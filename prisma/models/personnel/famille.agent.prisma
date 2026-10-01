@@ -1,0 +1,34 @@
+model FamilleAgent {
+  id               Int       @id @map("id")
+  agentMatricule   String    @map("agent_matricule")
+  carteSocialePath String    @map("carte_sociale_path") @db.VarChar(50)
+  conjoint         Conjoint?
+  enfant           Enfant?
+
+  personne Personne @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  agent Agent @relation(fields: [agentMatricule], references: [matricule])
+
+  @@map("famille_agents")
+  @@schema("personnel")
+}
+
+model Conjoint {
+  id          Int @id
+  numConjoint Int @unique @map("num_conjoint")
+
+  familleAgent FamilleAgent @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("conjoints")
+  @@schema("personnel")
+}
+
+model Enfant {
+  id        Int @id
+  numEnfant Int @unique @map("num_enfant")
+
+  familleAgent FamilleAgent @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("enfants")
+  @@schema("personnel")
+}

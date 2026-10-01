@@ -1,0 +1,32 @@
+enum DirectionType {
+  SERVICE @map("service")
+  LIBRE   @map("libre")
+
+  @@map("direction_type")
+  @@schema("personnel")
+}
+
+model Direction {
+  codeDirection String        @id @map("code_direction")
+  nom           String
+  directionType DirectionType @map("direction_type")
+  services      Service[]
+
+  structure StructureOrganisationnelle @relation(fields: [codeDirection], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("directions")
+  @@schema("personnel")
+}
+
+model Service {
+  codeService   String @id @map("code_service")
+  nom           String
+  codeDirection String @map("code_direction")
+
+  direction Direction @relation(fields: [codeDirection], references: [codeDirection])
+
+  agents Agent[]
+
+  @@map("services")
+  @@schema("personnel")
+}

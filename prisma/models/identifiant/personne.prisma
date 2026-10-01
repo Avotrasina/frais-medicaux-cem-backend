@@ -1,0 +1,22 @@
+enum Sexe {
+  MASCULIN @map("masculin")
+  FEMININ  @map("feminin")
+
+  @@map("sexe")
+  @@schema("identifiant")
+}
+
+model Personne {
+  id            Int      @id @default(autoincrement())
+  nom           String   @db.VarChar(25)
+  prenom        String   @db.VarChar(100)
+  dateNaissance DateTime @map("dt_naissance")
+  sexe          Sexe
+
+  beneficiaire Beneficiaire?
+  familleAgent FamilleAgent?
+  agent        Agent?
+
+  @@map("personnes")
+  @@schema("identifiant")
+}

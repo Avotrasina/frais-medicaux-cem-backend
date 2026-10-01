@@ -1,0 +1,50 @@
+enum StatutPrestataire {
+  PRIVE  @map("privee")
+  PUBLIC @map("public")
+
+  @@map("statut_prestataire")
+  @@schema("pec")
+}
+
+model Prestataire {
+  id                  Int               @id @default(autoincrement())
+  nom                 String
+  adresse             String
+  statut              StatutPrestataire @map("status_prestataire")
+  nif                 String            @unique
+  stat                String            @unique
+  dateDebutConvention DateTime          @map("dt_debut_convention")
+  dateFinConvention   DateTime          @map("dt_fin_convention")
+  listePrestation     String            @map("liste_prestation")
+
+  attestations Attestation[]
+
+  lieuID      Int @map("lieu_id")
+  categorieID Int @map("categorie_id")
+
+  lieu      Lieu                 @relation(fields: [lieuID], references: [id])
+  categorie CategoriePrestataire @relation(fields: [categorieID], references: [id])
+
+  @@map("prestataires")
+  @@schema("pec")
+}
+
+model Lieu {
+  id  Int    @id @default(autoincrement())
+  nom String @map("nom")
+
+  prestataires Prestataire[]
+
+  @@map("lieux")
+  @@schema("pec")
+}
+
+model CategoriePrestataire {
+  id  Int    @id @default(autoincrement())
+  nom String @map("nom")
+
+  prestataires Prestataire[]
+
+  @@map("categories_prestataire")
+  @@schema("pec")
+}

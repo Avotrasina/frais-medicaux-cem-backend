@@ -1,0 +1,16 @@
+model Attestation {
+  id                 Int      @id @default(autoincrement())
+  attestationPath    String   @map("attestation_path") @db.VarChar(50)
+  dateValidation     DateTime @map("dt_validation")
+  naturePrestation   String   @map("nature_prestation") @db.VarChar(100)
+  servicePrestataire String?  @map("service_prestataire") @db.VarChar(50)
+
+  prestataireID   Int    @map("prestataire_id")
+  idpBeneficiaire String @map("beneficiaire_id")
+
+  prestataire  Prestataire  @relation(fields: [prestataireID], references: [id])
+  beneficiaire Beneficiaire @relation(fields: [idpBeneficiaire], references: [idp])
+
+  @@map("attestations")
+  @@schema("pec")
+}

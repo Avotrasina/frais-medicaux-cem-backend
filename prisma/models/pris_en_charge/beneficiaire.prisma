@@ -1,0 +1,12 @@
+model Beneficiaire {
+  id             Int     @id
+  idp            String  @unique @map("idp")
+  observationIDP String? @map("observation_idp")
+
+  attestations Attestation[]
+
+  personne Personne @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("beneficiaires")
+  @@schema("pec")
+}

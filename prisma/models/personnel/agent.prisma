@@ -1,0 +1,51 @@
+enum AgentType {
+  AGENT_ACTIF    @map("agent_actif")
+  AGENT_RETRAITE @map("agent_retraite")
+
+  @@map("agent_type")
+  @@schema("personnel")
+}
+
+model Agent {
+  id                       Int       @id
+  matricule                String    @unique
+  observationMatricule     String?   @map("observation_matricule")
+  carteProfessionnellePath String    @map("carte_professionnelle_path") @db.VarChar(50)
+  dateEntree               DateTime  @map("dt_entree")
+  agentType                AgentType @default(AGENT_ACTIF) @map("agent_type")
+
+  familleAgent FamilleAgent[]
+
+  structureID String? @map("structure_orga_id")
+  serviceID   String? @map("code_service")
+  fonctionID  Int?    @map("fonction_id")
+  categorieID String? @map("categorie_id")
+
+  personne Personne @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  structureOrganisationnelle StructureOrganisationnelle? @relation(fields: [structureID], references: [id])
+  service                    Service?                    @relation(fields: [serviceID], references: [codeService])
+  fonction                   Fonction?                   @relation(fields: [fonctionID], references: [id])
+  categorie                  CategorieAgent?             @relation(fields: [categorieID], references: [codeCategory])
+
+  @@map("agents")
+  @@schema("personnel")
+}
+
+model Fonction {
+  id     Int     @id @default(autoincrement())
+  nom    String
+  agents Agent[]
+
+  @@map("fonctions")
+  @@schema("personnel")
+}
+
+model CategorieAgent {
+  id           Int     @id @default(autoincrement())
+  codeCategory String  @unique @map("code_category")
+  agents       Agent[]
+
+  @@map("categories_agents")
+  @@schema("personnel")
+}

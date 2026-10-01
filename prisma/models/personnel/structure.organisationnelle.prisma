@@ -1,0 +1,41 @@
+enum StatusPEC {
+  AGENT        @map("agent")
+  CHEF_SERVICE @map("chef_service")
+  CHEF_AGENCE  @map("chef_agence")
+  DIRECTEUR    @map("directeur")
+
+  @@map("status_pec")
+  @@schema("personnel")
+}
+
+enum StructureOrganisationnelleType {
+  AGENCE    @map("agence")
+  DIRECTION @map("direction")
+
+  @@map("structure_organisationnelle_type")
+  @@schema("personnel")
+}
+
+model StructureOrganisationnelle {
+  id                             String                         @id
+  statusPEC                      StatusPEC                      @map("status_pec")
+  structureOrganisationnelleType StructureOrganisationnelleType @map("structure_organisationnelle_type")
+
+  agence    Agence?
+  direction Direction?
+
+  agents Agent[]
+
+  @@map("structure_organisationnelle")
+  @@schema("personnel")
+}
+
+model Agence {
+  codeAgence String @id @map("code_agence")
+  nomAgence  String @map("nom_agence")
+
+  structure StructureOrganisationnelle @relation(fields: [codeAgence], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("agences")
+  @@schema("personnel")
+}
