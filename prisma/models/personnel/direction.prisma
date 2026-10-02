@@ -1,15 +1,6 @@
-enum DirectionType {
-  SERVICE @map("service")
-  LIBRE   @map("libre")
-
-  @@map("direction_type")
-  @@schema("personnel")
-}
-
 model Direction {
-  codeDirection String        @id @map("code_direction")
+  codeDirection String    @id @map("code_direction")
   nom           String
-  directionType DirectionType @map("direction_type")
   services      Service[]
 
   structure StructureOrganisationnelle @relation(fields: [codeDirection], references: [id], onDelete: Cascade, onUpdate: Cascade)

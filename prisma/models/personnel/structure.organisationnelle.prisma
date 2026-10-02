@@ -1,4 +1,4 @@
-enum StatusPEC {
+enum StatutPEC {
   AGENT        @map("agent")
   CHEF_SERVICE @map("chef_service")
   CHEF_AGENCE  @map("chef_agence")
@@ -18,7 +18,7 @@ enum StructureOrganisationnelleType {
 
 model StructureOrganisationnelle {
   id                             String                         @id
-  statusPEC                      StatusPEC                      @map("status_pec")
+  statutPEC                      StatutPEC                      @map("statut_pec")
   structureOrganisationnelleType StructureOrganisationnelleType @map("structure_organisationnelle_type")
 
   agence    Agence?
