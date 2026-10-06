@@ -1,0 +1,63 @@
+import { Injectable } from "@nestjs/common";
+import { PrismaClient } from "../../../generated/prisma/client.js";
+import { AgentRepository } from "../repositories/agent.repository.js";
+import { PersonneRepository } from "../repositories/personne.repository.js";
+import {AgentType} from "../types/agent.types.js"
+import type { AgentUseCaseTypes } from "../types/use-case.agent.types.js";
+import type { CreateAgent} from "../types/agent.types.js";
+import type { CreatePersonne} from "../types/personne.types.js";
+
+
+
+@Injectable()
+export class SaveAgentUseCase {
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly personneRepository: PersonneRepository,
+    private readonly agentRepository: AgentRepository,
+  ) {}
+
+  private splitInput(input: AgentUseCaseTypes): {
+    personne: CreatePersonne;
+    agent: Omit<CreateAgent, "id">;
+  } {
+    const personne: CreatePersonne = {
+      nom: input.nom,
+      prenom: input.prenom,
+      dateNaissance: input.dateNaissance,
+      sexe: input.sexe,
+    };
+
+    const agent: Omit<CreateAgent, "id"> = {
+      matricule: input.matricule,
+      observationMatricule: input.observationMatricule,
+      carteProfessionnellePath: input.carteProfessionnellePath,
+      dateEntree: input.dateEntree,
+      fonctionID: input.fonctionID,
+      categorieID: input.categorieID,
+      codeDirection: input.codeDirection,
+      codeAgence: input.codeAgence,
+      codeService: input.codeService,
+      statutPEC: input.statutPEC,
+      agentType : input.backOfficeFrontOffice == "RETRAITE" ? AgentType.AGENT_RETRAITE : AgentType.AGENT_ACTIF,
+      structureID: input.codeAgence ? input.codeAgence : input.codeDirection,
+    };
+
+    return { personne, agent };
+  }
+
+  async execute(
+    input: AgentUseCaseTypes,
+  ): Promise<AgentUseCaseTypes> {
+    const { personne, agent } = this.splitInput(input);
+
+    this.prisma.$transaction(async (tx) => {
+      const createdPersonne = await this.personneRepository.create(personne, tx);
+      await this.agentRepository.create(
+        { ...agent, id: createdPersonne.id },
+        tx,
+      );
+    });
+    return input;
+  }
+}
