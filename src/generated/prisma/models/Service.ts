@@ -28,18 +28,24 @@ export type ServiceMinAggregateOutputType = {
   codeService: string | null
   nom: string | null
   codeDirection: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ServiceMaxAggregateOutputType = {
   codeService: string | null
   nom: string | null
   codeDirection: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ServiceCountAggregateOutputType = {
   codeService: number
   nom: number
   codeDirection: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -48,18 +54,24 @@ export type ServiceMinAggregateInputType = {
   codeService?: true
   nom?: true
   codeDirection?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ServiceMaxAggregateInputType = {
   codeService?: true
   nom?: true
   codeDirection?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ServiceCountAggregateInputType = {
   codeService?: true
   nom?: true
   codeDirection?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -139,6 +151,8 @@ export type ServiceGroupByOutputType = {
   codeService: string
   nom: string
   codeDirection: string
+  createdAt: Date
+  updatedAt: Date
   _count: ServiceCountAggregateOutputType | null
   _min: ServiceMinAggregateOutputType | null
   _max: ServiceMaxAggregateOutputType | null
@@ -166,6 +180,8 @@ export type ServiceWhereInput = {
   codeService?: Prisma.StringFilter<"Service"> | string
   nom?: Prisma.StringFilter<"Service"> | string
   codeDirection?: Prisma.StringFilter<"Service"> | string
+  createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   direction?: Prisma.XOR<Prisma.DirectionScalarRelationFilter, Prisma.DirectionWhereInput>
   agents?: Prisma.AgentListRelationFilter
 }
@@ -174,6 +190,8 @@ export type ServiceOrderByWithRelationInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   direction?: Prisma.DirectionOrderByWithRelationInput
   agents?: Prisma.AgentOrderByRelationAggregateInput
 }
@@ -185,6 +203,8 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ServiceWhereInput | Prisma.ServiceWhereInput[]
   nom?: Prisma.StringFilter<"Service"> | string
   codeDirection?: Prisma.StringFilter<"Service"> | string
+  createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   direction?: Prisma.XOR<Prisma.DirectionScalarRelationFilter, Prisma.DirectionWhereInput>
   agents?: Prisma.AgentListRelationFilter
 }, "codeService">
@@ -193,6 +213,8 @@ export type ServiceOrderByWithAggregationInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ServiceCountOrderByAggregateInput
   _max?: Prisma.ServiceMaxOrderByAggregateInput
   _min?: Prisma.ServiceMinOrderByAggregateInput
@@ -205,11 +227,15 @@ export type ServiceScalarWhereWithAggregatesInput = {
   codeService?: Prisma.StringWithAggregatesFilter<"Service"> | string
   nom?: Prisma.StringWithAggregatesFilter<"Service"> | string
   codeDirection?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
 }
 
 export type ServiceCreateInput = {
   codeService: string
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   direction: Prisma.DirectionCreateNestedOneWithoutServicesInput
   agents?: Prisma.AgentCreateNestedManyWithoutServiceInput
 }
@@ -218,12 +244,16 @@ export type ServiceUncheckedCreateInput = {
   codeService: string
   nom: string
   codeDirection: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUpdateInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUpdateOneRequiredWithoutServicesNestedInput
   agents?: Prisma.AgentUpdateManyWithoutServiceNestedInput
 }
@@ -232,6 +262,8 @@ export type ServiceUncheckedUpdateInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUncheckedUpdateManyWithoutServiceNestedInput
 }
 
@@ -239,17 +271,23 @@ export type ServiceCreateManyInput = {
   codeService: string
   nom: string
   codeDirection: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceUpdateManyMutationInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceUncheckedUpdateManyInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceNullableScalarRelationFilter = {
@@ -271,18 +309,24 @@ export type ServiceCountOrderByAggregateInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ServiceMaxOrderByAggregateInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ServiceMinOrderByAggregateInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ServiceCreateNestedOneWithoutAgentsInput = {
@@ -346,6 +390,8 @@ export type ServiceUncheckedUpdateManyWithoutDirectionNestedInput = {
 export type ServiceCreateWithoutAgentsInput = {
   codeService: string
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   direction: Prisma.DirectionCreateNestedOneWithoutServicesInput
 }
 
@@ -353,6 +399,8 @@ export type ServiceUncheckedCreateWithoutAgentsInput = {
   codeService: string
   nom: string
   codeDirection: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceCreateOrConnectWithoutAgentsInput = {
@@ -374,6 +422,8 @@ export type ServiceUpdateToOneWithWhereWithoutAgentsInput = {
 export type ServiceUpdateWithoutAgentsInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUpdateOneRequiredWithoutServicesNestedInput
 }
 
@@ -381,17 +431,23 @@ export type ServiceUncheckedUpdateWithoutAgentsInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceCreateWithoutDirectionInput = {
   codeService: string
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agents?: Prisma.AgentCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutDirectionInput = {
   codeService: string
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutServiceInput
 }
 
@@ -428,28 +484,38 @@ export type ServiceScalarWhereInput = {
   codeService?: Prisma.StringFilter<"Service"> | string
   nom?: Prisma.StringFilter<"Service"> | string
   codeDirection?: Prisma.StringFilter<"Service"> | string
+  createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
 }
 
 export type ServiceCreateManyDirectionInput = {
   codeService: string
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceUpdateWithoutDirectionInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutDirectionInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutDirectionInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -487,6 +553,8 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
   agents?: boolean | Prisma.Service$agentsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
@@ -496,6 +564,8 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
@@ -503,6 +573,8 @@ export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
@@ -510,9 +582,11 @@ export type ServiceSelectScalar = {
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeService" | "nom" | "codeDirection", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeService" | "nom" | "codeDirection" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
   agents?: boolean | Prisma.Service$agentsArgs<ExtArgs>
@@ -535,6 +609,8 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     codeService: string
     nom: string
     codeDirection: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["service"]>
   composites: {}
 }
@@ -963,6 +1039,8 @@ export interface ServiceFieldRefs {
   readonly codeService: Prisma.FieldRef<"Service", 'String'>
   readonly nom: Prisma.FieldRef<"Service", 'String'>
   readonly codeDirection: Prisma.FieldRef<"Service", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Service", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Service", 'DateTime'>
 }
     
 

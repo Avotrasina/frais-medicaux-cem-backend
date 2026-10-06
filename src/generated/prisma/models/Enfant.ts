@@ -39,16 +39,22 @@ export type EnfantSumAggregateOutputType = {
 export type EnfantMinAggregateOutputType = {
   id: number | null
   numEnfant: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type EnfantMaxAggregateOutputType = {
   id: number | null
   numEnfant: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type EnfantCountAggregateOutputType = {
   id: number
   numEnfant: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -66,16 +72,22 @@ export type EnfantSumAggregateInputType = {
 export type EnfantMinAggregateInputType = {
   id?: true
   numEnfant?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type EnfantMaxAggregateInputType = {
   id?: true
   numEnfant?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type EnfantCountAggregateInputType = {
   id?: true
   numEnfant?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -168,6 +180,8 @@ export type EnfantGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type EnfantGroupByOutputType = {
   id: number
   numEnfant: number
+  createdAt: Date
+  updatedAt: Date
   _count: EnfantCountAggregateOutputType | null
   _avg: EnfantAvgAggregateOutputType | null
   _sum: EnfantSumAggregateOutputType | null
@@ -196,12 +210,16 @@ export type EnfantWhereInput = {
   NOT?: Prisma.EnfantWhereInput | Prisma.EnfantWhereInput[]
   id?: Prisma.IntFilter<"Enfant"> | number
   numEnfant?: Prisma.IntFilter<"Enfant"> | number
+  createdAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
   familleAgent?: Prisma.XOR<Prisma.FamilleAgentScalarRelationFilter, Prisma.FamilleAgentWhereInput>
 }
 
 export type EnfantOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   familleAgent?: Prisma.FamilleAgentOrderByWithRelationInput
 }
 
@@ -211,12 +229,16 @@ export type EnfantWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EnfantWhereInput | Prisma.EnfantWhereInput[]
   OR?: Prisma.EnfantWhereInput[]
   NOT?: Prisma.EnfantWhereInput | Prisma.EnfantWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
   familleAgent?: Prisma.XOR<Prisma.FamilleAgentScalarRelationFilter, Prisma.FamilleAgentWhereInput>
 }, "id" | "numEnfant">
 
 export type EnfantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.EnfantCountOrderByAggregateInput
   _avg?: Prisma.EnfantAvgOrderByAggregateInput
   _max?: Prisma.EnfantMaxOrderByAggregateInput
@@ -230,40 +252,56 @@ export type EnfantScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EnfantScalarWhereWithAggregatesInput | Prisma.EnfantScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Enfant"> | number
   numEnfant?: Prisma.IntWithAggregatesFilter<"Enfant"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Enfant"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Enfant"> | Date | string
 }
 
 export type EnfantCreateInput = {
   numEnfant: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent: Prisma.FamilleAgentCreateNestedOneWithoutEnfantInput
 }
 
 export type EnfantUncheckedCreateInput = {
   id: number
   numEnfant: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EnfantUpdateInput = {
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateOneRequiredWithoutEnfantNestedInput
 }
 
 export type EnfantUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EnfantCreateManyInput = {
   id: number
   numEnfant: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EnfantUpdateManyMutationInput = {
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EnfantUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EnfantNullableScalarRelationFilter = {
@@ -274,6 +312,8 @@ export type EnfantNullableScalarRelationFilter = {
 export type EnfantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type EnfantAvgOrderByAggregateInput = {
@@ -284,11 +324,15 @@ export type EnfantAvgOrderByAggregateInput = {
 export type EnfantMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type EnfantMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type EnfantSumOrderByAggregateInput = {
@@ -330,10 +374,14 @@ export type EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput = {
 
 export type EnfantCreateWithoutFamilleAgentInput = {
   numEnfant: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EnfantUncheckedCreateWithoutFamilleAgentInput = {
   numEnfant: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EnfantCreateOrConnectWithoutFamilleAgentInput = {
@@ -354,10 +402,14 @@ export type EnfantUpdateToOneWithWhereWithoutFamilleAgentInput = {
 
 export type EnfantUpdateWithoutFamilleAgentInput = {
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EnfantUncheckedUpdateWithoutFamilleAgentInput = {
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -365,27 +417,35 @@ export type EnfantUncheckedUpdateWithoutFamilleAgentInput = {
 export type EnfantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numEnfant?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["enfant"]>
 
 export type EnfantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numEnfant?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["enfant"]>
 
 export type EnfantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numEnfant?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["enfant"]>
 
 export type EnfantSelectScalar = {
   id?: boolean
   numEnfant?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type EnfantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numEnfant", ExtArgs["result"]["enfant"]>
+export type EnfantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numEnfant" | "createdAt" | "updatedAt", ExtArgs["result"]["enfant"]>
 export type EnfantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }
@@ -404,6 +464,8 @@ export type $EnfantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     numEnfant: number
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["enfant"]>
   composites: {}
 }
@@ -830,6 +892,8 @@ export interface Prisma__EnfantClient<T, Null = never, ExtArgs extends runtime.T
 export interface EnfantFieldRefs {
   readonly id: Prisma.FieldRef<"Enfant", 'Int'>
   readonly numEnfant: Prisma.FieldRef<"Enfant", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Enfant", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Enfant", 'DateTime'>
 }
     
 

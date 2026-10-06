@@ -25,6 +25,9 @@ model Prestataire {
   lieu      Lieu                 @relation(fields: [lieuID], references: [id])
   categorie CategoriePrestataire @relation(fields: [categorieID], references: [id])
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("prestataires")
   @@schema("pec")
 }
@@ -35,6 +38,9 @@ model Lieu {
 
   prestataires Prestataire[]
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("lieux")
   @@schema("pec")
 }
@@ -44,6 +50,9 @@ model CategoriePrestataire {
   nom String @map("nom")
 
   prestataires Prestataire[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("categories_prestataire")
   @@schema("pec")

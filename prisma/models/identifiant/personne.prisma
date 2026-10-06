@@ -17,6 +17,9 @@ model Personne {
   familleAgent FamilleAgent?
   agent        Agent?
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("personnes")
   @@schema("identifiant")
 }

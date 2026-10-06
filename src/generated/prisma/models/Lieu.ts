@@ -37,16 +37,22 @@ export type LieuSumAggregateOutputType = {
 export type LieuMinAggregateOutputType = {
   id: number | null
   nom: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type LieuMaxAggregateOutputType = {
   id: number | null
   nom: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type LieuCountAggregateOutputType = {
   id: number
   nom: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -62,16 +68,22 @@ export type LieuSumAggregateInputType = {
 export type LieuMinAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type LieuMaxAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type LieuCountAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -164,6 +176,8 @@ export type LieuGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type LieuGroupByOutputType = {
   id: number
   nom: string
+  createdAt: Date
+  updatedAt: Date
   _count: LieuCountAggregateOutputType | null
   _avg: LieuAvgAggregateOutputType | null
   _sum: LieuSumAggregateOutputType | null
@@ -192,12 +206,16 @@ export type LieuWhereInput = {
   NOT?: Prisma.LieuWhereInput | Prisma.LieuWhereInput[]
   id?: Prisma.IntFilter<"Lieu"> | number
   nom?: Prisma.StringFilter<"Lieu"> | string
+  createdAt?: Prisma.DateTimeFilter<"Lieu"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lieu"> | Date | string
   prestataires?: Prisma.PrestataireListRelationFilter
 }
 
 export type LieuOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   prestataires?: Prisma.PrestataireOrderByRelationAggregateInput
 }
 
@@ -207,12 +225,16 @@ export type LieuWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LieuWhereInput[]
   NOT?: Prisma.LieuWhereInput | Prisma.LieuWhereInput[]
   nom?: Prisma.StringFilter<"Lieu"> | string
+  createdAt?: Prisma.DateTimeFilter<"Lieu"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lieu"> | Date | string
   prestataires?: Prisma.PrestataireListRelationFilter
 }, "id">
 
 export type LieuOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.LieuCountOrderByAggregateInput
   _avg?: Prisma.LieuAvgOrderByAggregateInput
   _max?: Prisma.LieuMaxOrderByAggregateInput
@@ -226,42 +248,58 @@ export type LieuScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LieuScalarWhereWithAggregatesInput | Prisma.LieuScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Lieu"> | number
   nom?: Prisma.StringWithAggregatesFilter<"Lieu"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lieu"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lieu"> | Date | string
 }
 
 export type LieuCreateInput = {
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   prestataires?: Prisma.PrestataireCreateNestedManyWithoutLieuInput
 }
 
 export type LieuUncheckedCreateInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   prestataires?: Prisma.PrestataireUncheckedCreateNestedManyWithoutLieuInput
 }
 
 export type LieuUpdateInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataires?: Prisma.PrestataireUpdateManyWithoutLieuNestedInput
 }
 
 export type LieuUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataires?: Prisma.PrestataireUncheckedUpdateManyWithoutLieuNestedInput
 }
 
 export type LieuCreateManyInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LieuUpdateManyMutationInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LieuUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LieuScalarRelationFilter = {
@@ -272,6 +310,8 @@ export type LieuScalarRelationFilter = {
 export type LieuCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LieuAvgOrderByAggregateInput = {
@@ -281,11 +321,15 @@ export type LieuAvgOrderByAggregateInput = {
 export type LieuMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LieuMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LieuSumOrderByAggregateInput = {
@@ -308,11 +352,15 @@ export type LieuUpdateOneRequiredWithoutPrestatairesNestedInput = {
 
 export type LieuCreateWithoutPrestatairesInput = {
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LieuUncheckedCreateWithoutPrestatairesInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LieuCreateOrConnectWithoutPrestatairesInput = {
@@ -333,11 +381,15 @@ export type LieuUpdateToOneWithWhereWithoutPrestatairesInput = {
 
 export type LieuUpdateWithoutPrestatairesInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LieuUncheckedUpdateWithoutPrestatairesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -374,6 +426,8 @@ export type LieuCountOutputTypeCountPrestatairesArgs<ExtArgs extends runtime.Typ
 export type LieuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   prestataires?: boolean | Prisma.Lieu$prestatairesArgs<ExtArgs>
   _count?: boolean | Prisma.LieuCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lieu"]>
@@ -381,19 +435,25 @@ export type LieuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type LieuSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["lieu"]>
 
 export type LieuSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["lieu"]>
 
 export type LieuSelectScalar = {
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type LieuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom", ExtArgs["result"]["lieu"]>
+export type LieuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "createdAt" | "updatedAt", ExtArgs["result"]["lieu"]>
 export type LieuInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestataires?: boolean | Prisma.Lieu$prestatairesArgs<ExtArgs>
   _count?: boolean | Prisma.LieuCountOutputTypeDefaultArgs<ExtArgs>
@@ -409,6 +469,8 @@ export type $LieuPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nom: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["lieu"]>
   composites: {}
 }
@@ -835,6 +897,8 @@ export interface Prisma__LieuClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface LieuFieldRefs {
   readonly id: Prisma.FieldRef<"Lieu", 'Int'>
   readonly nom: Prisma.FieldRef<"Lieu", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Lieu", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Lieu", 'DateTime'>
 }
     
 

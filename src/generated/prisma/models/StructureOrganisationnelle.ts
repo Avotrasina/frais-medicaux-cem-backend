@@ -26,40 +26,46 @@ export type AggregateStructureOrganisationnelle = {
 
 export type StructureOrganisationnelleMinAggregateOutputType = {
   id: string | null
-  statutPEC: $Enums.StatutPEC | null
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StructureOrganisationnelleMaxAggregateOutputType = {
   id: string | null
-  statutPEC: $Enums.StatutPEC | null
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StructureOrganisationnelleCountAggregateOutputType = {
   id: number
-  statutPEC: number
   structureOrganisationnelleType: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type StructureOrganisationnelleMinAggregateInputType = {
   id?: true
-  statutPEC?: true
   structureOrganisationnelleType?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type StructureOrganisationnelleMaxAggregateInputType = {
   id?: true
-  statutPEC?: true
   structureOrganisationnelleType?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type StructureOrganisationnelleCountAggregateInputType = {
   id?: true
-  statutPEC?: true
   structureOrganisationnelleType?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -137,8 +143,9 @@ export type StructureOrganisationnelleGroupByArgs<ExtArgs extends runtime.Types.
 
 export type StructureOrganisationnelleGroupByOutputType = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt: Date
+  updatedAt: Date
   _count: StructureOrganisationnelleCountAggregateOutputType | null
   _min: StructureOrganisationnelleMinAggregateOutputType | null
   _max: StructureOrganisationnelleMaxAggregateOutputType | null
@@ -164,8 +171,9 @@ export type StructureOrganisationnelleWhereInput = {
   OR?: Prisma.StructureOrganisationnelleWhereInput[]
   NOT?: Prisma.StructureOrganisationnelleWhereInput | Prisma.StructureOrganisationnelleWhereInput[]
   id?: Prisma.StringFilter<"StructureOrganisationnelle"> | string
-  statutPEC?: Prisma.EnumStatutPECFilter<"StructureOrganisationnelle"> | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFilter<"StructureOrganisationnelle"> | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
   agence?: Prisma.XOR<Prisma.AgenceNullableScalarRelationFilter, Prisma.AgenceWhereInput> | null
   direction?: Prisma.XOR<Prisma.DirectionNullableScalarRelationFilter, Prisma.DirectionWhereInput> | null
   agents?: Prisma.AgentListRelationFilter
@@ -173,8 +181,9 @@ export type StructureOrganisationnelleWhereInput = {
 
 export type StructureOrganisationnelleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  statutPEC?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   agence?: Prisma.AgenceOrderByWithRelationInput
   direction?: Prisma.DirectionOrderByWithRelationInput
   agents?: Prisma.AgentOrderByRelationAggregateInput
@@ -185,8 +194,9 @@ export type StructureOrganisationnelleWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.StructureOrganisationnelleWhereInput | Prisma.StructureOrganisationnelleWhereInput[]
   OR?: Prisma.StructureOrganisationnelleWhereInput[]
   NOT?: Prisma.StructureOrganisationnelleWhereInput | Prisma.StructureOrganisationnelleWhereInput[]
-  statutPEC?: Prisma.EnumStatutPECFilter<"StructureOrganisationnelle"> | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFilter<"StructureOrganisationnelle"> | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
   agence?: Prisma.XOR<Prisma.AgenceNullableScalarRelationFilter, Prisma.AgenceWhereInput> | null
   direction?: Prisma.XOR<Prisma.DirectionNullableScalarRelationFilter, Prisma.DirectionWhereInput> | null
   agents?: Prisma.AgentListRelationFilter
@@ -194,8 +204,9 @@ export type StructureOrganisationnelleWhereUniqueInput = Prisma.AtLeast<{
 
 export type StructureOrganisationnelleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  statutPEC?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.StructureOrganisationnelleCountOrderByAggregateInput
   _max?: Prisma.StructureOrganisationnelleMaxOrderByAggregateInput
   _min?: Prisma.StructureOrganisationnelleMinOrderByAggregateInput
@@ -206,14 +217,16 @@ export type StructureOrganisationnelleScalarWhereWithAggregatesInput = {
   OR?: Prisma.StructureOrganisationnelleScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StructureOrganisationnelleScalarWhereWithAggregatesInput | Prisma.StructureOrganisationnelleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StructureOrganisationnelle"> | string
-  statutPEC?: Prisma.EnumStatutPECWithAggregatesFilter<"StructureOrganisationnelle"> | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeWithAggregatesFilter<"StructureOrganisationnelle"> | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"StructureOrganisationnelle"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StructureOrganisationnelle"> | Date | string
 }
 
 export type StructureOrganisationnelleCreateInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agence?: Prisma.AgenceCreateNestedOneWithoutStructureInput
   direction?: Prisma.DirectionCreateNestedOneWithoutStructureInput
   agents?: Prisma.AgentCreateNestedManyWithoutStructureOrganisationnelleInput
@@ -221,8 +234,9 @@ export type StructureOrganisationnelleCreateInput = {
 
 export type StructureOrganisationnelleUncheckedCreateInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agence?: Prisma.AgenceUncheckedCreateNestedOneWithoutStructureInput
   direction?: Prisma.DirectionUncheckedCreateNestedOneWithoutStructureInput
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutStructureOrganisationnelleInput
@@ -230,8 +244,9 @@ export type StructureOrganisationnelleUncheckedCreateInput = {
 
 export type StructureOrganisationnelleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUpdateOneWithoutStructureNestedInput
   direction?: Prisma.DirectionUpdateOneWithoutStructureNestedInput
   agents?: Prisma.AgentUpdateManyWithoutStructureOrganisationnelleNestedInput
@@ -239,8 +254,9 @@ export type StructureOrganisationnelleUpdateInput = {
 
 export type StructureOrganisationnelleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUncheckedUpdateOneWithoutStructureNestedInput
   direction?: Prisma.DirectionUncheckedUpdateOneWithoutStructureNestedInput
   agents?: Prisma.AgentUncheckedUpdateManyWithoutStructureOrganisationnelleNestedInput
@@ -248,20 +264,23 @@ export type StructureOrganisationnelleUncheckedUpdateInput = {
 
 export type StructureOrganisationnelleCreateManyInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StructureOrganisationnelleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StructureOrganisationnelleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StructureOrganisationnelleNullableScalarRelationFilter = {
@@ -276,20 +295,23 @@ export type StructureOrganisationnelleScalarRelationFilter = {
 
 export type StructureOrganisationnelleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  statutPEC?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StructureOrganisationnelleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  statutPEC?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StructureOrganisationnelleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  statutPEC?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StructureOrganisationnelleCreateNestedOneWithoutAgentsInput = {
@@ -322,10 +344,6 @@ export type StructureOrganisationnelleUpdateOneRequiredWithoutDirectionNestedInp
   update?: Prisma.XOR<Prisma.XOR<Prisma.StructureOrganisationnelleUpdateToOneWithWhereWithoutDirectionInput, Prisma.StructureOrganisationnelleUpdateWithoutDirectionInput>, Prisma.StructureOrganisationnelleUncheckedUpdateWithoutDirectionInput>
 }
 
-export type EnumStatutPECFieldUpdateOperationsInput = {
-  set?: $Enums.StatutPEC
-}
-
 export type EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput = {
   set?: $Enums.StructureOrganisationnelleType
 }
@@ -346,16 +364,18 @@ export type StructureOrganisationnelleUpdateOneRequiredWithoutAgenceNestedInput 
 
 export type StructureOrganisationnelleCreateWithoutAgentsInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agence?: Prisma.AgenceCreateNestedOneWithoutStructureInput
   direction?: Prisma.DirectionCreateNestedOneWithoutStructureInput
 }
 
 export type StructureOrganisationnelleUncheckedCreateWithoutAgentsInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agence?: Prisma.AgenceUncheckedCreateNestedOneWithoutStructureInput
   direction?: Prisma.DirectionUncheckedCreateNestedOneWithoutStructureInput
 }
@@ -378,32 +398,36 @@ export type StructureOrganisationnelleUpdateToOneWithWhereWithoutAgentsInput = {
 
 export type StructureOrganisationnelleUpdateWithoutAgentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUpdateOneWithoutStructureNestedInput
   direction?: Prisma.DirectionUpdateOneWithoutStructureNestedInput
 }
 
 export type StructureOrganisationnelleUncheckedUpdateWithoutAgentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUncheckedUpdateOneWithoutStructureNestedInput
   direction?: Prisma.DirectionUncheckedUpdateOneWithoutStructureNestedInput
 }
 
 export type StructureOrganisationnelleCreateWithoutDirectionInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agence?: Prisma.AgenceCreateNestedOneWithoutStructureInput
   agents?: Prisma.AgentCreateNestedManyWithoutStructureOrganisationnelleInput
 }
 
 export type StructureOrganisationnelleUncheckedCreateWithoutDirectionInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agence?: Prisma.AgenceUncheckedCreateNestedOneWithoutStructureInput
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutStructureOrganisationnelleInput
 }
@@ -426,32 +450,36 @@ export type StructureOrganisationnelleUpdateToOneWithWhereWithoutDirectionInput 
 
 export type StructureOrganisationnelleUpdateWithoutDirectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUpdateOneWithoutStructureNestedInput
   agents?: Prisma.AgentUpdateManyWithoutStructureOrganisationnelleNestedInput
 }
 
 export type StructureOrganisationnelleUncheckedUpdateWithoutDirectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUncheckedUpdateOneWithoutStructureNestedInput
   agents?: Prisma.AgentUncheckedUpdateManyWithoutStructureOrganisationnelleNestedInput
 }
 
 export type StructureOrganisationnelleCreateWithoutAgenceInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   direction?: Prisma.DirectionCreateNestedOneWithoutStructureInput
   agents?: Prisma.AgentCreateNestedManyWithoutStructureOrganisationnelleInput
 }
 
 export type StructureOrganisationnelleUncheckedCreateWithoutAgenceInput = {
   id: string
-  statutPEC: $Enums.StatutPEC
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   direction?: Prisma.DirectionUncheckedCreateNestedOneWithoutStructureInput
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutStructureOrganisationnelleInput
 }
@@ -474,16 +502,18 @@ export type StructureOrganisationnelleUpdateToOneWithWhereWithoutAgenceInput = {
 
 export type StructureOrganisationnelleUpdateWithoutAgenceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUpdateOneWithoutStructureNestedInput
   agents?: Prisma.AgentUpdateManyWithoutStructureOrganisationnelleNestedInput
 }
 
 export type StructureOrganisationnelleUncheckedUpdateWithoutAgenceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUncheckedUpdateOneWithoutStructureNestedInput
   agents?: Prisma.AgentUncheckedUpdateManyWithoutStructureOrganisationnelleNestedInput
 }
@@ -521,8 +551,9 @@ export type StructureOrganisationnelleCountOutputTypeCountAgentsArgs<ExtArgs ext
 
 export type StructureOrganisationnelleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  statutPEC?: boolean
   structureOrganisationnelleType?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   agence?: boolean | Prisma.StructureOrganisationnelle$agenceArgs<ExtArgs>
   direction?: boolean | Prisma.StructureOrganisationnelle$directionArgs<ExtArgs>
   agents?: boolean | Prisma.StructureOrganisationnelle$agentsArgs<ExtArgs>
@@ -531,23 +562,26 @@ export type StructureOrganisationnelleSelect<ExtArgs extends runtime.Types.Exten
 
 export type StructureOrganisationnelleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  statutPEC?: boolean
   structureOrganisationnelleType?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["structureOrganisationnelle"]>
 
 export type StructureOrganisationnelleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  statutPEC?: boolean
   structureOrganisationnelleType?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["structureOrganisationnelle"]>
 
 export type StructureOrganisationnelleSelectScalar = {
   id?: boolean
-  statutPEC?: boolean
   structureOrganisationnelleType?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type StructureOrganisationnelleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "statutPEC" | "structureOrganisationnelleType", ExtArgs["result"]["structureOrganisationnelle"]>
+export type StructureOrganisationnelleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "structureOrganisationnelleType" | "createdAt" | "updatedAt", ExtArgs["result"]["structureOrganisationnelle"]>
 export type StructureOrganisationnelleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agence?: boolean | Prisma.StructureOrganisationnelle$agenceArgs<ExtArgs>
   direction?: boolean | Prisma.StructureOrganisationnelle$directionArgs<ExtArgs>
@@ -566,8 +600,9 @@ export type $StructureOrganisationnellePayload<ExtArgs extends runtime.Types.Ext
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    statutPEC: $Enums.StatutPEC
     structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["structureOrganisationnelle"]>
   composites: {}
 }
@@ -995,8 +1030,9 @@ export interface Prisma__StructureOrganisationnelleClient<T, Null = never, ExtAr
  */
 export interface StructureOrganisationnelleFieldRefs {
   readonly id: Prisma.FieldRef<"StructureOrganisationnelle", 'String'>
-  readonly statutPEC: Prisma.FieldRef<"StructureOrganisationnelle", 'StatutPEC'>
   readonly structureOrganisationnelleType: Prisma.FieldRef<"StructureOrganisationnelle", 'StructureOrganisationnelleType'>
+  readonly createdAt: Prisma.FieldRef<"StructureOrganisationnelle", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"StructureOrganisationnelle", 'DateTime'>
 }
     
 

@@ -37,16 +37,22 @@ export type FonctionSumAggregateOutputType = {
 export type FonctionMinAggregateOutputType = {
   id: number | null
   nom: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type FonctionMaxAggregateOutputType = {
   id: number | null
   nom: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type FonctionCountAggregateOutputType = {
   id: number
   nom: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -62,16 +68,22 @@ export type FonctionSumAggregateInputType = {
 export type FonctionMinAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type FonctionMaxAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type FonctionCountAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -164,6 +176,8 @@ export type FonctionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type FonctionGroupByOutputType = {
   id: number
   nom: string
+  createdAt: Date
+  updatedAt: Date
   _count: FonctionCountAggregateOutputType | null
   _avg: FonctionAvgAggregateOutputType | null
   _sum: FonctionSumAggregateOutputType | null
@@ -192,12 +206,16 @@ export type FonctionWhereInput = {
   NOT?: Prisma.FonctionWhereInput | Prisma.FonctionWhereInput[]
   id?: Prisma.IntFilter<"Fonction"> | number
   nom?: Prisma.StringFilter<"Fonction"> | string
+  createdAt?: Prisma.DateTimeFilter<"Fonction"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Fonction"> | Date | string
   agents?: Prisma.AgentListRelationFilter
 }
 
 export type FonctionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   agents?: Prisma.AgentOrderByRelationAggregateInput
 }
 
@@ -207,12 +225,16 @@ export type FonctionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FonctionWhereInput[]
   NOT?: Prisma.FonctionWhereInput | Prisma.FonctionWhereInput[]
   nom?: Prisma.StringFilter<"Fonction"> | string
+  createdAt?: Prisma.DateTimeFilter<"Fonction"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Fonction"> | Date | string
   agents?: Prisma.AgentListRelationFilter
 }, "id">
 
 export type FonctionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.FonctionCountOrderByAggregateInput
   _avg?: Prisma.FonctionAvgOrderByAggregateInput
   _max?: Prisma.FonctionMaxOrderByAggregateInput
@@ -226,42 +248,58 @@ export type FonctionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FonctionScalarWhereWithAggregatesInput | Prisma.FonctionScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Fonction"> | number
   nom?: Prisma.StringWithAggregatesFilter<"Fonction"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Fonction"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Fonction"> | Date | string
 }
 
 export type FonctionCreateInput = {
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agents?: Prisma.AgentCreateNestedManyWithoutFonctionInput
 }
 
 export type FonctionUncheckedCreateInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutFonctionInput
 }
 
 export type FonctionUpdateInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUpdateManyWithoutFonctionNestedInput
 }
 
 export type FonctionUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUncheckedUpdateManyWithoutFonctionNestedInput
 }
 
 export type FonctionCreateManyInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FonctionUpdateManyMutationInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FonctionUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FonctionNullableScalarRelationFilter = {
@@ -272,6 +310,8 @@ export type FonctionNullableScalarRelationFilter = {
 export type FonctionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FonctionAvgOrderByAggregateInput = {
@@ -281,11 +321,15 @@ export type FonctionAvgOrderByAggregateInput = {
 export type FonctionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FonctionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FonctionSumOrderByAggregateInput = {
@@ -310,11 +354,15 @@ export type FonctionUpdateOneWithoutAgentsNestedInput = {
 
 export type FonctionCreateWithoutAgentsInput = {
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FonctionUncheckedCreateWithoutAgentsInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FonctionCreateOrConnectWithoutAgentsInput = {
@@ -335,11 +383,15 @@ export type FonctionUpdateToOneWithWhereWithoutAgentsInput = {
 
 export type FonctionUpdateWithoutAgentsInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FonctionUncheckedUpdateWithoutAgentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -376,6 +428,8 @@ export type FonctionCountOutputTypeCountAgentsArgs<ExtArgs extends runtime.Types
 export type FonctionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   agents?: boolean | Prisma.Fonction$agentsArgs<ExtArgs>
   _count?: boolean | Prisma.FonctionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fonction"]>
@@ -383,19 +437,25 @@ export type FonctionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type FonctionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["fonction"]>
 
 export type FonctionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["fonction"]>
 
 export type FonctionSelectScalar = {
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type FonctionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom", ExtArgs["result"]["fonction"]>
+export type FonctionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "createdAt" | "updatedAt", ExtArgs["result"]["fonction"]>
 export type FonctionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agents?: boolean | Prisma.Fonction$agentsArgs<ExtArgs>
   _count?: boolean | Prisma.FonctionCountOutputTypeDefaultArgs<ExtArgs>
@@ -411,6 +471,8 @@ export type $FonctionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nom: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["fonction"]>
   composites: {}
 }
@@ -837,6 +899,8 @@ export interface Prisma__FonctionClient<T, Null = never, ExtArgs extends runtime
 export interface FonctionFieldRefs {
   readonly id: Prisma.FieldRef<"Fonction", 'Int'>
   readonly nom: Prisma.FieldRef<"Fonction", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Fonction", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Fonction", 'DateTime'>
 }
     
 

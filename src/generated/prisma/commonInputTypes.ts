@@ -131,6 +131,13 @@ export type StringNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null
 }
 
+export type EnumStatutPECFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPECFilter<$PrismaModel> | $Enums.StatutPEC
+}
+
 export type EnumAgentTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.AgentType | Prisma.EnumAgentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.AgentType[] | Prisma.ListEnumAgentTypeFieldRefInput<$PrismaModel>
@@ -172,6 +179,16 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type EnumStatutPECWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPECWithAggregatesFilter<$PrismaModel> | $Enums.StatutPEC
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
+}
+
 export type EnumAgentTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.AgentType | Prisma.EnumAgentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.AgentType[] | Prisma.ListEnumAgentTypeFieldRefInput<$PrismaModel>
@@ -198,28 +215,11 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
 }
 
-export type EnumStatutPECFilter<$PrismaModel = never> = {
-  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
-  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatutPECFilter<$PrismaModel> | $Enums.StatutPEC
-}
-
 export type EnumStructureOrganisationnelleTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.StructureOrganisationnelleType | Prisma.EnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel>
   in?: $Enums.StructureOrganisationnelleType[] | Prisma.ListEnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel>
   notIn?: $Enums.StructureOrganisationnelleType[] | Prisma.ListEnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumStructureOrganisationnelleTypeFilter<$PrismaModel> | $Enums.StructureOrganisationnelleType
-}
-
-export type EnumStatutPECWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
-  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatutPECWithAggregatesFilter<$PrismaModel> | $Enums.StatutPEC
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
 }
 
 export type EnumStructureOrganisationnelleTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -374,6 +374,13 @@ export type NestedStringNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringNullableFilter<$PrismaModel> | string | null
 }
 
+export type NestedEnumStatutPECFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPECFilter<$PrismaModel> | $Enums.StatutPEC
+}
+
 export type NestedEnumAgentTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.AgentType | Prisma.EnumAgentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.AgentType[] | Prisma.ListEnumAgentTypeFieldRefInput<$PrismaModel>
@@ -407,6 +414,16 @@ export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedStringNullableFilter<$PrismaModel>
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumStatutPECWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPECWithAggregatesFilter<$PrismaModel> | $Enums.StatutPEC
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
 }
 
 export type NestedEnumAgentTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -446,28 +463,11 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
 }
 
-export type NestedEnumStatutPECFilter<$PrismaModel = never> = {
-  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
-  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatutPECFilter<$PrismaModel> | $Enums.StatutPEC
-}
-
 export type NestedEnumStructureOrganisationnelleTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.StructureOrganisationnelleType | Prisma.EnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel>
   in?: $Enums.StructureOrganisationnelleType[] | Prisma.ListEnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel>
   notIn?: $Enums.StructureOrganisationnelleType[] | Prisma.ListEnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumStructureOrganisationnelleTypeFilter<$PrismaModel> | $Enums.StructureOrganisationnelleType
-}
-
-export type NestedEnumStatutPECWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.StatutPEC | Prisma.EnumStatutPECFieldRefInput<$PrismaModel>
-  in?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  notIn?: $Enums.StatutPEC[] | Prisma.ListEnumStatutPECFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatutPECWithAggregatesFilter<$PrismaModel> | $Enums.StatutPEC
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumStatutPECFilter<$PrismaModel>
 }
 
 export type NestedEnumStructureOrganisationnelleTypeWithAggregatesFilter<$PrismaModel = never> = {

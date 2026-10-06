@@ -37,16 +37,22 @@ export type CategoriePrestataireSumAggregateOutputType = {
 export type CategoriePrestataireMinAggregateOutputType = {
   id: number | null
   nom: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CategoriePrestataireMaxAggregateOutputType = {
   id: number | null
   nom: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CategoriePrestataireCountAggregateOutputType = {
   id: number
   nom: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -62,16 +68,22 @@ export type CategoriePrestataireSumAggregateInputType = {
 export type CategoriePrestataireMinAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type CategoriePrestataireMaxAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type CategoriePrestataireCountAggregateInputType = {
   id?: true
   nom?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -164,6 +176,8 @@ export type CategoriePrestataireGroupByArgs<ExtArgs extends runtime.Types.Extens
 export type CategoriePrestataireGroupByOutputType = {
   id: number
   nom: string
+  createdAt: Date
+  updatedAt: Date
   _count: CategoriePrestataireCountAggregateOutputType | null
   _avg: CategoriePrestataireAvgAggregateOutputType | null
   _sum: CategoriePrestataireSumAggregateOutputType | null
@@ -192,12 +206,16 @@ export type CategoriePrestataireWhereInput = {
   NOT?: Prisma.CategoriePrestataireWhereInput | Prisma.CategoriePrestataireWhereInput[]
   id?: Prisma.IntFilter<"CategoriePrestataire"> | number
   nom?: Prisma.StringFilter<"CategoriePrestataire"> | string
+  createdAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
   prestataires?: Prisma.PrestataireListRelationFilter
 }
 
 export type CategoriePrestataireOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   prestataires?: Prisma.PrestataireOrderByRelationAggregateInput
 }
 
@@ -207,12 +225,16 @@ export type CategoriePrestataireWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CategoriePrestataireWhereInput[]
   NOT?: Prisma.CategoriePrestataireWhereInput | Prisma.CategoriePrestataireWhereInput[]
   nom?: Prisma.StringFilter<"CategoriePrestataire"> | string
+  createdAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
   prestataires?: Prisma.PrestataireListRelationFilter
 }, "id">
 
 export type CategoriePrestataireOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.CategoriePrestataireCountOrderByAggregateInput
   _avg?: Prisma.CategoriePrestataireAvgOrderByAggregateInput
   _max?: Prisma.CategoriePrestataireMaxOrderByAggregateInput
@@ -226,42 +248,58 @@ export type CategoriePrestataireScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CategoriePrestataireScalarWhereWithAggregatesInput | Prisma.CategoriePrestataireScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"CategoriePrestataire"> | number
   nom?: Prisma.StringWithAggregatesFilter<"CategoriePrestataire"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"CategoriePrestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CategoriePrestataire"> | Date | string
 }
 
 export type CategoriePrestataireCreateInput = {
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   prestataires?: Prisma.PrestataireCreateNestedManyWithoutCategorieInput
 }
 
 export type CategoriePrestataireUncheckedCreateInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   prestataires?: Prisma.PrestataireUncheckedCreateNestedManyWithoutCategorieInput
 }
 
 export type CategoriePrestataireUpdateInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataires?: Prisma.PrestataireUpdateManyWithoutCategorieNestedInput
 }
 
 export type CategoriePrestataireUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataires?: Prisma.PrestataireUncheckedUpdateManyWithoutCategorieNestedInput
 }
 
 export type CategoriePrestataireCreateManyInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CategoriePrestataireUpdateManyMutationInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CategoriePrestataireUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CategoriePrestataireScalarRelationFilter = {
@@ -272,6 +310,8 @@ export type CategoriePrestataireScalarRelationFilter = {
 export type CategoriePrestataireCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CategoriePrestataireAvgOrderByAggregateInput = {
@@ -281,11 +321,15 @@ export type CategoriePrestataireAvgOrderByAggregateInput = {
 export type CategoriePrestataireMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CategoriePrestataireMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CategoriePrestataireSumOrderByAggregateInput = {
@@ -308,11 +352,15 @@ export type CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput 
 
 export type CategoriePrestataireCreateWithoutPrestatairesInput = {
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CategoriePrestataireUncheckedCreateWithoutPrestatairesInput = {
   id?: number
   nom: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CategoriePrestataireCreateOrConnectWithoutPrestatairesInput = {
@@ -333,11 +381,15 @@ export type CategoriePrestataireUpdateToOneWithWhereWithoutPrestatairesInput = {
 
 export type CategoriePrestataireUpdateWithoutPrestatairesInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CategoriePrestataireUncheckedUpdateWithoutPrestatairesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -374,6 +426,8 @@ export type CategoriePrestataireCountOutputTypeCountPrestatairesArgs<ExtArgs ext
 export type CategoriePrestataireSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   prestataires?: boolean | Prisma.CategoriePrestataire$prestatairesArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriePrestataireCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoriePrestataire"]>
@@ -381,19 +435,25 @@ export type CategoriePrestataireSelect<ExtArgs extends runtime.Types.Extensions.
 export type CategoriePrestataireSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["categoriePrestataire"]>
 
 export type CategoriePrestataireSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["categoriePrestataire"]>
 
 export type CategoriePrestataireSelectScalar = {
   id?: boolean
   nom?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type CategoriePrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom", ExtArgs["result"]["categoriePrestataire"]>
+export type CategoriePrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "createdAt" | "updatedAt", ExtArgs["result"]["categoriePrestataire"]>
 export type CategoriePrestataireInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestataires?: boolean | Prisma.CategoriePrestataire$prestatairesArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriePrestataireCountOutputTypeDefaultArgs<ExtArgs>
@@ -409,6 +469,8 @@ export type $CategoriePrestatairePayload<ExtArgs extends runtime.Types.Extension
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nom: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["categoriePrestataire"]>
   composites: {}
 }
@@ -835,6 +897,8 @@ export interface Prisma__CategoriePrestataireClient<T, Null = never, ExtArgs ext
 export interface CategoriePrestataireFieldRefs {
   readonly id: Prisma.FieldRef<"CategoriePrestataire", 'Int'>
   readonly nom: Prisma.FieldRef<"CategoriePrestataire", 'String'>
+  readonly createdAt: Prisma.FieldRef<"CategoriePrestataire", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"CategoriePrestataire", 'DateTime'>
 }
     
 

@@ -38,18 +38,24 @@ export type FamilleAgentMinAggregateOutputType = {
   id: number | null
   agentMatricule: string | null
   carteSocialePath: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type FamilleAgentMaxAggregateOutputType = {
   id: number | null
   agentMatricule: string | null
   carteSocialePath: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type FamilleAgentCountAggregateOutputType = {
   id: number
   agentMatricule: number
   carteSocialePath: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -66,18 +72,24 @@ export type FamilleAgentMinAggregateInputType = {
   id?: true
   agentMatricule?: true
   carteSocialePath?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type FamilleAgentMaxAggregateInputType = {
   id?: true
   agentMatricule?: true
   carteSocialePath?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type FamilleAgentCountAggregateInputType = {
   id?: true
   agentMatricule?: true
   carteSocialePath?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -171,6 +183,8 @@ export type FamilleAgentGroupByOutputType = {
   id: number
   agentMatricule: string
   carteSocialePath: string
+  createdAt: Date
+  updatedAt: Date
   _count: FamilleAgentCountAggregateOutputType | null
   _avg: FamilleAgentAvgAggregateOutputType | null
   _sum: FamilleAgentSumAggregateOutputType | null
@@ -200,6 +214,8 @@ export type FamilleAgentWhereInput = {
   id?: Prisma.IntFilter<"FamilleAgent"> | number
   agentMatricule?: Prisma.StringFilter<"FamilleAgent"> | string
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
+  createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   conjoint?: Prisma.XOR<Prisma.ConjointNullableScalarRelationFilter, Prisma.ConjointWhereInput> | null
   enfant?: Prisma.XOR<Prisma.EnfantNullableScalarRelationFilter, Prisma.EnfantWhereInput> | null
   personne?: Prisma.XOR<Prisma.PersonneScalarRelationFilter, Prisma.PersonneWhereInput>
@@ -210,6 +226,8 @@ export type FamilleAgentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   conjoint?: Prisma.ConjointOrderByWithRelationInput
   enfant?: Prisma.EnfantOrderByWithRelationInput
   personne?: Prisma.PersonneOrderByWithRelationInput
@@ -223,6 +241,8 @@ export type FamilleAgentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FamilleAgentWhereInput | Prisma.FamilleAgentWhereInput[]
   agentMatricule?: Prisma.StringFilter<"FamilleAgent"> | string
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
+  createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   conjoint?: Prisma.XOR<Prisma.ConjointNullableScalarRelationFilter, Prisma.ConjointWhereInput> | null
   enfant?: Prisma.XOR<Prisma.EnfantNullableScalarRelationFilter, Prisma.EnfantWhereInput> | null
   personne?: Prisma.XOR<Prisma.PersonneScalarRelationFilter, Prisma.PersonneWhereInput>
@@ -233,6 +253,8 @@ export type FamilleAgentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.FamilleAgentCountOrderByAggregateInput
   _avg?: Prisma.FamilleAgentAvgOrderByAggregateInput
   _max?: Prisma.FamilleAgentMaxOrderByAggregateInput
@@ -247,10 +269,14 @@ export type FamilleAgentScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"FamilleAgent"> | number
   agentMatricule?: Prisma.StringWithAggregatesFilter<"FamilleAgent"> | string
   carteSocialePath?: Prisma.StringWithAggregatesFilter<"FamilleAgent"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"FamilleAgent"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FamilleAgent"> | Date | string
 }
 
 export type FamilleAgentCreateInput = {
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
   enfant?: Prisma.EnfantCreateNestedOneWithoutFamilleAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutFamilleAgentInput
@@ -261,12 +287,16 @@ export type FamilleAgentUncheckedCreateInput = {
   id: number
   agentMatricule: string
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
   enfant?: Prisma.EnfantUncheckedCreateNestedOneWithoutFamilleAgentInput
 }
 
 export type FamilleAgentUpdateInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
   enfant?: Prisma.EnfantUpdateOneWithoutFamilleAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutFamilleAgentNestedInput
@@ -277,6 +307,8 @@ export type FamilleAgentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
   enfant?: Prisma.EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput
 }
@@ -285,16 +317,22 @@ export type FamilleAgentCreateManyInput = {
   id: number
   agentMatricule: string
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FamilleAgentUpdateManyMutationInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FamilleAgentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FamilleAgentNullableScalarRelationFilter = {
@@ -316,6 +354,8 @@ export type FamilleAgentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FamilleAgentAvgOrderByAggregateInput = {
@@ -326,12 +366,16 @@ export type FamilleAgentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FamilleAgentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type FamilleAgentSumOrderByAggregateInput = {
@@ -447,6 +491,8 @@ export type FamilleAgentUpdateOneRequiredWithoutEnfantNestedInput = {
 
 export type FamilleAgentCreateWithoutPersonneInput = {
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
   enfant?: Prisma.EnfantCreateNestedOneWithoutFamilleAgentInput
   agent: Prisma.AgentCreateNestedOneWithoutFamilleAgentInput
@@ -455,6 +501,8 @@ export type FamilleAgentCreateWithoutPersonneInput = {
 export type FamilleAgentUncheckedCreateWithoutPersonneInput = {
   agentMatricule: string
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
   enfant?: Prisma.EnfantUncheckedCreateNestedOneWithoutFamilleAgentInput
 }
@@ -477,6 +525,8 @@ export type FamilleAgentUpdateToOneWithWhereWithoutPersonneInput = {
 
 export type FamilleAgentUpdateWithoutPersonneInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
   enfant?: Prisma.EnfantUpdateOneWithoutFamilleAgentNestedInput
   agent?: Prisma.AgentUpdateOneRequiredWithoutFamilleAgentNestedInput
@@ -485,12 +535,16 @@ export type FamilleAgentUpdateWithoutPersonneInput = {
 export type FamilleAgentUncheckedUpdateWithoutPersonneInput = {
   agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
   enfant?: Prisma.EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput
 }
 
 export type FamilleAgentCreateWithoutAgentInput = {
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
   enfant?: Prisma.EnfantCreateNestedOneWithoutFamilleAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutFamilleAgentInput
@@ -499,6 +553,8 @@ export type FamilleAgentCreateWithoutAgentInput = {
 export type FamilleAgentUncheckedCreateWithoutAgentInput = {
   id: number
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
   enfant?: Prisma.EnfantUncheckedCreateNestedOneWithoutFamilleAgentInput
 }
@@ -536,10 +592,14 @@ export type FamilleAgentScalarWhereInput = {
   id?: Prisma.IntFilter<"FamilleAgent"> | number
   agentMatricule?: Prisma.StringFilter<"FamilleAgent"> | string
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
+  createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
 }
 
 export type FamilleAgentCreateWithoutConjointInput = {
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   enfant?: Prisma.EnfantCreateNestedOneWithoutFamilleAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutFamilleAgentInput
   agent: Prisma.AgentCreateNestedOneWithoutFamilleAgentInput
@@ -549,6 +609,8 @@ export type FamilleAgentUncheckedCreateWithoutConjointInput = {
   id: number
   agentMatricule: string
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   enfant?: Prisma.EnfantUncheckedCreateNestedOneWithoutFamilleAgentInput
 }
 
@@ -570,6 +632,8 @@ export type FamilleAgentUpdateToOneWithWhereWithoutConjointInput = {
 
 export type FamilleAgentUpdateWithoutConjointInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enfant?: Prisma.EnfantUpdateOneWithoutFamilleAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutFamilleAgentNestedInput
   agent?: Prisma.AgentUpdateOneRequiredWithoutFamilleAgentNestedInput
@@ -579,11 +643,15 @@ export type FamilleAgentUncheckedUpdateWithoutConjointInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enfant?: Prisma.EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput
 }
 
 export type FamilleAgentCreateWithoutEnfantInput = {
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutFamilleAgentInput
   agent: Prisma.AgentCreateNestedOneWithoutFamilleAgentInput
@@ -593,6 +661,8 @@ export type FamilleAgentUncheckedCreateWithoutEnfantInput = {
   id: number
   agentMatricule: string
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
 }
 
@@ -614,6 +684,8 @@ export type FamilleAgentUpdateToOneWithWhereWithoutEnfantInput = {
 
 export type FamilleAgentUpdateWithoutEnfantInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutFamilleAgentNestedInput
   agent?: Prisma.AgentUpdateOneRequiredWithoutFamilleAgentNestedInput
@@ -623,16 +695,22 @@ export type FamilleAgentUncheckedUpdateWithoutEnfantInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
 }
 
 export type FamilleAgentCreateManyAgentInput = {
   id: number
   carteSocialePath: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type FamilleAgentUpdateWithoutAgentInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
   enfant?: Prisma.EnfantUpdateOneWithoutFamilleAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutFamilleAgentNestedInput
@@ -641,6 +719,8 @@ export type FamilleAgentUpdateWithoutAgentInput = {
 export type FamilleAgentUncheckedUpdateWithoutAgentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
   enfant?: Prisma.EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput
 }
@@ -648,6 +728,8 @@ export type FamilleAgentUncheckedUpdateWithoutAgentInput = {
 export type FamilleAgentUncheckedUpdateManyWithoutAgentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -656,6 +738,8 @@ export type FamilleAgentSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   conjoint?: boolean | Prisma.FamilleAgent$conjointArgs<ExtArgs>
   enfant?: boolean | Prisma.FamilleAgent$enfantArgs<ExtArgs>
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
@@ -666,6 +750,8 @@ export type FamilleAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["familleAgent"]>
@@ -674,6 +760,8 @@ export type FamilleAgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
   agent?: boolean | Prisma.AgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["familleAgent"]>
@@ -682,9 +770,11 @@ export type FamilleAgentSelectScalar = {
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type FamilleAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentMatricule" | "carteSocialePath", ExtArgs["result"]["familleAgent"]>
+export type FamilleAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentMatricule" | "carteSocialePath" | "createdAt" | "updatedAt", ExtArgs["result"]["familleAgent"]>
 export type FamilleAgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conjoint?: boolean | Prisma.FamilleAgent$conjointArgs<ExtArgs>
   enfant?: boolean | Prisma.FamilleAgent$enfantArgs<ExtArgs>
@@ -712,6 +802,8 @@ export type $FamilleAgentPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: number
     agentMatricule: string
     carteSocialePath: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["familleAgent"]>
   composites: {}
 }
@@ -1142,6 +1234,8 @@ export interface FamilleAgentFieldRefs {
   readonly id: Prisma.FieldRef<"FamilleAgent", 'Int'>
   readonly agentMatricule: Prisma.FieldRef<"FamilleAgent", 'String'>
   readonly carteSocialePath: Prisma.FieldRef<"FamilleAgent", 'String'>
+  readonly createdAt: Prisma.FieldRef<"FamilleAgent", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"FamilleAgent", 'DateTime'>
 }
     
 

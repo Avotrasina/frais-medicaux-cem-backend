@@ -11,6 +11,9 @@ model Attestation {
   prestataire  Prestataire  @relation(fields: [prestataireID], references: [id])
   beneficiaire Beneficiaire @relation(fields: [idpBeneficiaire], references: [idp])
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("attestations")
   @@schema("pec")
 }

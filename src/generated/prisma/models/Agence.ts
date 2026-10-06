@@ -27,16 +27,22 @@ export type AggregateAgence = {
 export type AgenceMinAggregateOutputType = {
   codeAgence: string | null
   nomAgence: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type AgenceMaxAggregateOutputType = {
   codeAgence: string | null
   nomAgence: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type AgenceCountAggregateOutputType = {
   codeAgence: number
   nomAgence: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -44,16 +50,22 @@ export type AgenceCountAggregateOutputType = {
 export type AgenceMinAggregateInputType = {
   codeAgence?: true
   nomAgence?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type AgenceMaxAggregateInputType = {
   codeAgence?: true
   nomAgence?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type AgenceCountAggregateInputType = {
   codeAgence?: true
   nomAgence?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -132,6 +144,8 @@ export type AgenceGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type AgenceGroupByOutputType = {
   codeAgence: string
   nomAgence: string
+  createdAt: Date
+  updatedAt: Date
   _count: AgenceCountAggregateOutputType | null
   _min: AgenceMinAggregateOutputType | null
   _max: AgenceMaxAggregateOutputType | null
@@ -158,12 +172,16 @@ export type AgenceWhereInput = {
   NOT?: Prisma.AgenceWhereInput | Prisma.AgenceWhereInput[]
   codeAgence?: Prisma.StringFilter<"Agence"> | string
   nomAgence?: Prisma.StringFilter<"Agence"> | string
+  createdAt?: Prisma.DateTimeFilter<"Agence"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Agence"> | Date | string
   structure?: Prisma.XOR<Prisma.StructureOrganisationnelleScalarRelationFilter, Prisma.StructureOrganisationnelleWhereInput>
 }
 
 export type AgenceOrderByWithRelationInput = {
   codeAgence?: Prisma.SortOrder
   nomAgence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   structure?: Prisma.StructureOrganisationnelleOrderByWithRelationInput
 }
 
@@ -173,12 +191,16 @@ export type AgenceWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.AgenceWhereInput[]
   NOT?: Prisma.AgenceWhereInput | Prisma.AgenceWhereInput[]
   nomAgence?: Prisma.StringFilter<"Agence"> | string
+  createdAt?: Prisma.DateTimeFilter<"Agence"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Agence"> | Date | string
   structure?: Prisma.XOR<Prisma.StructureOrganisationnelleScalarRelationFilter, Prisma.StructureOrganisationnelleWhereInput>
 }, "codeAgence">
 
 export type AgenceOrderByWithAggregationInput = {
   codeAgence?: Prisma.SortOrder
   nomAgence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.AgenceCountOrderByAggregateInput
   _max?: Prisma.AgenceMaxOrderByAggregateInput
   _min?: Prisma.AgenceMinOrderByAggregateInput
@@ -190,40 +212,56 @@ export type AgenceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AgenceScalarWhereWithAggregatesInput | Prisma.AgenceScalarWhereWithAggregatesInput[]
   codeAgence?: Prisma.StringWithAggregatesFilter<"Agence"> | string
   nomAgence?: Prisma.StringWithAggregatesFilter<"Agence"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Agence"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Agence"> | Date | string
 }
 
 export type AgenceCreateInput = {
   nomAgence: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   structure: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgenceInput
 }
 
 export type AgenceUncheckedCreateInput = {
   codeAgence: string
   nomAgence: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgenceUpdateInput = {
   nomAgence?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   structure?: Prisma.StructureOrganisationnelleUpdateOneRequiredWithoutAgenceNestedInput
 }
 
 export type AgenceUncheckedUpdateInput = {
   codeAgence?: Prisma.StringFieldUpdateOperationsInput | string
   nomAgence?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgenceCreateManyInput = {
   codeAgence: string
   nomAgence: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgenceUpdateManyMutationInput = {
   nomAgence?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgenceUncheckedUpdateManyInput = {
   codeAgence?: Prisma.StringFieldUpdateOperationsInput | string
   nomAgence?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgenceNullableScalarRelationFilter = {
@@ -234,16 +272,22 @@ export type AgenceNullableScalarRelationFilter = {
 export type AgenceCountOrderByAggregateInput = {
   codeAgence?: Prisma.SortOrder
   nomAgence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AgenceMaxOrderByAggregateInput = {
   codeAgence?: Prisma.SortOrder
   nomAgence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AgenceMinOrderByAggregateInput = {
   codeAgence?: Prisma.SortOrder
   nomAgence?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AgenceCreateNestedOneWithoutStructureInput = {
@@ -280,10 +324,14 @@ export type AgenceUncheckedUpdateOneWithoutStructureNestedInput = {
 
 export type AgenceCreateWithoutStructureInput = {
   nomAgence: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgenceUncheckedCreateWithoutStructureInput = {
   nomAgence: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgenceCreateOrConnectWithoutStructureInput = {
@@ -304,10 +352,14 @@ export type AgenceUpdateToOneWithWhereWithoutStructureInput = {
 
 export type AgenceUpdateWithoutStructureInput = {
   nomAgence?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgenceUncheckedUpdateWithoutStructureInput = {
   nomAgence?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -315,27 +367,35 @@ export type AgenceUncheckedUpdateWithoutStructureInput = {
 export type AgenceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   codeAgence?: boolean
   nomAgence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agence"]>
 
 export type AgenceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   codeAgence?: boolean
   nomAgence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agence"]>
 
 export type AgenceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   codeAgence?: boolean
   nomAgence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agence"]>
 
 export type AgenceSelectScalar = {
   codeAgence?: boolean
   nomAgence?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type AgenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeAgence" | "nomAgence", ExtArgs["result"]["agence"]>
+export type AgenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeAgence" | "nomAgence" | "createdAt" | "updatedAt", ExtArgs["result"]["agence"]>
 export type AgenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
 }
@@ -354,6 +414,8 @@ export type $AgencePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     codeAgence: string
     nomAgence: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["agence"]>
   composites: {}
 }
@@ -780,6 +842,8 @@ export interface Prisma__AgenceClient<T, Null = never, ExtArgs extends runtime.T
 export interface AgenceFieldRefs {
   readonly codeAgence: Prisma.FieldRef<"Agence", 'String'>
   readonly nomAgence: Prisma.FieldRef<"Agence", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Agence", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Agence", 'DateTime'>
 }
     
 

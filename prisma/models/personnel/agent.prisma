@@ -12,6 +12,7 @@ model Agent {
   observationMatricule     String?   @map("observation_matricule")
   carteProfessionnellePath String    @map("carte_professionnelle_path") @db.VarChar(50)
   dateEntree               DateTime  @map("dt_entree")
+  statutPEC                StatutPEC @map("statut_pec")
   agentType                AgentType @default(AGENT_ACTIF) @map("agent_type")
 
   familleAgent FamilleAgent[]
@@ -28,6 +29,9 @@ model Agent {
   fonction                   Fonction?                   @relation(fields: [fonctionID], references: [id])
   categorie                  CategorieAgent?             @relation(fields: [categorieID], references: [codeCategory])
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("agents")
   @@schema("personnel")
 }
@@ -37,6 +41,9 @@ model Fonction {
   nom    String
   agents Agent[]
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("fonctions")
   @@schema("personnel")
 }
@@ -45,6 +52,9 @@ model CategorieAgent {
   id           Int     @id @default(autoincrement())
   codeCategory String  @unique @map("code_category")
   agents       Agent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("categories_agents")
   @@schema("personnel")

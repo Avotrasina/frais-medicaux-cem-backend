@@ -1660,7 +1660,9 @@ export const PersonneScalarFieldEnum = {
   nom: 'nom',
   prenom: 'prenom',
   dateNaissance: 'dateNaissance',
-  sexe: 'sexe'
+  sexe: 'sexe',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PersonneScalarFieldEnum = (typeof PersonneScalarFieldEnum)[keyof typeof PersonneScalarFieldEnum]
@@ -1672,11 +1674,14 @@ export const AgentScalarFieldEnum = {
   observationMatricule: 'observationMatricule',
   carteProfessionnellePath: 'carteProfessionnellePath',
   dateEntree: 'dateEntree',
+  statutPEC: 'statutPEC',
   agentType: 'agentType',
   structureID: 'structureID',
   serviceID: 'serviceID',
   fonctionID: 'fonctionID',
-  categorieID: 'categorieID'
+  categorieID: 'categorieID',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof AgentScalarFieldEnum]
@@ -1684,7 +1689,9 @@ export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof Ag
 
 export const FonctionScalarFieldEnum = {
   id: 'id',
-  nom: 'nom'
+  nom: 'nom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type FonctionScalarFieldEnum = (typeof FonctionScalarFieldEnum)[keyof typeof FonctionScalarFieldEnum]
@@ -1692,7 +1699,9 @@ export type FonctionScalarFieldEnum = (typeof FonctionScalarFieldEnum)[keyof typ
 
 export const CategorieAgentScalarFieldEnum = {
   id: 'id',
-  codeCategory: 'codeCategory'
+  codeCategory: 'codeCategory',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CategorieAgentScalarFieldEnum = (typeof CategorieAgentScalarFieldEnum)[keyof typeof CategorieAgentScalarFieldEnum]
@@ -1700,7 +1709,9 @@ export type CategorieAgentScalarFieldEnum = (typeof CategorieAgentScalarFieldEnu
 
 export const DirectionScalarFieldEnum = {
   codeDirection: 'codeDirection',
-  nom: 'nom'
+  nom: 'nom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type DirectionScalarFieldEnum = (typeof DirectionScalarFieldEnum)[keyof typeof DirectionScalarFieldEnum]
@@ -1709,7 +1720,9 @@ export type DirectionScalarFieldEnum = (typeof DirectionScalarFieldEnum)[keyof t
 export const ServiceScalarFieldEnum = {
   codeService: 'codeService',
   nom: 'nom',
-  codeDirection: 'codeDirection'
+  codeDirection: 'codeDirection',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
@@ -1718,7 +1731,9 @@ export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeo
 export const FamilleAgentScalarFieldEnum = {
   id: 'id',
   agentMatricule: 'agentMatricule',
-  carteSocialePath: 'carteSocialePath'
+  carteSocialePath: 'carteSocialePath',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type FamilleAgentScalarFieldEnum = (typeof FamilleAgentScalarFieldEnum)[keyof typeof FamilleAgentScalarFieldEnum]
@@ -1726,7 +1741,9 @@ export type FamilleAgentScalarFieldEnum = (typeof FamilleAgentScalarFieldEnum)[k
 
 export const ConjointScalarFieldEnum = {
   id: 'id',
-  numConjoint: 'numConjoint'
+  numConjoint: 'numConjoint',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ConjointScalarFieldEnum = (typeof ConjointScalarFieldEnum)[keyof typeof ConjointScalarFieldEnum]
@@ -1734,7 +1751,9 @@ export type ConjointScalarFieldEnum = (typeof ConjointScalarFieldEnum)[keyof typ
 
 export const EnfantScalarFieldEnum = {
   id: 'id',
-  numEnfant: 'numEnfant'
+  numEnfant: 'numEnfant',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type EnfantScalarFieldEnum = (typeof EnfantScalarFieldEnum)[keyof typeof EnfantScalarFieldEnum]
@@ -1742,8 +1761,9 @@ export type EnfantScalarFieldEnum = (typeof EnfantScalarFieldEnum)[keyof typeof 
 
 export const StructureOrganisationnelleScalarFieldEnum = {
   id: 'id',
-  statutPEC: 'statutPEC',
-  structureOrganisationnelleType: 'structureOrganisationnelleType'
+  structureOrganisationnelleType: 'structureOrganisationnelleType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type StructureOrganisationnelleScalarFieldEnum = (typeof StructureOrganisationnelleScalarFieldEnum)[keyof typeof StructureOrganisationnelleScalarFieldEnum]
@@ -1751,7 +1771,9 @@ export type StructureOrganisationnelleScalarFieldEnum = (typeof StructureOrganis
 
 export const AgenceScalarFieldEnum = {
   codeAgence: 'codeAgence',
-  nomAgence: 'nomAgence'
+  nomAgence: 'nomAgence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type AgenceScalarFieldEnum = (typeof AgenceScalarFieldEnum)[keyof typeof AgenceScalarFieldEnum]
@@ -1764,7 +1786,9 @@ export const AttestationScalarFieldEnum = {
   naturePrestation: 'naturePrestation',
   servicePrestataire: 'servicePrestataire',
   prestataireID: 'prestataireID',
-  idpBeneficiaire: 'idpBeneficiaire'
+  idpBeneficiaire: 'idpBeneficiaire',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type AttestationScalarFieldEnum = (typeof AttestationScalarFieldEnum)[keyof typeof AttestationScalarFieldEnum]
@@ -1773,7 +1797,9 @@ export type AttestationScalarFieldEnum = (typeof AttestationScalarFieldEnum)[key
 export const BeneficiaireScalarFieldEnum = {
   id: 'id',
   idp: 'idp',
-  observationIDP: 'observationIDP'
+  observationIDP: 'observationIDP',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type BeneficiaireScalarFieldEnum = (typeof BeneficiaireScalarFieldEnum)[keyof typeof BeneficiaireScalarFieldEnum]
@@ -1790,7 +1816,9 @@ export const PrestataireScalarFieldEnum = {
   dateFinConvention: 'dateFinConvention',
   listePrestation: 'listePrestation',
   lieuID: 'lieuID',
-  categorieID: 'categorieID'
+  categorieID: 'categorieID',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PrestataireScalarFieldEnum = (typeof PrestataireScalarFieldEnum)[keyof typeof PrestataireScalarFieldEnum]
@@ -1798,7 +1826,9 @@ export type PrestataireScalarFieldEnum = (typeof PrestataireScalarFieldEnum)[key
 
 export const LieuScalarFieldEnum = {
   id: 'id',
-  nom: 'nom'
+  nom: 'nom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type LieuScalarFieldEnum = (typeof LieuScalarFieldEnum)[keyof typeof LieuScalarFieldEnum]
@@ -1806,7 +1836,9 @@ export type LieuScalarFieldEnum = (typeof LieuScalarFieldEnum)[keyof typeof Lieu
 
 export const CategoriePrestataireScalarFieldEnum = {
   id: 'id',
-  nom: 'nom'
+  nom: 'nom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CategoriePrestataireScalarFieldEnum = (typeof CategoriePrestataireScalarFieldEnum)[keyof typeof CategoriePrestataireScalarFieldEnum]
@@ -1899,20 +1931,6 @@ export type ListEnumSexeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'AgentType'
- */
-export type EnumAgentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentType'>
-    
-
-
-/**
- * Reference to a field of type 'AgentType[]'
- */
-export type ListEnumAgentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentType[]'>
-    
-
-
-/**
  * Reference to a field of type 'StatutPEC'
  */
 export type EnumStatutPECFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutPEC'>
@@ -1923,6 +1941,20 @@ export type EnumStatutPECFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
  * Reference to a field of type 'StatutPEC[]'
  */
 export type ListEnumStatutPECFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutPEC[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AgentType'
+ */
+export type EnumAgentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentType'>
+    
+
+
+/**
+ * Reference to a field of type 'AgentType[]'
+ */
+export type ListEnumAgentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentType[]'>
     
 
 

@@ -18,13 +18,15 @@ enum StructureOrganisationnelleType {
 
 model StructureOrganisationnelle {
   id                             String                         @id
-  statutPEC                      StatutPEC                      @map("statut_pec")
   structureOrganisationnelleType StructureOrganisationnelleType @map("structure_organisationnelle_type")
 
   agence    Agence?
   direction Direction?
 
   agents Agent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("structure_organisationnelle")
   @@schema("personnel")
@@ -35,6 +37,9 @@ model Agence {
   nomAgence  String @map("nom_agence")
 
   structure StructureOrganisationnelle @relation(fields: [codeAgence], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("agences")
   @@schema("personnel")

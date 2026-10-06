@@ -42,11 +42,14 @@ export type AgentMinAggregateOutputType = {
   observationMatricule: string | null
   carteProfessionnellePath: string | null
   dateEntree: Date | null
+  statutPEC: $Enums.StatutPEC | null
   agentType: $Enums.AgentType | null
   structureID: string | null
   serviceID: string | null
   fonctionID: number | null
   categorieID: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type AgentMaxAggregateOutputType = {
@@ -55,11 +58,14 @@ export type AgentMaxAggregateOutputType = {
   observationMatricule: string | null
   carteProfessionnellePath: string | null
   dateEntree: Date | null
+  statutPEC: $Enums.StatutPEC | null
   agentType: $Enums.AgentType | null
   structureID: string | null
   serviceID: string | null
   fonctionID: number | null
   categorieID: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type AgentCountAggregateOutputType = {
@@ -68,11 +74,14 @@ export type AgentCountAggregateOutputType = {
   observationMatricule: number
   carteProfessionnellePath: number
   dateEntree: number
+  statutPEC: number
   agentType: number
   structureID: number
   serviceID: number
   fonctionID: number
   categorieID: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -93,11 +102,14 @@ export type AgentMinAggregateInputType = {
   observationMatricule?: true
   carteProfessionnellePath?: true
   dateEntree?: true
+  statutPEC?: true
   agentType?: true
   structureID?: true
   serviceID?: true
   fonctionID?: true
   categorieID?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type AgentMaxAggregateInputType = {
@@ -106,11 +118,14 @@ export type AgentMaxAggregateInputType = {
   observationMatricule?: true
   carteProfessionnellePath?: true
   dateEntree?: true
+  statutPEC?: true
   agentType?: true
   structureID?: true
   serviceID?: true
   fonctionID?: true
   categorieID?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type AgentCountAggregateInputType = {
@@ -119,11 +134,14 @@ export type AgentCountAggregateInputType = {
   observationMatricule?: true
   carteProfessionnellePath?: true
   dateEntree?: true
+  statutPEC?: true
   agentType?: true
   structureID?: true
   serviceID?: true
   fonctionID?: true
   categorieID?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -219,11 +237,14 @@ export type AgentGroupByOutputType = {
   observationMatricule: string | null
   carteProfessionnellePath: string
   dateEntree: Date
+  statutPEC: $Enums.StatutPEC
   agentType: $Enums.AgentType
   structureID: string | null
   serviceID: string | null
   fonctionID: number | null
   categorieID: string | null
+  createdAt: Date
+  updatedAt: Date
   _count: AgentCountAggregateOutputType | null
   _avg: AgentAvgAggregateOutputType | null
   _sum: AgentSumAggregateOutputType | null
@@ -255,11 +276,14 @@ export type AgentWhereInput = {
   observationMatricule?: Prisma.StringNullableFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
+  statutPEC?: Prisma.EnumStatutPECFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFilter<"Agent"> | $Enums.AgentType
   structureID?: Prisma.StringNullableFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableFilter<"Agent"> | string | null
   fonctionID?: Prisma.IntNullableFilter<"Agent"> | number | null
   categorieID?: Prisma.StringNullableFilter<"Agent"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
   familleAgent?: Prisma.FamilleAgentListRelationFilter
   personne?: Prisma.XOR<Prisma.PersonneScalarRelationFilter, Prisma.PersonneWhereInput>
   structureOrganisationnelle?: Prisma.XOR<Prisma.StructureOrganisationnelleNullableScalarRelationFilter, Prisma.StructureOrganisationnelleWhereInput> | null
@@ -274,11 +298,14 @@ export type AgentOrderByWithRelationInput = {
   observationMatricule?: Prisma.SortOrderInput | Prisma.SortOrder
   carteProfessionnellePath?: Prisma.SortOrder
   dateEntree?: Prisma.SortOrder
+  statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
   structureID?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceID?: Prisma.SortOrderInput | Prisma.SortOrder
   fonctionID?: Prisma.SortOrderInput | Prisma.SortOrder
   categorieID?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   familleAgent?: Prisma.FamilleAgentOrderByRelationAggregateInput
   personne?: Prisma.PersonneOrderByWithRelationInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleOrderByWithRelationInput
@@ -296,11 +323,14 @@ export type AgentWhereUniqueInput = Prisma.AtLeast<{
   observationMatricule?: Prisma.StringNullableFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
+  statutPEC?: Prisma.EnumStatutPECFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFilter<"Agent"> | $Enums.AgentType
   structureID?: Prisma.StringNullableFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableFilter<"Agent"> | string | null
   fonctionID?: Prisma.IntNullableFilter<"Agent"> | number | null
   categorieID?: Prisma.StringNullableFilter<"Agent"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
   familleAgent?: Prisma.FamilleAgentListRelationFilter
   personne?: Prisma.XOR<Prisma.PersonneScalarRelationFilter, Prisma.PersonneWhereInput>
   structureOrganisationnelle?: Prisma.XOR<Prisma.StructureOrganisationnelleNullableScalarRelationFilter, Prisma.StructureOrganisationnelleWhereInput> | null
@@ -315,11 +345,14 @@ export type AgentOrderByWithAggregationInput = {
   observationMatricule?: Prisma.SortOrderInput | Prisma.SortOrder
   carteProfessionnellePath?: Prisma.SortOrder
   dateEntree?: Prisma.SortOrder
+  statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
   structureID?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceID?: Prisma.SortOrderInput | Prisma.SortOrder
   fonctionID?: Prisma.SortOrderInput | Prisma.SortOrder
   categorieID?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.AgentCountOrderByAggregateInput
   _avg?: Prisma.AgentAvgOrderByAggregateInput
   _max?: Prisma.AgentMaxOrderByAggregateInput
@@ -336,11 +369,14 @@ export type AgentScalarWhereWithAggregatesInput = {
   observationMatricule?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringWithAggregatesFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeWithAggregatesFilter<"Agent"> | Date | string
+  statutPEC?: Prisma.EnumStatutPECWithAggregatesFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeWithAggregatesFilter<"Agent"> | $Enums.AgentType
   structureID?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
   fonctionID?: Prisma.IntNullableWithAggregatesFilter<"Agent"> | number | null
   categorieID?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Agent"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Agent"> | Date | string
 }
 
 export type AgentCreateInput = {
@@ -348,7 +384,10 @@ export type AgentCreateInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedManyWithoutAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutAgentInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgentsInput
@@ -363,11 +402,14 @@ export type AgentUncheckedCreateInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedManyWithoutAgentInput
 }
 
@@ -376,7 +418,10 @@ export type AgentUpdateInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateManyWithoutAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutAgentNestedInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleUpdateOneWithoutAgentsNestedInput
@@ -391,11 +436,14 @@ export type AgentUncheckedUpdateInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateManyWithoutAgentNestedInput
 }
 
@@ -405,11 +453,14 @@ export type AgentCreateManyInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgentUpdateManyMutationInput = {
@@ -417,7 +468,10 @@ export type AgentUpdateManyMutationInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgentUncheckedUpdateManyInput = {
@@ -426,11 +480,14 @@ export type AgentUncheckedUpdateManyInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgentNullableScalarRelationFilter = {
@@ -444,11 +501,14 @@ export type AgentCountOrderByAggregateInput = {
   observationMatricule?: Prisma.SortOrder
   carteProfessionnellePath?: Prisma.SortOrder
   dateEntree?: Prisma.SortOrder
+  statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
   structureID?: Prisma.SortOrder
   serviceID?: Prisma.SortOrder
   fonctionID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AgentAvgOrderByAggregateInput = {
@@ -462,11 +522,14 @@ export type AgentMaxOrderByAggregateInput = {
   observationMatricule?: Prisma.SortOrder
   carteProfessionnellePath?: Prisma.SortOrder
   dateEntree?: Prisma.SortOrder
+  statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
   structureID?: Prisma.SortOrder
   serviceID?: Prisma.SortOrder
   fonctionID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AgentMinOrderByAggregateInput = {
@@ -475,11 +538,14 @@ export type AgentMinOrderByAggregateInput = {
   observationMatricule?: Prisma.SortOrder
   carteProfessionnellePath?: Prisma.SortOrder
   dateEntree?: Prisma.SortOrder
+  statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
   structureID?: Prisma.SortOrder
   serviceID?: Prisma.SortOrder
   fonctionID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type AgentSumOrderByAggregateInput = {
@@ -536,6 +602,10 @@ export type AgentUncheckedUpdateOneWithoutPersonneNestedInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type EnumStatutPECFieldUpdateOperationsInput = {
+  set?: $Enums.StatutPEC
 }
 
 export type EnumAgentTypeFieldUpdateOperationsInput = {
@@ -737,7 +807,10 @@ export type AgentCreateWithoutPersonneInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedManyWithoutAgentInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgentsInput
   service?: Prisma.ServiceCreateNestedOneWithoutAgentsInput
@@ -750,11 +823,14 @@ export type AgentUncheckedCreateWithoutPersonneInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedManyWithoutAgentInput
 }
 
@@ -779,7 +855,10 @@ export type AgentUpdateWithoutPersonneInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateManyWithoutAgentNestedInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleUpdateOneWithoutAgentsNestedInput
   service?: Prisma.ServiceUpdateOneWithoutAgentsNestedInput
@@ -792,11 +871,14 @@ export type AgentUncheckedUpdateWithoutPersonneInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateManyWithoutAgentNestedInput
 }
 
@@ -805,7 +887,10 @@ export type AgentCreateWithoutFonctionInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedManyWithoutAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutAgentInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgentsInput
@@ -819,10 +904,13 @@ export type AgentUncheckedCreateWithoutFonctionInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedManyWithoutAgentInput
 }
 
@@ -861,11 +949,14 @@ export type AgentScalarWhereInput = {
   observationMatricule?: Prisma.StringNullableFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
+  statutPEC?: Prisma.EnumStatutPECFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFilter<"Agent"> | $Enums.AgentType
   structureID?: Prisma.StringNullableFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableFilter<"Agent"> | string | null
   fonctionID?: Prisma.IntNullableFilter<"Agent"> | number | null
   categorieID?: Prisma.StringNullableFilter<"Agent"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
 }
 
 export type AgentCreateWithoutCategorieInput = {
@@ -873,7 +964,10 @@ export type AgentCreateWithoutCategorieInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedManyWithoutAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutAgentInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgentsInput
@@ -887,10 +981,13 @@ export type AgentUncheckedCreateWithoutCategorieInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   fonctionID?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedManyWithoutAgentInput
 }
 
@@ -925,7 +1022,10 @@ export type AgentCreateWithoutServiceInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedManyWithoutAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutAgentInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgentsInput
@@ -939,10 +1039,13 @@ export type AgentUncheckedCreateWithoutServiceInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedManyWithoutAgentInput
 }
 
@@ -977,7 +1080,10 @@ export type AgentCreateWithoutFamilleAgentInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   personne: Prisma.PersonneCreateNestedOneWithoutAgentInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleCreateNestedOneWithoutAgentsInput
   service?: Prisma.ServiceCreateNestedOneWithoutAgentsInput
@@ -991,11 +1097,14 @@ export type AgentUncheckedCreateWithoutFamilleAgentInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgentCreateOrConnectWithoutFamilleAgentInput = {
@@ -1019,7 +1128,10 @@ export type AgentUpdateWithoutFamilleAgentInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personne?: Prisma.PersonneUpdateOneRequiredWithoutAgentNestedInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleUpdateOneWithoutAgentsNestedInput
   service?: Prisma.ServiceUpdateOneWithoutAgentsNestedInput
@@ -1033,11 +1145,14 @@ export type AgentUncheckedUpdateWithoutFamilleAgentInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgentCreateWithoutStructureOrganisationnelleInput = {
@@ -1045,7 +1160,10 @@ export type AgentCreateWithoutStructureOrganisationnelleInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedManyWithoutAgentInput
   personne: Prisma.PersonneCreateNestedOneWithoutAgentInput
   service?: Prisma.ServiceCreateNestedOneWithoutAgentsInput
@@ -1059,10 +1177,13 @@ export type AgentUncheckedCreateWithoutStructureOrganisationnelleInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   serviceID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedManyWithoutAgentInput
 }
 
@@ -1098,10 +1219,13 @@ export type AgentCreateManyFonctionInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgentUpdateWithoutFonctionInput = {
@@ -1109,7 +1233,10 @@ export type AgentUpdateWithoutFonctionInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateManyWithoutAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutAgentNestedInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleUpdateOneWithoutAgentsNestedInput
@@ -1123,10 +1250,13 @@ export type AgentUncheckedUpdateWithoutFonctionInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateManyWithoutAgentNestedInput
 }
 
@@ -1136,10 +1266,13 @@ export type AgentUncheckedUpdateManyWithoutFonctionInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgentCreateManyCategorieInput = {
@@ -1148,10 +1281,13 @@ export type AgentCreateManyCategorieInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   serviceID?: string | null
   fonctionID?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgentUpdateWithoutCategorieInput = {
@@ -1159,7 +1295,10 @@ export type AgentUpdateWithoutCategorieInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateManyWithoutAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutAgentNestedInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleUpdateOneWithoutAgentsNestedInput
@@ -1173,10 +1312,13 @@ export type AgentUncheckedUpdateWithoutCategorieInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateManyWithoutAgentNestedInput
 }
 
@@ -1186,10 +1328,13 @@ export type AgentUncheckedUpdateManyWithoutCategorieInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgentCreateManyServiceInput = {
@@ -1198,10 +1343,13 @@ export type AgentCreateManyServiceInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   structureID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgentUpdateWithoutServiceInput = {
@@ -1209,7 +1357,10 @@ export type AgentUpdateWithoutServiceInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateManyWithoutAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutAgentNestedInput
   structureOrganisationnelle?: Prisma.StructureOrganisationnelleUpdateOneWithoutAgentsNestedInput
@@ -1223,10 +1374,13 @@ export type AgentUncheckedUpdateWithoutServiceInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateManyWithoutAgentNestedInput
 }
 
@@ -1236,10 +1390,13 @@ export type AgentUncheckedUpdateManyWithoutServiceInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AgentCreateManyStructureOrganisationnelleInput = {
@@ -1248,10 +1405,13 @@ export type AgentCreateManyStructureOrganisationnelleInput = {
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
+  statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
   serviceID?: string | null
   fonctionID?: number | null
   categorieID?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type AgentUpdateWithoutStructureOrganisationnelleInput = {
@@ -1259,7 +1419,10 @@ export type AgentUpdateWithoutStructureOrganisationnelleInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateManyWithoutAgentNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutAgentNestedInput
   service?: Prisma.ServiceUpdateOneWithoutAgentsNestedInput
@@ -1273,10 +1436,13 @@ export type AgentUncheckedUpdateWithoutStructureOrganisationnelleInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateManyWithoutAgentNestedInput
 }
 
@@ -1286,10 +1452,13 @@ export type AgentUncheckedUpdateManyWithoutStructureOrganisationnelleInput = {
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonctionID?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1329,11 +1498,14 @@ export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   observationMatricule?: boolean
   carteProfessionnellePath?: boolean
   dateEntree?: boolean
+  statutPEC?: boolean
   agentType?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonctionID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.Agent$familleAgentArgs<ExtArgs>
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
   structureOrganisationnelle?: boolean | Prisma.Agent$structureOrganisationnelleArgs<ExtArgs>
@@ -1349,11 +1521,14 @@ export type AgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   observationMatricule?: boolean
   carteProfessionnellePath?: boolean
   dateEntree?: boolean
+  statutPEC?: boolean
   agentType?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonctionID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
   structureOrganisationnelle?: boolean | Prisma.Agent$structureOrganisationnelleArgs<ExtArgs>
   service?: boolean | Prisma.Agent$serviceArgs<ExtArgs>
@@ -1367,11 +1542,14 @@ export type AgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   observationMatricule?: boolean
   carteProfessionnellePath?: boolean
   dateEntree?: boolean
+  statutPEC?: boolean
   agentType?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonctionID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
   structureOrganisationnelle?: boolean | Prisma.Agent$structureOrganisationnelleArgs<ExtArgs>
   service?: boolean | Prisma.Agent$serviceArgs<ExtArgs>
@@ -1385,14 +1563,17 @@ export type AgentSelectScalar = {
   observationMatricule?: boolean
   carteProfessionnellePath?: boolean
   dateEntree?: boolean
+  statutPEC?: boolean
   agentType?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonctionID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type AgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matricule" | "observationMatricule" | "carteProfessionnellePath" | "dateEntree" | "agentType" | "structureID" | "serviceID" | "fonctionID" | "categorieID", ExtArgs["result"]["agent"]>
+export type AgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matricule" | "observationMatricule" | "carteProfessionnellePath" | "dateEntree" | "statutPEC" | "agentType" | "structureID" | "serviceID" | "fonctionID" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["agent"]>
 export type AgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   familleAgent?: boolean | Prisma.Agent$familleAgentArgs<ExtArgs>
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
@@ -1433,11 +1614,14 @@ export type $AgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     observationMatricule: string | null
     carteProfessionnellePath: string
     dateEntree: Date
+    statutPEC: $Enums.StatutPEC
     agentType: $Enums.AgentType
     structureID: string | null
     serviceID: string | null
     fonctionID: number | null
     categorieID: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["agent"]>
   composites: {}
 }
@@ -1872,11 +2056,14 @@ export interface AgentFieldRefs {
   readonly observationMatricule: Prisma.FieldRef<"Agent", 'String'>
   readonly carteProfessionnellePath: Prisma.FieldRef<"Agent", 'String'>
   readonly dateEntree: Prisma.FieldRef<"Agent", 'DateTime'>
+  readonly statutPEC: Prisma.FieldRef<"Agent", 'StatutPEC'>
   readonly agentType: Prisma.FieldRef<"Agent", 'AgentType'>
   readonly structureID: Prisma.FieldRef<"Agent", 'String'>
   readonly serviceID: Prisma.FieldRef<"Agent", 'String'>
   readonly fonctionID: Prisma.FieldRef<"Agent", 'Int'>
   readonly categorieID: Prisma.FieldRef<"Agent", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Agent", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Agent", 'DateTime'>
 }
     
 

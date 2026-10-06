@@ -38,18 +38,24 @@ export type BeneficiaireMinAggregateOutputType = {
   id: number | null
   idp: string | null
   observationIDP: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type BeneficiaireMaxAggregateOutputType = {
   id: number | null
   idp: string | null
   observationIDP: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type BeneficiaireCountAggregateOutputType = {
   id: number
   idp: number
   observationIDP: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -66,18 +72,24 @@ export type BeneficiaireMinAggregateInputType = {
   id?: true
   idp?: true
   observationIDP?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type BeneficiaireMaxAggregateInputType = {
   id?: true
   idp?: true
   observationIDP?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type BeneficiaireCountAggregateInputType = {
   id?: true
   idp?: true
   observationIDP?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -171,6 +183,8 @@ export type BeneficiaireGroupByOutputType = {
   id: number
   idp: string
   observationIDP: string | null
+  createdAt: Date
+  updatedAt: Date
   _count: BeneficiaireCountAggregateOutputType | null
   _avg: BeneficiaireAvgAggregateOutputType | null
   _sum: BeneficiaireSumAggregateOutputType | null
@@ -200,6 +214,8 @@ export type BeneficiaireWhereInput = {
   id?: Prisma.IntFilter<"Beneficiaire"> | number
   idp?: Prisma.StringFilter<"Beneficiaire"> | string
   observationIDP?: Prisma.StringNullableFilter<"Beneficiaire"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Beneficiaire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Beneficiaire"> | Date | string
   attestations?: Prisma.AttestationListRelationFilter
   personne?: Prisma.XOR<Prisma.PersonneScalarRelationFilter, Prisma.PersonneWhereInput>
 }
@@ -208,6 +224,8 @@ export type BeneficiaireOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   idp?: Prisma.SortOrder
   observationIDP?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   attestations?: Prisma.AttestationOrderByRelationAggregateInput
   personne?: Prisma.PersonneOrderByWithRelationInput
 }
@@ -219,6 +237,8 @@ export type BeneficiaireWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.BeneficiaireWhereInput[]
   NOT?: Prisma.BeneficiaireWhereInput | Prisma.BeneficiaireWhereInput[]
   observationIDP?: Prisma.StringNullableFilter<"Beneficiaire"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Beneficiaire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Beneficiaire"> | Date | string
   attestations?: Prisma.AttestationListRelationFilter
   personne?: Prisma.XOR<Prisma.PersonneScalarRelationFilter, Prisma.PersonneWhereInput>
 }, "id" | "idp">
@@ -227,6 +247,8 @@ export type BeneficiaireOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   idp?: Prisma.SortOrder
   observationIDP?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.BeneficiaireCountOrderByAggregateInput
   _avg?: Prisma.BeneficiaireAvgOrderByAggregateInput
   _max?: Prisma.BeneficiaireMaxOrderByAggregateInput
@@ -241,11 +263,15 @@ export type BeneficiaireScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Beneficiaire"> | number
   idp?: Prisma.StringWithAggregatesFilter<"Beneficiaire"> | string
   observationIDP?: Prisma.StringNullableWithAggregatesFilter<"Beneficiaire"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Beneficiaire"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Beneficiaire"> | Date | string
 }
 
 export type BeneficiaireCreateInput = {
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutBeneficiaireInput
   personne: Prisma.PersonneCreateNestedOneWithoutBeneficiaireInput
 }
@@ -254,12 +280,16 @@ export type BeneficiaireUncheckedCreateInput = {
   id: number
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutBeneficiaireInput
 }
 
 export type BeneficiaireUpdateInput = {
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutBeneficiaireNestedInput
   personne?: Prisma.PersonneUpdateOneRequiredWithoutBeneficiaireNestedInput
 }
@@ -268,6 +298,8 @@ export type BeneficiaireUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutBeneficiaireNestedInput
 }
 
@@ -275,17 +307,23 @@ export type BeneficiaireCreateManyInput = {
   id: number
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type BeneficiaireUpdateManyMutationInput = {
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaireUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaireNullableScalarRelationFilter = {
@@ -302,6 +340,8 @@ export type BeneficiaireCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   idp?: Prisma.SortOrder
   observationIDP?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type BeneficiaireAvgOrderByAggregateInput = {
@@ -312,12 +352,16 @@ export type BeneficiaireMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   idp?: Prisma.SortOrder
   observationIDP?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type BeneficiaireMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   idp?: Prisma.SortOrder
   observationIDP?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type BeneficiaireSumOrderByAggregateInput = {
@@ -373,12 +417,16 @@ export type BeneficiaireUpdateOneRequiredWithoutAttestationsNestedInput = {
 export type BeneficiaireCreateWithoutPersonneInput = {
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutBeneficiaireInput
 }
 
 export type BeneficiaireUncheckedCreateWithoutPersonneInput = {
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutBeneficiaireInput
 }
 
@@ -401,18 +449,24 @@ export type BeneficiaireUpdateToOneWithWhereWithoutPersonneInput = {
 export type BeneficiaireUpdateWithoutPersonneInput = {
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutBeneficiaireNestedInput
 }
 
 export type BeneficiaireUncheckedUpdateWithoutPersonneInput = {
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutBeneficiaireNestedInput
 }
 
 export type BeneficiaireCreateWithoutAttestationsInput = {
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   personne: Prisma.PersonneCreateNestedOneWithoutBeneficiaireInput
 }
 
@@ -420,6 +474,8 @@ export type BeneficiaireUncheckedCreateWithoutAttestationsInput = {
   id: number
   idp: string
   observationIDP?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type BeneficiaireCreateOrConnectWithoutAttestationsInput = {
@@ -441,6 +497,8 @@ export type BeneficiaireUpdateToOneWithWhereWithoutAttestationsInput = {
 export type BeneficiaireUpdateWithoutAttestationsInput = {
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   personne?: Prisma.PersonneUpdateOneRequiredWithoutBeneficiaireNestedInput
 }
 
@@ -448,6 +506,8 @@ export type BeneficiaireUncheckedUpdateWithoutAttestationsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   idp?: Prisma.StringFieldUpdateOperationsInput | string
   observationIDP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -485,6 +545,8 @@ export type BeneficiaireSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   idp?: boolean
   observationIDP?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   attestations?: boolean | Prisma.Beneficiaire$attestationsArgs<ExtArgs>
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.BeneficiaireCountOutputTypeDefaultArgs<ExtArgs>
@@ -494,6 +556,8 @@ export type BeneficiaireSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   idp?: boolean
   observationIDP?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["beneficiaire"]>
 
@@ -501,6 +565,8 @@ export type BeneficiaireSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   idp?: boolean
   observationIDP?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["beneficiaire"]>
 
@@ -508,9 +574,11 @@ export type BeneficiaireSelectScalar = {
   id?: boolean
   idp?: boolean
   observationIDP?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type BeneficiaireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idp" | "observationIDP", ExtArgs["result"]["beneficiaire"]>
+export type BeneficiaireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idp" | "observationIDP" | "createdAt" | "updatedAt", ExtArgs["result"]["beneficiaire"]>
 export type BeneficiaireInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attestations?: boolean | Prisma.Beneficiaire$attestationsArgs<ExtArgs>
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
@@ -533,6 +601,8 @@ export type $BeneficiairePayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: number
     idp: string
     observationIDP: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["beneficiaire"]>
   composites: {}
 }
@@ -961,6 +1031,8 @@ export interface BeneficiaireFieldRefs {
   readonly id: Prisma.FieldRef<"Beneficiaire", 'Int'>
   readonly idp: Prisma.FieldRef<"Beneficiaire", 'String'>
   readonly observationIDP: Prisma.FieldRef<"Beneficiaire", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Beneficiaire", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Beneficiaire", 'DateTime'>
 }
     
 

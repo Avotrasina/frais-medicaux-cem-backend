@@ -50,6 +50,8 @@ export type PrestataireMinAggregateOutputType = {
   listePrestation: string | null
   lieuID: number | null
   categorieID: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PrestataireMaxAggregateOutputType = {
@@ -64,6 +66,8 @@ export type PrestataireMaxAggregateOutputType = {
   listePrestation: string | null
   lieuID: number | null
   categorieID: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PrestataireCountAggregateOutputType = {
@@ -78,6 +82,8 @@ export type PrestataireCountAggregateOutputType = {
   listePrestation: number
   lieuID: number
   categorieID: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -106,6 +112,8 @@ export type PrestataireMinAggregateInputType = {
   listePrestation?: true
   lieuID?: true
   categorieID?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type PrestataireMaxAggregateInputType = {
@@ -120,6 +128,8 @@ export type PrestataireMaxAggregateInputType = {
   listePrestation?: true
   lieuID?: true
   categorieID?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type PrestataireCountAggregateInputType = {
@@ -134,6 +144,8 @@ export type PrestataireCountAggregateInputType = {
   listePrestation?: true
   lieuID?: true
   categorieID?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -235,6 +247,8 @@ export type PrestataireGroupByOutputType = {
   listePrestation: string
   lieuID: number
   categorieID: number
+  createdAt: Date
+  updatedAt: Date
   _count: PrestataireCountAggregateOutputType | null
   _avg: PrestataireAvgAggregateOutputType | null
   _sum: PrestataireSumAggregateOutputType | null
@@ -272,6 +286,8 @@ export type PrestataireWhereInput = {
   listePrestation?: Prisma.StringFilter<"Prestataire"> | string
   lieuID?: Prisma.IntFilter<"Prestataire"> | number
   categorieID?: Prisma.IntFilter<"Prestataire"> | number
+  createdAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   attestations?: Prisma.AttestationListRelationFilter
   lieu?: Prisma.XOR<Prisma.LieuScalarRelationFilter, Prisma.LieuWhereInput>
   categorie?: Prisma.XOR<Prisma.CategoriePrestataireScalarRelationFilter, Prisma.CategoriePrestataireWhereInput>
@@ -289,6 +305,8 @@ export type PrestataireOrderByWithRelationInput = {
   listePrestation?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   attestations?: Prisma.AttestationOrderByRelationAggregateInput
   lieu?: Prisma.LieuOrderByWithRelationInput
   categorie?: Prisma.CategoriePrestataireOrderByWithRelationInput
@@ -309,6 +327,8 @@ export type PrestataireWhereUniqueInput = Prisma.AtLeast<{
   listePrestation?: Prisma.StringFilter<"Prestataire"> | string
   lieuID?: Prisma.IntFilter<"Prestataire"> | number
   categorieID?: Prisma.IntFilter<"Prestataire"> | number
+  createdAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   attestations?: Prisma.AttestationListRelationFilter
   lieu?: Prisma.XOR<Prisma.LieuScalarRelationFilter, Prisma.LieuWhereInput>
   categorie?: Prisma.XOR<Prisma.CategoriePrestataireScalarRelationFilter, Prisma.CategoriePrestataireWhereInput>
@@ -326,6 +346,8 @@ export type PrestataireOrderByWithAggregationInput = {
   listePrestation?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PrestataireCountOrderByAggregateInput
   _avg?: Prisma.PrestataireAvgOrderByAggregateInput
   _max?: Prisma.PrestataireMaxOrderByAggregateInput
@@ -348,6 +370,8 @@ export type PrestataireScalarWhereWithAggregatesInput = {
   listePrestation?: Prisma.StringWithAggregatesFilter<"Prestataire"> | string
   lieuID?: Prisma.IntWithAggregatesFilter<"Prestataire"> | number
   categorieID?: Prisma.IntWithAggregatesFilter<"Prestataire"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Prestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Prestataire"> | Date | string
 }
 
 export type PrestataireCreateInput = {
@@ -359,6 +383,8 @@ export type PrestataireCreateInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
   lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
   categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
@@ -376,6 +402,8 @@ export type PrestataireUncheckedCreateInput = {
   listePrestation: string
   lieuID: number
   categorieID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
 }
 
@@ -388,6 +416,8 @@ export type PrestataireUpdateInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
   lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
   categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
@@ -405,6 +435,8 @@ export type PrestataireUncheckedUpdateInput = {
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
 }
 
@@ -420,6 +452,8 @@ export type PrestataireCreateManyInput = {
   listePrestation: string
   lieuID: number
   categorieID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PrestataireUpdateManyMutationInput = {
@@ -431,6 +465,8 @@ export type PrestataireUpdateManyMutationInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PrestataireUncheckedUpdateManyInput = {
@@ -445,6 +481,8 @@ export type PrestataireUncheckedUpdateManyInput = {
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PrestataireScalarRelationFilter = {
@@ -464,6 +502,8 @@ export type PrestataireCountOrderByAggregateInput = {
   listePrestation?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PrestataireAvgOrderByAggregateInput = {
@@ -484,6 +524,8 @@ export type PrestataireMaxOrderByAggregateInput = {
   listePrestation?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PrestataireMinOrderByAggregateInput = {
@@ -498,6 +540,8 @@ export type PrestataireMinOrderByAggregateInput = {
   listePrestation?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PrestataireSumOrderByAggregateInput = {
@@ -627,6 +671,8 @@ export type PrestataireCreateWithoutAttestationsInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
   categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
 }
@@ -643,6 +689,8 @@ export type PrestataireUncheckedCreateWithoutAttestationsInput = {
   listePrestation: string
   lieuID: number
   categorieID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PrestataireCreateOrConnectWithoutAttestationsInput = {
@@ -670,6 +718,8 @@ export type PrestataireUpdateWithoutAttestationsInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
   categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
 }
@@ -686,6 +736,8 @@ export type PrestataireUncheckedUpdateWithoutAttestationsInput = {
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PrestataireCreateWithoutLieuInput = {
@@ -697,6 +749,8 @@ export type PrestataireCreateWithoutLieuInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
   categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
 }
@@ -712,6 +766,8 @@ export type PrestataireUncheckedCreateWithoutLieuInput = {
   dateFinConvention: Date | string
   listePrestation: string
   categorieID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
 }
 
@@ -756,6 +812,8 @@ export type PrestataireScalarWhereInput = {
   listePrestation?: Prisma.StringFilter<"Prestataire"> | string
   lieuID?: Prisma.IntFilter<"Prestataire"> | number
   categorieID?: Prisma.IntFilter<"Prestataire"> | number
+  createdAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
 }
 
 export type PrestataireCreateWithoutCategorieInput = {
@@ -767,6 +825,8 @@ export type PrestataireCreateWithoutCategorieInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
   lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
 }
@@ -782,6 +842,8 @@ export type PrestataireUncheckedCreateWithoutCategorieInput = {
   dateFinConvention: Date | string
   listePrestation: string
   lieuID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
 }
 
@@ -822,6 +884,8 @@ export type PrestataireCreateManyLieuInput = {
   dateFinConvention: Date | string
   listePrestation: string
   categorieID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PrestataireUpdateWithoutLieuInput = {
@@ -833,6 +897,8 @@ export type PrestataireUpdateWithoutLieuInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
   categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
 }
@@ -848,6 +914,8 @@ export type PrestataireUncheckedUpdateWithoutLieuInput = {
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
 }
 
@@ -862,6 +930,8 @@ export type PrestataireUncheckedUpdateManyWithoutLieuInput = {
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PrestataireCreateManyCategorieInput = {
@@ -875,6 +945,8 @@ export type PrestataireCreateManyCategorieInput = {
   dateFinConvention: Date | string
   listePrestation: string
   lieuID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PrestataireUpdateWithoutCategorieInput = {
@@ -886,6 +958,8 @@ export type PrestataireUpdateWithoutCategorieInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
   lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
 }
@@ -901,6 +975,8 @@ export type PrestataireUncheckedUpdateWithoutCategorieInput = {
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
 }
 
@@ -915,6 +991,8 @@ export type PrestataireUncheckedUpdateManyWithoutCategorieInput = {
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -960,6 +1038,8 @@ export type PrestataireSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   listePrestation?: boolean
   lieuID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   attestations?: boolean | Prisma.Prestataire$attestationsArgs<ExtArgs>
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
   categorie?: boolean | Prisma.CategoriePrestataireDefaultArgs<ExtArgs>
@@ -978,6 +1058,8 @@ export type PrestataireSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   listePrestation?: boolean
   lieuID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
   categorie?: boolean | Prisma.CategoriePrestataireDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["prestataire"]>
@@ -994,6 +1076,8 @@ export type PrestataireSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   listePrestation?: boolean
   lieuID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
   categorie?: boolean | Prisma.CategoriePrestataireDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["prestataire"]>
@@ -1010,9 +1094,11 @@ export type PrestataireSelectScalar = {
   listePrestation?: boolean
   lieuID?: boolean
   categorieID?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type PrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "adresse" | "statut" | "nif" | "stat" | "dateDebutConvention" | "dateFinConvention" | "listePrestation" | "lieuID" | "categorieID", ExtArgs["result"]["prestataire"]>
+export type PrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "adresse" | "statut" | "nif" | "stat" | "dateDebutConvention" | "dateFinConvention" | "listePrestation" | "lieuID" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["prestataire"]>
 export type PrestataireInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attestations?: boolean | Prisma.Prestataire$attestationsArgs<ExtArgs>
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
@@ -1047,6 +1133,8 @@ export type $PrestatairePayload<ExtArgs extends runtime.Types.Extensions.Interna
     listePrestation: string
     lieuID: number
     categorieID: number
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["prestataire"]>
   composites: {}
 }
@@ -1484,6 +1572,8 @@ export interface PrestataireFieldRefs {
   readonly listePrestation: Prisma.FieldRef<"Prestataire", 'String'>
   readonly lieuID: Prisma.FieldRef<"Prestataire", 'Int'>
   readonly categorieID: Prisma.FieldRef<"Prestataire", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Prestataire", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Prestataire", 'DateTime'>
 }
     
 

@@ -39,16 +39,22 @@ export type ConjointSumAggregateOutputType = {
 export type ConjointMinAggregateOutputType = {
   id: number | null
   numConjoint: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ConjointMaxAggregateOutputType = {
   id: number | null
   numConjoint: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ConjointCountAggregateOutputType = {
   id: number
   numConjoint: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -66,16 +72,22 @@ export type ConjointSumAggregateInputType = {
 export type ConjointMinAggregateInputType = {
   id?: true
   numConjoint?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ConjointMaxAggregateInputType = {
   id?: true
   numConjoint?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ConjointCountAggregateInputType = {
   id?: true
   numConjoint?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -168,6 +180,8 @@ export type ConjointGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type ConjointGroupByOutputType = {
   id: number
   numConjoint: number
+  createdAt: Date
+  updatedAt: Date
   _count: ConjointCountAggregateOutputType | null
   _avg: ConjointAvgAggregateOutputType | null
   _sum: ConjointSumAggregateOutputType | null
@@ -196,12 +210,16 @@ export type ConjointWhereInput = {
   NOT?: Prisma.ConjointWhereInput | Prisma.ConjointWhereInput[]
   id?: Prisma.IntFilter<"Conjoint"> | number
   numConjoint?: Prisma.IntFilter<"Conjoint"> | number
+  createdAt?: Prisma.DateTimeFilter<"Conjoint"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Conjoint"> | Date | string
   familleAgent?: Prisma.XOR<Prisma.FamilleAgentScalarRelationFilter, Prisma.FamilleAgentWhereInput>
 }
 
 export type ConjointOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   numConjoint?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   familleAgent?: Prisma.FamilleAgentOrderByWithRelationInput
 }
 
@@ -211,12 +229,16 @@ export type ConjointWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ConjointWhereInput | Prisma.ConjointWhereInput[]
   OR?: Prisma.ConjointWhereInput[]
   NOT?: Prisma.ConjointWhereInput | Prisma.ConjointWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Conjoint"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Conjoint"> | Date | string
   familleAgent?: Prisma.XOR<Prisma.FamilleAgentScalarRelationFilter, Prisma.FamilleAgentWhereInput>
 }, "id" | "numConjoint">
 
 export type ConjointOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   numConjoint?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ConjointCountOrderByAggregateInput
   _avg?: Prisma.ConjointAvgOrderByAggregateInput
   _max?: Prisma.ConjointMaxOrderByAggregateInput
@@ -230,40 +252,56 @@ export type ConjointScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ConjointScalarWhereWithAggregatesInput | Prisma.ConjointScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Conjoint"> | number
   numConjoint?: Prisma.IntWithAggregatesFilter<"Conjoint"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Conjoint"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Conjoint"> | Date | string
 }
 
 export type ConjointCreateInput = {
   numConjoint: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   familleAgent: Prisma.FamilleAgentCreateNestedOneWithoutConjointInput
 }
 
 export type ConjointUncheckedCreateInput = {
   id: number
   numConjoint: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ConjointUpdateInput = {
   numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateOneRequiredWithoutConjointNestedInput
 }
 
 export type ConjointUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConjointCreateManyInput = {
   id: number
   numConjoint: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ConjointUpdateManyMutationInput = {
   numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConjointUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConjointNullableScalarRelationFilter = {
@@ -274,6 +312,8 @@ export type ConjointNullableScalarRelationFilter = {
 export type ConjointCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numConjoint?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ConjointAvgOrderByAggregateInput = {
@@ -284,11 +324,15 @@ export type ConjointAvgOrderByAggregateInput = {
 export type ConjointMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numConjoint?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ConjointMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numConjoint?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ConjointSumOrderByAggregateInput = {
@@ -330,10 +374,14 @@ export type ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput = {
 
 export type ConjointCreateWithoutFamilleAgentInput = {
   numConjoint: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ConjointUncheckedCreateWithoutFamilleAgentInput = {
   numConjoint: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ConjointCreateOrConnectWithoutFamilleAgentInput = {
@@ -354,10 +402,14 @@ export type ConjointUpdateToOneWithWhereWithoutFamilleAgentInput = {
 
 export type ConjointUpdateWithoutFamilleAgentInput = {
   numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConjointUncheckedUpdateWithoutFamilleAgentInput = {
   numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -365,27 +417,35 @@ export type ConjointUncheckedUpdateWithoutFamilleAgentInput = {
 export type ConjointSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numConjoint?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conjoint"]>
 
 export type ConjointSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numConjoint?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conjoint"]>
 
 export type ConjointSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numConjoint?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conjoint"]>
 
 export type ConjointSelectScalar = {
   id?: boolean
   numConjoint?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ConjointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numConjoint", ExtArgs["result"]["conjoint"]>
+export type ConjointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numConjoint" | "createdAt" | "updatedAt", ExtArgs["result"]["conjoint"]>
 export type ConjointInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }
@@ -404,6 +464,8 @@ export type $ConjointPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     numConjoint: number
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["conjoint"]>
   composites: {}
 }
@@ -830,6 +892,8 @@ export interface Prisma__ConjointClient<T, Null = never, ExtArgs extends runtime
 export interface ConjointFieldRefs {
   readonly id: Prisma.FieldRef<"Conjoint", 'Int'>
   readonly numConjoint: Prisma.FieldRef<"Conjoint", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Conjoint", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Conjoint", 'DateTime'>
 }
     
 
