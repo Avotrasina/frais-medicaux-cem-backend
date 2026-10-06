@@ -51,7 +51,7 @@ export class SaveAgentUseCase {
   ): Promise<AgentUseCaseTypes> {
     const { personne, agent } = this.splitInput(input);
 
-    this.prisma.$transaction(async (tx) => {
+    await this.prisma.$transaction(async (tx) => {
       const createdPersonne = await this.personneRepository.create(personne, tx);
       await this.agentRepository.create(
         { ...agent, id: createdPersonne.id },

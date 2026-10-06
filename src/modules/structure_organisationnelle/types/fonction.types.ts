@@ -1,10 +1,10 @@
-export type ReadFonction = {
+export interface ReadFonction {
   id: number;
   nom: string;
-};
+}
 
-export type CreateFonction = {
+export interface CreateFonction {
   nom: string;
-};
+}
 
 export type UpdateFonction = Partial<CreateFonction>;

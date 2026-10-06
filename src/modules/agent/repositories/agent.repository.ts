@@ -5,7 +5,7 @@ import type {
   Agent,
   Prisma,
 } from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../common/prisma/db-client.type.js";
+import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import {
   AgentType,StatutPEC,
   type CreateAgent,

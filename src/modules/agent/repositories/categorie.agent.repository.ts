@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import type { CategorieAgent } from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../common/prisma/db-client.type.js";
+import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
   CreateCategorieAgent,
   ReadCategorieAgent,

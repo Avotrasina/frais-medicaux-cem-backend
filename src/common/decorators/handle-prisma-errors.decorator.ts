@@ -1,4 +1,4 @@
-import { translatePrismaError } from "../../lib/prisma-error.translator.js";
+import { translatePrismaError } from "../errors/prisma-error.translator.js";
 
 export interface HandlePrismaErrorsOptions {
   entity?: string;

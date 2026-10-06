@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import type { Fonction } from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../common/prisma/db-client.type.js";
+import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
   CreateFonction,
   ReadFonction,
@@ -9,9 +9,8 @@ import type {
 } from "../types/fonction.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 
-
 @Injectable()
-@HandlePrismaErrors({exclude: ["toReadFonction"] })
+@HandlePrismaErrors({ exclude: ["toReadFonction"] })
 export class FonctionRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -20,7 +19,10 @@ export class FonctionRepository {
   }
 
   private toReadFonction(fonction: Fonction): ReadFonction {
-    return { id: fonction.id, nom: fonction.nom };
+    return {
+      id: fonction.id,
+      nom: fonction.nom,
+    };
   }
 
   async findAll(tx?: DbClient): Promise<ReadFonction[]> {

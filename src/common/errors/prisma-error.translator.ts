@@ -1,4 +1,4 @@
-import { Prisma } from "../generated/prisma/client.js";
+import { Prisma } from "../../generated/prisma/client.js";
 import {
   CheckConstraintError,
   ConnectionPoolExhaustedError,
@@ -19,14 +19,11 @@ import {
   UnknownDatabaseError,
   ValueOutOfRangeError,
   ValueTooLongError,
-} from "../utils/errors/database.errors.js";
+} from "./database.errors.js";
 
-import { CHECK_CONSTRAINT_MESSAGES } from "../utils/errors/check-constraint.messages.js";
+import { CHECK_CONSTRAINT_MESSAGES } from "./check-constraint.messages.js";
 
 
-/* ========================================================================== */
-/* Concepts : ce que l'on cherche à reconnaître, quelle que soit la source    */
-/* ========================================================================== */
 
 type Concept =
   | "unique"
@@ -47,7 +44,6 @@ type Concept =
   | "auth"
   | "schema";
 
-/** SQLSTATE PostgreSQL -> concept. */
 const SQLSTATE_MAP: Record<string, Concept> = {
   "23505": "unique",
   "23503": "foreignKey",
@@ -70,7 +66,6 @@ const SQLSTATE_MAP: Record<string, Concept> = {
   "57P03": "unavailable",
 };
 
-/** « kind » de l'adapter pg de Prisma 7 -> concept (à vérifier avec votre version). */
 const ADAPTER_KIND_MAP: Record<string, Concept> = {
   UniqueConstraintViolation: "unique",
   ForeignKeyConstraintViolation: "foreignKey",
@@ -87,7 +82,6 @@ const ADAPTER_KIND_MAP: Record<string, Concept> = {
   DatabaseAccessDenied: "auth",
 };
 
-/** Code Prisma Pxxxx -> concept. */
 const PRISMA_CODE_MAP: Record<string, Concept> = {
   P2002: "unique",
   P2003: "foreignKey",
@@ -111,9 +105,6 @@ const PRISMA_CODE_MAP: Record<string, Concept> = {
   P2022: "schema",
 };
 
-/* ========================================================================== */
-/* Exploration de l'erreur d'origine                                          */
-/* ========================================================================== */
 
 type Node = Record<string, unknown>;
 
@@ -124,10 +115,6 @@ function isNode(value: unknown): value is Node {
   return typeof value === "object" && value !== null;
 }
 
-/**
- * Parcourt l'erreur et ses sous-objets possibles (meta, driverAdapterError, cause...),
- * en largeur et avec une profondeur limitée, sans boucler sur les références circulaires.
- */
 function* walk(root: unknown, maxDepth = 6): Generator<Node> {
   const seen = new Set<unknown>();
   const queue: Array<[unknown, number]> = [[root, 0]];
@@ -143,11 +130,9 @@ function* walk(root: unknown, maxDepth = 6): Generator<Node> {
   }
 }
 
-/** SQLSTATE PostgreSQL (5 caractères) trouvé dans l'erreur d'origine. */
 function extractSqlState(root: unknown): string | undefined {
   for (const node of walk(root)) {
     for (const key of ["originalCode", "sqlState", "code"]) {
-      // Le `code` de l'erreur Prisma racine est un Pxxxx, pas un SQLSTATE.
       if (node === root && key === "code") continue;
       const value = node[key];
       if (
@@ -162,7 +147,6 @@ function extractSqlState(root: unknown): string | undefined {
   return undefined;
 }
 
-/** « kind » de l'adapter pg (ex. "UniqueConstraintViolation"). */
 function extractAdapterKind(root: unknown): string | undefined {
   for (const node of walk(root)) {
     if (typeof node.kind === "string") return node.kind;
@@ -170,7 +154,6 @@ function extractAdapterKind(root: unknown): string | undefined {
   return undefined;
 }
 
-/** Code Prisma Pxxxx de l'erreur. */
 function extractPrismaCode(error: unknown): string | undefined {
   if (error instanceof Prisma.PrismaClientKnownRequestError) return error.code;
   if (error instanceof Prisma.PrismaClientInitializationError) {
@@ -179,7 +162,6 @@ function extractPrismaCode(error: unknown): string | undefined {
   return undefined;
 }
 
-/** Nom de la contrainte violée (ex. "chk_agent_date_entree"). */
 function extractConstraintName(root: unknown): string | undefined {
   for (const node of walk(root)) {
     const constraint = node.constraint;
@@ -189,8 +171,7 @@ function extractConstraintName(root: unknown): string | undefined {
       if (typeof constraint.index === "string") return constraint.index;
     }
   }
-  // Dernier recours : lire le nom dans le message PostgreSQL
-  // (ex. `violates check constraint "chk_agent_date_entree"`).
+
   for (const node of walk(root)) {
     for (const key of ["message", "originalMessage", "detail"]) {
       const text = node[key];
@@ -203,7 +184,6 @@ function extractConstraintName(root: unknown): string | undefined {
   return undefined;
 }
 
-/** Champs concernés (jamais les valeurs, pour ne pas exposer de données). */
 function extractFields(root: unknown): string[] {
   for (const node of walk(root)) {
     const constraint = node.constraint;
@@ -217,7 +197,6 @@ function extractFields(root: unknown): string[] {
     if (typeof target === "string") return [target];
     if (typeof node.column === "string") return [node.column];
   }
-  // Dernier recours : `Key (matricule)=(...) already exists.`
   for (const node of walk(root)) {
     const detail = node.detail;
     if (typeof detail === "string") {
@@ -227,10 +206,6 @@ function extractFields(root: unknown): string[] {
   }
   return [];
 }
-
-/* ========================================================================== */
-/* Construction de l'erreur applicative                                       */
-/* ========================================================================== */
 
 function build(concept: Concept, entity: string, error: unknown): DatabaseError {
   switch (concept) {
@@ -274,9 +249,6 @@ function build(concept: Concept, entity: string, error: unknown): DatabaseError 
   }
 }
 
-/* ========================================================================== */
-/* Point d'entrée                                                             */
-/* ========================================================================== */
 
 function isPrismaError(error: unknown): boolean {
   return (

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
-import { RecordNotFoundError } from "../../../utils/errors/database.errors.js";
+import { RecordNotFoundError } from "../../../common/errors/database.errors.js";
 import { AgentRepository } from "../repositories/agent.repository.js";
 import { PersonneRepository } from "../repositories/personne.repository.js";
 import { AgentType } from "../types/agent.types.js";

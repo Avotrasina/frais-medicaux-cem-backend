@@ -4,7 +4,7 @@ import {
   EnvValidationError,
   EnvInvalidKeyError,
   EnvMissingKeyError,
-} from '../utils/errors/env.validation.error.js';
+} from '../common/errors/env.validation.error.js';
 
 const validators = {
 

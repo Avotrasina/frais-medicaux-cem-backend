@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import type { Personne } from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../common/prisma/db-client.type.js";
+import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import {
   Sexe,
   type CreatePersonne,
