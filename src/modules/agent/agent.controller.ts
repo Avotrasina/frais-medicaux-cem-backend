@@ -12,15 +12,15 @@ import {
   Get,
   Query,
 } from "@nestjs/common";
-import { ImageUploadInterceptor } from "../../../common/interceptors/image-upload.interceptor.js";
-import { createImageFilePipe } from "../../../common/pipes/image-file.pipe.js";
-import { FileStorageService } from "../../../infrastructure/storage/file-storage.service.js";
-import { AgentInputDto,AgentUpdateDto} from "../dtos/agent.dto.js";
-import { SaveAgentUseCase } from "../use-cases/agent.save.js";
-import {UpdateAgentUseCase} from "../use-cases/agent.update.js"
-import type { AgentUpdatePartial, AgentUpdateProfCard,FilterOptions } from "../types/use-case.agent.types.js";
-import { DeleteAgentUseCase } from "../use-cases/agent.delete.js";
-import {ReadAgentUseCase} from  "../use-cases/agent.read.js"
+import { ImageUploadInterceptor } from "../../common/interceptors/image-upload.interceptor.js";
+import { createImageFilePipe } from "../../common/pipes/image-file.pipe.js";
+import { FileStorageService } from "../../infrastructure/storage/file-storage.service.js";
+import { AgentInputDto,AgentUpdateDto} from "./dtos/agent.dto.js";
+import { SaveAgentUseCase } from "./use-cases/agent.save.js";
+import {UpdateAgentUseCase} from "./use-cases/agent.update.js"
+import type { AgentUpdatePartial, AgentUpdateProfCard,FilterOptions } from "./types/use-case.agent.types.js";
+import { DeleteAgentUseCase } from "./use-cases/agent.delete.js";
+import {ReadAgentUseCase} from  "./use-cases/agent.read.js"
 
 @Controller("agent")
 export class AgentController{
