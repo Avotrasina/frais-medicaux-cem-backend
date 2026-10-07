@@ -1,5 +1,5 @@
 import { defineConfig } from "prisma/config";
-import { env } from "./src/settings/env.validator.js";
+import { env } from "./src/common/settings/env.validator.js";
 
 export default defineConfig({
   schema: "prisma/",

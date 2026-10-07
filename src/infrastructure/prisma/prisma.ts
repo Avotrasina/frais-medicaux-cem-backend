@@ -1,4 +1,4 @@
-import {env} from "../../settings/env.validator.js"
+import {env} from "../../common/settings/env.validator.js"
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client.js";
 
