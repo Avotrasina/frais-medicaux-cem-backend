@@ -18,7 +18,7 @@ model FamilleAgent {
 
 model Conjoint {
   id          Int @id
-  numConjoint Int @unique @map("num_conjoint")
+  numConjoint Int @unique @default(autoincrement()) @map("num_conjoint")
 
   familleAgent FamilleAgent @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -31,7 +31,7 @@ model Conjoint {
 
 model Enfant {
   id        Int @id
-  numEnfant Int @unique @map("num_enfant")
+  numEnfant Int @unique @map("num_enfant") @default(autoincrement())
 
   familleAgent FamilleAgent @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 

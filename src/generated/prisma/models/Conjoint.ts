@@ -257,7 +257,7 @@ export type ConjointScalarWhereWithAggregatesInput = {
 }
 
 export type ConjointCreateInput = {
-  numConjoint: number
+  numConjoint?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   familleAgent: Prisma.FamilleAgentCreateNestedOneWithoutConjointInput
@@ -265,13 +265,12 @@ export type ConjointCreateInput = {
 
 export type ConjointUncheckedCreateInput = {
   id: number
-  numConjoint: number
+  numConjoint?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ConjointUpdateInput = {
-  numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateOneRequiredWithoutConjointNestedInput
@@ -286,13 +285,12 @@ export type ConjointUncheckedUpdateInput = {
 
 export type ConjointCreateManyInput = {
   id: number
-  numConjoint: number
+  numConjoint?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ConjointUpdateManyMutationInput = {
-  numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -373,13 +371,13 @@ export type ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput = {
 }
 
 export type ConjointCreateWithoutFamilleAgentInput = {
-  numConjoint: number
+  numConjoint?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ConjointUncheckedCreateWithoutFamilleAgentInput = {
-  numConjoint: number
+  numConjoint?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -401,7 +399,6 @@ export type ConjointUpdateToOneWithWhereWithoutFamilleAgentInput = {
 }
 
 export type ConjointUpdateWithoutFamilleAgentInput = {
-  numConjoint?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }

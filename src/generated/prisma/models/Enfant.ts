@@ -257,7 +257,7 @@ export type EnfantScalarWhereWithAggregatesInput = {
 }
 
 export type EnfantCreateInput = {
-  numEnfant: number
+  numEnfant?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   familleAgent: Prisma.FamilleAgentCreateNestedOneWithoutEnfantInput
@@ -265,13 +265,12 @@ export type EnfantCreateInput = {
 
 export type EnfantUncheckedCreateInput = {
   id: number
-  numEnfant: number
+  numEnfant?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type EnfantUpdateInput = {
-  numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateOneRequiredWithoutEnfantNestedInput
@@ -286,13 +285,12 @@ export type EnfantUncheckedUpdateInput = {
 
 export type EnfantCreateManyInput = {
   id: number
-  numEnfant: number
+  numEnfant?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type EnfantUpdateManyMutationInput = {
-  numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -373,13 +371,13 @@ export type EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput = {
 }
 
 export type EnfantCreateWithoutFamilleAgentInput = {
-  numEnfant: number
+  numEnfant?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type EnfantUncheckedCreateWithoutFamilleAgentInput = {
-  numEnfant: number
+  numEnfant?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -401,7 +399,6 @@ export type EnfantUpdateToOneWithWhereWithoutFamilleAgentInput = {
 }
 
 export type EnfantUpdateWithoutFamilleAgentInput = {
-  numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
