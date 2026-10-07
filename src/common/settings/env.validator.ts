@@ -1,24 +1,35 @@
 import 'dotenv/config';
-import { cleanEnv, port, str, EnvError, EnvMissingError } from 'envalid';
+import { cleanEnv, port, str, num, EnvError, EnvMissingError } from 'envalid';
 import {
   EnvValidationError,
   EnvInvalidKeyError,
   EnvMissingKeyError,
-} from '../common/errors/env.validation.error.js';
+} from '../errors/env.validation.error.js';
+
+const DEFAULT_MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
 const validators = {
-
-  DB_HOST: str(),
+  DB_HOST: str({ default: 'localhost' }),
   DB_PORT: port({ default: 5432 }),
-  DB_NAME: str(),
-  DB_USER: str(),
-  DB_PASSWORD: str(),
+  DB_NAME: str({ default: 'cem_facturation' }),
+  DB_USER: str({ default: 'postgres' }),
+  DB_PASSWORD: str({ default: 'postgres' }),
+
+  STORAGE_ROOT: str({ default: 'data' }),
+  UPLOAD_MAX_IMAGE_SIZE: num({ default: DEFAULT_MAX_IMAGE_SIZE }),
 };
 
 const toError = (key: string, err: unknown): Error => {
   if (err instanceof EnvMissingError) return new EnvMissingKeyError(key);
-  if (err instanceof EnvError) return new EnvInvalidKeyError(key, `Invalid environment variable: ${key} - ${err.message}`);
-  return new EnvValidationError(`Unexpected error for environment variable: ${key}`);
+  if (err instanceof EnvError) {
+    return new EnvInvalidKeyError(
+      key,
+      `Invalid environment variable: ${key} - ${err.message}`,
+    );
+  }
+  return new EnvValidationError(
+    `Unexpected error for environment variable: ${key}`,
+  );
 };
 
 const cleaned = cleanEnv(process.env, validators, {
@@ -43,4 +54,4 @@ const DATABASE_URL =
 export const env = Object.freeze({
   ...cleaned,
   DATABASE_URL,
-}); 
+});
