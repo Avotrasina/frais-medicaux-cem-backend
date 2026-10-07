@@ -6,11 +6,12 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type,Expose } from 'class-transformer';
+import { PartialType, OmitType } from "@nestjs/mapped-types";
 import { Sexe } from '../types/personne.types.js';
 import {StatutPEC, BackOfficeFrontOffice } from './enum.js';
 
-export class AgentDto {
+export class AgentInputDto {
   @IsString()
   @IsNotEmpty()
   matricule!: string;
@@ -64,4 +65,10 @@ export class AgentDto {
   @IsOptional()
   @IsString()
   codeService?: string | null;
+
 }
+
+
+export class AgentUpdateDto extends PartialType(
+  OmitType(AgentInputDto, ["matricule"] as const),
+) {}

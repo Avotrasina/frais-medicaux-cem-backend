@@ -51,4 +51,16 @@ export type ReadAgent = {
   categorieID?: string | null;
 };
 
-export type UpdateAgent = Partial<Omit<CreateAgent, "id">>;
+export type UpdatePartialAgent = {
+  matricule: string;
+  fonctionID?: number | null;
+  statutPEC?: StatutPEC | null;
+  observationMatricule?: string | null;
+  dateEntree?: Date | null;
+  agentType?: AgentType | null;
+  structureID?: string | null;
+  codeDirection?: string | null;
+  codeService?: string | null;
+  codeAgence?: string | null;
+  categorieID?: string | null;
+};

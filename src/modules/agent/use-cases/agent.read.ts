@@ -1,17 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { AgentRepository } from "../repositories/agent.repository.js";
 import { AgentType } from "../types/agent.types.js";
-import type { AgentUseCaseTypes } from "../types/use-case.agent.types.js";
-import { BackOfficeFrontOffice } from "../dto/enum.js";
+import type { AgentUseCaseTypes,FilterOptions} from "../types/use-case.agent.types.js";
+import { BackOfficeFrontOffice } from "../dtos/enum.js";
 
-type FilterOptions = {
-  backOfficeFrontOffice?: BackOfficeFrontOffice | null;
-  codeDirection?: string;
-  codeService?: string;
-  codeAgence?: string;
-};
-
-// Type d'un élément retourné par le repository (évite de dupliquer le type)
 type PersonneAgent = Awaited<
   ReturnType<AgentRepository["findAllAgents"]>
 >[number];

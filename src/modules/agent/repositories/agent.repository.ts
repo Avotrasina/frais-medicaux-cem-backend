@@ -10,11 +10,12 @@ import {
   AgentType,StatutPEC,
   type CreateAgent,
   type ReadAgent,
-  type UpdateAgent,
+  type UpdatePartialAgent,
 } from "../types/agent.types.js";
 import {type ReadPersonne,Sexe} from "../types/personne.types.js"
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 import type {ReadPersonneAgent} from "../types/agent.types.js"
+import { omitNullish } from "../../../common/utils/omit-nullish.js";
 
 type PersonneWithAgent = Prisma.PersonneGetPayload<{
   include: { agent: true };
@@ -155,14 +156,40 @@ export class AgentRepository {
     return this.toReadAgent(created);
   }
 
-  async update(
+  async updatePartial(
     id: number,
-    agent: UpdateAgent,
+    agent: UpdatePartialAgent,
+    tx?: DbClient,
+  ): Promise<ReadAgent> {
+    const structureID =
+      agent.codeAgence || agent.codeDirection || agent.structureID;
+
+    const data = omitNullish({
+      observationMatricule: agent.observationMatricule,
+      dateEntree: agent.dateEntree,
+      statutPEC: agent.statutPEC,
+      agentType: agent.agentType,
+      structureID,
+      serviceID: agent.codeService,
+      fonctionID: agent.fonctionID,
+      categorieID: agent.categorieID,
+    });
+
+    const updated = await this.client(tx).agent.update({
+      where: { id },
+      data,
+    });
+    return this.toReadAgent(updated);
+  }
+
+  async updateProfCard(
+    id: number,
+    newCardPath: string,
     tx?: DbClient,
   ): Promise<ReadAgent> {
     const updated = await this.client(tx).agent.update({
       where: { id },
-      data: agent,
+      data: { carteProfessionnellePath: newCardPath },
     });
     return this.toReadAgent(updated);
   }

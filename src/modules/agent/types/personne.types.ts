@@ -18,9 +18,9 @@ export type ReadPersonne = {
   sexe: Sexe;
 };
 
-export type UpdatePersonne = {
-  nom: string;
-  prenom: string;
-  dateNaissance: Date;
-  sexe: Sexe;
+export type UpdatePartialPersonne = {
+  nom?: string | null;
+  prenom?: string | null;
+  dateNaissance?: Date | null;
+  sexe?: Sexe | null;
 };
