@@ -6,21 +6,23 @@ import { UnsupportedImageTypeException } from "../../common/errors/unsupported-i
 import {
   IMAGE_EXTENSION_BY_MIME,
   STORAGE_SETTINGS,
+  type ImageCategory,
 } from "../../common/settings/storage.settings.js";
 import type { StorableImage } from "./file-storage.types.js";
 
-const IMAGES_DIR = "images";
-
 @Injectable()
 export class FileStorageService {
-  async saveImage(file: StorableImage): Promise<string> {
+
+  async saveImage(file: StorableImage, category: ImageCategory): Promise<string> {
     const extension = IMAGE_EXTENSION_BY_MIME[file.mimetype];
     if (!extension) {
       throw new UnsupportedImageTypeException(file.mimetype);
     }
 
-    const relativePath = `${IMAGES_DIR}/${randomUUID()}${extension}`;
-    await mkdir(join(STORAGE_SETTINGS.root, IMAGES_DIR), { recursive: true });
+    const directory = `${STORAGE_SETTINGS.imagesDir}/${STORAGE_SETTINGS.imageSubDirs[category]}`;
+    const relativePath = `${directory}/${randomUUID()}${extension}`;
+
+    await mkdir(join(STORAGE_SETTINGS.root, directory), { recursive: true });
     await writeFile(join(STORAGE_SETTINGS.root, relativePath), file.buffer);
     return relativePath;
   }

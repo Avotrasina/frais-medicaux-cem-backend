@@ -1,12 +1,22 @@
 import 'dotenv/config';
-import { cleanEnv, port, str, num, EnvError, EnvMissingError } from 'envalid';
+import { cleanEnv, port, str, num, makeValidator, EnvError, EnvMissingError } from 'envalid';
 import {
   EnvValidationError,
   EnvInvalidKeyError,
   EnvMissingKeyError,
+  InvalidDirNameError,
 } from '../errors/env.validation.error.js';
 
 const DEFAULT_MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+
+const SAFE_DIR_NAME = /^[A-Za-z0-9_-]+$/;
+
+const dirName = makeValidator<string>((input) => {
+  if (!SAFE_DIR_NAME.test(input)) {
+    throw new InvalidDirNameError(input);
+  }
+  return input;
+});
 
 const validators = {
   DB_HOST: str({ default: 'localhost' }),
@@ -17,10 +27,19 @@ const validators = {
 
   STORAGE_ROOT: str({ default: 'data' }),
   UPLOAD_MAX_IMAGE_SIZE: num({ default: DEFAULT_MAX_IMAGE_SIZE }),
+  STORAGE_IMAGES_DIR: dirName({ default: 'images' }),
+  STORAGE_CARTES_PROFESSIONNELLES_DIR: dirName({ default: 'cartes-professionnelles' }),
+  STORAGE_CARTES_SOCIALES_DIR: dirName({ default: 'cartes-sociales' }),
 };
 
 const toError = (key: string, err: unknown): Error => {
   if (err instanceof EnvMissingError) return new EnvMissingKeyError(key);
+  if (err instanceof InvalidDirNameError) {
+    return new EnvInvalidKeyError(
+      key,
+      `Invalid environment variable: ${key} - ${err.message}`,
+    );
+  }
   if (err instanceof EnvError) {
     return new EnvInvalidKeyError(
       key,

@@ -39,7 +39,7 @@ export class AgentController{
     @Body() dto: AgentInputDto,
     @UploadedFile(createImageFilePipe()) image: Express.Multer.File,
   ): Promise<void> {
-    const carteProfessionnellePath = await this.fileStorage.saveImage(image);
+    const carteProfessionnellePath = await this.fileStorage.saveImage(image,"carteProfessionnelle");
 
     try {
       await this.saveAgentUseCase.execute({ ...dto, carteProfessionnellePath });
@@ -70,7 +70,7 @@ export class AgentController{
     @Param("matricule") matricule: string,
     @UploadedFile(createImageFilePipe()) image: Express.Multer.File,
   ): Promise<void> {
-    const carteProfessionnellePath = await this.fileStorage.saveImage(image);
+    const carteProfessionnellePath = await this.fileStorage.saveImage(image,"carteProfessionnelle");
     const inputUseCase: AgentUpdateProfCard = {
       matricule,
       carteProfessionnellePath

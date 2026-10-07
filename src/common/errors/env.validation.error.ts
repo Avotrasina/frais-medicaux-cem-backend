@@ -28,3 +28,16 @@ export class EnvInvalidKeyError extends EnvValidationError {
     this.key = key;
   }
 }
+
+export class InvalidDirNameError extends EnvValidationError {
+  public readonly value: string;
+
+  constructor(
+    value: string,
+    message = `"${value}" invalide : uniquement lettres, chiffres, "_" et "-" (un seul niveau de dossier)`,
+  ) {
+    super(message);
+    this.name = "InvalidDirNameError";
+    this.value = value;
+  }
+}
