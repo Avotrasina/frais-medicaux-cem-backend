@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import { AgentRepository } from "../repositories/agent.repository.js";
-import { PersonneRepository } from "../repositories/personne.repository.js";
+import { PersonneRepository } from "../../personne/personne.repository.js";
 import {AgentType} from "../types/agent.types.js"
 import type { AgentUseCaseTypes } from "../types/use-case.agent.types.js";
 import type { CreateAgent} from "../types/agent.types.js";
-import type { CreatePersonne} from "../types/personne.types.js";
+import type { CreatePersonne} from "../../personne/personne.types.js";
 
 
 

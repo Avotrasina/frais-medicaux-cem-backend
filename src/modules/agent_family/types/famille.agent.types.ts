@@ -1,6 +1,6 @@
 // famille.agent.types.ts
 import type { Prisma } from "../../../generated/prisma/client.js";
-import type { Sexe } from "../../agent/types/personne.types.js";
+import type { Sexe } from "../../personne/personne.types.js";
 
 export type PersonneData = {
   nom: string;

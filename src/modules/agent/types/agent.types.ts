@@ -1,4 +1,4 @@
-import type { ReadPersonne } from "./personne.types.js";
+import type { ReadPersonne } from "../../personne/personne.types.js";
 
 export type ReadPersonneAgent = ReadPersonne & {
   agent: ReadAgent;

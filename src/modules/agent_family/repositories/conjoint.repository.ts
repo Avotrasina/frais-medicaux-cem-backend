@@ -1,16 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient,Prisma} from "../../../generated/prisma/client.js";
+import { PrismaClient, Prisma } from "../../../generated/prisma/client.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
   CreateConjoint,
-  UpdatePartialConjoint,
-  ReadConjoint
+  ReadConjoint,
 } from "../types/conjoint.types.js";
+import { Sexe } from "../../personne/personne.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 
-type ConjointWithFamilleAgent = Prisma.ConjointGetPayload<{
-  include: { familleAgent: true };
+type ConjointWithFamilleAgentPersonne = Prisma.ConjointGetPayload<{
+  include: { familleAgent: { include: { personne: true } } };
 }>;
+
+type CreateConjointRecord = Omit<CreateConjoint, "personne"> & { id: number };
 
 @Injectable()
 @HandlePrismaErrors()
@@ -21,49 +23,34 @@ export class ConjointRepository {
     return tx ?? this.prisma;
   }
 
-  private toReadConjoint(conjoint: ConjointWithFamilleAgent): ReadConjoint {
+  private toReadConjoint(
+    conjoint: ConjointWithFamilleAgentPersonne,
+  ): ReadConjoint {
+    const { familleAgent } = conjoint;
+    const { personne } = familleAgent;
     return {
-      id: conjoint.id,
+      ...personne,
       numConjoint: conjoint.numConjoint,
-      agentMatricule: conjoint.familleAgent.agentMatricule,
-      carteSocialePath: conjoint.familleAgent.carteSocialePath,
+      agentMatricule: familleAgent.agentMatricule,
+      carteSocialePath: familleAgent.carteSocialePath,
     };
   }
 
-  async create(conjoint: CreateConjoint, tx?: DbClient): Promise<number> {
-    const { agentMatricule, carteSocialePath, personne } = conjoint;
+  async create(
+    conjoint: CreateConjointRecord,
+    tx?: DbClient,
+  ): Promise<number> {
+    const { id, agentMatricule, carteSocialePath } = conjoint;
 
     const created = await this.client(tx).conjoint.create({
       data: {
         familleAgent: {
-          create: {
-            carteSocialePath,
-            agent: { connect: { matricule: agentMatricule } },
-            personne: { create: personne },
-          },
+          create: { id, agentMatricule, carteSocialePath },
         },
       },
       select: { id: true },
     });
     return created.id;
-  }
-
-  async updatePartial(
-    id: number,
-    conjoint: UpdatePartialConjoint,
-    tx?: DbClient,
-  ): Promise<void> {
-    const { personne } = conjoint;
-    if (!personne || Object.keys(personne).length === 0) return;
-
-    await this.client(tx).conjoint.update({
-      where: { id },
-      data: {
-        familleAgent: {
-          update: { personne: { update: personne } },
-        },
-      },
-    });
   }
 
   async updateCarteSociale(
@@ -84,12 +71,8 @@ export class ConjointRepository {
   async readbyID(id: number, tx?: DbClient): Promise<ReadConjoint> {
     const conjoint = await this.client(tx).conjoint.findUniqueOrThrow({
       where: { id },
-      include: { familleAgent: true },
+      include: { familleAgent: { include: { personne: true } } },
     });
     return this.toReadConjoint(conjoint);
-  }
-  
-  async delete(id: number, tx?: DbClient): Promise<void> {
-    await this.client(tx).familleAgent.delete({ where: { id } });
   }
 }

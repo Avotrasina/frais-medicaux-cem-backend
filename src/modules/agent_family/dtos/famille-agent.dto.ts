@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsNotEmpty, IsString, IsOptional } from "class-validator";
-import { Sexe } from "../../agent/types/personne.types.js";
+import { Sexe } from "../../personne/personne.types.js";
 
 class FamilleAgentInputBaseDto {
   @IsString()

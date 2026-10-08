@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import { RecordNotFoundError } from "../../../common/errors/database.errors.js";
 import { AgentRepository } from "../repositories/agent.repository.js";
-import { PersonneRepository } from "../repositories/personne.repository.js";
+import { PersonneRepository } from "../../personne/personne.repository.js";
 import { AgentType } from "../types/agent.types.js";
 import type { AgentUpdatePartial,AgentUpdateProfCard} from "../types/use-case.agent.types.js";
 import type { UpdatePartialAgent } from "../types/agent.types.js";
-import type { UpdatePartialPersonne } from "../types/personne.types.js";
+import type { UpdatePartialPersonne } from "../../personne/personne.types.js";
 import { FileStorageService } from "../../../infrastructure/storage/file-storage.service.js";
 
 @Injectable()

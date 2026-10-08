@@ -1,5 +1,5 @@
-import type { Sexe } from "./personne.types.js";
-import type { StatutPEC, BackOfficeFrontOffice } from "./enum.types.js";
+import type { Sexe } from "../../personne/personne.types.js";
+import type { StatutPEC, BackOfficeFrontOffice } from "./agent.enum.types.js";
 
 export type AgentUseCaseTypes = {
   matricule: string;

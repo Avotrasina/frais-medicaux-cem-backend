@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import { RecordNotFoundError } from "../../../common/errors/database.errors.js";
 import { AgentRepository } from "../repositories/agent.repository.js";
-import { PersonneRepository } from "../repositories/personne.repository.js";
+import { PersonneRepository } from "../../personne/personne.repository.js";
 
 @Injectable()
 export class DeleteAgentUseCase {
@@ -23,7 +23,6 @@ export class DeleteAgentUseCase {
         throw new RecordNotFoundError("Agent");
       }
 
-      await this.agentRepository.delete(agent.id, tx);
       await this.personneRepository.delete(agent.id, tx);
     });
   }

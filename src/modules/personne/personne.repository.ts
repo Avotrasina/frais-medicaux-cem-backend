@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
-import type { Personne } from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
+import { PrismaClient } from "../../generated/prisma/client.js";
+import type { Personne } from "../../generated/prisma/client.js";
+import type { DbClient } from "../../infrastructure/prisma/db-client.type.js";
 import {
   Sexe,
   type CreatePersonne,
   type ReadPersonne,
-  type UpdatePersonne,
-} from "../types/personne.types.js";
-import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
+  type UpdatePartialPersonne,
+} from "./personne.types.js";
+import { HandlePrismaErrors } from "../../common/decorators/handle-prisma-errors.decorator.js";
 
 
 @Injectable()
@@ -39,10 +39,15 @@ export class PersonneRepository {
 
   async update(
     id: number,
-    personne: UpdatePersonne,
+    personne: UpdatePartialPersonne,
     tx?: DbClient,
   ): Promise<ReadPersonne> {
-    const updatedPersonne = await this.client(tx).personne.update({ where: { id }, data: personne });
+    const updatedPersonne = await this.client(tx).personne.update({ where: { id }, data:{
+      nom:personne.nom?personne.nom : undefined,
+      prenom:personne.prenom?personne.prenom:undefined,
+      dateNaissance:personne.dateNaissance?personne.dateNaissance:undefined,
+      sexe:personne.sexe?personne.sexe:undefined,
+    }});
     return this.toReadPersonne(updatedPersonne);
   }
 

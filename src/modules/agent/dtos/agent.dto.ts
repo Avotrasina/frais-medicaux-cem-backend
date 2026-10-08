@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type,Expose } from 'class-transformer';
 import { PartialType, OmitType } from "@nestjs/mapped-types";
-import { Sexe } from '../types/personne.types.js';
+import { Sexe } from '../../personne/personne.types.js';
 import {StatutPEC, BackOfficeFrontOffice } from './enum.js';
 
 export class AgentInputDto {

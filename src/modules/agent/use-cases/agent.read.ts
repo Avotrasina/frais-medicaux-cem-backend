@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AgentRepository } from "../repositories/agent.repository.js";
+import { AgentRepository } from "../../personne/agent.repository.js";
 import { AgentType } from "../types/agent.types.js";
 import type { AgentUseCaseTypes,FilterOptions} from "../types/use-case.agent.types.js";
 import { BackOfficeFrontOffice } from "../dtos/enum.js";
@@ -47,6 +47,7 @@ export class ReadAgentUseCase {
       ? BackOfficeFrontOffice.DIRECTION
       : BackOfficeFrontOffice.AGENCE;
   }
+  
   readAll(): Promise<AgentUseCaseTypes[]> {
     return this.fetch(() => this.agentRepository.findAllAgents());
   }
