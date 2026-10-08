@@ -1,13 +1,32 @@
-export type ReadFamilleAgent = {
-  id: number;
-  agentMatricule: string;
-  carteSocialePath: string;
+// famille.agent.types.ts
+import type { Prisma } from "../../../generated/prisma/client.js";
+import type { Sexe } from "../../agent/types/personne.types.js";
+
+export type PersonneData = {
+  nom: string;
+  prenom: string;
+  dateNaissance: Date;
+  sexe: Sexe;
 };
 
-export type CreateFamilleAgent = {
-  id: number;
+export type CreateFamilleAgentBase = {
   agentMatricule: string;
   carteSocialePath: string;
+  personne: PersonneData;
 };
 
-export type UpdateFamilleAgent = Partial<Omit<CreateFamilleAgent, "id">>;
+export type UpdatePartialFamilleAgentBase = {
+  personne?: Partial<PersonneData>;
+};
+
+const familleInclude = {
+  personne: true,
+  conjoint: true,
+  enfant: true,
+} satisfies Prisma.FamilleAgentInclude;
+
+export const FAMILLE_AGENT_INCLUDE = familleInclude;
+
+export type ReadFamilleAgent = Prisma.FamilleAgentGetPayload<{
+  include: typeof familleInclude;
+}>;
