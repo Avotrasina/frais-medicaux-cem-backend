@@ -11,3 +11,7 @@ export type ReadEnfant = {
   agentMatricule: string;
   carteSocialePath: string;
 };
+export type CreatedEnfant = {
+  id: number;
+  numEnfant: number;
+};

@@ -2,10 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import { AgentRepository } from "../repositories/agent.repository.js";
 import { PersonneRepository } from "../../personne/personne.repository.js";
+import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
 import {AgentType} from "../types/agent.types.js"
 import type { AgentUseCaseTypes } from "../types/use-case.agent.types.js";
 import type { CreateAgent} from "../types/agent.types.js";
 import type { CreatePersonne} from "../../personne/personne.types.js";
+import type { CreateBeneficiary } from "../../beneficiary/types/beneficiary.types.js";
 
 
 
@@ -15,6 +17,7 @@ export class SaveAgentUseCase {
     private readonly prisma: PrismaClient,
     private readonly personneRepository: PersonneRepository,
     private readonly agentRepository: AgentRepository,
+    private readonly beneficiaryRepository: BeneficiaryRepository
   ) {}
 
   private splitInput(input: AgentUseCaseTypes): {
@@ -57,6 +60,11 @@ export class SaveAgentUseCase {
         { ...agent, id: createdPersonne.id },
         tx,
       );
+      const beneficiary : CreateBeneficiary = {
+        id:createdPersonne.id,
+        codeFamille:"AGENT",
+      }
+      await this.beneficiaryRepository.create(beneficiary)
     });
     return input;
   }

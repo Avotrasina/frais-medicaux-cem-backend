@@ -3,6 +3,7 @@ import { PrismaClient, Prisma } from "../../../generated/prisma/client.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
   CreateConjoint,
+  CreatedConjoint,
   ReadConjoint,
 } from "../types/conjoint.types.js";
 import { Sexe } from "../../personne/personne.types.js";
@@ -39,18 +40,17 @@ export class ConjointRepository {
   async create(
     conjoint: CreateConjointRecord,
     tx?: DbClient,
-  ): Promise<number> {
+  ): Promise<CreatedConjoint> {
     const { id, agentMatricule, carteSocialePath } = conjoint;
 
-    const created = await this.client(tx).conjoint.create({
+    return this.client(tx).conjoint.create({
       data: {
         familleAgent: {
           create: { id, agentMatricule, carteSocialePath },
         },
       },
-      select: { id: true },
+      select: { id: true, numConjoint: true },
     });
-    return created.id;
   }
 
   async updateCarteSociale(

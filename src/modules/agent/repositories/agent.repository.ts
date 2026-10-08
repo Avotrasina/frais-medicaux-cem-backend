@@ -12,7 +12,7 @@ import {
   type ReadAgent,
   type UpdatePartialAgent,
 } from "../types/agent.types.js";
-import {type ReadPersonne,Sexe} from "../types/personne.types.js"
+import {type ReadPersonne,Sexe} from "../../personne/personne.types.js"
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 import type {ReadPersonneAgent} from "../types/agent.types.js"
 import { omitNullish } from "../../../common/utils/omit-nullish.js";

@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient, Prisma } from "../../../generated/prisma/client.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
-import type { CreateEnfant, ReadEnfant } from "../types/enfant.types.js";
+import type {
+  CreateEnfant,
+  CreatedEnfant,
+  ReadEnfant,
+} from "../types/enfant.types.js";
 import { Sexe } from "../../personne/personne.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 
@@ -31,18 +35,20 @@ export class EnfantRepository {
     };
   }
 
-  async create(enfant: CreateEnfantRecord, tx?: DbClient): Promise<number> {
+  async create(
+    enfant: CreateEnfantRecord,
+    tx?: DbClient,
+  ): Promise<CreatedEnfant> {
     const { id, agentMatricule, carteSocialePath } = enfant;
 
-    const created = await this.client(tx).enfant.create({
+    return this.client(tx).enfant.create({
       data: {
         familleAgent: {
           create: { id, agentMatricule, carteSocialePath },
         },
       },
-      select: { id: true },
+      select: { id: true, numEnfant: true },
     });
-    return created.id;
   }
 
   async readbyID(id: number, tx?: DbClient): Promise<ReadEnfant> {

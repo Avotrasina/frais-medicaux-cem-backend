@@ -2,7 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
 import { EnfantRepository } from "../repositories/enfant.repository.js";
 import { PersonneRepository } from "../../personne/personne.repository.js";
+import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
 import type { CreateEnfant } from "../types/enfant.types.js";
+import type {CreateBeneficiary} from "../../beneficiary/types/beneficiary.types.js"
 
 @Injectable()
 export class SaveEnfantUseCase {
@@ -10,6 +12,7 @@ export class SaveEnfantUseCase {
     private readonly prisma: PrismaClient,
     private readonly personneRepository: PersonneRepository,
     private readonly enfantRepository: EnfantRepository,
+    private readonly beneficiaryRepository: BeneficiaryRepository
   ) {}
 
   async execute(input: CreateEnfant): Promise<number> {
@@ -20,10 +23,17 @@ export class SaveEnfantUseCase {
         personne,
         tx,
       );
-      return this.enfantRepository.create(
+      const enfant = await this.enfantRepository.create(
         { id: createdPersonne.id, agentMatricule, carteSocialePath },
         tx,
       );
+      const beneficiary : CreateBeneficiary = {
+        id:createdPersonne.id,
+        codeFamille:"ENFANT",
+        numConjoint:enfant.numEnfant
+      }
+      await this.beneficiaryRepository.create(beneficiary)
+      return createdPersonne.id
     });
   }
 }

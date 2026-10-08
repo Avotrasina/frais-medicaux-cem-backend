@@ -11,3 +11,7 @@ export type ReadConjoint = {
   agentMatricule: string;
   carteSocialePath: string;
 };
+export type CreatedConjoint = {
+  id: number;
+  numConjoint: number;
+};
