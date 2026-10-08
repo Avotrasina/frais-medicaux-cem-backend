@@ -1,11 +1,8 @@
-export interface ReadAgence {
+export type ReadAgence = {
   codeAgence: string;
   nomAgence: string;
-}
+};
 
-export interface CreateAgence {
-  codeAgence: string;
-  nomAgence: string;
-}
+export type CreateAgence = ReadAgence;
 
 export type UpdateAgence = Partial<Omit<CreateAgence, "codeAgence">>;

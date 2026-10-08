@@ -27,18 +27,10 @@ export class ServiceRepository {
   }
 
   async findAll(tx?: DbClient): Promise<ReadService[]> {
-    const services = await this.client(tx).service.findMany();
-    return services.map((service) => this.toReadService(service));
-  }
-
-  async findOne(
-    codeService: string,
-    tx?: DbClient,
-  ): Promise<ReadService | null> {
-    const service = await this.client(tx).service.findUnique({
-      where: { codeService },
+    const services = await this.client(tx).service.findMany({
+      orderBy: [{ codeDirection: "asc" }, { nom: "asc" }],
     });
-    return service ? this.toReadService(service) : null;
+    return services.map((service) => this.toReadService(service));
   }
 
   async findByCodeDirection(
@@ -47,6 +39,7 @@ export class ServiceRepository {
   ): Promise<ReadService[]> {
     const services = await this.client(tx).service.findMany({
       where: { codeDirection },
+      orderBy: { nom: "asc" },
     });
     return services.map((service) => this.toReadService(service));
   }

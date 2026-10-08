@@ -197,4 +197,16 @@ export class AgentRepository {
   async delete(id: number, tx?: DbClient): Promise<void> {
     await this.client(tx).agent.delete({ where: { id } });
   }
+
+  async updateStructureByService(
+    serviceID: string,
+    structureID: string,
+    tx?: DbClient,
+  ): Promise<number> {
+    const result = await this.client(tx).agent.updateMany({
+      where: { serviceID },
+      data: { structureID },
+    });
+    return result.count;
+  }
 }

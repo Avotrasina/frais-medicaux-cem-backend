@@ -5,15 +5,12 @@ export const StructureOrganisationnelleType = {
 export type StructureOrganisationnelleType =
   (typeof StructureOrganisationnelleType)[keyof typeof StructureOrganisationnelleType];
 
-export interface ReadStructureOrganisationnelle {
+export type ReadStructureOrganisationnelle = {
   id: string;
   structureOrganisationnelleType: StructureOrganisationnelleType;
-}
+};
 
-export interface CreateStructureOrganisationnelle {
-  id: string;
-  structureOrganisationnelleType: StructureOrganisationnelleType;
-}
+export type CreateStructureOrganisationnelle = ReadStructureOrganisationnelle;
 
 export type UpdateStructureOrganisationnelle = Partial<
   Omit<CreateStructureOrganisationnelle, "id">

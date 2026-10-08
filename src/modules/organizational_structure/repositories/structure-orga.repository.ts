@@ -36,27 +36,6 @@ export class StructureOrganisationnelleRepository {
     );
   }
 
-  async findOne(
-    id: string,
-    tx?: DbClient,
-  ): Promise<ReadStructureOrganisationnelle | null> {
-    const structure = await this.client(tx).structureOrganisationnelle.findUnique({
-      where: { id },
-    });
-    return structure ? this.toReadStructureOrganisationnelle(structure) : null;
-  }
-
-  async findByType(
-    structureOrganisationnelleType: StructureOrganisationnelleType,
-    tx?: DbClient,
-  ): Promise<ReadStructureOrganisationnelle[]> {
-    const structures = await this.client(tx).structureOrganisationnelle.findMany({
-      where: { structureOrganisationnelleType },
-    });
-    return structures.map((structure) =>
-      this.toReadStructureOrganisationnelle(structure),
-    );
-  }
 
   async create(
     structure: CreateStructureOrganisationnelle,

@@ -1,16 +1,26 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../../../generated/prisma/client.js";
-import type { Direction } from "../../../generated/prisma/client.js";
+import type {
+  Direction,
+  Prisma,
+} from "../../../generated/prisma/client.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
   CreateDirection,
   ReadDirection,
+  ReadDirectionWithServices,
   UpdateDirection,
 } from "../types/direction.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 
+type DirectionWithServices = Prisma.DirectionGetPayload<{
+  include: { services: true };
+}>;
+
 @Injectable()
-@HandlePrismaErrors({ exclude: ["toReadDirection"] })
+@HandlePrismaErrors({
+  exclude: ["toReadDirection", "toReadDirectionWithServices"],
+})
 export class DirectionRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -25,19 +35,36 @@ export class DirectionRepository {
     };
   }
 
+  private toReadDirectionWithServices(
+    direction: DirectionWithServices,
+  ): ReadDirectionWithServices {
+    return {
+      ...this.toReadDirection(direction),
+      services: direction.services.map((service) => ({
+        codeService: service.codeService,
+        nom: service.nom,
+        codeDirection: service.codeDirection,
+      })),
+    };
+  }
+
   async findAll(tx?: DbClient): Promise<ReadDirection[]> {
-    const directions = await this.client(tx).direction.findMany();
+    const directions = await this.client(tx).direction.findMany({
+      orderBy: { nom: "asc" },
+    });
     return directions.map((direction) => this.toReadDirection(direction));
   }
 
-  async findOne(
-    codeDirection: string,
+  async findAllWithServices(
     tx?: DbClient,
-  ): Promise<ReadDirection | null> {
-    const direction = await this.client(tx).direction.findUnique({
-      where: { codeDirection },
+  ): Promise<ReadDirectionWithServices[]> {
+    const directions = await this.client(tx).direction.findMany({
+      include: { services: { orderBy: { nom: "asc" } } },
+      orderBy: { nom: "asc" },
     });
-    return direction ? this.toReadDirection(direction) : null;
+    return directions.map((direction) =>
+      this.toReadDirectionWithServices(direction),
+    );
   }
 
   async create(
