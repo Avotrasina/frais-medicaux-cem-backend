@@ -243,9 +243,11 @@ export type DateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
-export type BoolNullableFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedBoolNullableFilter<$PrismaModel> | boolean | null
+export type EnumStatutAttestationFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutAttestation | Prisma.EnumStatutAttestationFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutAttestationFilter<$PrismaModel> | $Enums.StatutAttestation
 }
 
 export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -262,12 +264,14 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
 }
 
-export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedBoolNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedBoolNullableFilter<$PrismaModel>
+export type EnumStatutAttestationWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutAttestation | Prisma.EnumStatutAttestationFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutAttestationWithAggregatesFilter<$PrismaModel> | $Enums.StatutAttestation
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutAttestationFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutAttestationFilter<$PrismaModel>
 }
 
 export type EnumStatutPrestataireFilter<$PrismaModel = never> = {
@@ -529,9 +533,11 @@ export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
-export type NestedBoolNullableFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedBoolNullableFilter<$PrismaModel> | boolean | null
+export type NestedEnumStatutAttestationFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutAttestation | Prisma.EnumStatutAttestationFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutAttestationFilter<$PrismaModel> | $Enums.StatutAttestation
 }
 
 export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -548,12 +554,14 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
 }
 
-export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel> | null
-  not?: Prisma.NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-  _min?: Prisma.NestedBoolNullableFilter<$PrismaModel>
-  _max?: Prisma.NestedBoolNullableFilter<$PrismaModel>
+export type NestedEnumStatutAttestationWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutAttestation | Prisma.EnumStatutAttestationFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutAttestation[] | Prisma.ListEnumStatutAttestationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutAttestationWithAggregatesFilter<$PrismaModel> | $Enums.StatutAttestation
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutAttestationFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutAttestationFilter<$PrismaModel>
 }
 
 export type NestedEnumStatutPrestataireFilter<$PrismaModel = never> = {

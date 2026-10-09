@@ -43,6 +43,15 @@ export const StructureOrganisationnelleType = {
 export type StructureOrganisationnelleType = (typeof StructureOrganisationnelleType)[keyof typeof StructureOrganisationnelleType]
 
 
+export const StatutAttestation = {
+  EN_ATTENTE: 'EN_ATTENTE',
+  VALIDEE: 'VALIDEE',
+  REFUSEE: 'REFUSEE'
+} as const
+
+export type StatutAttestation = (typeof StatutAttestation)[keyof typeof StatutAttestation]
+
+
 export const StatutPrestataire = {
   PRIVE: 'PRIVE',
   PUBLIC: 'PUBLIC'

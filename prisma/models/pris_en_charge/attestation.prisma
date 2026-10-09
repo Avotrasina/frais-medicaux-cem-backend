@@ -1,11 +1,20 @@
+enum StatutAttestation {
+  EN_ATTENTE @map("en_attente")
+  VALIDEE    @map("validee")
+  REFUSEE    @map("refusee")
+
+  @@map("statut_attestation")
+  @@schema("pec")
+}
+
 model Attestation {
-  id                 Int       @id @default(autoincrement())
-  attestationRef     String    @unique @map("ref_attestation")
-  attestationPath    String    @map("attestation_path") @db.VarChar(50)
-  dateValidation     DateTime? @map("dt_validation")
-  naturePrestation   String    @map("nature_prestation") @db.VarChar(100)
-  servicePrestataire String?   @map("service_prestataire") @db.VarChar(50)
-  isValid            Boolean?  @default(false) @map("is_validate")
+  id                 Int               @id @default(autoincrement())
+  attestationRef     String            @unique @map("ref_attestation")
+  attestationPath    String            @map("attestation_path") @db.VarChar(50)
+  dateValidation     DateTime?         @map("dt_validation")
+  naturePrestation   String            @map("nature_prestation") @db.VarChar(100)
+  servicePrestataire String?           @map("service_prestataire") @db.VarChar(50)
+  statut             StatutAttestation @default(EN_ATTENTE)
 
   prestataireID   Int    @map("prestataire_id")
   idpBeneficiaire String @map("beneficiaire_id")
