@@ -1,5 +1,6 @@
 model Attestation {
   id                 Int       @id @default(autoincrement())
+  attestationRef     String    @unique @map("ref_attestation")
   attestationPath    String    @map("attestation_path") @db.VarChar(50)
   dateValidation     DateTime? @map("dt_validation")
   naturePrestation   String    @map("nature_prestation") @db.VarChar(100)

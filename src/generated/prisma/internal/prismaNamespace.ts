@@ -1781,6 +1781,7 @@ export type AgenceScalarFieldEnum = (typeof AgenceScalarFieldEnum)[keyof typeof 
 
 export const AttestationScalarFieldEnum = {
   id: 'id',
+  attestationRef: 'attestationRef',
   attestationPath: 'attestationPath',
   dateValidation: 'dateValidation',
   naturePrestation: 'naturePrestation',

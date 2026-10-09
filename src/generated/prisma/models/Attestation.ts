@@ -38,6 +38,7 @@ export type AttestationSumAggregateOutputType = {
 
 export type AttestationMinAggregateOutputType = {
   id: number | null
+  attestationRef: string | null
   attestationPath: string | null
   dateValidation: Date | null
   naturePrestation: string | null
@@ -51,6 +52,7 @@ export type AttestationMinAggregateOutputType = {
 
 export type AttestationMaxAggregateOutputType = {
   id: number | null
+  attestationRef: string | null
   attestationPath: string | null
   dateValidation: Date | null
   naturePrestation: string | null
@@ -64,6 +66,7 @@ export type AttestationMaxAggregateOutputType = {
 
 export type AttestationCountAggregateOutputType = {
   id: number
+  attestationRef: number
   attestationPath: number
   dateValidation: number
   naturePrestation: number
@@ -89,6 +92,7 @@ export type AttestationSumAggregateInputType = {
 
 export type AttestationMinAggregateInputType = {
   id?: true
+  attestationRef?: true
   attestationPath?: true
   dateValidation?: true
   naturePrestation?: true
@@ -102,6 +106,7 @@ export type AttestationMinAggregateInputType = {
 
 export type AttestationMaxAggregateInputType = {
   id?: true
+  attestationRef?: true
   attestationPath?: true
   dateValidation?: true
   naturePrestation?: true
@@ -115,6 +120,7 @@ export type AttestationMaxAggregateInputType = {
 
 export type AttestationCountAggregateInputType = {
   id?: true
+  attestationRef?: true
   attestationPath?: true
   dateValidation?: true
   naturePrestation?: true
@@ -215,6 +221,7 @@ export type AttestationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type AttestationGroupByOutputType = {
   id: number
+  attestationRef: string
   attestationPath: string
   dateValidation: Date | null
   naturePrestation: string
@@ -251,6 +258,7 @@ export type AttestationWhereInput = {
   OR?: Prisma.AttestationWhereInput[]
   NOT?: Prisma.AttestationWhereInput | Prisma.AttestationWhereInput[]
   id?: Prisma.IntFilter<"Attestation"> | number
+  attestationRef?: Prisma.StringFilter<"Attestation"> | string
   attestationPath?: Prisma.StringFilter<"Attestation"> | string
   dateValidation?: Prisma.DateTimeNullableFilter<"Attestation"> | Date | string | null
   naturePrestation?: Prisma.StringFilter<"Attestation"> | string
@@ -266,6 +274,7 @@ export type AttestationWhereInput = {
 
 export type AttestationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  attestationRef?: Prisma.SortOrder
   attestationPath?: Prisma.SortOrder
   dateValidation?: Prisma.SortOrderInput | Prisma.SortOrder
   naturePrestation?: Prisma.SortOrder
@@ -281,6 +290,7 @@ export type AttestationOrderByWithRelationInput = {
 
 export type AttestationWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  attestationRef?: string
   AND?: Prisma.AttestationWhereInput | Prisma.AttestationWhereInput[]
   OR?: Prisma.AttestationWhereInput[]
   NOT?: Prisma.AttestationWhereInput | Prisma.AttestationWhereInput[]
@@ -295,10 +305,11 @@ export type AttestationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Attestation"> | Date | string
   prestataire?: Prisma.XOR<Prisma.PrestataireScalarRelationFilter, Prisma.PrestataireWhereInput>
   beneficiaire?: Prisma.XOR<Prisma.BeneficiaireScalarRelationFilter, Prisma.BeneficiaireWhereInput>
-}, "id">
+}, "id" | "attestationRef">
 
 export type AttestationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  attestationRef?: Prisma.SortOrder
   attestationPath?: Prisma.SortOrder
   dateValidation?: Prisma.SortOrderInput | Prisma.SortOrder
   naturePrestation?: Prisma.SortOrder
@@ -320,6 +331,7 @@ export type AttestationScalarWhereWithAggregatesInput = {
   OR?: Prisma.AttestationScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AttestationScalarWhereWithAggregatesInput | Prisma.AttestationScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Attestation"> | number
+  attestationRef?: Prisma.StringWithAggregatesFilter<"Attestation"> | string
   attestationPath?: Prisma.StringWithAggregatesFilter<"Attestation"> | string
   dateValidation?: Prisma.DateTimeNullableWithAggregatesFilter<"Attestation"> | Date | string | null
   naturePrestation?: Prisma.StringWithAggregatesFilter<"Attestation"> | string
@@ -332,6 +344,7 @@ export type AttestationScalarWhereWithAggregatesInput = {
 }
 
 export type AttestationCreateInput = {
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -345,6 +358,7 @@ export type AttestationCreateInput = {
 
 export type AttestationUncheckedCreateInput = {
   id?: number
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -357,6 +371,7 @@ export type AttestationUncheckedCreateInput = {
 }
 
 export type AttestationUpdateInput = {
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -370,6 +385,7 @@ export type AttestationUpdateInput = {
 
 export type AttestationUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -383,6 +399,7 @@ export type AttestationUncheckedUpdateInput = {
 
 export type AttestationCreateManyInput = {
   id?: number
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -395,6 +412,7 @@ export type AttestationCreateManyInput = {
 }
 
 export type AttestationUpdateManyMutationInput = {
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -406,6 +424,7 @@ export type AttestationUpdateManyMutationInput = {
 
 export type AttestationUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -419,6 +438,7 @@ export type AttestationUncheckedUpdateManyInput = {
 
 export type AttestationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  attestationRef?: Prisma.SortOrder
   attestationPath?: Prisma.SortOrder
   dateValidation?: Prisma.SortOrder
   naturePrestation?: Prisma.SortOrder
@@ -437,6 +457,7 @@ export type AttestationAvgOrderByAggregateInput = {
 
 export type AttestationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  attestationRef?: Prisma.SortOrder
   attestationPath?: Prisma.SortOrder
   dateValidation?: Prisma.SortOrder
   naturePrestation?: Prisma.SortOrder
@@ -450,6 +471,7 @@ export type AttestationMaxOrderByAggregateInput = {
 
 export type AttestationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  attestationRef?: Prisma.SortOrder
   attestationPath?: Prisma.SortOrder
   dateValidation?: Prisma.SortOrder
   naturePrestation?: Prisma.SortOrder
@@ -569,6 +591,7 @@ export type AttestationUncheckedUpdateManyWithoutPrestataireNestedInput = {
 }
 
 export type AttestationCreateWithoutBeneficiaireInput = {
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -581,6 +604,7 @@ export type AttestationCreateWithoutBeneficiaireInput = {
 
 export type AttestationUncheckedCreateWithoutBeneficiaireInput = {
   id?: number
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -622,6 +646,7 @@ export type AttestationScalarWhereInput = {
   OR?: Prisma.AttestationScalarWhereInput[]
   NOT?: Prisma.AttestationScalarWhereInput | Prisma.AttestationScalarWhereInput[]
   id?: Prisma.IntFilter<"Attestation"> | number
+  attestationRef?: Prisma.StringFilter<"Attestation"> | string
   attestationPath?: Prisma.StringFilter<"Attestation"> | string
   dateValidation?: Prisma.DateTimeNullableFilter<"Attestation"> | Date | string | null
   naturePrestation?: Prisma.StringFilter<"Attestation"> | string
@@ -634,6 +659,7 @@ export type AttestationScalarWhereInput = {
 }
 
 export type AttestationCreateWithoutPrestataireInput = {
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -646,6 +672,7 @@ export type AttestationCreateWithoutPrestataireInput = {
 
 export type AttestationUncheckedCreateWithoutPrestataireInput = {
   id?: number
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -684,6 +711,7 @@ export type AttestationUpdateManyWithWhereWithoutPrestataireInput = {
 
 export type AttestationCreateManyBeneficiaireInput = {
   id?: number
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -695,6 +723,7 @@ export type AttestationCreateManyBeneficiaireInput = {
 }
 
 export type AttestationUpdateWithoutBeneficiaireInput = {
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -707,6 +736,7 @@ export type AttestationUpdateWithoutBeneficiaireInput = {
 
 export type AttestationUncheckedUpdateWithoutBeneficiaireInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -719,6 +749,7 @@ export type AttestationUncheckedUpdateWithoutBeneficiaireInput = {
 
 export type AttestationUncheckedUpdateManyWithoutBeneficiaireInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -731,6 +762,7 @@ export type AttestationUncheckedUpdateManyWithoutBeneficiaireInput = {
 
 export type AttestationCreateManyPrestataireInput = {
   id?: number
+  attestationRef: string
   attestationPath: string
   dateValidation?: Date | string | null
   naturePrestation: string
@@ -742,6 +774,7 @@ export type AttestationCreateManyPrestataireInput = {
 }
 
 export type AttestationUpdateWithoutPrestataireInput = {
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -754,6 +787,7 @@ export type AttestationUpdateWithoutPrestataireInput = {
 
 export type AttestationUncheckedUpdateWithoutPrestataireInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -766,6 +800,7 @@ export type AttestationUncheckedUpdateWithoutPrestataireInput = {
 
 export type AttestationUncheckedUpdateManyWithoutPrestataireInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  attestationRef?: Prisma.StringFieldUpdateOperationsInput | string
   attestationPath?: Prisma.StringFieldUpdateOperationsInput | string
   dateValidation?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   naturePrestation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -780,6 +815,7 @@ export type AttestationUncheckedUpdateManyWithoutPrestataireInput = {
 
 export type AttestationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  attestationRef?: boolean
   attestationPath?: boolean
   dateValidation?: boolean
   naturePrestation?: boolean
@@ -795,6 +831,7 @@ export type AttestationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type AttestationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  attestationRef?: boolean
   attestationPath?: boolean
   dateValidation?: boolean
   naturePrestation?: boolean
@@ -810,6 +847,7 @@ export type AttestationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type AttestationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  attestationRef?: boolean
   attestationPath?: boolean
   dateValidation?: boolean
   naturePrestation?: boolean
@@ -825,6 +863,7 @@ export type AttestationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type AttestationSelectScalar = {
   id?: boolean
+  attestationRef?: boolean
   attestationPath?: boolean
   dateValidation?: boolean
   naturePrestation?: boolean
@@ -836,7 +875,7 @@ export type AttestationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AttestationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attestationPath" | "dateValidation" | "naturePrestation" | "servicePrestataire" | "isValid" | "prestataireID" | "idpBeneficiaire" | "createdAt" | "updatedAt", ExtArgs["result"]["attestation"]>
+export type AttestationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attestationRef" | "attestationPath" | "dateValidation" | "naturePrestation" | "servicePrestataire" | "isValid" | "prestataireID" | "idpBeneficiaire" | "createdAt" | "updatedAt", ExtArgs["result"]["attestation"]>
 export type AttestationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestataire?: boolean | Prisma.PrestataireDefaultArgs<ExtArgs>
   beneficiaire?: boolean | Prisma.BeneficiaireDefaultArgs<ExtArgs>
@@ -858,6 +897,7 @@ export type $AttestationPayload<ExtArgs extends runtime.Types.Extensions.Interna
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    attestationRef: string
     attestationPath: string
     dateValidation: Date | null
     naturePrestation: string
@@ -1293,6 +1333,7 @@ export interface Prisma__AttestationClient<T, Null = never, ExtArgs extends runt
  */
 export interface AttestationFieldRefs {
   readonly id: Prisma.FieldRef<"Attestation", 'Int'>
+  readonly attestationRef: Prisma.FieldRef<"Attestation", 'String'>
   readonly attestationPath: Prisma.FieldRef<"Attestation", 'String'>
   readonly dateValidation: Prisma.FieldRef<"Attestation", 'DateTime'>
   readonly naturePrestation: Prisma.FieldRef<"Attestation", 'String'>
