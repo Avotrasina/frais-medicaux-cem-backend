@@ -215,6 +215,7 @@ export const AttestationScalarFieldEnum = {
   dateValidation: 'dateValidation',
   naturePrestation: 'naturePrestation',
   servicePrestataire: 'servicePrestataire',
+  isValid: 'isValid',
   prestataireID: 'prestataireID',
   idpBeneficiaire: 'idpBeneficiaire',
   createdAt: 'createdAt',

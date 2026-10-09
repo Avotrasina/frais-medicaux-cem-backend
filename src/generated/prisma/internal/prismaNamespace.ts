@@ -1785,6 +1785,7 @@ export const AttestationScalarFieldEnum = {
   dateValidation: 'dateValidation',
   naturePrestation: 'naturePrestation',
   servicePrestataire: 'servicePrestataire',
+  isValid: 'isValid',
   prestataireID: 'prestataireID',
   idpBeneficiaire: 'idpBeneficiaire',
   createdAt: 'createdAt',
@@ -1969,6 +1970,13 @@ export type EnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel> = Fiel
  * Reference to a field of type 'StructureOrganisationnelleType[]'
  */
 export type ListEnumStructureOrganisationnelleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StructureOrganisationnelleType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
