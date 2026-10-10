@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
 import { ReadBeneficiaryUseCase } from "./use-cases/beneficiary.read.js";
 import { UpdateBeneficiaryUseCase } from "./use-cases/beneficiary.update.js";
 import { UpdateObservationBeneficiaryDto } from "./dtos/update-observation-beneficiary.dto.js";
-import type { ReadBeneficiaryByMatricule } from "./types/beneficiary.types.js";
+import type { ReadBeneficiaryUseCaseType } from "./types/beneficiary.use-case.types.js";
 
 @Controller("beneficiaries")
 export class BeneficiaryController {
@@ -14,15 +14,22 @@ export class BeneficiaryController {
   @Get("matricule/:matricule")
   async findByMatricule(
     @Param("matricule") matricule: string,
-  ): Promise<ReadBeneficiaryByMatricule[]> {
+  ): Promise<ReadBeneficiaryUseCaseType[]> {
     return this.readBeneficiaryUseCase.readByMatricule(matricule);
   }
 
-  @Patch(":idp/observation")
+  @Get("idp/:idp")
+  async findByIdp(
+    @Param("idp") idp: string,
+  ): Promise<ReadBeneficiaryUseCaseType> {
+    return this.readBeneficiaryUseCase.readByIDP(idp);
+  }
+
+  @Patch("idp/:idp/observation")
   async updateObservation(
     @Param("idp") idp: string,
     @Body() body: UpdateObservationBeneficiaryDto,
-  ): Promise<void> {
-    await this.updateBeneficiaryUseCase.updateObservation(idp, body);
+  ): Promise<ReadBeneficiaryUseCaseType> {
+    return await this.updateBeneficiaryUseCase.updateObservation(idp, body);
   }
 }

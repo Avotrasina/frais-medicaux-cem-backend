@@ -1,4 +1,4 @@
-import type { ReadPersonne, Sexe } from "../../personne/personne.types.js";
+import type { Sexe } from "../../personne/personne.types.js";
 import type { CodeFamille } from "./idp.types.js";
 
 export type CreateBeneficiary = {
@@ -34,12 +34,7 @@ export type BeneficiaryLien =
       carteSocialePath: string;
     };
 
-export type ReadBeneficiary = ReadPersonne &
-  ReadBeneficiaryBase & {
-    lien: BeneficiaryLien | null;
-  };
-
-export type ReadBeneficiaryByMatricule = {
+  export type ReadBeneficiary = {
   nom: string;
   prenom: string;
   dateNaissance: Date;

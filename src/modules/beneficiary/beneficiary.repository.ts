@@ -4,11 +4,9 @@ import type { DbClient } from "../../infrastructure/prisma/db-client.type.js";
 import { Sexe } from "../personne/personne.types.js";
 import { CodeFamille } from "./types/idp.types.js";
 import type {
-  BeneficiaryLien,
   CreateBeneficiary,
-  ReadBeneficiary,
   ReadBeneficiaryBase,
-  ReadBeneficiaryByMatricule,
+  ReadBeneficiary,
   UpdateObservationBeneficiary,
 } from "./types/beneficiary.types.js";
 import { buildCodeFamille } from "./utils/build-idp.js";
@@ -31,45 +29,13 @@ type BeneficiaryWithRelations = Prisma.BeneficiaireGetPayload<{
 
 @Injectable()
 @HandlePrismaErrors({
-  exclude: [
-    "toReadBeneficiary",
-    "toReadBeneficiaryByMatricule",
-    "resolveLien",
-    "resolveCodeFamille",
-  ],
+  exclude: ["toReadBeneficiary", "resolveCodeFamille", "resolveMatricule"],
 })
 export class BeneficiaryRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;
-  }
-
-  private resolveLien(
-    personne: BeneficiaryWithRelations["personne"],
-  ): BeneficiaryLien | null {
-    const { agent, familleAgent } = personne;
-
-    if (agent) {
-      return { type: "AGENT", matricule: agent.matricule };
-    }
-    if (familleAgent?.conjoint) {
-      return {
-        type: "CONJOINT",
-        numConjoint: familleAgent.conjoint.numConjoint,
-        agentMatricule: familleAgent.agentMatricule,
-        carteSocialePath: familleAgent.carteSocialePath,
-      };
-    }
-    if (familleAgent?.enfant) {
-      return {
-        type: "ENFANT",
-        numEnfant: familleAgent.enfant.numEnfant,
-        agentMatricule: familleAgent.agentMatricule,
-        carteSocialePath: familleAgent.carteSocialePath,
-      };
-    }
-    return null;
   }
 
   private resolveCodeFamille(
@@ -83,26 +49,20 @@ export class BeneficiaryRepository {
     );
   }
 
+  private resolveMatricule(
+    personne: BeneficiaryWithRelations["personne"],
+  ): string {
+    const matricule =
+      personne.agent?.matricule ?? personne.familleAgent?.agentMatricule;
+    if (!matricule) {
+      throw new Error(`La personne ${personne.id} n'est liée à aucun agent`);
+    }
+    return matricule;
+  }
+
   private toReadBeneficiary(
     beneficiary: BeneficiaryWithRelations,
   ): ReadBeneficiary {
-    const { personne, ...rest } = beneficiary;
-    const { agent: _agent, familleAgent: _famille, ...identite } = personne;
-
-    return {
-      ...identite,
-      sexe: Sexe[personne.sexe],
-      id: rest.id,
-      idp: rest.idp,
-      observationIDP: rest.observationIDP,
-      lien: this.resolveLien(personne),
-    };
-  }
-
-  private toReadBeneficiaryByMatricule(
-    beneficiary: BeneficiaryWithRelations,
-    matricule: string,
-  ): ReadBeneficiaryByMatricule {
     const { personne } = beneficiary;
     const { agent, familleAgent } = personne;
 
@@ -113,7 +73,7 @@ export class BeneficiaryRepository {
       sexe: Sexe[personne.sexe],
       idp: beneficiary.idp,
       observationIDP: beneficiary.observationIDP,
-      matricule,
+      matricule: this.resolveMatricule(personne),
       codeFamille: this.resolveCodeFamille(personne),
       carteSocialePath: familleAgent?.carteSocialePath ?? null,
       carteProfessionnellePath: agent?.carteProfessionnellePath ?? null,
@@ -134,28 +94,29 @@ export class BeneficiaryRepository {
       numConjoint ?? undefined,
     );
 
-    const created = await this.client(tx).beneficiaire.create({
+    return this.client(tx).beneficiaire.create({
       data: { id, idp, observationIDP: observationIDP ?? null },
       select: { id: true, idp: true, observationIDP: true },
     });
-    return created;
   }
 
   async updateObservation(
     idp: string,
     input: UpdateObservationBeneficiary,
     tx?: DbClient,
-  ): Promise<void> {
-    await this.client(tx).beneficiaire.update({
+  ): Promise<ReadBeneficiary> {
+    const updated = await this.client(tx).beneficiaire.update({
       where: { idp },
       data: { observationIDP: input.observationIDP },
+      include: BENEFICIARY_INCLUDE,
     });
+    return this.toReadBeneficiary(updated);
   }
 
   async findByMatricule(
     matricule: string,
     tx?: DbClient,
-  ): Promise<ReadBeneficiaryByMatricule[]> {
+  ): Promise<ReadBeneficiary[]> {
     const beneficiaries = await this.client(tx).beneficiaire.findMany({
       where: {
         personne: {
@@ -169,8 +130,17 @@ export class BeneficiaryRepository {
       orderBy: [{ personne: { nom: "asc" } }, { personne: { prenom: "asc" } }],
     });
 
-    return beneficiaries.map((b) =>
-      this.toReadBeneficiaryByMatricule(b, matricule),
-    );
+    return beneficiaries.map((b) => this.toReadBeneficiary(b));
+  }
+
+  async findByIDP(
+    idp: string,
+    tx?: DbClient,
+  ): Promise<ReadBeneficiary> {
+    const beneficiary = await this.client(tx).beneficiaire.findUniqueOrThrow({
+      where: { idp },
+      include: BENEFICIARY_INCLUDE,
+    });
+    return this.toReadBeneficiary(beneficiary);
   }
 }
