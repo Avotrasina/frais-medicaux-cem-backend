@@ -30,6 +30,13 @@ export class AgenceRepository {
     return agences.map((agence) => this.toReadAgence(agence));
   }
 
+  async findByID(codeAgence:string,tx?:DbClient):Promise<ReadAgence|null>{
+    const agence = await this.client(tx).agence.findFirst({
+      where:{codeAgence}
+    })
+    return agence?this.toReadAgence(agence):null
+  }
+
 
   async create(agence: CreateAgence, tx?: DbClient): Promise<ReadAgence> {
     const created = await this.client(tx).agence.create({ data: agence });

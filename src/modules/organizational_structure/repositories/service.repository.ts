@@ -44,6 +44,11 @@ export class ServiceRepository {
     return services.map((service) => this.toReadService(service));
   }
 
+  async findByID(codeService:string,tx?:DbClient):Promise<ReadService|null>{
+    const service = await this.client(tx).service.findUnique({where:{codeService}})
+    return service ?  this.toReadService(service) : null
+  }
+
   async create(service: CreateService, tx?: DbClient): Promise<ReadService> {
     const created = await this.client(tx).service.create({ data: service });
     return this.toReadService(created);

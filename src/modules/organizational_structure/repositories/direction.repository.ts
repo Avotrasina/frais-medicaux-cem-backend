@@ -55,6 +55,13 @@ export class DirectionRepository {
     return directions.map((direction) => this.toReadDirection(direction));
   }
 
+  async findByID(codeDirection:string,tx?:DbClient):Promise<ReadDirection|null>{
+    const direction = await this.client(tx).direction.findFirst({
+      where:{codeDirection}
+    })
+    return direction ? this.toReadDirection(direction) : null
+  }
+
   async findAllWithServices(
     tx?: DbClient,
   ): Promise<ReadDirectionWithServices[]> {
