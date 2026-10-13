@@ -24,7 +24,7 @@ import { SaveEnfantUseCase } from "./use-cases/enfant.save.js";
 import { UpdateConjointUseCase } from "./use-cases/conjoint.update.js";
 import { UpdateEnfantUseCase } from "./use-cases/enfant.update.js";
 import { ReadFamilleUseCase } from "./use-cases/famille.read.js";
-import type { ReadFamilleAgent } from "./types/famille.agent.types.js";
+import type { ReadAgentFamily } from "./types/famille.agent.types.js";
 
 @Controller("agent-family")
 export class AgentFamilyController {
@@ -152,7 +152,7 @@ export class AgentFamilyController {
   @HttpCode(HttpStatus.OK)
   async getByMatricule(
     @Param("matricule") matricule: string,
-  ): Promise<ReadFamilleAgent[]> {
+  ): Promise<ReadAgentFamily[]> {
     return this.readFamilleUseCase.readByMatricule(matricule);
   }
 }

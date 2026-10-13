@@ -1,10 +1,11 @@
 import type {
-  CreateFamilleAgentBase,
-  UpdatePartialFamilleAgentBase,
+  CreateAgentFamilyBase,
+  UpdatePartialAgentFamilyBase,
 } from "./famille.agent.types.js";
+import { Prisma } from "../../../generated/prisma/client.js";
 
-export type CreateEnfant = CreateFamilleAgentBase;
-export type UpdatePartialEnfant = UpdatePartialFamilleAgentBase;
+export type CreateEnfant = CreateAgentFamilyBase;
+export type UpdatePartialEnfant = UpdatePartialAgentFamilyBase;
 export type ReadEnfant = {
   id: number;
   numEnfant: number;
@@ -15,3 +16,9 @@ export type CreatedEnfant = {
   id: number;
   numEnfant: number;
 };
+
+export type EnfantWithFamilleAgentPersonne = Prisma.EnfantGetPayload<{
+  include: { familleAgent: { include: { personne: true } } };
+}>;
+
+export type CreateEnfantRecord = Omit<CreateEnfant, "personne"> & { id: number };

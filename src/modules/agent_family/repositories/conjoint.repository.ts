@@ -1,19 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient, Prisma } from "../../../generated/prisma/client.js";
+import { PrismaClient} from "../../../generated/prisma/client.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
-  CreateConjoint,
   CreatedConjoint,
   ReadConjoint,
+  ConjointWithFamilleAgentPersonne,
+  CreateConjointRecord
 } from "../types/conjoint.types.js";
-import { Sexe } from "../../personne/personne.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
-
-type ConjointWithFamilleAgentPersonne = Prisma.ConjointGetPayload<{
-  include: { familleAgent: { include: { personne: true } } };
-}>;
-
-type CreateConjointRecord = Omit<CreateConjoint, "personne"> & { id: number };
 
 @Injectable()
 @HandlePrismaErrors()
@@ -68,7 +62,7 @@ export class ConjointRepository {
     });
   }
 
-  async readbyID(id: number, tx?: DbClient): Promise<ReadConjoint> {
+  async findByID(id: number, tx?: DbClient): Promise<ReadConjoint> {
     const conjoint = await this.client(tx).conjoint.findUniqueOrThrow({
       where: { id },
       include: { familleAgent: { include: { personne: true } } },

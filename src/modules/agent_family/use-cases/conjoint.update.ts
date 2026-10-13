@@ -20,14 +20,14 @@ export class UpdateConjointUseCase {
     if (!personne || Object.keys(omitNullish(personne)).length === 0) return;
 
     await this.prisma.$transaction(async (tx) => {
-      await this.conjointRepository.readbyID(id, tx);
+      await this.conjointRepository.findByID(id, tx);
       await this.personneRepository.update(id, personne, tx);
     });
   }
 
   async updateCarteSociale(id: number, newCardPath: string): Promise<void> {
     const { carteSocialePath: oldPath, ...reste } =
-      await this.conjointRepository.readbyID(id);
+      await this.conjointRepository.findByID(id);
 
     await this.conjointRepository.updateCarteSociale(id, newCardPath);
 

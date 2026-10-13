@@ -13,7 +13,7 @@ export class DeleteEnfantUseCase {
 
   async execute(id: number): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      await this.enfantRepository.readbyID(id, tx);
+      await this.enfantRepository.findByID(id, tx);
       await this.personneRepository.delete(id, tx);
     });
   }

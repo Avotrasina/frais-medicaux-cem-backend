@@ -13,7 +13,7 @@ export class DeleteConjointUseCase {
 
   async execute(id: number): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      await this.conjointRepository.readbyID(id, tx);
+      await this.conjointRepository.findByID(id, tx);
       await this.personneRepository.delete(id, tx);
     });
   }

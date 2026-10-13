@@ -1,10 +1,11 @@
+import { Prisma } from "../../../generated/prisma/client.js";
 import type {
-  CreateFamilleAgentBase,
-  UpdatePartialFamilleAgentBase,
+  CreateAgentFamilyBase,
+  UpdatePartialAgentFamilyBase,
 } from "./famille.agent.types.js";
 
-export type CreateConjoint = CreateFamilleAgentBase;
-export type UpdatePartialConjoint = UpdatePartialFamilleAgentBase;
+export type CreateConjoint = CreateAgentFamilyBase;
+export type UpdatePartialConjoint = UpdatePartialAgentFamilyBase;
 export type ReadConjoint = {
   id: number;
   numConjoint: number;
@@ -15,3 +16,8 @@ export type CreatedConjoint = {
   id: number;
   numConjoint: number;
 };
+export type ConjointWithFamilleAgentPersonne = Prisma.ConjointGetPayload<{
+  include: { familleAgent: { include: { personne: true } } };
+}>;
+
+export type CreateConjointRecord = Omit<CreateConjoint, "personne"> & { id: number };

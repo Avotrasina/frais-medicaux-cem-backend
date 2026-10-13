@@ -9,24 +9,36 @@ export type PersonneData = {
   sexe: Sexe;
 };
 
-export type CreateFamilleAgentBase = {
+export type CreateAgentFamilyBase = {
   agentMatricule: string;
   carteSocialePath: string;
   personne: PersonneData;
 };
 
-export type UpdatePartialFamilleAgentBase = {
+export type UpdatePartialAgentFamilyBase = {
   personne?: Partial<PersonneData>;
 };
 
-const familleInclude = {
+export type ReadAgentFamily = {
+  id:number,
+  nom:string,
+  prenom:string,
+  dateNaissance:Date,
+  sexe:Sexe,
+  numConjoint?: number | null,
+  numEnfant?:number | null,
+  carteSocialPath:string,
+  agentMatricule:string
+}
+
+const FamilyInclude = {
   personne: true,
   conjoint: true,
   enfant: true,
 } satisfies Prisma.FamilleAgentInclude;
 
-export const FAMILLE_AGENT_INCLUDE = familleInclude;
+export const FAMILLE_AGENT_INCLUDE = FamilyInclude;
 
-export type ReadFamilleAgent = Prisma.FamilleAgentGetPayload<{
-  include: typeof familleInclude;
+export type ReadAgentFamilyDB = Prisma.FamilleAgentGetPayload<{
+  include: typeof FamilyInclude;
 }>;
