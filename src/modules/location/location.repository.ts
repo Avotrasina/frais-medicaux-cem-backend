@@ -11,7 +11,7 @@ import { HandlePrismaErrors } from "../../common/decorators/handle-prisma-errors
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ["toReadLieu"] })
-export class LieuRepository {
+export class LocationRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   private client(tx?: DbClient): DbClient {
@@ -29,7 +29,7 @@ export class LieuRepository {
     return lieux.map((l) => this.toReadLieu(l));
   }
 
-  async readbyID(id: number, tx?: DbClient): Promise<ReadLieu> {
+  async findByID(id: number, tx?: DbClient): Promise<ReadLieu> {
     const lieu = await this.client(tx).lieu.findUniqueOrThrow({
       where: { id },
     });

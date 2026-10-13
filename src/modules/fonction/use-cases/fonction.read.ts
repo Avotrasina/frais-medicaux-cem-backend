@@ -6,11 +6,11 @@ import type { ReadFonction } from "../types/fonction.types.js";
 export class ReadFonctionUseCase {
   constructor(private readonly fonctionRepository: FonctionRepository) {}
 
-  async readAll(): Promise<ReadFonction[]> {
+  async findAll(): Promise<ReadFonction[]> {
     return this.fonctionRepository.findAll();
   }
 
-  async readById(id: number): Promise<ReadFonction> {
-    return this.fonctionRepository.readbyID(id);
+  async findByID(id: number): Promise<ReadFonction> {
+    return this.fonctionRepository.findByID(id);
   }
 }

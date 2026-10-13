@@ -29,7 +29,7 @@ export class FonctionRepository {
     return fonctions.map((f) => this.toReadFonction(f));
   }
 
-  async readbyID(id: number, tx?: DbClient): Promise<ReadFonction> {
+  async findByID(id: number, tx?: DbClient): Promise<ReadFonction> {
     const fonction = await this.client(tx).fonction.findUniqueOrThrow({
       where: { id },
     });

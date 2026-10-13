@@ -10,7 +10,7 @@ import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-err
 import { Sexe } from "../../personne/personne.types.js";
 
 @Injectable()
-@HandlePrismaErrors()
+@HandlePrismaErrors({exclude:["toReadAgentFamily"]})
 export class FamilleAgentRepository {
   constructor(private readonly prisma: PrismaClient) {}
 

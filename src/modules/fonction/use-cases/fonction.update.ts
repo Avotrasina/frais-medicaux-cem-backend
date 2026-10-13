@@ -15,7 +15,7 @@ export class UpdateFonctionUseCase {
   ): Promise<ReadFonction> {
     // aucun champ fourni : pas d'UPDATE inutile, on renvoie l'existant
     if (input.nom == null) {
-      return this.fonctionRepository.readbyID(id);
+      return this.fonctionRepository.findByID(id);
     }
     return this.fonctionRepository.updatePartial(id, input);
   }

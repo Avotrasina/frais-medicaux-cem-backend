@@ -28,12 +28,12 @@ export class FonctionController {
 
   @Get()
   async findAll(): Promise<ReadFonction[]> {
-    return this.readFonctionUseCase.readAll();
+    return this.readFonctionUseCase.findAll();
   }
 
   @Get(":id")
   async findOne(@Param("id", ParseIntPipe) id: number): Promise<ReadFonction> {
-    return this.readFonctionUseCase.readById(id);
+    return this.readFonctionUseCase.findByID(id);
   }
 
   @Patch(":id")
