@@ -10,6 +10,7 @@ import { Type,Expose } from 'class-transformer';
 import { PartialType, OmitType } from "@nestjs/mapped-types";
 import { Sexe } from '../../personne/personne.types.js';
 import {StatutPEC, BackOfficeFrontOffice } from './enum.js';
+import { Transform } from "class-transformer";
 
 export class AgentInputDto {
   @IsString()
@@ -72,3 +73,12 @@ export class AgentInputDto {
 export class AgentUpdateDto extends PartialType(
   OmitType(AgentInputDto, ["matricule"] as const),
 ) {}
+
+
+
+export class AgentSearchNameDto {
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @IsString()
+  @IsNotEmpty()
+  value!: string;
+}

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AgentRepository } from "../../personne/agent.repository.js";
+import { AgentRepository } from "../repositories/agent.repository.js";
 import { AgentType } from "../types/agent.types.js";
 import type { AgentUseCaseTypes,FilterOptions} from "../types/use-case.agent.types.js";
 import { BackOfficeFrontOffice } from "../dtos/enum.js";
@@ -61,15 +61,27 @@ export class ReadAgentUseCase {
     }
     if (codeAgence != null) {
       return this.fetch(() =>
-        this.agentRepository.findAgentsByCodeAgence(codeAgence),
+        this.agentRepository.findAgentsWithPrsonneByCodeAgence(codeAgence),
       );
     }
     if (codeDirection != null) {
       return this.fetch(() =>
-        this.agentRepository.findAgentsByDirection(codeDirection, codeService),
+        this.agentRepository.findAgentsWithPersonneByDirection(codeDirection, codeService),
       );
     }
     return this.readAll();
+  }
+
+  findByLastName(lastName: string): Promise<AgentUseCaseTypes[]> {
+    return this.fetch(() =>
+      this.agentRepository.findByLastNameWithPersonne(lastName),
+    );
+  }
+
+  findByFirstName(firstName: string): Promise<AgentUseCaseTypes[]> {
+    return this.fetch(() =>
+      this.agentRepository.findByFirstNameWithPersonne(firstName),
+    );
   }
 
 }

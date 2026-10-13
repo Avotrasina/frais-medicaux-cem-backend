@@ -19,10 +19,6 @@ export class DeleteAgentUseCase {
         tx,
       );
 
-      if (!agent) {
-        throw new RecordNotFoundError("Agent");
-      }
-
       await this.personneRepository.delete(agent.id, tx);
     });
   }

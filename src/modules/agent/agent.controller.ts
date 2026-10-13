@@ -15,7 +15,7 @@ import {
 import { ImageUploadInterceptor } from "../../common/interceptors/image-upload.interceptor.js";
 import { createImageFilePipe } from "../../common/pipes/image-file.pipe.js";
 import { FileStorageService } from "../../infrastructure/storage/file-storage.service.js";
-import { AgentInputDto,AgentUpdateDto} from "./dtos/agent.dto.js";
+import { AgentInputDto,AgentUpdateDto,AgentSearchNameDto} from "./dtos/agent.dto.js";
 import { SaveAgentUseCase } from "./use-cases/agent.save.js";
 import {UpdateAgentUseCase} from "./use-cases/agent.update.js"
 import type { AgentUpdatePartial, AgentUpdateProfCard,FilterOptions } from "./types/use-case.agent.types.js";
@@ -104,5 +104,17 @@ export class AgentController{
     @Query("filter") filter: FilterOptions
   ){
     return await this.readAgentUseCase.filter(filter)
+  }
+
+  @Get("search/last-name")
+  @HttpCode(HttpStatus.OK)
+  async getByLastName(@Query() query: AgentSearchNameDto) {
+    return await this.readAgentUseCase.findByLastName(query.value);
+  }
+
+  @Get("search/first-name")
+  @HttpCode(HttpStatus.OK)
+  async getByFirstName(@Query() query: AgentSearchNameDto) {
+    return await this.readAgentUseCase.findByFirstName(query.value);
   }
 }
