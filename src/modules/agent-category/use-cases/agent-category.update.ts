@@ -15,9 +15,8 @@ export class UpdateAgentCategoryUseCase {
     id: number,
     input: UpdatePartialAgentCategory,
   ): Promise<ReadAgentCategory> {
-    // aucun champ fourni : pas d'UPDATE inutile, on renvoie l'existant
     if (input.codeCategory == null) {
-      return this.agentCategoryRepository.readbyID(id);
+      return this.agentCategoryRepository.findByID(id);
     }
     return this.agentCategoryRepository.updatePartial(id, input);
   }

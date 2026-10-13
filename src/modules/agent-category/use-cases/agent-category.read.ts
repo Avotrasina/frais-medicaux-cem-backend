@@ -8,11 +8,11 @@ export class ReadAgentCategoryUseCase {
     private readonly agentCategoryRepository: AgentCategoryRepository,
   ) {}
 
-  async readAll(): Promise<ReadAgentCategory[]> {
+  async findAll(): Promise<ReadAgentCategory[]> {
     return this.agentCategoryRepository.findAll();
   }
 
-  async readById(id: number): Promise<ReadAgentCategory> {
-    return this.agentCategoryRepository.readbyID(id);
+  async findByID(id: number): Promise<ReadAgentCategory> {
+    return this.agentCategoryRepository.findByID(id);
   }
 }

@@ -29,7 +29,7 @@ export class AgentCategoryRepository {
     return categories.map((c) => this.toReadAgentCategory(c));
   }
 
-  async readbyID(id: number, tx?: DbClient): Promise<ReadAgentCategory> {
+  async findByID(id: number, tx?: DbClient): Promise<ReadAgentCategory> {
     const category = await this.client(tx).categorieAgent.findUniqueOrThrow({
       where: { id },
     });

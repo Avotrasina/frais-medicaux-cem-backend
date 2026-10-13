@@ -33,14 +33,14 @@ export class AgentCategoryController {
 
   @Get()
   async findAll(): Promise<ReadAgentCategory[]> {
-    return this.readAgentCategoryUseCase.readAll();
+    return this.readAgentCategoryUseCase.findAll();
   }
 
   @Get(":id")
   async findOne(
     @Param("id", ParseIntPipe) id: number,
   ): Promise<ReadAgentCategory> {
-    return this.readAgentCategoryUseCase.readById(id);
+    return this.readAgentCategoryUseCase.findByID(id);
   }
 
   @Patch(":id")
