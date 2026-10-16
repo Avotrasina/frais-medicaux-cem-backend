@@ -27,6 +27,7 @@ const validators = {
 
   STORAGE_ROOT: str({ default: 'data' }),
   UPLOAD_MAX_IMAGE_SIZE: num({ default: DEFAULT_MAX_IMAGE_SIZE }),
+  STORAGE_PDF_ATTESTATION_DIR:dirName({default:'attestation'}),
   STORAGE_IMAGES_DIR: dirName({ default: 'images' }),
   STORAGE_CARTES_PROFESSIONNELLES_DIR: dirName({ default: 'cartes-professionnelles' }),
   STORAGE_CARTES_SOCIALES_DIR: dirName({ default: 'cartes-sociales' }),

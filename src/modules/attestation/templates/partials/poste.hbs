@@ -1,0 +1,5 @@
+{{#if (eq agent.backofficefrontoffice "DIRECTION")}}
+<p>{{#if (eq agent.statusPEC "DIRECTEUR")}}{{agent.nomFonction}}{{else if (eq agent.statusPEC "CHEF_SERVICE")}}Chef de service à la direction {{agent.nomDirection}}{{else}}Agent à la direction {{agent.nomDirection}}{{/if}} .</p>
+{{else if (eq agent.backofficefrontoffice "AGENCE")}}
+<p>{{#if (eq agent.statusPEC "CHEF_AGENCE")}}chef d'agence à l'agence {{agent.nomAgence}}{{else}}Agent à l'agence {{agent.nomAgence}}{{/if}} .</p>
+{{/if}}

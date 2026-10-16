@@ -1,0 +1,10 @@
+<div class="mt-[22mm] text-base leading-10">
+  <p>La Caisse d'Épargne de Madagascar (CEM.SA) certifie par la présente que :</p>
+  <p class="font-semibold">{{#if (eq codeFamille "CONJOINT")}}{{civilite famille.sexe}} {{/if}}{{famille.nom}} {{famille.prenom}};</p>
+  <p>
+    {{#if (eq codeFamille "ENFANT")}}enfant{{else if (eq codeFamille "CONJOINT")}}{{#if (eq (civilite famille.sexe) "Madame")}}conjointe{{else}}conjoint{{/if}}{{else}}<span class="lowercase">{{codeFamille}}</span>{{/if}}
+    de {{civilite agent.sexe}} {{agent.nom}} {{agent.prenom}}, <strong>IM : {{agent.matricule}}</strong> ,
+  </p>
+  {{> poste}}
+  {{> prestation}}
+</div>
