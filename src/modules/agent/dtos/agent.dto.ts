@@ -72,7 +72,21 @@ export class AgentInputDto {
 
 export class AgentUpdateDto extends PartialType(
   OmitType(AgentInputDto, ["matricule"] as const),
-) {}
+) {
+  nom?: string;
+  prenom?: string;
+  statutPEC?: StatutPEC;
+  dateNaissance?: Date;
+  sexe?: Sexe;
+  backOfficeFrontOffice?: BackOfficeFrontOffice;
+  observationMatricule?: string | null;
+  dateEntree?: Date;
+  fonctionID?: number | null;
+  categorieID?: string | null;
+  codeDirection?: string | null;
+  codeAgence?: string | null;
+  codeService?: string | null;
+}
 
 
 
