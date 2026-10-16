@@ -33,8 +33,6 @@ export class AgentRepository {
     return tx ?? this.prisma;
   }
 
-  // ------------------------------------------------------------- Mappers
-
   private toReadPersonne(personne: Personne): ReadPersonne {
     return { ...personne, sexe: Sexe[personne.sexe] };
   }
@@ -133,6 +131,17 @@ export class AgentRepository {
       where: { matricule },
     });
     return this.toReadAgent(agent)
+  }
+
+  async findByMatriculeWithPersonne(
+    matricule: string,
+    tx?: DbClient,
+  ):Promise<ReadPersonneAgent>{
+    const agent = await this.client(tx).agent.findUniqueOrThrow({
+      where: { matricule },
+      include:{personne:true}
+    });
+    return this.toReadPersonneAgent(agent)
   }
 
   async findAllAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {

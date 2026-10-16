@@ -32,7 +32,7 @@ export class SaveConjointUseCase {
         codeFamille:"CONJOINT",
         numConjoint:conjoint.numConjoint
       }
-      await this.beneficiaryRepository.create(beneficiary)
+      await this.beneficiaryRepository.create(beneficiary, tx)
 
       return createdPersonne.id
     });

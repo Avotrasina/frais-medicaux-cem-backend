@@ -25,11 +25,11 @@ export class PersonneRepository {
   }
 
 
-  async findOne(id: number, tx?: DbClient): Promise<ReadPersonne | null> {
-    const personne = await this.client(tx).personne.findUnique({
+  async findByID(id: number, tx?: DbClient): Promise<ReadPersonne> {
+    const personne = await this.client(tx).personne.findUniqueOrThrow({
       where: { id },
     });
-    return personne ? this.toReadPersonne(personne) : null;
+    return  this.toReadPersonne(personne)
   }
 
   async create(personne: CreatePersonne, tx?: DbClient): Promise<ReadPersonne> {

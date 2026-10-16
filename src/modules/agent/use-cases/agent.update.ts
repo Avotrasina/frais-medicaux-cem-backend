@@ -65,7 +65,7 @@ export class UpdateAgentUseCase {
       await this.agentRepository.updatePartial(existingAgent.id, agent, tx);      
       await this.personneRepository.update(existingAgent.id, personne, tx);
 
-      const updatedPersonne = await this.personneRepository.findOne(
+      const updatedPersonne = await this.personneRepository.findByID(
         existingAgent.id,
         tx,
       );

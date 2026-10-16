@@ -32,7 +32,7 @@ export class SaveEnfantUseCase {
         codeFamille:"ENFANT",
         numConjoint:enfant.numEnfant
       }
-      await this.beneficiaryRepository.create(beneficiary)
+      await this.beneficiaryRepository.create(beneficiary, tx)
       return createdPersonne.id
     });
   }

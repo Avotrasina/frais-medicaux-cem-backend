@@ -64,7 +64,7 @@ export class SaveAgentUseCase {
         id:createdPersonne.id,
         codeFamille:"AGENT",
       }
-      await this.beneficiaryRepository.create(beneficiary)
+      await this.beneficiaryRepository.create(beneficiary, tx)
     });
     return input;
   }
