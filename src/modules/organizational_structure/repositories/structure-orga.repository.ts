@@ -4,14 +4,21 @@ import type { StructureOrganisationnelle } from "../../../generated/prisma/clien
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import {
   StructureOrganisationnelleType,
+  STRUCTURE_WITH_NAMES_INCLUDE,
   type CreateStructureOrganisationnelle,
   type ReadStructureOrganisationnelle,
   type UpdateStructureOrganisationnelle,
+  type ReadStructureName,
+  type StructureWithNames,
 } from "../types/structure-orga.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
+import { AgenceRepository } from "./agence.repository.js";
+import { DirectionRepository } from "./direction.repository.js";
 
 @Injectable()
-@HandlePrismaErrors({ exclude: ["toReadStructureOrganisationnelle"] })
+@HandlePrismaErrors({
+  exclude: ["toReadStructureOrganisationnelle", "toReadStructureName"],
+})
 export class StructureOrganisationnelleRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -29,6 +36,16 @@ export class StructureOrganisationnelleRepository {
     };
   }
 
+  private toReadStructureName(structure: StructureWithNames): ReadStructureName {
+    return {
+      id: structure.id,
+      structureOrganisationnelleType:
+        StructureOrganisationnelleType[structure.structureOrganisationnelleType],
+      nomAgence: structure.agence?.nomAgence ?? null,
+      nomDirection: structure.direction?.nom ?? null,
+    };
+  }
+
   async findAll(tx?: DbClient): Promise<ReadStructureOrganisationnelle[]> {
     const structures = await this.client(tx).structureOrganisationnelle.findMany();
     return structures.map((structure) =>
@@ -36,6 +53,14 @@ export class StructureOrganisationnelleRepository {
     );
   }
 
+  async findByID(id: string, tx?: DbClient): Promise<ReadStructureName> {
+    const structure = await this.client(tx).structureOrganisationnelle.findUniqueOrThrow({
+      where: { id },
+      include: STRUCTURE_WITH_NAMES_INCLUDE,
+    });
+
+    return this.toReadStructureName(structure);
+  }
 
   async create(
     structure: CreateStructureOrganisationnelle,
