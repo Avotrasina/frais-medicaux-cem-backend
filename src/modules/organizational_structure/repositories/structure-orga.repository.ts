@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { StructureOrganisationnelle } from "../../../generated/prisma/client.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import {
@@ -20,7 +20,7 @@ import { DirectionRepository } from "./direction.repository.js";
   exclude: ["toReadStructureOrganisationnelle", "toReadStructureName"],
 })
 export class StructureOrganisationnelleRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;

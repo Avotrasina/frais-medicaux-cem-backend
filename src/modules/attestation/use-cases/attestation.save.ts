@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
 import {ProviderRepository} from "../../provider/provider.repository.js"
 import {StructureOrganisationnelleRepository} from '../../organizational_structure/repositories/structure-orga.repository.js'
@@ -16,7 +16,7 @@ import { AttestationRepository } from "../repositories/attestation.repository.js
 @Injectable()
 export class SaveAttestation{
     constructor(
-        private readonly prisma : PrismaClient,
+        private readonly prisma : PrismaService,
         private readonly beneficiaryRepository: BeneficiaryRepository,
         private readonly providerRepository: ProviderRepository,
         private readonly agentRepository: AgentRepository,

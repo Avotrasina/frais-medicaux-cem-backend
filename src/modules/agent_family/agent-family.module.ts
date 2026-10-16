@@ -1,4 +1,6 @@
 import { Module } from "@nestjs/common";
+import { PrismaModule } from "../../infrastructure/prisma/prisma.module.js";
+import { StorageModule } from "../../infrastructure/storage/storage.module.js";
 import { PersonneModule } from "../personne/personne.module.js";
 import { AgentFamilyController } from "./agent-family.controller.js";
 import { ConjointRepository } from "./repositories/conjoint.repository.js";
@@ -13,7 +15,7 @@ import { DeleteEnfantUseCase } from "./use-cases/enfant.delete.js";
 import { ReadFamilleUseCase } from "./use-cases/famille.read.js";
 
 @Module({
-  imports: [PersonneModule],
+  imports: [PersonneModule, PrismaModule, StorageModule],
   controllers: [AgentFamilyController],
   providers: [
     ConjointRepository,

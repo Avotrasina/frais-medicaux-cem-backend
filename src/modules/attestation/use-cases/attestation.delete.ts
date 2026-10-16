@@ -1,5 +1,5 @@
 import {Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { AttestationRepository } from "../repositories/attestation.repository.js";
 import { AttestationPdfService } from "../services/attesatation-pdf.service.js";
 import { bool } from "envalid";
@@ -7,7 +7,7 @@ import { bool } from "envalid";
 @Injectable()
 export class DeleteAttesation{
     constructor(
-        private readonly prisma : PrismaClient,
+        private readonly prisma : PrismaService,
         private readonly attestationRepository : AttestationRepository,
         private readonly attestationService : AttestationPdfService
     ){}

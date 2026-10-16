@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import {
   FAMILLE_AGENT_INCLUDE,
@@ -12,7 +12,7 @@ import { Sexe } from "../../personne/personne.types.js";
 @Injectable()
 @HandlePrismaErrors({exclude:["toReadAgentFamily"]})
 export class FamilleAgentRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;

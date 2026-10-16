@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { EnfantRepository } from "../repositories/enfant.repository.js";
 import { PersonneRepository } from "../../personne/personne.repository.js";
 import { FileStorageService } from "../../../infrastructure/storage/file-storage.service.js";
@@ -9,7 +9,7 @@ import type { UpdatePartialEnfant } from "../types/enfant.types.js";
 @Injectable()
 export class UpdateEnfantUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly personneRepository: PersonneRepository,
     private readonly enfantRepository: EnfantRepository,
     private readonly fileStorage: FileStorageService,

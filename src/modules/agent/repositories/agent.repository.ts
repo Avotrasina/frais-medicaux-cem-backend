@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type {
   Personne,
   Agent,
@@ -27,7 +27,7 @@ type AgentWithPersonne = Prisma.AgentGetPayload<{
   exclude: ["toReadAgent", "toReadPersonne", "toReadPersonneAgent"],
 })
 export class AgentRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;

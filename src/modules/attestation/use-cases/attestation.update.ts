@@ -7,7 +7,7 @@ import {StructureOrganisationnelleRepository} from '../../organizational_structu
 import {FonctionRepository} from "../../fonction/fonction.repository.js"
 import {AgentRepository} from "../../agent/repositories/agent.repository.js"
 import {LocationRepository} from "../../location/location.repository.js"
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type {AgentData,FamilleData,AttestationData} from "../types/attestation.types.js"
 import type {UpdateAttestationUseCaseType} from "../types/attestation.use-case.types.js"
 import {BackOfficeFrontOffice} from "../types/attestation.types.js"
@@ -16,7 +16,7 @@ import { CodeFamille } from "../../beneficiary/types/idp.types.js";
 @Injectable()
 export class UpdateAttestation{
     constructor(
-        private readonly prisma : PrismaClient,
+        private readonly prisma : PrismaService,
         private readonly attestationRepository:AttestationRepository,
         private readonly attestationService:AttestationPdfService,
         private readonly beneficiaryRepository: BeneficiaryRepository,

@@ -1,4 +1,5 @@
 import { Module, forwardRef } from "@nestjs/common";
+import { PrismaModule } from "../../infrastructure/prisma/prisma.module.js";
 import { AgentModule } from "../agent/agent.module.js";
 import { StructureOrganisationnelleController } from "./organizational-structure.controller.js";
 
@@ -20,7 +21,7 @@ import { UpdateServiceUseCase } from "./use-cases/service.update.js";
 import { ReadServiceUseCase } from "./use-cases/service.read.js";
 
 @Module({
-  imports: [forwardRef(() => AgentModule)],
+  imports: [forwardRef(() => AgentModule), PrismaModule],
   controllers: [StructureOrganisationnelleController],
   providers: [
     StructureOrganisationnelleRepository,

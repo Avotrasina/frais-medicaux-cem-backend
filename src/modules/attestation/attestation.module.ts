@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { PrismaModule } from "../../infrastructure/prisma/prisma.module.js";
 import { StorageModule } from "../../infrastructure/storage/storage.module.js";
 import { AgentModule } from "../agent/agent.module.js";
 import { BeneficiaryModule } from "../beneficiary/beneficiary.module.js";
@@ -23,8 +24,7 @@ import { UpdateAttestation } from "./use-cases/attestation.update.js";
     OrganizationalStructureModule,
     FonctionModule,
     LieuModule,
-    StorageModule,
-  ],
+    StorageModule, PrismaModule],
   controllers: [AttestationController],
   providers: [
     AttestationRepository,

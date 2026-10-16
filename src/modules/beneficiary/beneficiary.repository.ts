@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient, Prisma } from "../../generated/prisma/client.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import { PrismaService } from "../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../infrastructure/prisma/db-client.type.js";
 import { Sexe } from "../personne/personne.types.js";
 import { CodeFamille } from "./types/idp.types.js";
@@ -32,7 +33,7 @@ type BeneficiaryWithRelations = Prisma.BeneficiaireGetPayload<{
   exclude: ["toReadBeneficiary", "resolveCodeFamille", "resolveMatricule"],
 })
 export class BeneficiaryRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;

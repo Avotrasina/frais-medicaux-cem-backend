@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { ConjointRepository } from "../repositories/conjoint.repository.js";
 import { PersonneRepository } from "../../personne/personne.repository.js";
 import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
@@ -9,7 +9,7 @@ import type {CreateBeneficiary} from "../../beneficiary/types/beneficiary.types.
 @Injectable()
 export class SaveConjointUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly personneRepository: PersonneRepository,
     private readonly conjointRepository: ConjointRepository,
     private readonly beneficiaryRepository: BeneficiaryRepository

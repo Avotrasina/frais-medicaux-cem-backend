@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient} from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
   CreatedEnfant,
@@ -12,7 +12,7 @@ import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-err
 @Injectable()
 @HandlePrismaErrors()
 export class EnfantRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;

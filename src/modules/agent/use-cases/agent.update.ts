@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { RecordNotFoundError } from "../../../common/errors/database.errors.js";
 import { AgentRepository } from "../repositories/agent.repository.js";
 import { PersonneRepository } from "../../personne/personne.repository.js";
@@ -12,7 +12,7 @@ import { FileStorageService } from "../../../infrastructure/storage/file-storage
 @Injectable()
 export class UpdateAgentUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly personneRepository: PersonneRepository,
     private readonly agentRepository: AgentRepository,
     private readonly fileStorage: FileStorageService,

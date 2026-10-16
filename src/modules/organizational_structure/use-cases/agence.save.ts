@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { StructureOrganisationnelleRepository } from "../repositories/structure-orga.repository.js";
 import { AgenceRepository } from "../repositories/agence.repository.js";
 import { StructureOrganisationnelleType } from "../types/structure-orga.types.js";
@@ -10,7 +10,7 @@ import type { CreateAgenceUseCaseInput } from "../types/use-case.structure-orga.
 @Injectable()
 export class CreateAgenceUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly structureRepository: StructureOrganisationnelleRepository,
     private readonly agenceRepository: AgenceRepository,
   ) {}

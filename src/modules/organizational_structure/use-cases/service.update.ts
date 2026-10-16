@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { ServiceRepository } from "../repositories/service.repository.js";
 import { AgentRepository } from "../../agent/repositories/agent.repository.js";
 import type {
@@ -10,7 +10,7 @@ import type {
 @Injectable()
 export class UpdateServiceUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly serviceRepository: ServiceRepository,
     private readonly agentRepository: AgentRepository,
   ) {}

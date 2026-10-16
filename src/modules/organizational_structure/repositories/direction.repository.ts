@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type {
   Direction,
   Prisma,
@@ -22,7 +22,7 @@ type DirectionWithServices = Prisma.DirectionGetPayload<{
   exclude: ["toReadDirection", "toReadDirectionWithServices"],
 })
 export class DirectionRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;

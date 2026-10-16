@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
+import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import { EnfantRepository } from "../repositories/enfant.repository.js";
 import { PersonneRepository } from "../../personne/personne.repository.js";
 import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
@@ -9,7 +9,7 @@ import type {CreateBeneficiary} from "../../beneficiary/types/beneficiary.types.
 @Injectable()
 export class SaveEnfantUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly personneRepository: PersonneRepository,
     private readonly enfantRepository: EnfantRepository,
     private readonly beneficiaryRepository: BeneficiaryRepository
