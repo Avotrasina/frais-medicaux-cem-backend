@@ -40,6 +40,6 @@ import { ReadServiceUseCase } from "./use-cases/service.read.js";
     UpdateServiceUseCase,
     ReadServiceUseCase,
   ],
-  exports: [ServiceRepository],
+  exports: [ServiceRepository, StructureOrganisationnelleRepository],
 })
 export class OrganizationalStructureModule {}
