@@ -48,7 +48,7 @@ export class AgentRepository {
       agentType: AgentType[agent.agentType],
       structureID: agent.structureID,
       codeService: agent.serviceID,
-      fonctionID: agent.fonctionID,
+      fonction: agent.fonction,
       categorieID: agent.categorieID,
     };
   }
@@ -197,7 +197,7 @@ export class AgentRepository {
       agentType: agent.agentType,
       structureID,
       serviceID: agent.codeService,
-      fonctionID: agent.fonctionID,
+      fonction: agent.fonction,
       categorieID: agent.categorieID,
     });
 

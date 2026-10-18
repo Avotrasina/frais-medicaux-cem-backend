@@ -1,7 +1,6 @@
 import {
   IsDate,
   IsEnum,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -47,9 +46,8 @@ export class AgentInputDto {
   dateEntree!: Date;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  fonctionID?: number | null;
+  @IsString()
+  fonction?: string | null;
 
   @IsOptional()
   @IsString()
@@ -81,7 +79,7 @@ export class AgentUpdateDto extends PartialType(
   backOfficeFrontOffice?: BackOfficeFrontOffice;
   observationMatricule?: string | null;
   dateEntree?: Date;
-  fonctionID?: number | null;
+  fonction?: string | null;
   categorieID?: string | null;
   codeDirection?: string | null;
   codeAgence?: string | null;

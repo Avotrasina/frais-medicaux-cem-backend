@@ -399,7 +399,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Personne: 'Personne',
   Agent: 'Agent',
-  Fonction: 'Fonction',
   CategorieAgent: 'CategorieAgent',
   Direction: 'Direction',
   Service: 'Service',
@@ -428,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "personne" | "agent" | "fonction" | "categorieAgent" | "direction" | "service" | "familleAgent" | "conjoint" | "enfant" | "structureOrganisationnelle" | "agence" | "attestation" | "beneficiaire" | "prestataire" | "lieu" | "categoriePrestataire"
+    modelProps: "personne" | "agent" | "categorieAgent" | "direction" | "service" | "familleAgent" | "conjoint" | "enfant" | "structureOrganisationnelle" | "agence" | "attestation" | "beneficiaire" | "prestataire" | "lieu" | "categoriePrestataire"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -577,80 +576,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AgentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AgentCountAggregateOutputType> | number
-        }
-      }
-    }
-    Fonction: {
-      payload: Prisma.$FonctionPayload<ExtArgs>
-      fields: Prisma.FonctionFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FonctionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FonctionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>
-        }
-        findFirst: {
-          args: Prisma.FonctionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FonctionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>
-        }
-        findMany: {
-          args: Prisma.FonctionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>[]
-        }
-        create: {
-          args: Prisma.FonctionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>
-        }
-        createMany: {
-          args: Prisma.FonctionCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FonctionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>[]
-        }
-        delete: {
-          args: Prisma.FonctionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>
-        }
-        update: {
-          args: Prisma.FonctionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>
-        }
-        deleteMany: {
-          args: Prisma.FonctionDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FonctionUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FonctionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>[]
-        }
-        upsert: {
-          args: Prisma.FonctionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FonctionPayload>
-        }
-        aggregate: {
-          args: Prisma.FonctionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFonction>
-        }
-        groupBy: {
-          args: Prisma.FonctionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FonctionGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FonctionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FonctionCountAggregateOutputType> | number
         }
       }
     }
@@ -1678,23 +1603,13 @@ export const AgentScalarFieldEnum = {
   agentType: 'agentType',
   structureID: 'structureID',
   serviceID: 'serviceID',
-  fonctionID: 'fonctionID',
+  fonction: 'fonction',
   categorieID: 'categorieID',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof AgentScalarFieldEnum]
-
-
-export const FonctionScalarFieldEnum = {
-  id: 'id',
-  nom: 'nom',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FonctionScalarFieldEnum = (typeof FonctionScalarFieldEnum)[keyof typeof FonctionScalarFieldEnum]
 
 
 export const CategorieAgentScalarFieldEnum = {
@@ -2167,7 +2082,6 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   personne?: Prisma.PersonneOmit
   agent?: Prisma.AgentOmit
-  fonction?: Prisma.FonctionOmit
   categorieAgent?: Prisma.CategorieAgentOmit
   direction?: Prisma.DirectionOmit
   service?: Prisma.ServiceOmit

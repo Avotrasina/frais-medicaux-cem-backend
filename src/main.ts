@@ -1,16 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
-import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-    }),
-  );
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Frais médicaux CEM API')
     .setDescription('Documentation de l’API de gestion des frais médicaux du CEM.')

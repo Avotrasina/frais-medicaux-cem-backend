@@ -33,7 +33,7 @@ export class UpdateAgentUseCase {
       matricule: input.matricule,
       observationMatricule: input.observationMatricule,
       dateEntree: input.dateEntree,
-      fonctionID: input.fonctionID,
+      fonction: input.fonction,
       categorieID: input.categorieID,
       codeDirection: input.codeDirection,
       codeAgence: input.codeAgence,
