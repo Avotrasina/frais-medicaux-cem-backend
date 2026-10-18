@@ -19,6 +19,7 @@ const dirName = makeValidator<string>((input) => {
 });
 
 const validators = {
+  NODE_ENV: str({ choices: ['development', 'production'], default: 'development' }),
   DB_HOST: str({ default: 'localhost' }),
   DB_PORT: port({ default: 5432 }),
   DB_NAME: str({ default: 'cem_facturation' }),
