@@ -52,11 +52,6 @@ export type Personne = Prisma.PersonneModel
  */
 export type Agent = Prisma.AgentModel
 /**
- * Model Fonction
- * 
- */
-export type Fonction = Prisma.FonctionModel
-/**
  * Model CategorieAgent
  * 
  */

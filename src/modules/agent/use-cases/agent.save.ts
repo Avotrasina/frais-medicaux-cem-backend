@@ -36,7 +36,7 @@ export class SaveAgentUseCase {
       observationMatricule: input.observationMatricule,
       carteProfessionnellePath: input.carteProfessionnellePath,
       dateEntree: input.dateEntree,
-      fonctionID: input.fonctionID,
+      fonction: input.fonction,
       categorieID: input.categorieID,
       codeDirection: input.codeDirection,
       codeAgence: input.codeAgence,

@@ -53,7 +53,6 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Personne: 'Personne',
   Agent: 'Agent',
-  Fonction: 'Fonction',
   CategorieAgent: 'CategorieAgent',
   Direction: 'Direction',
   Service: 'Service',
@@ -108,23 +107,13 @@ export const AgentScalarFieldEnum = {
   agentType: 'agentType',
   structureID: 'structureID',
   serviceID: 'serviceID',
-  fonctionID: 'fonctionID',
+  fonction: 'fonction',
   categorieID: 'categorieID',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof AgentScalarFieldEnum]
-
-
-export const FonctionScalarFieldEnum = {
-  id: 'id',
-  nom: 'nom',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FonctionScalarFieldEnum = (typeof FonctionScalarFieldEnum)[keyof typeof FonctionScalarFieldEnum]
 
 
 export const CategorieAgentScalarFieldEnum = {

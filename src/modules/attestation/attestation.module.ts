@@ -3,7 +3,6 @@ import { PrismaModule } from "../../infrastructure/prisma/prisma.module.js";
 import { StorageModule } from "../../infrastructure/storage/storage.module.js";
 import { AgentModule } from "../agent/agent.module.js";
 import { BeneficiaryModule } from "../beneficiary/beneficiary.module.js";
-import { FonctionModule } from "../fonction/fonction.module.js";
 import { LieuModule } from "../location/location.module.js";
 import { OrganizationalStructureModule } from "../organizational_structure/organizational-structure.module.js";
 import { ProviderModule } from "../provider/provider.module.js";
@@ -22,7 +21,6 @@ import { UpdateAttestation } from "./use-cases/attestation.update.js";
     ProviderModule,
     AgentModule,
     OrganizationalStructureModule,
-    FonctionModule,
     LieuModule,
     StorageModule, PrismaModule],
   controllers: [AttestationController],

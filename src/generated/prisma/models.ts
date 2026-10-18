@@ -10,7 +10,6 @@
  */
 export type * from './models/Personne.js'
 export type * from './models/Agent.js'
-export type * from './models/Fonction.js'
 export type * from './models/CategorieAgent.js'
 export type * from './models/Direction.js'
 export type * from './models/Service.js'

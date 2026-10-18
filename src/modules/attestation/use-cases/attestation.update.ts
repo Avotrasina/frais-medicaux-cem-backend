@@ -4,7 +4,6 @@ import { AttestationPdfService } from "../services/attesatation-pdf.service.js";
 import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
 import {ProviderRepository} from "../../provider/provider.repository.js"
 import {StructureOrganisationnelleRepository} from '../../organizational_structure/repositories/structure-orga.repository.js'
-import {FonctionRepository} from "../../fonction/fonction.repository.js"
 import {AgentRepository} from "../../agent/repositories/agent.repository.js"
 import {LocationRepository} from "../../location/location.repository.js"
 import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
@@ -23,7 +22,6 @@ export class UpdateAttestation{
         private readonly providerRepository: ProviderRepository,
         private readonly agentRepository: AgentRepository,
         private readonly structureRepository :  StructureOrganisationnelleRepository,
-        private readonly fonctionRepository : FonctionRepository,
         private readonly lieuRepository : LocationRepository,
     ){}
 
@@ -48,12 +46,12 @@ export class UpdateAttestation{
                 prenom : beneficiary.prenom,
                 dateNaissance : beneficiary.dateNaissance
             }
-            if(agentObject.agent.agentType == "AGENT_ACTIF" && agentObject.agent.fonctionID && agentObject.agent.structureID){
+            if(agentObject.agent.agentType == "AGENT_ACTIF" && agentObject.agent.fonction && agentObject.agent.structureID){
                 const structureObject = await this.structureRepository.findByID(agentObject.agent.structureID,tx);
                 const nomAgence = structureObject.nomAgence;
                 const nomDirection = structureObject.nomDirection;
                 
-                const nomFonction = (await this.fonctionRepository.findByID(agentObject.agent.fonctionID,tx)).nom;
+                const nomFonction = agentObject.agent.fonction;
                 const agentData : AgentData = {
                     sexe: agentObject.sexe,
                     nom:agentObject.nom,

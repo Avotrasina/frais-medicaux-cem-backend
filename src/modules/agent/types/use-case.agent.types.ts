@@ -13,7 +13,7 @@ export type AgentUseCaseTypes = {
   carteProfessionnellePath: string;
   dateEntree: Date;
 
-  fonctionID?: number | null;
+  fonction?: string | null;
   categorieID?: string | null;
   codeDirection?: string | null;
   codeAgence?: string | null;
@@ -31,7 +31,7 @@ export type AgentUpdatePartial= {
   observationMatricule?: string | null;
   dateEntree?: Date | null;
 
-  fonctionID?: number | null;
+  fonction?: string | null;
   categorieID?: string | null;
   codeDirection?: string | null;
   codeAgence?: string | null;
