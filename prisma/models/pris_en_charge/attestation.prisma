@@ -9,7 +9,7 @@ enum StatutAttestation {
 
 model Attestation {
   id                 Int               @id @default(autoincrement())
-  attestationPath    String?           @map("attestation_path") @db.VarChar(50)
+  attestationPath    String?           @map("attestation_path") @db.VarChar(100)
   dateValidation     DateTime?         @map("dt_validation")
   naturePrestation   String            @map("nature_prestation") @db.VarChar(100)
   servicePrestataire String?           @map("service_prestataire") @db.VarChar(50)
