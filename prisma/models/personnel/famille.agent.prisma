@@ -1,6 +1,6 @@
 model FamilleAgent {
   id               Int       @id @map("id")
-  agentMatricule   String    @map("agent_matricule")
+  agentMatricule   Int    @map("agent_matricule")
   carteSocialePath String    @map("carte_sociale_path") @db.VarChar(100)
   conjoint         Conjoint?
   enfant           Enfant?

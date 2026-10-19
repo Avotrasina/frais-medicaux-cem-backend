@@ -28,15 +28,17 @@ export type AggregateFamilleAgent = {
 
 export type FamilleAgentAvgAggregateOutputType = {
   id: number | null
+  agentMatricule: number | null
 }
 
 export type FamilleAgentSumAggregateOutputType = {
   id: number | null
+  agentMatricule: number | null
 }
 
 export type FamilleAgentMinAggregateOutputType = {
   id: number | null
-  agentMatricule: string | null
+  agentMatricule: number | null
   carteSocialePath: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -44,7 +46,7 @@ export type FamilleAgentMinAggregateOutputType = {
 
 export type FamilleAgentMaxAggregateOutputType = {
   id: number | null
-  agentMatricule: string | null
+  agentMatricule: number | null
   carteSocialePath: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -62,10 +64,12 @@ export type FamilleAgentCountAggregateOutputType = {
 
 export type FamilleAgentAvgAggregateInputType = {
   id?: true
+  agentMatricule?: true
 }
 
 export type FamilleAgentSumAggregateInputType = {
   id?: true
+  agentMatricule?: true
 }
 
 export type FamilleAgentMinAggregateInputType = {
@@ -181,7 +185,7 @@ export type FamilleAgentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type FamilleAgentGroupByOutputType = {
   id: number
-  agentMatricule: string
+  agentMatricule: number
   carteSocialePath: string
   createdAt: Date
   updatedAt: Date
@@ -212,7 +216,7 @@ export type FamilleAgentWhereInput = {
   OR?: Prisma.FamilleAgentWhereInput[]
   NOT?: Prisma.FamilleAgentWhereInput | Prisma.FamilleAgentWhereInput[]
   id?: Prisma.IntFilter<"FamilleAgent"> | number
-  agentMatricule?: Prisma.StringFilter<"FamilleAgent"> | string
+  agentMatricule?: Prisma.IntFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
   createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
@@ -239,7 +243,7 @@ export type FamilleAgentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.FamilleAgentWhereInput | Prisma.FamilleAgentWhereInput[]
   OR?: Prisma.FamilleAgentWhereInput[]
   NOT?: Prisma.FamilleAgentWhereInput | Prisma.FamilleAgentWhereInput[]
-  agentMatricule?: Prisma.StringFilter<"FamilleAgent"> | string
+  agentMatricule?: Prisma.IntFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
   createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
@@ -267,7 +271,7 @@ export type FamilleAgentScalarWhereWithAggregatesInput = {
   OR?: Prisma.FamilleAgentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FamilleAgentScalarWhereWithAggregatesInput | Prisma.FamilleAgentScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"FamilleAgent"> | number
-  agentMatricule?: Prisma.StringWithAggregatesFilter<"FamilleAgent"> | string
+  agentMatricule?: Prisma.IntWithAggregatesFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringWithAggregatesFilter<"FamilleAgent"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FamilleAgent"> | Date | string
@@ -285,7 +289,7 @@ export type FamilleAgentCreateInput = {
 
 export type FamilleAgentUncheckedCreateInput = {
   id: number
-  agentMatricule: string
+  agentMatricule: number
   carteSocialePath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -305,7 +309,7 @@ export type FamilleAgentUpdateInput = {
 
 export type FamilleAgentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
+  agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,7 +319,7 @@ export type FamilleAgentUncheckedUpdateInput = {
 
 export type FamilleAgentCreateManyInput = {
   id: number
-  agentMatricule: string
+  agentMatricule: number
   carteSocialePath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -329,7 +333,7 @@ export type FamilleAgentUpdateManyMutationInput = {
 
 export type FamilleAgentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
+  agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -360,6 +364,7 @@ export type FamilleAgentCountOrderByAggregateInput = {
 
 export type FamilleAgentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  agentMatricule?: Prisma.SortOrder
 }
 
 export type FamilleAgentMaxOrderByAggregateInput = {
@@ -380,6 +385,7 @@ export type FamilleAgentMinOrderByAggregateInput = {
 
 export type FamilleAgentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  agentMatricule?: Prisma.SortOrder
 }
 
 export type FamilleAgentScalarRelationFilter = {
@@ -499,7 +505,7 @@ export type FamilleAgentCreateWithoutPersonneInput = {
 }
 
 export type FamilleAgentUncheckedCreateWithoutPersonneInput = {
-  agentMatricule: string
+  agentMatricule: number
   carteSocialePath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -533,7 +539,7 @@ export type FamilleAgentUpdateWithoutPersonneInput = {
 }
 
 export type FamilleAgentUncheckedUpdateWithoutPersonneInput = {
-  agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
+  agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -590,7 +596,7 @@ export type FamilleAgentScalarWhereInput = {
   OR?: Prisma.FamilleAgentScalarWhereInput[]
   NOT?: Prisma.FamilleAgentScalarWhereInput | Prisma.FamilleAgentScalarWhereInput[]
   id?: Prisma.IntFilter<"FamilleAgent"> | number
-  agentMatricule?: Prisma.StringFilter<"FamilleAgent"> | string
+  agentMatricule?: Prisma.IntFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
   createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
@@ -607,7 +613,7 @@ export type FamilleAgentCreateWithoutConjointInput = {
 
 export type FamilleAgentUncheckedCreateWithoutConjointInput = {
   id: number
-  agentMatricule: string
+  agentMatricule: number
   carteSocialePath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -641,7 +647,7 @@ export type FamilleAgentUpdateWithoutConjointInput = {
 
 export type FamilleAgentUncheckedUpdateWithoutConjointInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
+  agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -659,7 +665,7 @@ export type FamilleAgentCreateWithoutEnfantInput = {
 
 export type FamilleAgentUncheckedCreateWithoutEnfantInput = {
   id: number
-  agentMatricule: string
+  agentMatricule: number
   carteSocialePath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -693,7 +699,7 @@ export type FamilleAgentUpdateWithoutEnfantInput = {
 
 export type FamilleAgentUncheckedUpdateWithoutEnfantInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  agentMatricule?: Prisma.StringFieldUpdateOperationsInput | string
+  agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -800,7 +806,7 @@ export type $FamilleAgentPayload<ExtArgs extends runtime.Types.Extensions.Intern
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    agentMatricule: string
+    agentMatricule: number
     carteSocialePath: string
     createdAt: Date
     updatedAt: Date
@@ -1232,7 +1238,7 @@ export interface Prisma__FamilleAgentClient<T, Null = never, ExtArgs extends run
  */
 export interface FamilleAgentFieldRefs {
   readonly id: Prisma.FieldRef<"FamilleAgent", 'Int'>
-  readonly agentMatricule: Prisma.FieldRef<"FamilleAgent", 'String'>
+  readonly agentMatricule: Prisma.FieldRef<"FamilleAgent", 'Int'>
   readonly carteSocialePath: Prisma.FieldRef<"FamilleAgent", 'String'>
   readonly createdAt: Prisma.FieldRef<"FamilleAgent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FamilleAgent", 'DateTime'>

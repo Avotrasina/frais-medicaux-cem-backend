@@ -28,15 +28,17 @@ export type AggregateAgent = {
 
 export type AgentAvgAggregateOutputType = {
   id: number | null
+  matricule: number | null
 }
 
 export type AgentSumAggregateOutputType = {
   id: number | null
+  matricule: number | null
 }
 
 export type AgentMinAggregateOutputType = {
   id: number | null
-  matricule: string | null
+  matricule: number | null
   observationMatricule: string | null
   carteProfessionnellePath: string | null
   dateEntree: Date | null
@@ -52,7 +54,7 @@ export type AgentMinAggregateOutputType = {
 
 export type AgentMaxAggregateOutputType = {
   id: number | null
-  matricule: string | null
+  matricule: number | null
   observationMatricule: string | null
   carteProfessionnellePath: string | null
   dateEntree: Date | null
@@ -86,10 +88,12 @@ export type AgentCountAggregateOutputType = {
 
 export type AgentAvgAggregateInputType = {
   id?: true
+  matricule?: true
 }
 
 export type AgentSumAggregateInputType = {
   id?: true
+  matricule?: true
 }
 
 export type AgentMinAggregateInputType = {
@@ -229,7 +233,7 @@ export type AgentGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type AgentGroupByOutputType = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule: string | null
   carteProfessionnellePath: string
   dateEntree: Date
@@ -268,7 +272,7 @@ export type AgentWhereInput = {
   OR?: Prisma.AgentWhereInput[]
   NOT?: Prisma.AgentWhereInput | Prisma.AgentWhereInput[]
   id?: Prisma.IntFilter<"Agent"> | number
-  matricule?: Prisma.StringFilter<"Agent"> | string
+  matricule?: Prisma.IntFilter<"Agent"> | number
   observationMatricule?: Prisma.StringNullableFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
@@ -310,7 +314,7 @@ export type AgentOrderByWithRelationInput = {
 
 export type AgentWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  matricule?: string
+  matricule?: number
   AND?: Prisma.AgentWhereInput | Prisma.AgentWhereInput[]
   OR?: Prisma.AgentWhereInput[]
   NOT?: Prisma.AgentWhereInput | Prisma.AgentWhereInput[]
@@ -358,7 +362,7 @@ export type AgentScalarWhereWithAggregatesInput = {
   OR?: Prisma.AgentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AgentScalarWhereWithAggregatesInput | Prisma.AgentScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Agent"> | number
-  matricule?: Prisma.StringWithAggregatesFilter<"Agent"> | string
+  matricule?: Prisma.IntWithAggregatesFilter<"Agent"> | number
   observationMatricule?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringWithAggregatesFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeWithAggregatesFilter<"Agent"> | Date | string
@@ -373,7 +377,7 @@ export type AgentScalarWhereWithAggregatesInput = {
 }
 
 export type AgentCreateInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -391,7 +395,7 @@ export type AgentCreateInput = {
 
 export type AgentUncheckedCreateInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -407,7 +411,7 @@ export type AgentUncheckedCreateInput = {
 }
 
 export type AgentUpdateInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -425,7 +429,7 @@ export type AgentUpdateInput = {
 
 export type AgentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,7 +446,7 @@ export type AgentUncheckedUpdateInput = {
 
 export type AgentCreateManyInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -457,7 +461,7 @@ export type AgentCreateManyInput = {
 }
 
 export type AgentUpdateManyMutationInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -470,7 +474,7 @@ export type AgentUpdateManyMutationInput = {
 
 export type AgentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -507,6 +511,7 @@ export type AgentCountOrderByAggregateInput = {
 
 export type AgentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  matricule?: Prisma.SortOrder
 }
 
 export type AgentMaxOrderByAggregateInput = {
@@ -543,6 +548,7 @@ export type AgentMinOrderByAggregateInput = {
 
 export type AgentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  matricule?: Prisma.SortOrder
 }
 
 export type AgentListRelationFilter = {
@@ -745,7 +751,7 @@ export type AgentUncheckedUpdateManyWithoutStructureOrganisationnelleNestedInput
 }
 
 export type AgentCreateWithoutPersonneInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -761,7 +767,7 @@ export type AgentCreateWithoutPersonneInput = {
 }
 
 export type AgentUncheckedCreateWithoutPersonneInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -793,7 +799,7 @@ export type AgentUpdateToOneWithWhereWithoutPersonneInput = {
 }
 
 export type AgentUpdateWithoutPersonneInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -809,7 +815,7 @@ export type AgentUpdateWithoutPersonneInput = {
 }
 
 export type AgentUncheckedUpdateWithoutPersonneInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -825,7 +831,7 @@ export type AgentUncheckedUpdateWithoutPersonneInput = {
 }
 
 export type AgentCreateWithoutCategorieInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -842,7 +848,7 @@ export type AgentCreateWithoutCategorieInput = {
 
 export type AgentUncheckedCreateWithoutCategorieInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -887,7 +893,7 @@ export type AgentScalarWhereInput = {
   OR?: Prisma.AgentScalarWhereInput[]
   NOT?: Prisma.AgentScalarWhereInput | Prisma.AgentScalarWhereInput[]
   id?: Prisma.IntFilter<"Agent"> | number
-  matricule?: Prisma.StringFilter<"Agent"> | string
+  matricule?: Prisma.IntFilter<"Agent"> | number
   observationMatricule?: Prisma.StringNullableFilter<"Agent"> | string | null
   carteProfessionnellePath?: Prisma.StringFilter<"Agent"> | string
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
@@ -902,7 +908,7 @@ export type AgentScalarWhereInput = {
 }
 
 export type AgentCreateWithoutServiceInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -919,7 +925,7 @@ export type AgentCreateWithoutServiceInput = {
 
 export type AgentUncheckedCreateWithoutServiceInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -960,7 +966,7 @@ export type AgentUpdateManyWithWhereWithoutServiceInput = {
 }
 
 export type AgentCreateWithoutFamilleAgentInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -977,7 +983,7 @@ export type AgentCreateWithoutFamilleAgentInput = {
 
 export type AgentUncheckedCreateWithoutFamilleAgentInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -1008,7 +1014,7 @@ export type AgentUpdateToOneWithWhereWithoutFamilleAgentInput = {
 }
 
 export type AgentUpdateWithoutFamilleAgentInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1025,7 +1031,7 @@ export type AgentUpdateWithoutFamilleAgentInput = {
 
 export type AgentUncheckedUpdateWithoutFamilleAgentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1040,7 +1046,7 @@ export type AgentUncheckedUpdateWithoutFamilleAgentInput = {
 }
 
 export type AgentCreateWithoutStructureOrganisationnelleInput = {
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -1057,7 +1063,7 @@ export type AgentCreateWithoutStructureOrganisationnelleInput = {
 
 export type AgentUncheckedCreateWithoutStructureOrganisationnelleInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -1099,7 +1105,7 @@ export type AgentUpdateManyWithWhereWithoutStructureOrganisationnelleInput = {
 
 export type AgentCreateManyCategorieInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -1113,7 +1119,7 @@ export type AgentCreateManyCategorieInput = {
 }
 
 export type AgentUpdateWithoutCategorieInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1130,7 +1136,7 @@ export type AgentUpdateWithoutCategorieInput = {
 
 export type AgentUncheckedUpdateWithoutCategorieInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1146,7 +1152,7 @@ export type AgentUncheckedUpdateWithoutCategorieInput = {
 
 export type AgentUncheckedUpdateManyWithoutCategorieInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1161,7 +1167,7 @@ export type AgentUncheckedUpdateManyWithoutCategorieInput = {
 
 export type AgentCreateManyServiceInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -1175,7 +1181,7 @@ export type AgentCreateManyServiceInput = {
 }
 
 export type AgentUpdateWithoutServiceInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1192,7 +1198,7 @@ export type AgentUpdateWithoutServiceInput = {
 
 export type AgentUncheckedUpdateWithoutServiceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1208,7 +1214,7 @@ export type AgentUncheckedUpdateWithoutServiceInput = {
 
 export type AgentUncheckedUpdateManyWithoutServiceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1223,7 +1229,7 @@ export type AgentUncheckedUpdateManyWithoutServiceInput = {
 
 export type AgentCreateManyStructureOrganisationnelleInput = {
   id: number
-  matricule: string
+  matricule: number
   observationMatricule?: string | null
   carteProfessionnellePath: string
   dateEntree: Date | string
@@ -1237,7 +1243,7 @@ export type AgentCreateManyStructureOrganisationnelleInput = {
 }
 
 export type AgentUpdateWithoutStructureOrganisationnelleInput = {
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1254,7 +1260,7 @@ export type AgentUpdateWithoutStructureOrganisationnelleInput = {
 
 export type AgentUncheckedUpdateWithoutStructureOrganisationnelleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1270,7 +1276,7 @@ export type AgentUncheckedUpdateWithoutStructureOrganisationnelleInput = {
 
 export type AgentUncheckedUpdateManyWithoutStructureOrganisationnelleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  matricule?: Prisma.StringFieldUpdateOperationsInput | string
+  matricule?: Prisma.IntFieldUpdateOperationsInput | number
   observationMatricule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   carteProfessionnellePath?: Prisma.StringFieldUpdateOperationsInput | string
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1425,7 +1431,7 @@ export type $AgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    matricule: string
+    matricule: number
     observationMatricule: string | null
     carteProfessionnellePath: string
     dateEntree: Date
@@ -1866,7 +1872,7 @@ export interface Prisma__AgentClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface AgentFieldRefs {
   readonly id: Prisma.FieldRef<"Agent", 'Int'>
-  readonly matricule: Prisma.FieldRef<"Agent", 'String'>
+  readonly matricule: Prisma.FieldRef<"Agent", 'Int'>
   readonly observationMatricule: Prisma.FieldRef<"Agent", 'String'>
   readonly carteProfessionnellePath: Prisma.FieldRef<"Agent", 'String'>
   readonly dateEntree: Prisma.FieldRef<"Agent", 'DateTime'>
