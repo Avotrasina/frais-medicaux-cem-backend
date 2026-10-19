@@ -54,6 +54,7 @@ export class SaveAgentUseCase {
 
     await this.prisma.$transaction(async (tx) => {
       const createdPersonne = await this.personneRepository.create(personne, tx);
+
       await this.agentRepository.create(
         { ...agent, id: createdPersonne.id },
         tx,
@@ -61,8 +62,10 @@ export class SaveAgentUseCase {
       const beneficiary : CreateBeneficiary = {
         id:createdPersonne.id,
         codeFamille:"AGENT",
+        agentMatricule:input.matricule,
       }
       await this.beneficiaryRepository.create(beneficiary, tx)
+
     });
     return input;
   }
