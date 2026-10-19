@@ -5,7 +5,7 @@ import {
   FAMILLE_AGENT_INCLUDE,
   type ReadAgentFamilyDB,
   type ReadAgentFamily
-} from "../types/famille.agent.types.js";
+} from "../types/agent-family.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 import { Sexe } from "../../personne/personne.types.js";
 
@@ -45,6 +45,18 @@ export class FamilleAgentRepository {
     return agentFamilies.map((agentFamily)=>{
       return this.toReadAgentFamily(agentFamily)
     })
+  }
+
+  async findCardByID(
+    id:number,
+    tx?:DbClient
+  ):Promise<string>{
+    const AgentFamily =  await this.client(tx).familleAgent.findFirstOrThrow({
+      where:{
+        id
+      }
+    })
+    return AgentFamily.carteSocialePath
   }
 
   

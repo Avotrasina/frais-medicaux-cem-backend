@@ -1,6 +1,7 @@
 // famille.agent.types.ts
 import type { Prisma } from "../../../generated/prisma/client.js";
 import type { Sexe } from "../../personne/personne.types.js";
+import type { Readable } from "node:stream";
 
 export type PersonneData = {
   nom: string;
@@ -42,3 +43,9 @@ export const FAMILLE_AGENT_INCLUDE = FamilyInclude;
 export type ReadAgentFamilyDB = Prisma.FamilleAgentGetPayload<{
   include: typeof FamilyInclude;
 }>;
+
+export type AgentCardFile = {
+  stream: Readable;
+  mimeType: string;
+  fileName: string;
+};

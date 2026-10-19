@@ -26,8 +26,13 @@ import { SaveEnfantUseCase } from "./use-cases/enfant.save.js";
 import { UpdateConjointUseCase } from "./use-cases/conjoint.update.js";
 import { UpdateEnfantUseCase } from "./use-cases/enfant.update.js";
 import { ReadFamilleUseCase } from "./use-cases/famille.read.js";
-import type { ReadAgentFamily } from "./types/famille.agent.types.js";
+import type { ReadAgentFamily } from "./types/agent-family.types.js";
 import { ApiBody, ApiConsumes } from "@nestjs/swagger";
+import { StreamableFile } from "@nestjs/common";
+import { ApiProduces } from "@nestjs/swagger";
+import { GetFamilleCardUseCase } from "./use-cases/agent-family.get-card.js";
+
+
 
 
 @Controller("agent-family")
@@ -39,6 +44,7 @@ export class AgentFamilyController {
     private readonly updateEnfantUseCase: UpdateEnfantUseCase,
     private readonly readFamilleUseCase: ReadFamilleUseCase,
     private readonly fileStorage: FileStorageService,
+    private readonly getFamilleCardUseCase: GetFamilleCardUseCase,
   ) {}
 
 
@@ -166,5 +172,20 @@ export class AgentFamilyController {
     @Param("matricule") matricule: string,
   ): Promise<ReadAgentFamily[]> {
     return this.readFamilleUseCase.readByMatricule(matricule);
+  }
+
+  @Get("/card/:id")
+  @HttpCode(HttpStatus.OK)
+  @ApiProduces("image/png", "image/jpeg", "image/webp")
+  async getCarteSociale(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<StreamableFile> {
+    const { stream, mimeType, fileName } =
+      await this.getFamilleCardUseCase.execute(id);
+
+    return new StreamableFile(stream, {
+      type: mimeType,
+      disposition: `inline; filename="${fileName}"`,
+    });
   }
 }

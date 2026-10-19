@@ -6,13 +6,14 @@ import { PersonneModule } from "../personne/personne.module.js";
 import { AgentFamilyController } from "./agent-family.controller.js";
 import { ConjointRepository } from "./repositories/conjoint.repository.js";
 import { EnfantRepository } from "./repositories/enfant.repository.js";
-import { FamilleAgentRepository } from "./repositories/famille.agent.repository.js";
+import { FamilleAgentRepository } from "./repositories/agent-family.repository.js";
 import { SaveConjointUseCase } from "./use-cases/conjoint.save.js";
 import { UpdateConjointUseCase } from "./use-cases/conjoint.update.js";
 import { DeleteConjointUseCase } from "./use-cases/conjoint.delete.js";
 import { SaveEnfantUseCase } from "./use-cases/enfant.save.js";
 import { UpdateEnfantUseCase } from "./use-cases/enfant.update.js";
 import { DeleteEnfantUseCase } from "./use-cases/enfant.delete.js";
+import {GetFamilleCardUseCase} from "./use-cases/agent-family.get-card.js"
 import { ReadFamilleUseCase } from "./use-cases/famille.read.js";
 
 @Module({
@@ -29,6 +30,7 @@ import { ReadFamilleUseCase } from "./use-cases/famille.read.js";
     UpdateEnfantUseCase,
     DeleteEnfantUseCase,
     ReadFamilleUseCase,
+    GetFamilleCardUseCase
   ],
   exports: [ConjointRepository, EnfantRepository, FamilleAgentRepository],
 })

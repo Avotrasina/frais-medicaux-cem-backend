@@ -2,7 +2,7 @@ import { Prisma } from "../../../generated/prisma/client.js";
 import type {
   CreateAgentFamilyBase,
   UpdatePartialAgentFamilyBase,
-} from "./famille.agent.types.js";
+} from "./agent-family.types.js";
 
 export type CreateConjoint = CreateAgentFamilyBase;
 export type UpdatePartialConjoint = UpdatePartialAgentFamilyBase;
