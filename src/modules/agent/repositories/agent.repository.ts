@@ -187,8 +187,7 @@ export class AgentRepository {
     agent: UpdatePartialAgent,
     tx?: DbClient,
   ): Promise<ReadAgent> {
-    const structureID =
-      agent.codeAgence || agent.codeDirection || agent.structureID;
+    const structureID =agent.structureID;
 
     const data = omitNullish({
       observationMatricule: agent.observationMatricule,

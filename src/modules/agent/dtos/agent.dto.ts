@@ -55,11 +55,7 @@ export class AgentInputDto {
 
   @IsOptional()
   @IsString()
-  codeDirection?: string | null;
-
-  @IsOptional()
-  @IsString()
-  codeAgence?: string | null;
+  structureID?: string | null;
 
   @IsOptional()
   @IsString()
@@ -81,8 +77,7 @@ export class AgentUpdateDto extends PartialType(
   dateEntree?: Date;
   fonction?: string | null;
   categorieID?: string | null;
-  codeDirection?: string | null;
-  codeAgence?: string | null;
+  structureID?: string | null;
   codeService?: string | null;
 }
 

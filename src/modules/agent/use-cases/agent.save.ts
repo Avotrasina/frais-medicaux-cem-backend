@@ -38,12 +38,10 @@ export class SaveAgentUseCase {
       dateEntree: input.dateEntree,
       fonction: input.fonction,
       categorieID: input.categorieID,
-      codeDirection: input.codeDirection,
-      codeAgence: input.codeAgence,
       codeService: input.codeService,
       statutPEC: input.statutPEC,
       agentType : input.backOfficeFrontOffice == "RETRAITE" ? AgentType.AGENT_RETRAITE : AgentType.AGENT_ACTIF,
-      structureID: input.codeAgence ? input.codeAgence : input.codeDirection,
+      structureID: input.structureID
     };
 
     return { personne, agent };

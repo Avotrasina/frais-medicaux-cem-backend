@@ -29,9 +29,7 @@ export type CreateAgent = {
   dateEntree: Date;
   agentType: AgentType;
   structureID?: string | null;
-  codeDirection?: string | null;
   codeService?: string | null;
-  codeAgence?: string | null;
   categorieID?: string | null;
 };
 
@@ -59,8 +57,6 @@ export type UpdatePartialAgent = {
   dateEntree?: Date | null;
   agentType?: AgentType | null;
   structureID?: string | null;
-  codeDirection?: string | null;
   codeService?: string | null;
-  codeAgence?: string | null;
   categorieID?: string | null;
 };

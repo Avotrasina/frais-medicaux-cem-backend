@@ -15,8 +15,7 @@ export type AgentUseCaseTypes = {
 
   fonction?: string | null;
   categorieID?: string | null;
-  codeDirection?: string | null;
-  codeAgence?: string | null;
+  structureID?:string | null;
   codeService?: string | null;
 };
 
@@ -33,8 +32,7 @@ export type AgentUpdatePartial= {
 
   fonction?: string | null;
   categorieID?: string | null;
-  codeDirection?: string | null;
-  codeAgence?: string | null;
+  structureID?:string | null;
   codeService?: string | null;
 }
 
