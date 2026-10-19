@@ -20,17 +20,17 @@ export type ReadBeneficiaryBase = {
 };
 
 export type BeneficiaryLien =
-  | { type: "AGENT"; matricule: string }
+  | { type: "AGENT"; matricule: number }
   | {
       type: "CONJOINT";
       numConjoint: number;
-      agentMatricule: string;
+      agentMatricule: number;
       carteSocialePath: string;
     }
   | {
       type: "ENFANT";
       numEnfant: number;
-      agentMatricule: string;
+      agentMatricule: number;
       carteSocialePath: string;
     };
 
@@ -41,7 +41,7 @@ export type BeneficiaryLien =
   sexe: Sexe;
   idp: string;
   observationIDP: string | null;
-  matricule: string;
+  matricule: number;
   codeFamille: CodeFamille;
   carteSocialePath: string | null;
   carteProfessionnellePath: string | null;

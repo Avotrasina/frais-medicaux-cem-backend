@@ -125,7 +125,7 @@ export class AgentRepository {
   }
 
   async findByMatricule(
-    matricule: string,
+    matricule: number,
     tx?: DbClient,
   ): Promise<ReadAgent> {
     const agent = await this.client(tx).agent.findUniqueOrThrow({
@@ -135,7 +135,7 @@ export class AgentRepository {
   }
 
   async findByMatriculeWithPersonne(
-    matricule: string,
+    matricule: number,
     tx?: DbClient,
   ):Promise<ReadPersonneAgent>{
     const agent = await this.client(tx).agent.findUniqueOrThrow({
@@ -177,7 +177,7 @@ export class AgentRepository {
     );
   }
 
-  async findAgentCard(agentMatricule: string,tx?:DbClient):Promise<string>{
+  async findAgentCard(agentMatricule: number,tx?:DbClient):Promise<string>{
     const agent  = await this.client(tx).agent.findFirstOrThrow(
       {
         where:{

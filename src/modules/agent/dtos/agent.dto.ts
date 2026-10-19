@@ -1,6 +1,7 @@
 import {
   IsDate,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -13,9 +14,10 @@ import { Transform } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class AgentInputDto {
-  @IsString()
   @IsNotEmpty()
-  matricule!: string;
+  @Type(() => Number)
+  @IsInt()
+  matricule!: number;
 
   @IsString()
   @IsNotEmpty()

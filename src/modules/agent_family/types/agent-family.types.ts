@@ -11,7 +11,7 @@ export type PersonneData = {
 };
 
 export type CreateAgentFamilyBase = {
-  agentMatricule: string;
+  agentMatricule: number;
   carteSocialePath: string;
   personne: PersonneData;
 };
@@ -29,7 +29,7 @@ export type ReadAgentFamily = {
   numConjoint?: number | null,
   numEnfant?:number | null,
   carteSocialPath:string,
-  agentMatricule:string
+  agentMatricule:number
 }
 
 const FamilyInclude = {

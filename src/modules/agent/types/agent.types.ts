@@ -21,7 +21,7 @@ export type StatutPEC = (typeof StatutPEC)[keyof typeof StatutPEC];
 
 export type CreateAgent = {
   id: number;
-  matricule: string;
+  matricule: number;
   fonction?: string | null;
   statutPEC: StatutPEC;
   observationMatricule?: string | null;
@@ -35,7 +35,7 @@ export type CreateAgent = {
 
 export type ReadAgent = {
   id: number;
-  matricule: string;
+  matricule: number;
   fonction?: string | null;
   statutPEC: StatutPEC;
   observationMatricule?: string | null;
@@ -50,7 +50,7 @@ export type ReadAgent = {
 };
 
 export type UpdatePartialAgent = {
-  matricule: string;
+  matricule: number;
   fonction?: string | null;
   statutPEC?: StatutPEC | null;
   observationMatricule?: string | null;

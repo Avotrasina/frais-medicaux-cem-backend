@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Param,
+  ParseIntPipe,
   Get,
   Query,
   StreamableFile
@@ -65,7 +66,7 @@ export class AgentController{
   @Patch("/information/:matricule")
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateAgentInformation(
-    @Param("matricule") matricule: string,
+    @Param("matricule", ParseIntPipe) matricule: number,
     @Body() dto: AgentUpdateDto,
   ): Promise<void> {
     const inputUseCase: AgentUpdatePartial = {
@@ -82,7 +83,7 @@ export class AgentController{
   @ApiBody({ type: AgentCardMultipartDto })
   @UseInterceptors(ImageUploadInterceptor("image"))
   async updateAgentProfCard(
-    @Param("matricule") matricule: string,
+    @Param("matricule", ParseIntPipe) matricule: number,
     @UploadedFile(createImageFilePipe()) image: Express.Multer.File,
   ): Promise<void> {
     const carteProfessionnellePath = await this.fileStorage.saveImage(image,"carteProfessionnelle");
@@ -102,7 +103,7 @@ export class AgentController{
   @Delete(":matricule")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAgent(
-    @Param("matricule") matricule: string,
+    @Param("matricule", ParseIntPipe) matricule: number,
   ){
     await this.deleteAgentUseCase.execute(matricule)
   }
@@ -137,7 +138,7 @@ export class AgentController{
   @HttpCode(HttpStatus.OK)
   @ApiProduces("image/png", "image/jpeg", "image/webp")
   async getAgentCard(
-    @Param("matricule") matricule: string,
+    @Param("matricule", ParseIntPipe) matricule: number,
   ): Promise<StreamableFile> {
     const { stream, mimeType, fileName } =
       await this.getAgentCardUseCase.execute(matricule);

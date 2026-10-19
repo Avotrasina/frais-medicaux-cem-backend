@@ -12,7 +12,7 @@ export class DeleteAgentUseCase {
     private readonly agentRepository: AgentRepository,
   ) {}
 
-  async execute(agentMatricule: string): Promise<void> {
+  async execute(agentMatricule: number): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
       const agent = await this.agentRepository.findByMatricule(
         agentMatricule,

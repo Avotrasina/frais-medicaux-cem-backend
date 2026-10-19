@@ -9,7 +9,7 @@ export type UpdatePartialEnfant = UpdatePartialAgentFamilyBase;
 export type ReadEnfant = {
   id: number;
   numEnfant: number;
-  agentMatricule: string;
+  agentMatricule: number;
   carteSocialePath: string;
 };
 export type CreatedEnfant = {

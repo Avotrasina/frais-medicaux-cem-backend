@@ -9,7 +9,7 @@ export type UpdatePartialConjoint = UpdatePartialAgentFamilyBase;
 export type ReadConjoint = {
   id: number;
   numConjoint: number;
-  agentMatricule: string;
+  agentMatricule: number;
   carteSocialePath: string;
 };
 export type CreatedConjoint = {

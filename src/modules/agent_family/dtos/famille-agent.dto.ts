@@ -1,12 +1,13 @@
 import { Type } from "class-transformer";
-import { IsDate, IsEnum, IsNotEmpty, IsString, IsOptional } from "class-validator";
+import { IsDate, IsEnum, IsNotEmpty, IsString, IsOptional, IsInt } from "class-validator";
 import { Sexe } from "../../personne/personne.types.js";
 import { ApiProperty } from "@nestjs/swagger";
 
 class AgentFamilyBaseInputDto {
-  @IsString()
+  @Type(() => Number)
+  @IsInt()
   @IsNotEmpty()
-  agentMatricule!: string;
+  agentMatricule!: number;
 
   @IsString()
   @IsNotEmpty()

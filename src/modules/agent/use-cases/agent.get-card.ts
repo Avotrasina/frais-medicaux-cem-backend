@@ -18,7 +18,7 @@ export class GetAgentCardUseCase {
     private readonly fileStorage: FileStorageService,
   ) {}
 
-  async execute(matricule: string): Promise<AgentCardFile> {
+  async execute(matricule: number): Promise<AgentCardFile> {
     const carteProfessionnellePath = await this.agentRepository.findAgentCard(matricule);
 
     const stream = await this.fileStorage.openImage(carteProfessionnellePath);

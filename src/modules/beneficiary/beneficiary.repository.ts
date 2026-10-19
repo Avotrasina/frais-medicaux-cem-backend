@@ -52,7 +52,7 @@ export class BeneficiaryRepository {
 
   private resolveMatricule(
     personne: BeneficiaryWithRelations["personne"],
-  ): string {
+  ): number {
     const matricule =
       personne.agent?.matricule ?? personne.familleAgent?.agentMatricule;
     if (!matricule) {
@@ -115,7 +115,7 @@ export class BeneficiaryRepository {
   }
 
   async findByMatricule(
-    matricule: string,
+    matricule: number,
     tx?: DbClient,
   ): Promise<ReadBeneficiary[]> {
     const beneficiaries = await this.client(tx).beneficiaire.findMany({

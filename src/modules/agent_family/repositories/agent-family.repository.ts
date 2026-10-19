@@ -35,7 +35,7 @@ export class FamilleAgentRepository {
   }
 
   async findByAgentMatricule(
-    agentMatricule: string,
+    agentMatricule: number,
     tx?: DbClient,
   ): Promise<ReadAgentFamily[]> {
     const agentFamilies = await this.client(tx).familleAgent.findMany({

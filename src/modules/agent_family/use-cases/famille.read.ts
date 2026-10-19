@@ -6,7 +6,7 @@ import type { ReadAgentFamily } from "../types/agent-family.types.js";
 export class ReadFamilleUseCase {
   constructor(private readonly familleRepository: FamilleAgentRepository) {}
 
-  async readByMatricule(agentMatricule: string): Promise<ReadAgentFamily[]> {
+  async readByMatricule(agentMatricule: number): Promise<ReadAgentFamily[]> {
     return this.familleRepository.findByAgentMatricule(agentMatricule);
   }
 }

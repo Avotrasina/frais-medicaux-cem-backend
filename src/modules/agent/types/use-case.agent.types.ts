@@ -9,7 +9,7 @@ export type AgentCardFile = {
 };
 
 export type AgentUseCaseTypes = {
-  matricule: string;
+  matricule: number;
   nom: string;
   prenom: string;
   statutPEC: StatutPEC;
@@ -27,7 +27,7 @@ export type AgentUseCaseTypes = {
 };
 
 export type AgentUpdatePartial= {
-  matricule: string;
+  matricule: number;
   nom?: string | null;
   prenom?: string | null;
   statutPEC?: StatutPEC | null;
@@ -44,7 +44,7 @@ export type AgentUpdatePartial= {
 }
 
 export type AgentUpdateProfCard ={
-    matricule: string;
+    matricule: number;
     carteProfessionnellePath: string;
 }
 export type FilterOptions = {

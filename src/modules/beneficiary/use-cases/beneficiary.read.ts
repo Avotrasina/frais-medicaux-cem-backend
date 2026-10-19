@@ -7,7 +7,7 @@ export class ReadBeneficiaryUseCase {
   constructor(private readonly beneficiaryRepository: BeneficiaryRepository) {}
 
   async readByMatricule(
-    matricule: string,
+    matricule: number,
   ): Promise<ReadBeneficiaryUseCaseType[]> {
     return this.beneficiaryRepository.findByMatricule(matricule);
   }

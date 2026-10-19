@@ -60,7 +60,7 @@ export type AgentData = {
     sexe: string;
     nom: string;
     prenom: string;
-    matricule: string;
+    matricule: number;
     statusPEC: string;
     backofficefrontoffice: BackOfficeFrontOffice;
     nomFonction: string | null;

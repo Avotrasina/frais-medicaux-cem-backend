@@ -169,7 +169,7 @@ export class AgentFamilyController {
   @Get("/:matricule")
   @HttpCode(HttpStatus.OK)
   async getByMatricule(
-    @Param("matricule") matricule: string,
+    @Param("matricule", ParseIntPipe) matricule: number,
   ): Promise<ReadAgentFamily[]> {
     return this.readFamilleUseCase.readByMatricule(matricule);
   }
