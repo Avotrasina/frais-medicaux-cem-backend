@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { join, resolve, sep  } from "node:path";
 import { UnsupportedImageTypeException } from "../../common/errors/unsupported-image-type.exception.js";
 import {
@@ -62,6 +62,20 @@ export class FileStorageService {
 
   async deletePdf(relativePath: string): Promise<void> {
     await this.remove(relativePath);
+  }
+
+  async readPdf(relativePath: string): Promise<Buffer | null> {
+    const root = resolve(STORAGE_SETTINGS.root);
+    const full = resolve(root, relativePath);
+
+    if (!full.startsWith(root + sep)) return null;
+
+    try {
+      const buffer = await readFile(full);
+      return buffer.subarray(0, 5).toString("ascii") === "%PDF-" ? buffer : null;
+    } catch {
+      return null;
+    }
   }
 
 

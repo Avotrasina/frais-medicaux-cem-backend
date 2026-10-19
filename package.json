@@ -34,6 +34,7 @@
     "dotenv": "^18.0.4",
     "envalid": "^8.2.0",
     "handlebars": "^4.7.10",
+    "pdf-to-img": "^7.0.1",
     "pg": "^8.23.0",
     "puppeteer": "^25.13.0",
     "reflect-metadata": "^0.2.2",

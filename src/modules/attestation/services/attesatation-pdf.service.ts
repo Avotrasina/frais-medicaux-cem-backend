@@ -7,6 +7,7 @@ import puppeteer, { type Browser } from "puppeteer";
 import { STORAGE_SETTINGS } from "../../../common/settings/storage.settings.js";
 import { FileStorageService } from "../../../infrastructure/storage/file-storage.service.js";
 import type { AttestationData } from "../types/attestation.types.js";
+import { pdf as pdfToImg } from "pdf-to-img";
 
 const TEMPLATES_DIR = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -53,6 +54,12 @@ export class AttestationPdfService implements OnModuleDestroy {
   async generateBuffer(data: AttestationData): Promise<Buffer> {
     const html = await this.renderHtml(data);
     return this.htmlToPdf(html);
+  }
+
+  async renderFirstPageAsPng(pdf: Buffer): Promise<Buffer> {
+    const document = await pdfToImg(pdf, { scale: 2 });
+    const page = await document.getPage(1);
+    return Buffer.from(page);
   }
 
   async delete(relativePath: string): Promise<void> {

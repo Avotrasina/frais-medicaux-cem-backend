@@ -14,6 +14,7 @@ import { ReadAttestattion } from "./use-cases/attestation.read.js";
 import { ReviewAttesation } from "./use-cases/attestation.review.js";
 import { SaveAttestation } from "./use-cases/attestation.save.js";
 import { UpdateAttestation } from "./use-cases/attestation.update.js";
+import { PreviewAttestation } from "./use-cases/attestation.preview.js";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UpdateAttestation } from "./use-cases/attestation.update.js";
     DeleteAttesation,
     ReviewAttesation,
     UpdateAttestation,
+    PreviewAttestation,
   ],
   exports: [AttestationRepository],
 })

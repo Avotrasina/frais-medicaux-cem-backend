@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, StreamableFile } from "@nestjs/common";
 import {DeleteAttesation} from "./use-cases/attestation.delete.js";
 import {ReadAttestattion} from "./use-cases/attestation.read.js";
 import {ReviewAttesation} from "./use-cases/attestation.review.js";
@@ -6,6 +6,7 @@ import {SaveAttestation} from "./use-cases/attestation.save.js";
 import {UpdateAttestation} from "./use-cases/attestation.update.js";
 import {CreateAttestationDto} from "./dtos/create-attestation.dto.js";
 import {UpdatePartialAttestationDto} from "./dtos/update-attestation.dto.js";
+import { PreviewAttestation } from "./use-cases/attestation.preview.js";
 
 @Controller("attestation")
 export class AttestationController{
@@ -14,7 +15,8 @@ export class AttestationController{
         private readonly attestationReadUseCase : ReadAttestattion,
         private readonly attestationReviewUseCase : ReviewAttesation,
         private readonly attestationSaveUseCase : SaveAttestation,
-        private readonly attestationUpdateUseCase : UpdateAttestation
+        private readonly attestationUpdateUseCase : UpdateAttestation,
+        private readonly attestationPreviewUseCase: PreviewAttestation,
     ){}
 
     @Post("/create/")
@@ -70,5 +72,17 @@ export class AttestationController{
         @Param("idp",) idp:string,
     ){
         return await this.attestationReadUseCase.readBeneficiaryValidateAttestation(idp);
+    }
+
+    @Get("/preview/:id")
+    @HttpCode(HttpStatus.OK)
+    async previewAttestation(
+        @Param("id", ParseIntPipe) id: number,
+    ): Promise<StreamableFile> {
+        const image = await this.attestationPreviewUseCase.execute(id);
+        return new StreamableFile(image, {
+            type: "image/png",
+            disposition: `inline; filename="attestation-${id}.png"`,
+        });
     }
 }
