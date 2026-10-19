@@ -29,7 +29,7 @@ export type CreateAgent = {
   dateEntree: Date;
   agentType: AgentType;
   structureID?: string | null;
-  codeService?: string | null;
+  serviceID?: string | null;
   categorieID?: string | null;
 };
 

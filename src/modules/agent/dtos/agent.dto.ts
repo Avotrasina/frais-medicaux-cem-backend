@@ -10,6 +10,7 @@ import { PartialType, OmitType } from "@nestjs/mapped-types";
 import { Sexe } from '../../personne/personne.types.js';
 import {StatutPEC, BackOfficeFrontOffice } from './enum.js';
 import { Transform } from "class-transformer";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class AgentInputDto {
   @IsString()
@@ -88,4 +89,14 @@ export class AgentSearchNameDto {
   @IsString()
   @IsNotEmpty()
   value!: string;
+}
+
+export class AgentCreateMultipartDto extends AgentInputDto {
+  @ApiProperty({ type: "string", format: "binary" })
+  image!: any;
+}
+
+export class AgentCardMultipartDto {
+  @ApiProperty({ type: "string", format: "binary" })
+  image!: any;
 }

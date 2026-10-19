@@ -38,7 +38,7 @@ export class SaveAgentUseCase {
       dateEntree: input.dateEntree,
       fonction: input.fonction,
       categorieID: input.categorieID,
-      codeService: input.codeService,
+      serviceID: input.codeService,
       statutPEC: input.statutPEC,
       agentType : input.backOfficeFrontOffice == "RETRAITE" ? AgentType.AGENT_RETRAITE : AgentType.AGENT_ACTIF,
       structureID: input.structureID
