@@ -30,7 +30,7 @@ export class SaveEnfantUseCase {
       const beneficiary : CreateBeneficiary = {
         id:createdPersonne.id,
         codeFamille:"ENFANT",
-        numConjoint:enfant.numEnfant
+        numEnfant:enfant.numEnfant
       }
       await this.beneficiaryRepository.create(beneficiary, tx)
       return createdPersonne.id
