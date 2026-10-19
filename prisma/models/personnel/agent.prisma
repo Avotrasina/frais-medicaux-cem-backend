@@ -10,7 +10,7 @@ model Agent {
   id                       Int       @id
   matricule                String    @unique
   observationMatricule     String?   @map("observation_matricule")
-  carteProfessionnellePath String    @map("carte_professionnelle_path") @db.VarChar(50)
+  carteProfessionnellePath String    @map("carte_professionnelle_path") @db.VarChar(100)
   dateEntree               DateTime  @map("dt_entree")
   statutPEC                StatutPEC @map("statut_pec")
   agentType                AgentType @default(AGENT_ACTIF) @map("agent_type")
