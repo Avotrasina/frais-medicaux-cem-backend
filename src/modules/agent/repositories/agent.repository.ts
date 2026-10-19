@@ -17,6 +17,7 @@ import {
 import { type ReadPersonne, Sexe } from "../../personne/personne.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 import { omitNullish } from "../../../common/utils/omit-nullish.js";
+import { addAbortListener } from "events";
 
 type AgentWithPersonne = Prisma.AgentGetPayload<{
   include: { personne: true };
@@ -174,6 +175,17 @@ export class AgentRepository {
       },
       tx,
     );
+  }
+
+  async findAgentCard(agentMatricule: string,tx?:DbClient):Promise<string>{
+    const agent  = await this.client(tx).agent.findFirstOrThrow(
+      {
+        where:{
+          matricule:agentMatricule
+        }
+      }
+    )
+    return agent.carteProfessionnellePath;
   }
 
 

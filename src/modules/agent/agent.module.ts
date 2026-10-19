@@ -9,6 +9,7 @@ import { SaveAgentUseCase } from "./use-cases/agent.save.js";
 import { UpdateAgentUseCase } from "./use-cases/agent.update.js";
 import { DeleteAgentUseCase } from "./use-cases/agent.delete.js";
 import { ReadAgentUseCase } from "./use-cases/agent.read.js";
+import {GetAgentCardUseCase} from "./use-cases/agent.get-card.js"
 import { OrganizationalStructureModule } from "../organizational_structure/organizational-structure.module.js"
 
 @Module({
@@ -20,6 +21,7 @@ import { OrganizationalStructureModule } from "../organizational_structure/organ
     UpdateAgentUseCase,
     DeleteAgentUseCase,
     ReadAgentUseCase,
+    GetAgentCardUseCase
   ],
   exports: [AgentRepository],
 })

@@ -11,6 +11,7 @@ import {
   Param,
   Get,
   Query,
+  StreamableFile
 } from "@nestjs/common";
 import { ImageUploadInterceptor } from "../../common/interceptors/image-upload.interceptor.js";
 import { createImageFilePipe } from "../../common/pipes/image-file.pipe.js";
@@ -24,10 +25,12 @@ import {
 } from "./dtos/agent.dto.js";
 import { SaveAgentUseCase } from "./use-cases/agent.save.js";
 import {UpdateAgentUseCase} from "./use-cases/agent.update.js"
+import {GetAgentCardUseCase} from "./use-cases/agent.get-card.js"
 import type { AgentUpdatePartial, AgentUpdateProfCard,FilterOptions } from "./types/use-case.agent.types.js";
 import { DeleteAgentUseCase } from "./use-cases/agent.delete.js";
 import {ReadAgentUseCase} from  "./use-cases/agent.read.js";
 import { ApiBody, ApiConsumes } from "@nestjs/swagger";
+import { ApiProduces } from "@nestjs/swagger";
 
 @Controller("agent")
 export class AgentController{
@@ -36,7 +39,8 @@ export class AgentController{
     private readonly fileStorage: FileStorageService,
     private readonly updateAgentUseCase: UpdateAgentUseCase,
     private readonly deleteAgentUseCase: DeleteAgentUseCase,
-    private readonly readAgentUseCase: ReadAgentUseCase
+    private readonly readAgentUseCase: ReadAgentUseCase,
+    private readonly getAgentCardUseCase: GetAgentCardUseCase,
   ) {}
 
 @Post("/create/")
@@ -127,5 +131,20 @@ export class AgentController{
   @HttpCode(HttpStatus.OK)
   async getByFirstName(@Query() query: AgentSearchNameDto) {
     return await this.readAgentUseCase.findByFirstName(query.value);
+  }
+
+  @Get(":matricule/card")
+  @HttpCode(HttpStatus.OK)
+  @ApiProduces("image/png", "image/jpeg", "image/webp")
+  async getAgentCard(
+    @Param("matricule") matricule: string,
+  ): Promise<StreamableFile> {
+    const { stream, mimeType, fileName } =
+      await this.getAgentCardUseCase.execute(matricule);
+
+    return new StreamableFile(stream, {
+      type: mimeType,
+      disposition: `inline; filename="${fileName}"`,
+    });
   }
 }

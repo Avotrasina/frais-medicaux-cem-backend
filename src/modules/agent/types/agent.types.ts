@@ -60,3 +60,4 @@ export type UpdatePartialAgent = {
   codeService?: string | null;
   categorieID?: string | null;
 };
+

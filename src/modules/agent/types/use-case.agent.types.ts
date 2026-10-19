@@ -1,5 +1,12 @@
 import type { Sexe } from "../../personne/personne.types.js";
 import type { StatutPEC, BackOfficeFrontOffice } from "./agent.enum.types.js";
+import type { Readable } from "node:stream";
+
+export type AgentCardFile = {
+  stream: Readable;
+  mimeType: string;
+  fileName: string;
+};
 
 export type AgentUseCaseTypes = {
   matricule: string;
