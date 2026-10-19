@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve, sep  } from "node:path";
 import { UnsupportedImageTypeException } from "../../common/errors/unsupported-image-type.exception.js";
 import {
   IMAGE_EXTENSION_BY_MIME,
@@ -10,6 +10,9 @@ import {
   type PdfCategory,
 } from "../../common/settings/storage.settings.js";
 import type { StorableImage, StorablePdf } from "./file-storage.types.js";
+  import { createReadStream } from "node:fs";
+  import { stat } from "node:fs/promises";
+  import type { Readable } from "node:stream";
 
 @Injectable()
 export class FileStorageService {
@@ -31,6 +34,20 @@ export class FileStorageService {
     await this.remove(relativePath);
   }
 
+  async openImage(relativePath: string): Promise<Readable | null> {
+    const root = STORAGE_SETTINGS.root;
+    const full = resolve(root, relativePath);
+
+    if (!full.startsWith(root + sep)) return null;
+
+    try {
+      const info = await stat(full);
+      if (!info.isFile()) return null;
+    } catch {
+      return null;
+    }
+    return createReadStream(full);
+  }
 
   async savePdf(file: StorablePdf, category: PdfCategory): Promise<string> {
     const directory = STORAGE_SETTINGS.pdfDirs[category];
