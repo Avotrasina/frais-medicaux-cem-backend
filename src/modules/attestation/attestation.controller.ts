@@ -58,7 +58,7 @@ export class AttestationController{
         await this.attestationDeleteUseCase.execute(id);
     }
 
-    @Get("/pening/")
+    @Get("/pending/")
     @HttpCode(HttpStatus.OK)
     async getAllPendingAttestation(){
         return await this.attestationReadUseCase.readAllPending();
