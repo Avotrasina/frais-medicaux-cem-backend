@@ -12,12 +12,13 @@ export type ReadConjoint = {
   agentMatricule: number;
   carteSocialePath: string;
 };
-export type CreatedConjoint = {
-  id: number;
-  numConjoint: number;
-};
-export type ConjointWithFamilleAgentPersonne = Prisma.ConjointGetPayload<{
+
+export type ConjointWitAgentFamilyPersonne = Prisma.ConjointGetPayload<{
   include: { familleAgent: { include: { personne: true } } };
 }>;
+
+export type CreatedConjointWithAgentFamily = Prisma.ConjointGetPayload<{
+  include:{familleAgent:true}
+}>
 
 export type CreateConjointRecord = Omit<CreateConjoint, "personne"> & { id: number };

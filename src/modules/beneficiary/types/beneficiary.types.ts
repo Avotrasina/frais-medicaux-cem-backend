@@ -3,6 +3,7 @@ import type { CodeFamille } from "./idp.types.js";
 
 export type CreateBeneficiary = {
   id: number;
+  agentMatricule:number;
   observationIDP?: string | null;
   codeFamille: CodeFamille;
   numConjoint?: number | null;

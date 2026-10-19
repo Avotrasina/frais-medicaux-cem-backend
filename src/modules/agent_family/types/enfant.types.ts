@@ -12,12 +12,12 @@ export type ReadEnfant = {
   agentMatricule: number;
   carteSocialePath: string;
 };
-export type CreatedEnfant = {
-  id: number;
-  numEnfant: number;
-};
 
-export type EnfantWithFamilleAgentPersonne = Prisma.EnfantGetPayload<{
+export type CreatedEnfantWithAgentFamilyAttribute = Prisma.EnfantGetPayload<{
+  include:{familleAgent:true};
+}>;
+
+export type EnfantWithAgentFamilyPersonne = Prisma.EnfantGetPayload<{
   include: { familleAgent: { include: { personne: true } } };
 }>;
 

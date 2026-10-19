@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
-  CreatedEnfant,
+  CreatedEnfantWithAgentFamilyAttribute,
   ReadEnfant,
   CreateEnfantRecord,
-  EnfantWithFamilleAgentPersonne
+  EnfantWithAgentFamilyPersonne
 } from "../types/enfant.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
 
@@ -18,7 +18,7 @@ export class EnfantRepository {
     return tx ?? this.prisma;
   }
 
-  private toReadEnfant(enfant: EnfantWithFamilleAgentPersonne): ReadEnfant {
+  private toReadEnfant(enfant: EnfantWithAgentFamilyPersonne): ReadEnfant {
     const { familleAgent } = enfant;
     const { personne } = familleAgent;
     return {
@@ -32,7 +32,7 @@ export class EnfantRepository {
   async create(
     enfant: CreateEnfantRecord,
     tx?: DbClient,
-  ): Promise<CreatedEnfant> {
+  ): Promise<CreatedEnfantWithAgentFamilyAttribute> {
     const { id, agentMatricule, carteSocialePath } = enfant;
 
     return this.client(tx).enfant.create({
@@ -41,7 +41,9 @@ export class EnfantRepository {
           create: { id, agentMatricule, carteSocialePath },
         },
       },
-      select: { id: true, numEnfant: true },
+      include:{
+        familleAgent:true
+      }
     });
   }
 

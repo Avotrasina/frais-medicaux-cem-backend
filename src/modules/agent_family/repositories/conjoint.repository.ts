@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
 import type {
-  CreatedConjoint,
+  CreatedConjointWithAgentFamily,
   ReadConjoint,
-  ConjointWithFamilleAgentPersonne,
+  ConjointWitAgentFamilyPersonne,
   CreateConjointRecord
 } from "../types/conjoint.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
@@ -19,7 +19,7 @@ export class ConjointRepository {
   }
 
   private toReadConjoint(
-    conjoint: ConjointWithFamilleAgentPersonne,
+    conjoint: ConjointWitAgentFamilyPersonne,
   ): ReadConjoint {
     const { familleAgent } = conjoint;
     const { personne } = familleAgent;
@@ -34,7 +34,7 @@ export class ConjointRepository {
   async create(
     conjoint: CreateConjointRecord,
     tx?: DbClient,
-  ): Promise<CreatedConjoint> {
+  ): Promise<CreatedConjointWithAgentFamily> {
     const { id, agentMatricule, carteSocialePath } = conjoint;
 
     return this.client(tx).conjoint.create({
@@ -43,7 +43,7 @@ export class ConjointRepository {
           create: { id, agentMatricule, carteSocialePath },
         },
       },
-      select: { id: true, numConjoint: true },
+      include:{familleAgent:true},
     });
   }
 

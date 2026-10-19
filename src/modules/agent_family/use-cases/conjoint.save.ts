@@ -5,6 +5,7 @@ import { PersonneRepository } from "../../personne/personne.repository.js";
 import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
 import type { CreateConjoint } from "../types/conjoint.types.js";
 import type {CreateBeneficiary} from "../../beneficiary/types/beneficiary.types.js"
+import { EnfantInputDto } from "../dtos/famille-agent.dto.js";
 
 @Injectable()
 export class SaveConjointUseCase {
@@ -30,7 +31,8 @@ export class SaveConjointUseCase {
       const beneficiary : CreateBeneficiary = {
         id:createdPersonne.id,
         codeFamille:"CONJOINT",
-        numConjoint:conjoint.numConjoint
+        numConjoint:conjoint.numConjoint,
+        agentMatricule:conjoint.familleAgent.agentMatricule,
       }
       await this.beneficiaryRepository.create(beneficiary, tx)
 

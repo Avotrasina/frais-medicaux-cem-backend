@@ -16,10 +16,10 @@ function formatMatricule(matricule: number): string {
 
 function formatNumero(numero: number): string {
   assertEntierPositif(numero, "numéro");
-  if (numero > 999) {
+  if (numero > 99) {
     throw new Error(`numéro doit être compris entre 0 et 999 (reçu : ${numero})`);
   }
-  return String(numero).padStart(3, "0");
+  return String(numero).padStart(2, "0");
 }
 
 export function buildCodeFamille(

@@ -85,11 +85,11 @@ export class BeneficiaryRepository {
     beneficiary: CreateBeneficiary,
     tx?: DbClient,
   ): Promise<ReadBeneficiaryBase> {
-    const { id, observationIDP, codeFamille, numConjoint, numEnfant } =
+    const {id, agentMatricule, observationIDP, codeFamille, numConjoint, numEnfant } =
       beneficiary;
 
     const idp = buildCodeFamille(
-      id,
+      agentMatricule,
       codeFamille,
       numEnfant ?? undefined,
       numConjoint ?? undefined,
