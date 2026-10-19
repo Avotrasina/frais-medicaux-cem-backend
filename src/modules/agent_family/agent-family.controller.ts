@@ -18,6 +18,8 @@ import {
   ConjointInputDto,
   EnfantInputDto,
   UpdatePartialFamilleAgentDto,
+  AgentFamilyCreateMultipartDto,
+  AgentFamilySocialCardMultipartDto
 } from "./dtos/famille-agent.dto.js";
 import { SaveConjointUseCase } from "./use-cases/conjoint.save.js";
 import { SaveEnfantUseCase } from "./use-cases/enfant.save.js";
@@ -25,6 +27,8 @@ import { UpdateConjointUseCase } from "./use-cases/conjoint.update.js";
 import { UpdateEnfantUseCase } from "./use-cases/enfant.update.js";
 import { ReadFamilleUseCase } from "./use-cases/famille.read.js";
 import type { ReadAgentFamily } from "./types/famille.agent.types.js";
+import { ApiBody, ApiConsumes } from "@nestjs/swagger";
+
 
 @Controller("agent-family")
 export class AgentFamilyController {
@@ -40,6 +44,8 @@ export class AgentFamilyController {
 
   @Post("/conjoint")
   @HttpCode(HttpStatus.CREATED)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({ type: AgentFamilyCreateMultipartDto})
   @UseInterceptors(ImageUploadInterceptor("image"))
   async createConjoint(
     @Body() dto: ConjointInputDto,
@@ -77,6 +83,8 @@ export class AgentFamilyController {
 
   @Patch("/conjoint/card/:id")
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({ type: AgentFamilySocialCardMultipartDto})
   @UseInterceptors(ImageUploadInterceptor("image"))
   async updateCarteSocialeConjoint(
     @Param("id", ParseIntPipe) id: number,
@@ -95,6 +103,8 @@ export class AgentFamilyController {
 
   @Post("/enfant")
   @HttpCode(HttpStatus.CREATED)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({ type: AgentFamilyCreateMultipartDto})
   @UseInterceptors(ImageUploadInterceptor("image"))
   async createEnfant(
     @Body() dto: EnfantInputDto,
@@ -132,6 +142,8 @@ export class AgentFamilyController {
 
   @Patch("/enfant/card/:id")
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({ type: AgentFamilySocialCardMultipartDto})
   @UseInterceptors(ImageUploadInterceptor("image"))
   async updateCarteSocialeEnfant(
     @Param("id", ParseIntPipe) id: number,

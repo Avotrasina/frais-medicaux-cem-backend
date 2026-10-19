@@ -1,8 +1,9 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsNotEmpty, IsString, IsOptional } from "class-validator";
 import { Sexe } from "../../personne/personne.types.js";
+import { ApiProperty } from "@nestjs/swagger";
 
-class FamilleAgentInputBaseDto {
+class AgentFamilyBaseInputDto {
   @IsString()
   @IsNotEmpty()
   agentMatricule!: string;
@@ -44,5 +45,15 @@ export class UpdatePartialFamilleAgentDto {
   sexe?: Sexe;
 }
 
-export class ConjointInputDto extends FamilleAgentInputBaseDto {}
-export class EnfantInputDto extends FamilleAgentInputBaseDto {}
+export class ConjointInputDto extends AgentFamilyBaseInputDto {}
+export class EnfantInputDto extends AgentFamilyBaseInputDto {}
+
+export class AgentFamilyCreateMultipartDto extends AgentFamilyBaseInputDto {
+  @ApiProperty({ type: "string", format: "binary" })
+  image!: any;
+}
+
+export class AgentFamilySocialCardMultipartDto{
+  @ApiProperty({ type: "string", format: "binary" })
+  image!: any;  
+}
