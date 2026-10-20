@@ -26,6 +26,7 @@ export type CreateAttestation = {
   servicePrestataire?: string | null;
   providerID: number;
   idpBeneficiaire: string;
+  datePEC:Date;
 };
 
 export type UpdatePartialAttestation = {
@@ -34,6 +35,7 @@ export type UpdatePartialAttestation = {
   servicePrestataire?: string | null;
   prestataireID?: number | null;
   idpBenificiaire?:string|null;
+  datePEC?: Date | null;
 };
 
 export type ReadAttestation = {
@@ -45,7 +47,7 @@ export type ReadAttestation = {
   statut: StatutAttestation;
   prestataireID: number;
   idpBeneficiaire: string;
-  createdAt: Date;
+  datePEC: Date;
 };
 
 
@@ -70,7 +72,6 @@ export type AgentData = {
     service_prestataire?: string | null;
     nomEtablissement: string;
     localite: string;
-    date_pec: Date;
 }
 
 export type AttestationData = {
@@ -79,5 +80,6 @@ export type AttestationData = {
   codeFamille: CodeFamille; 
   famille:FamilleData | null;
   agent:AgentData;
-  idp:string
+  idp:string;
+  datePEC:Date;
 }

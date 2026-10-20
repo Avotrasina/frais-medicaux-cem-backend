@@ -100,10 +100,11 @@ export class AttestationPdfService implements OnModuleDestroy {
       ...data,
       logoCem: await this.getLogo(),
       image: await this.toDataUri(data.image),
-      date: new Date().toLocaleDateString("fr-FR", {
+      date: new Date(data.datePEC).toLocaleDateString("fr-FR", {
         day: "numeric",
         month: "long",
         year: "numeric",
+
       }),
     });
   }

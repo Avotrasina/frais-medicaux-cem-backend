@@ -31,7 +31,8 @@ export class AttestationRepository {
       statut: StatutAttestation[attestation.statut],
       prestataireID: attestation.prestataireID,
       idpBeneficiaire: attestation.idpBeneficiaire,
-      createdAt: attestation.createdAt,
+      datePEC:attestation.datePEC,
+      
     };
   }
 
@@ -46,6 +47,7 @@ export class AttestationRepository {
         servicePrestataire: attestation.servicePrestataire ?? null,
         prestataireID: attestation.providerID,
         idpBeneficiaire: attestation.idpBeneficiaire,
+        datePEC: attestation.datePEC,
       },
     });
     return this.toReadAttestation(created);
@@ -73,7 +75,8 @@ export class AttestationRepository {
         naturePrestation: attestation.naturePrestation,
         servicePrestataire: attestation.servicePrestataire,
         prestataireID: attestation.prestataireID,
-        idpBeneficiary:attestation.idpBenificiaire
+        idpBeneficiary:attestation.idpBenificiaire,
+        datePEC:attestation.datePEC
       }),
     });
     return this.toReadAttestation(updated);

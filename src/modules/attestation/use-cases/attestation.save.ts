@@ -61,14 +61,14 @@ export class SaveAttestation{
                     service_prestataire:input.servicePrestataire,
                     nomEtablissement:provider.nom,
                     localite: nomLocation,
-                    date_pec: new Date(),
                 }
                 const newAttestation = await this.attestationRepository.create({
                     attestationPath:null,
                     naturePrestation: input.naturePrestation,
                     servicePrestataire:input.servicePrestataire,
                     idpBeneficiaire:beneficiary.idp,
-                    providerID:provider.id
+                    providerID:provider.id,
+                    datePEC:new Date(input.datePEC)
                 },tx)
                 const attestatonRef = `${actualYear} - ${newAttestation.id}`
                 const attestionData : AttestationData = {
@@ -77,7 +77,9 @@ export class SaveAttestation{
                     codeFamille : CodeFamille[beneficiary.codeFamille],
                     famille:familleData ?? null,
                     agent:agentData,
-                    idp:beneficiary.idp
+                    idp:beneficiary.idp,
+                    datePEC:newAttestation.datePEC
+                    
                 }
                 attestationPath = await this.attestationService.generateAndSave(attestionData)
                 await this.attestationRepository.updateByID(newAttestation.id,{attestationPath},tx)
@@ -97,14 +99,14 @@ export class SaveAttestation{
                     service_prestataire:input.servicePrestataire,
                     nomEtablissement:provider.nom,
                     localite: nomLocation,
-                    date_pec: new Date(),
                 }
                 const newAttestation = await this.attestationRepository.create({
                     attestationPath:null,
                     naturePrestation: input.naturePrestation,
                     servicePrestataire:input.servicePrestataire,
                     idpBeneficiaire:beneficiary.idp,
-                    providerID:provider.id
+                    providerID:provider.id,
+                    datePEC : new Date(input.datePEC)
                 },tx)
                 const attestatonRef = `${actualYear} - ${newAttestation.id}`
                 const attestionData : AttestationData = {
@@ -113,7 +115,8 @@ export class SaveAttestation{
                     codeFamille : CodeFamille[beneficiary.codeFamille],
                     famille:familleData ?? null,
                     agent:agentData,
-                    idp:beneficiary.idp
+                    idp:beneficiary.idp,
+                    datePEC:newAttestation.datePEC,
                 }
                 attestationPath = await this.attestationService.generateAndSave(attestionData)
                 await this.attestationRepository.updateByID(newAttestation.id,{attestationPath},tx)

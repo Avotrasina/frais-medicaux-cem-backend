@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import {
+  IsDate,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   MaxLength,
   Min,
 } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateAttestationDto {
 
@@ -28,4 +30,9 @@ export class CreateAttestationDto {
   @IsString()
   @IsNotEmpty()
   idpBeneficiaire!: string;
+
+  @ApiProperty({ type: String, format: "date-time" })
+  @Type(() => Date)
+  @IsDate()
+  datePEC!: Date;
 }
