@@ -32,6 +32,10 @@ const validators = {
   STORAGE_IMAGES_DIR: dirName({ default: 'images' }),
   STORAGE_CARTES_PROFESSIONNELLES_DIR: dirName({ default: 'cartes-professionnelles' }),
   STORAGE_CARTES_SOCIALES_DIR: dirName({ default: 'cartes-sociales' }),
+
+  TRANSACTION_MAX_WAIT:num({default:10000}),
+  TRANSACTION_TIMEOUT:num({default:10000})
+
 };
 
 const toError = (key: string, err: unknown): Error => {

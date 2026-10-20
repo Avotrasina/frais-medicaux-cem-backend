@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import {env} from "../../../common/settings/env.validator.js"
 import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
 import {ProviderRepository} from "../../provider/provider.repository.js"
@@ -118,7 +119,7 @@ export class SaveAttestation{
                 await this.attestationRepository.updateByID(newAttestation.id,{attestationPath},tx)
             }
 
-        }).catch(async (error: unknown) => {
+        },{timeout:env.TRANSACTION_TIMEOUT,maxWait:env.TRANSACTION_MAX_WAIT }).catch(async (error: unknown) => {
             if (attestationPath != null) {
                 await this.attestationService.delete(attestationPath).catch(() => undefined)
             }
