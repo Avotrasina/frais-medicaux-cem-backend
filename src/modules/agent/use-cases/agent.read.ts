@@ -3,6 +3,7 @@ import { AgentRepository } from "../repositories/agent.repository.js";
 import { AgentType } from "../types/agent.types.js";
 import type { AgentUseCaseTypes,FilterOptions} from "../types/use-case.agent.types.js";
 import { BackOfficeFrontOffice } from "../dtos/enum.js";
+import { StructureOrganisationnelleRepository } from "../../organizational_structure/repositories/structure-orga.repository.js";
 
 type PersonneAgent = Awaited<
   ReturnType<AgentRepository["findAllAgents"]>
@@ -10,42 +11,45 @@ type PersonneAgent = Awaited<
 
 @Injectable()
 export class ReadAgentUseCase {
-  constructor(private readonly agentRepository: AgentRepository) {}
+  constructor(
+    private readonly agentRepository: AgentRepository,
+    private readonly structureRepository: StructureOrganisationnelleRepository,
+  ) {}
 
   private async fetch(
     query: () => Promise<PersonneAgent[]>,
   ): Promise<AgentUseCaseTypes[]> {
     const agents = await query();
-    return agents.map((a) => this.toUseCaseType(a));
+    return Promise.all(agents.map((a) => this.toUseCaseType(a)));
   }
 
-  private toUseCaseType({
+  private async toUseCaseType({
     agent,
     id: _p,
     ...personne
-  }: PersonneAgent): AgentUseCaseTypes {
-    const { structureID: _s, id: _a, agentType, ...resteAgent } = agent;
+  }: PersonneAgent):Promise<AgentUseCaseTypes> {
+    const { structureID, id: _a, agentType, ...resteAgent } = agent;
+    const structure = structureID && agentType !== AgentType.AGENT_RETRAITE
+      ? await this.structureRepository.findByID(structureID)
+      : null;
 
     return {
       ...personne,
       ...resteAgent,
-      backOfficeFrontOffice: this.resolveBackOffice(
-        agentType,
-        resteAgent.codeDirection,
-      ),
+      backOfficeFrontOffice: this.resolveBackOffice(agentType, structure),
     };
   }
 
   private resolveBackOffice(
     agentType: AgentType,
-    codeDirection?: string | null,
+    structure: Awaited<ReturnType<StructureOrganisationnelleRepository["findByID"]>> | null,
   ): BackOfficeFrontOffice {
     if (agentType === AgentType.AGENT_RETRAITE) {
       return BackOfficeFrontOffice.RETRAITE;
     }
-    return codeDirection
-      ? BackOfficeFrontOffice.DIRECTION
-      : BackOfficeFrontOffice.AGENCE;
+    if (structure?.nomAgence) return BackOfficeFrontOffice.AGENCE;
+    if (structure?.nomDirection) return BackOfficeFrontOffice.DIRECTION;
+    return BackOfficeFrontOffice.AGENCE;
   }
   
   readAll(): Promise<AgentUseCaseTypes[]> {

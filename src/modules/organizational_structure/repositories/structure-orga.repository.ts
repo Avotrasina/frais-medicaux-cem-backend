@@ -12,8 +12,7 @@ import {
   type StructureWithNames,
 } from "../types/structure-orga.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
-import { AgenceRepository } from "./agence.repository.js";
-import { DirectionRepository } from "./direction.repository.js";
+
 
 @Injectable()
 @HandlePrismaErrors({
