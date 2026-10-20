@@ -65,7 +65,8 @@ export const ModelName = {
   Beneficiaire: 'Beneficiaire',
   Prestataire: 'Prestataire',
   Lieu: 'Lieu',
-  CategoriePrestataire: 'CategoriePrestataire'
+  CategoriePrestataire: 'CategoriePrestataire',
+  Convention: 'Convention'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -263,6 +264,15 @@ export const CategoriePrestataireScalarFieldEnum = {
 } as const
 
 export type CategoriePrestataireScalarFieldEnum = (typeof CategoriePrestataireScalarFieldEnum)[keyof typeof CategoriePrestataireScalarFieldEnum]
+
+
+export const ConventionScalarFieldEnum = {
+  id: 'id',
+  conventionPath: 'conventionPath',
+  idPrestataire: 'idPrestataire'
+} as const
+
+export type ConventionScalarFieldEnum = (typeof ConventionScalarFieldEnum)[keyof typeof ConventionScalarFieldEnum]
 
 
 export const SortOrder = {

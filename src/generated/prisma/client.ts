@@ -116,3 +116,8 @@ export type Lieu = Prisma.LieuModel
  * 
  */
 export type CategoriePrestataire = Prisma.CategoriePrestataireModel
+/**
+ * Model Convention
+ * 
+ */
+export type Convention = Prisma.ConventionModel

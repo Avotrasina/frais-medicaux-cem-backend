@@ -289,6 +289,7 @@ export type PrestataireWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   attestations?: Prisma.AttestationListRelationFilter
+  conventions?: Prisma.ConventionListRelationFilter
   lieu?: Prisma.XOR<Prisma.LieuScalarRelationFilter, Prisma.LieuWhereInput>
   categorie?: Prisma.XOR<Prisma.CategoriePrestataireScalarRelationFilter, Prisma.CategoriePrestataireWhereInput>
 }
@@ -308,6 +309,7 @@ export type PrestataireOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   attestations?: Prisma.AttestationOrderByRelationAggregateInput
+  conventions?: Prisma.ConventionOrderByRelationAggregateInput
   lieu?: Prisma.LieuOrderByWithRelationInput
   categorie?: Prisma.CategoriePrestataireOrderByWithRelationInput
 }
@@ -330,6 +332,7 @@ export type PrestataireWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   attestations?: Prisma.AttestationListRelationFilter
+  conventions?: Prisma.ConventionListRelationFilter
   lieu?: Prisma.XOR<Prisma.LieuScalarRelationFilter, Prisma.LieuWhereInput>
   categorie?: Prisma.XOR<Prisma.CategoriePrestataireScalarRelationFilter, Prisma.CategoriePrestataireWhereInput>
 }, "id" | "nif" | "stat">
@@ -386,6 +389,7 @@ export type PrestataireCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
+  conventions?: Prisma.ConventionCreateNestedManyWithoutPresatataireInput
   lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
   categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
 }
@@ -405,6 +409,7 @@ export type PrestataireUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
+  conventions?: Prisma.ConventionUncheckedCreateNestedManyWithoutPresatataireInput
 }
 
 export type PrestataireUpdateInput = {
@@ -419,6 +424,7 @@ export type PrestataireUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
+  conventions?: Prisma.ConventionUpdateManyWithoutPresatataireNestedInput
   lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
   categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
 }
@@ -438,6 +444,7 @@ export type PrestataireUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
+  conventions?: Prisma.ConventionUncheckedUpdateManyWithoutPresatataireNestedInput
 }
 
 export type PrestataireCreateManyInput = {
@@ -662,6 +669,20 @@ export type PrestataireUncheckedUpdateManyWithoutCategorieNestedInput = {
   deleteMany?: Prisma.PrestataireScalarWhereInput | Prisma.PrestataireScalarWhereInput[]
 }
 
+export type PrestataireCreateNestedOneWithoutConventionsInput = {
+  create?: Prisma.XOR<Prisma.PrestataireCreateWithoutConventionsInput, Prisma.PrestataireUncheckedCreateWithoutConventionsInput>
+  connectOrCreate?: Prisma.PrestataireCreateOrConnectWithoutConventionsInput
+  connect?: Prisma.PrestataireWhereUniqueInput
+}
+
+export type PrestataireUpdateOneRequiredWithoutConventionsNestedInput = {
+  create?: Prisma.XOR<Prisma.PrestataireCreateWithoutConventionsInput, Prisma.PrestataireUncheckedCreateWithoutConventionsInput>
+  connectOrCreate?: Prisma.PrestataireCreateOrConnectWithoutConventionsInput
+  upsert?: Prisma.PrestataireUpsertWithoutConventionsInput
+  connect?: Prisma.PrestataireWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PrestataireUpdateToOneWithWhereWithoutConventionsInput, Prisma.PrestataireUpdateWithoutConventionsInput>, Prisma.PrestataireUncheckedUpdateWithoutConventionsInput>
+}
+
 export type PrestataireCreateWithoutAttestationsInput = {
   nom: string
   adresse: string
@@ -673,6 +694,7 @@ export type PrestataireCreateWithoutAttestationsInput = {
   listePrestation: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  conventions?: Prisma.ConventionCreateNestedManyWithoutPresatataireInput
   lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
   categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
 }
@@ -691,6 +713,7 @@ export type PrestataireUncheckedCreateWithoutAttestationsInput = {
   categorieID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  conventions?: Prisma.ConventionUncheckedCreateNestedManyWithoutPresatataireInput
 }
 
 export type PrestataireCreateOrConnectWithoutAttestationsInput = {
@@ -720,6 +743,7 @@ export type PrestataireUpdateWithoutAttestationsInput = {
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conventions?: Prisma.ConventionUpdateManyWithoutPresatataireNestedInput
   lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
   categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
 }
@@ -738,6 +762,7 @@ export type PrestataireUncheckedUpdateWithoutAttestationsInput = {
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conventions?: Prisma.ConventionUncheckedUpdateManyWithoutPresatataireNestedInput
 }
 
 export type PrestataireCreateWithoutLieuInput = {
@@ -752,6 +777,7 @@ export type PrestataireCreateWithoutLieuInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
+  conventions?: Prisma.ConventionCreateNestedManyWithoutPresatataireInput
   categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
 }
 
@@ -769,6 +795,7 @@ export type PrestataireUncheckedCreateWithoutLieuInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
+  conventions?: Prisma.ConventionUncheckedCreateNestedManyWithoutPresatataireInput
 }
 
 export type PrestataireCreateOrConnectWithoutLieuInput = {
@@ -828,6 +855,7 @@ export type PrestataireCreateWithoutCategorieInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
+  conventions?: Prisma.ConventionCreateNestedManyWithoutPresatataireInput
   lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
 }
 
@@ -845,6 +873,7 @@ export type PrestataireUncheckedCreateWithoutCategorieInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
+  conventions?: Prisma.ConventionUncheckedCreateNestedManyWithoutPresatataireInput
 }
 
 export type PrestataireCreateOrConnectWithoutCategorieInput = {
@@ -871,6 +900,88 @@ export type PrestataireUpdateWithWhereUniqueWithoutCategorieInput = {
 export type PrestataireUpdateManyWithWhereWithoutCategorieInput = {
   where: Prisma.PrestataireScalarWhereInput
   data: Prisma.XOR<Prisma.PrestataireUpdateManyMutationInput, Prisma.PrestataireUncheckedUpdateManyWithoutCategorieInput>
+}
+
+export type PrestataireCreateWithoutConventionsInput = {
+  nom: string
+  adresse: string
+  statut: $Enums.StatutPrestataire
+  nif: string
+  stat: string
+  dateDebutConvention: Date | string
+  dateFinConvention: Date | string
+  listePrestation: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attestations?: Prisma.AttestationCreateNestedManyWithoutPrestataireInput
+  lieu: Prisma.LieuCreateNestedOneWithoutPrestatairesInput
+  categorie: Prisma.CategoriePrestataireCreateNestedOneWithoutPrestatairesInput
+}
+
+export type PrestataireUncheckedCreateWithoutConventionsInput = {
+  id?: number
+  nom: string
+  adresse: string
+  statut: $Enums.StatutPrestataire
+  nif: string
+  stat: string
+  dateDebutConvention: Date | string
+  dateFinConvention: Date | string
+  listePrestation: string
+  lieuID: number
+  categorieID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attestations?: Prisma.AttestationUncheckedCreateNestedManyWithoutPrestataireInput
+}
+
+export type PrestataireCreateOrConnectWithoutConventionsInput = {
+  where: Prisma.PrestataireWhereUniqueInput
+  create: Prisma.XOR<Prisma.PrestataireCreateWithoutConventionsInput, Prisma.PrestataireUncheckedCreateWithoutConventionsInput>
+}
+
+export type PrestataireUpsertWithoutConventionsInput = {
+  update: Prisma.XOR<Prisma.PrestataireUpdateWithoutConventionsInput, Prisma.PrestataireUncheckedUpdateWithoutConventionsInput>
+  create: Prisma.XOR<Prisma.PrestataireCreateWithoutConventionsInput, Prisma.PrestataireUncheckedCreateWithoutConventionsInput>
+  where?: Prisma.PrestataireWhereInput
+}
+
+export type PrestataireUpdateToOneWithWhereWithoutConventionsInput = {
+  where?: Prisma.PrestataireWhereInput
+  data: Prisma.XOR<Prisma.PrestataireUpdateWithoutConventionsInput, Prisma.PrestataireUncheckedUpdateWithoutConventionsInput>
+}
+
+export type PrestataireUpdateWithoutConventionsInput = {
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  adresse?: Prisma.StringFieldUpdateOperationsInput | string
+  statut?: Prisma.EnumStatutPrestataireFieldUpdateOperationsInput | $Enums.StatutPrestataire
+  nif?: Prisma.StringFieldUpdateOperationsInput | string
+  stat?: Prisma.StringFieldUpdateOperationsInput | string
+  dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
+  lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
+  categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
+}
+
+export type PrestataireUncheckedUpdateWithoutConventionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  adresse?: Prisma.StringFieldUpdateOperationsInput | string
+  statut?: Prisma.EnumStatutPrestataireFieldUpdateOperationsInput | $Enums.StatutPrestataire
+  nif?: Prisma.StringFieldUpdateOperationsInput | string
+  stat?: Prisma.StringFieldUpdateOperationsInput | string
+  dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  lieuID?: Prisma.IntFieldUpdateOperationsInput | number
+  categorieID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
 }
 
 export type PrestataireCreateManyLieuInput = {
@@ -900,6 +1011,7 @@ export type PrestataireUpdateWithoutLieuInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
+  conventions?: Prisma.ConventionUpdateManyWithoutPresatataireNestedInput
   categorie?: Prisma.CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput
 }
 
@@ -917,6 +1029,7 @@ export type PrestataireUncheckedUpdateWithoutLieuInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
+  conventions?: Prisma.ConventionUncheckedUpdateManyWithoutPresatataireNestedInput
 }
 
 export type PrestataireUncheckedUpdateManyWithoutLieuInput = {
@@ -961,6 +1074,7 @@ export type PrestataireUpdateWithoutCategorieInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUpdateManyWithoutPrestataireNestedInput
+  conventions?: Prisma.ConventionUpdateManyWithoutPresatataireNestedInput
   lieu?: Prisma.LieuUpdateOneRequiredWithoutPrestatairesNestedInput
 }
 
@@ -978,6 +1092,7 @@ export type PrestataireUncheckedUpdateWithoutCategorieInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attestations?: Prisma.AttestationUncheckedUpdateManyWithoutPrestataireNestedInput
+  conventions?: Prisma.ConventionUncheckedUpdateManyWithoutPresatataireNestedInput
 }
 
 export type PrestataireUncheckedUpdateManyWithoutCategorieInput = {
@@ -1002,10 +1117,12 @@ export type PrestataireUncheckedUpdateManyWithoutCategorieInput = {
 
 export type PrestataireCountOutputType = {
   attestations: number
+  conventions: number
 }
 
 export type PrestataireCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attestations?: boolean | PrestataireCountOutputTypeCountAttestationsArgs
+  conventions?: boolean | PrestataireCountOutputTypeCountConventionsArgs
 }
 
 /**
@@ -1025,6 +1142,13 @@ export type PrestataireCountOutputTypeCountAttestationsArgs<ExtArgs extends runt
   where?: Prisma.AttestationWhereInput
 }
 
+/**
+ * PrestataireCountOutputType without action
+ */
+export type PrestataireCountOutputTypeCountConventionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConventionWhereInput
+}
+
 
 export type PrestataireSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1041,6 +1165,7 @@ export type PrestataireSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   attestations?: boolean | Prisma.Prestataire$attestationsArgs<ExtArgs>
+  conventions?: boolean | Prisma.Prestataire$conventionsArgs<ExtArgs>
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
   categorie?: boolean | Prisma.CategoriePrestataireDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.PrestataireCountOutputTypeDefaultArgs<ExtArgs>
@@ -1101,6 +1226,7 @@ export type PrestataireSelectScalar = {
 export type PrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "adresse" | "statut" | "nif" | "stat" | "dateDebutConvention" | "dateFinConvention" | "listePrestation" | "lieuID" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["prestataire"]>
 export type PrestataireInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attestations?: boolean | Prisma.Prestataire$attestationsArgs<ExtArgs>
+  conventions?: boolean | Prisma.Prestataire$conventionsArgs<ExtArgs>
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
   categorie?: boolean | Prisma.CategoriePrestataireDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.PrestataireCountOutputTypeDefaultArgs<ExtArgs>
@@ -1118,6 +1244,7 @@ export type $PrestatairePayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "Prestataire"
   objects: {
     attestations: Prisma.$AttestationPayload<ExtArgs>[]
+    conventions: Prisma.$ConventionPayload<ExtArgs>[]
     lieu: Prisma.$LieuPayload<ExtArgs>
     categorie: Prisma.$CategoriePrestatairePayload<ExtArgs>
   }
@@ -1530,6 +1657,7 @@ readonly fields: PrestataireFieldRefs;
 export interface Prisma__PrestataireClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   attestations<T extends Prisma.Prestataire$attestationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestataire$attestationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttestationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conventions<T extends Prisma.Prestataire$conventionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestataire$conventionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConventionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lieu<T extends Prisma.LieuDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LieuDefaultArgs<ExtArgs>>): Prisma.Prisma__LieuClient<runtime.Types.Result.GetResult<Prisma.$LieuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   categorie<T extends Prisma.CategoriePrestataireDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoriePrestataireDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoriePrestataireClient<runtime.Types.Result.GetResult<Prisma.$CategoriePrestatairePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1996,6 +2124,30 @@ export type Prestataire$attestationsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.AttestationScalarFieldEnum | Prisma.AttestationScalarFieldEnum[]
+}
+
+/**
+ * Prestataire.conventions
+ */
+export type Prestataire$conventionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Convention
+   */
+  select?: Prisma.ConventionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Convention
+   */
+  omit?: Prisma.ConventionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConventionInclude<ExtArgs> | null
+  where?: Prisma.ConventionWhereInput
+  orderBy?: Prisma.ConventionOrderByWithRelationInput | Prisma.ConventionOrderByWithRelationInput[]
+  cursor?: Prisma.ConventionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConventionScalarFieldEnum | Prisma.ConventionScalarFieldEnum[]
 }
 
 /**

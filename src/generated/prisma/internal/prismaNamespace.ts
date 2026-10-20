@@ -411,7 +411,8 @@ export const ModelName = {
   Beneficiaire: 'Beneficiaire',
   Prestataire: 'Prestataire',
   Lieu: 'Lieu',
-  CategoriePrestataire: 'CategoriePrestataire'
+  CategoriePrestataire: 'CategoriePrestataire',
+  Convention: 'Convention'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "personne" | "agent" | "categorieAgent" | "direction" | "service" | "familleAgent" | "conjoint" | "enfant" | "structureOrganisationnelle" | "agence" | "attestation" | "beneficiaire" | "prestataire" | "lieu" | "categoriePrestataire"
+    modelProps: "personne" | "agent" | "categorieAgent" | "direction" | "service" | "familleAgent" | "conjoint" | "enfant" | "structureOrganisationnelle" | "agence" | "attestation" | "beneficiaire" | "prestataire" | "lieu" | "categoriePrestataire" | "convention"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1541,6 +1542,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Convention: {
+      payload: Prisma.$ConventionPayload<ExtArgs>
+      fields: Prisma.ConventionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConventionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConventionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>
+        }
+        findFirst: {
+          args: Prisma.ConventionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConventionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>
+        }
+        findMany: {
+          args: Prisma.ConventionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>[]
+        }
+        create: {
+          args: Prisma.ConventionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>
+        }
+        createMany: {
+          args: Prisma.ConventionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConventionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>[]
+        }
+        delete: {
+          args: Prisma.ConventionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>
+        }
+        update: {
+          args: Prisma.ConventionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ConventionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConventionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConventionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ConventionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConventionPayload>
+        }
+        aggregate: {
+          args: Prisma.ConventionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConvention>
+        }
+        groupBy: {
+          args: Prisma.ConventionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConventionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConventionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConventionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1759,6 +1834,15 @@ export const CategoriePrestataireScalarFieldEnum = {
 } as const
 
 export type CategoriePrestataireScalarFieldEnum = (typeof CategoriePrestataireScalarFieldEnum)[keyof typeof CategoriePrestataireScalarFieldEnum]
+
+
+export const ConventionScalarFieldEnum = {
+  id: 'id',
+  conventionPath: 'conventionPath',
+  idPrestataire: 'idPrestataire'
+} as const
+
+export type ConventionScalarFieldEnum = (typeof ConventionScalarFieldEnum)[keyof typeof ConventionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2096,6 +2180,7 @@ export type GlobalOmitConfig = {
   prestataire?: Prisma.PrestataireOmit
   lieu?: Prisma.LieuOmit
   categoriePrestataire?: Prisma.CategoriePrestataireOmit
+  convention?: Prisma.ConventionOmit
 }
 
 /* Types for Logging */
