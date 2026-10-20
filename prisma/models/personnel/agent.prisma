@@ -8,7 +8,7 @@ enum AgentType {
 
 model Agent {
   id                       Int       @id
-  matricule                Int    @unique
+  matricule                Int       @unique
   observationMatricule     String?   @map("observation_matricule")
   carteProfessionnellePath String    @map("carte_professionnelle_path") @db.VarChar(100)
   dateEntree               DateTime  @map("dt_entree")

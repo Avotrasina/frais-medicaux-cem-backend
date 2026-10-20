@@ -14,6 +14,7 @@ model Attestation {
   naturePrestation   String            @map("nature_prestation") @db.VarChar(100)
   servicePrestataire String?           @map("service_prestataire") @db.VarChar(50)
   statut             StatutAttestation @default(EN_ATTENTE)
+  datePEC            DateTime          @map("dt_pec")
 
   prestataireID   Int    @map("prestataire_id")
   idpBeneficiaire String @map("beneficiaire_id")
