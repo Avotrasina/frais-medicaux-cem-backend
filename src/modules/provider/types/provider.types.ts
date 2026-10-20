@@ -1,3 +1,5 @@
+import type { Readable } from "node:stream";
+
 export const ProviderStatus = {
   PRIVE: "PRIVE",
   PUBLIC: "PUBLIC",
@@ -37,4 +39,10 @@ export type ReadProvider = {
 export type FilterProvider = {
   lieuID?: number;
   categorieID?: number;
+};
+
+export type ConventionStreamPart = {
+  stream: Readable;
+  fileName: string;
+  mimeType: string;
 };

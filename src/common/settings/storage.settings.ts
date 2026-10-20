@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { env } from './env.validator.js';
 
-export const IMAGE_CATEGORIES = ['carteProfessionnelle', 'carteSociale'] as const;
+export const IMAGE_CATEGORIES = ['carteProfessionnelle', 'carteSociale', 'convention'] as const;
 export type ImageCategory = (typeof IMAGE_CATEGORIES)[number];
 
 export const PDF_CATEGORIES = ['attestation'] as const;
@@ -14,6 +14,7 @@ export const STORAGE_SETTINGS = {
   imageSubDirs: {
     carteProfessionnelle: env.STORAGE_CARTES_PROFESSIONNELLES_DIR,
     carteSociale: env.STORAGE_CARTES_SOCIALES_DIR,
+    convention: env.STORAGE_CONVENTIONS_DIR,
   } satisfies Record<ImageCategory, string>,
   pdfDirs: {
     attestation: env.STORAGE_PDF_ATTESTATION_DIR,
