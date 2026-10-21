@@ -72,6 +72,26 @@ export class ProviderRepository {
     return this.toReadProvider(created);
   }
 
+  async findConventionPath(id: number, tx?: DbClient): Promise<string | null> {
+    const provider = await this.client(tx).prestataire.findUniqueOrThrow({
+      where: { id },
+      select: { conventionPath: true },
+    });
+    return provider.conventionPath;
+  }
+
+  async updateConventionPath(
+    id: number,
+    conventionPath: string,
+    tx?: DbClient,
+  ): Promise<ReadProvider> {
+    const updated = await this.client(tx).prestataire.update({
+      where: { id },
+      data: { conventionPath },
+    });
+    return this.toReadProvider(updated);
+  }
+
   async updatePartial(
     id: number,
     provider: UpdatePartialProvider,

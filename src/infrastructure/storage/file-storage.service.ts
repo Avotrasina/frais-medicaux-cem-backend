@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { join, resolve, sep  } from "node:path";
@@ -10,9 +10,9 @@ import {
   type PdfCategory,
 } from "../../common/settings/storage.settings.js";
 import type { StorableImage, StorablePdf } from "./file-storage.types.js";
-  import { createReadStream } from "node:fs";
-  import { stat } from "node:fs/promises";
-  import type { Readable } from "node:stream";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import type { Readable } from "node:stream";
 
 @Injectable()
 export class FileStorageService {
@@ -50,7 +50,10 @@ export class FileStorageService {
   }
 
   async savePdf(file: StorablePdf, category: PdfCategory): Promise<string> {
-    const directory = STORAGE_SETTINGS.pdfDirs[category];
+    if (file.buffer.subarray(0, 5).toString("ascii") !== "%PDF-") {
+      throw new BadRequestException("Le fichier fourni n'est pas un PDF valide");
+    }
+    const directory = `${STORAGE_SETTINGS.pdfDir}/${STORAGE_SETTINGS.pdfDirs[category]}`;
     const prefix = file.name
       ? `${file.name.replace(/[^A-Za-z0-9_-]/g, "_")}-`
       : "";

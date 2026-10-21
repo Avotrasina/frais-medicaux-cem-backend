@@ -1,5 +1,3 @@
-import type { Readable } from "node:stream";
-
 export const ProviderStatus = {
   PRIVE: "PRIVE",
   PUBLIC: "PUBLIC",
@@ -18,9 +16,10 @@ export type CreateProvider = {
   listePrestation: string;
   lieuID: number;
   categorieID: number;
+  conventionPath: string;
 };
 
-export type UpdatePartialProvider = Partial<CreateProvider>;
+export type UpdatePartialProvider = Partial<Omit<CreateProvider, "conventionPath">>;
 
 export type ReadProvider = {
   id: number;
@@ -41,8 +40,3 @@ export type FilterProvider = {
   categorieID?: number;
 };
 
-export type ConventionStreamPart = {
-  stream: Readable;
-  fileName: string;
-  mimeType: string;
-};

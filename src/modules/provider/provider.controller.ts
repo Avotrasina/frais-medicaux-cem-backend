@@ -7,14 +7,14 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFiles,
+  UploadedFile,
   UseInterceptors,
   HttpCode,
   HttpStatus,
   BadRequestException,
   StreamableFile,
 } from "@nestjs/common";
-import { FilesInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { memoryStorage } from "multer";
 import {
   ApiBody,
@@ -24,14 +24,13 @@ import {
   getSchemaPath,
 } from "@nestjs/swagger";
 import { FileStorageService } from "../../infrastructure/storage/file-storage.service.js";
-import { STORAGE_SETTINGS } from "../../common/settings/storage.settings.js";
+import { PDF_MIME_TYPE, STORAGE_SETTINGS } from "../../common/settings/storage.settings.js";
 import { SaveProviderUseCase } from "./use-cases/provider.save.js";
 import { UpdateProviderUseCase } from "./use-cases/provider.update.js";
 import { ReadProviderUseCase } from "./use-cases/provider.read.js";
 import { CreateProviderDto, UpdateProviderDto } from "./dtos/provider.dto.js";
 import type { ReadProvider } from "./types/provider.types.js";
 import { UpdateProviderConventionUseCase } from "./use-cases/provider-convention.update.js";
-import type { ReadConvenion } from "../convention/types/convention.types.js";
 
 @Controller("providers")
 @ApiExtraModels(CreateProviderDto)
@@ -53,38 +52,34 @@ export class ProviderController {
         { $ref: getSchemaPath(CreateProviderDto) },
         {
           type: "object",
-          required: ["conventions"],
+          required: ["convention"],
           properties: {
-            conventions: {
-              type: "array",
-              items: { type: "string", format: "binary" },
-            },
+            convention: { type: "string", format: "binary" },
           },
         },
       ],
     },
   })
-  @UseInterceptors(
-    FilesInterceptor("conventions", 5, {
-      storage: memoryStorage(),
-      limits: { fileSize: STORAGE_SETTINGS.maxImageSize },
-    }),
-  )
+  @UseInterceptors(FileInterceptor("convention", {
+    storage: memoryStorage(),
+    limits: { fileSize: STORAGE_SETTINGS.maxPdfSize },
+    fileFilter: (_req, file, callback) => file.mimetype === PDF_MIME_TYPE
+      ? callback(null, true)
+      : callback(new BadRequestException("Le fichier de convention doit être un PDF"), false),
+  }))
   async create(
     @Body() body: CreateProviderDto,
-    @UploadedFiles() files: Express.Multer.File[] = [],
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<ReadProvider> {
-    if (files.length === 0) {
-      throw new BadRequestException("Au moins une image de convention est requise");
+    if (!file) {
+      throw new BadRequestException("Le PDF de convention est requis");
     }
-    const paths: string[] = [];
+    let path: string | undefined;
     try {
-      for (const file of files) {
-        paths.push(await this.fileStorage.saveImage(file, "convention"));
-      }
-      return await this.saveProviderUseCase.execute(body, paths);
+      path = await this.fileStorage.savePdf(file, "convention");
+      return await this.saveProviderUseCase.execute(body, path);
     } catch (error) {
-      await Promise.all(paths.map((path) => this.fileStorage.deleteImage(path)));
+      if (path) await this.fileStorage.deletePdf(path);
       throw error;
     }
   }
@@ -103,35 +98,14 @@ export class ProviderController {
     return this.readProviderUseCase.filter({ lieuID, categorieID });
   }
 
-  @Get(":idProvider/conventions/image-list")
-  @ApiProduces("multipart/mixed")
-  async getConventions(
-    @Param("idProvider", ParseIntPipe) idProvider: number,
-  ): Promise<StreamableFile> {
-    const { stream, boundary } =
-      await this.readProviderUseCase.streamConventions(idProvider);
-    return new StreamableFile(stream, {
-      type: `multipart/mixed; boundary=${boundary}`,
-      disposition: "inline",
-    });
-  }
-
   @Get(":idProvider/convention")
-  async getConventionImageReferences(
+  @ApiProduces("application/pdf")
+  async getConvention(
     @Param("idProvider", ParseIntPipe) idProvider: number,
-  ) {
-    return this.readProviderUseCase.getConventionImageReferences(idProvider);
-  }
-
-  @Get("convention/image/:idConvention")
-  @ApiProduces("image/jpeg", "image/png", "image/webp")
-  async getConventionImage(
-    @Param("idConvention", ParseIntPipe) idConvention: number,
   ): Promise<StreamableFile> {
-    const { stream, fileName, mimeType } =
-      await this.readProviderUseCase.streamConventionImage(idConvention);
-    return new StreamableFile(stream, {
-      type: mimeType,
+    const { buffer, fileName } = await this.readProviderUseCase.readConvention(idProvider);
+    return new StreamableFile(buffer, {
+      type: PDF_MIME_TYPE,
       disposition: `inline; filename="${fileName}"`,
     });
   }
@@ -150,37 +124,33 @@ export class ProviderController {
   @ApiBody({
     schema: {
       type: "object",
-      required: ["conventions"],
+      required: ["convention"],
       properties: {
-        conventions: {
-          type: "array",
-          items: { type: "string", format: "binary" },
-        },
+        convention: { type: "string", format: "binary" },
       },
     },
   })
-  @UseInterceptors(
-    FilesInterceptor("conventions", 20, {
-      storage: memoryStorage(),
-      limits: { fileSize: STORAGE_SETTINGS.maxImageSize },
-    }),
-  )
-  async updateConventions(
+  @UseInterceptors(FileInterceptor("convention", {
+    storage: memoryStorage(),
+    limits: { fileSize: STORAGE_SETTINGS.maxPdfSize },
+    fileFilter: (_req, file, callback) => file.mimetype === PDF_MIME_TYPE
+      ? callback(null, true)
+      : callback(new BadRequestException("Le fichier de convention doit être un PDF"), false),
+  }))
+  async updateConvention(
     @Param("idProvider", ParseIntPipe) idProvider: number,
-    @UploadedFiles() files: Express.Multer.File[] = [],
-  ): Promise<ReadConvenion[]> {
-    if (files.length === 0) {
-      throw new BadRequestException("Au moins une image de convention est requise");
+    @UploadedFile() file?: Express.Multer.File,
+  ): Promise<ReadProvider> {
+    if (!file) {
+      throw new BadRequestException("Le PDF de convention est requis");
     }
 
-    const newPaths: string[] = [];
+    let newPath: string | undefined;
     try {
-      for (const file of files) {
-        newPaths.push(await this.fileStorage.saveImage(file, "convention"));
-      }
-      return await this.updateProviderConventionUseCase.execute(idProvider, newPaths);
+      newPath = await this.fileStorage.savePdf(file, "convention");
+      return await this.updateProviderConventionUseCase.execute(idProvider, newPath);
     } catch (error) {
-      await Promise.all(newPaths.map((path) => this.fileStorage.deleteImage(path)));
+      if (newPath) await this.fileStorage.deletePdf(newPath);
       throw error;
     }
   }

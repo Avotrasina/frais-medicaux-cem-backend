@@ -28,11 +28,13 @@ const validators = {
 
   STORAGE_ROOT: str({ default: 'data' }),
   UPLOAD_MAX_IMAGE_SIZE: num({ default: DEFAULT_MAX_IMAGE_SIZE }),
-  STORAGE_PDF_ATTESTATION_DIR:dirName({default:'attestation'}),
+  UPLOAD_MAX_PDF_SIZE: num({ default: 10 * 1024 * 1024 }),
+  STORAGE_PDF_DIR: dirName({ default: 'pdf' }),
+  STORAGE_PDF_ATTESTATION_DIR:dirName({default:'attestations'}),
+  STORAGE_PDF_CONVENTION_DIR: dirName({ default: 'conventions' }),
   STORAGE_IMAGES_DIR: dirName({ default: 'images' }),
   STORAGE_CARTES_PROFESSIONNELLES_DIR: dirName({ default: 'cartes-professionnelles' }),
   STORAGE_CARTES_SOCIALES_DIR: dirName({ default: 'cartes-sociales' }),
-  STORAGE_CONVENTIONS_DIR: dirName({ default: 'conventions' }),
 
   TRANSACTION_MAX_WAIT:num({default:10000}),
   TRANSACTION_TIMEOUT:num({default:10000})
