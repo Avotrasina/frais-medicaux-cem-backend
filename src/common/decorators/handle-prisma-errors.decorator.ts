@@ -1,4 +1,10 @@
-import { translatePrismaError } from "../errors/prisma-error.translator.js";
+import { Logger } from "@nestjs/common";
+import {
+  isPrismaError,
+  translatePrismaError,
+} from "../errors/prisma-error.translator.js";
+
+const logger = new Logger("HandlePrismaErrors");
 
 export interface HandlePrismaErrorsOptions {
   entity?: string;
@@ -29,17 +35,29 @@ function wrap(
   original: AnyFunction,
   getEntity: (self: object) => string,
 ): AnyFunction {
+  const translate = (error: unknown, self: object): unknown => {
+    if (isPrismaError(error)) {
+      const entity = getEntity(self);
+      const method = original.name || "anonymous";
+      const details = error instanceof Error
+        ? `${error.name}: ${error.message}`
+        : String(error);
+      logger.error(`Prisma error in ${entity}.${method}: ${details}`, error instanceof Error ? error.stack : undefined);
+    }
+    return translatePrismaError(error, getEntity(self));
+  };
+
   const wrapped = function (this: object, ...args: unknown[]): unknown {
     try {
       const result = original.apply(this, args);
       if (isPromiseLike(result)) {
         return Promise.resolve(result).catch((error: unknown) => {
-          throw translatePrismaError(error, getEntity(this));
+          throw translate(error, this);
         });
       }
       return result;
     } catch (error) {
-      throw translatePrismaError(error, getEntity(this));
+      throw translate(error, this);
     }
   };
 

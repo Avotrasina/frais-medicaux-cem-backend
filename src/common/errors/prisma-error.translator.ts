@@ -250,7 +250,7 @@ function build(concept: Concept, entity: string, error: unknown): DatabaseError 
 }
 
 
-function isPrismaError(error: unknown): boolean {
+export function isPrismaError(error: unknown): boolean {
   return (
     error instanceof Prisma.PrismaClientKnownRequestError ||
     error instanceof Prisma.PrismaClientUnknownRequestError ||
