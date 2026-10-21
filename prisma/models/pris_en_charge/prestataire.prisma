@@ -17,8 +17,8 @@ model Prestataire {
   dateFinConvention   DateTime          @map("dt_fin_convention")
   listePrestation     String            @map("liste_prestation")
 
-  attestations Attestation[]
-  conventions  Convention[]
+  attestations   Attestation[]
+  conventionPath String        @map("convention_path")
 
   lieuID      Int @map("lieu_id")
   categorieID Int @map("categorie_id")
@@ -56,16 +56,5 @@ model CategoriePrestataire {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("categories_prestataire")
-  @@schema("pec")
-}
-
-model Convention {
-  id             Int    @id @default(autoincrement())
-  conventionPath String @map("convention_path")
-  idPrestataire  Int    @map("id_prestataire")
-
-  presatataire Prestataire @relation(fields: [idPrestataire], references: [id])
-
-  @@map("conventions")
   @@schema("pec")
 }
