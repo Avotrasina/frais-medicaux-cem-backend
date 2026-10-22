@@ -30,7 +30,7 @@ export class AgentCategoryRepository {
   }
 
   async findByID(id: number, tx?: DbClient): Promise<ReadAgentCategory> {
-    const category = await this.client(tx).categorieAgent.findUniqueOrThrow({
+    const category = await this.client(tx).categorieAgent.findFirstOrThrow({
       where: { id },
     });
     return this.toReadAgentCategory(category);

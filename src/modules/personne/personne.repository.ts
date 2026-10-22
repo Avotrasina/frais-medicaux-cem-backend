@@ -26,7 +26,7 @@ export class PersonneRepository {
 
 
   async findByID(id: number, tx?: DbClient): Promise<ReadPersonne> {
-    const personne = await this.client(tx).personne.findUniqueOrThrow({
+    const personne = await this.client(tx).personne.findFirstOrThrow({
       where: { id },
     });
     return  this.toReadPersonne(personne)

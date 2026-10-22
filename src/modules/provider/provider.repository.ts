@@ -59,7 +59,7 @@ export class ProviderRepository {
   }
 
   async readbyID(id: number, tx?: DbClient): Promise<ReadProvider> {
-    const provider = await this.client(tx).prestataire.findUniqueOrThrow({
+    const provider = await this.client(tx).prestataire.findFirstOrThrow({
       where: { id },
     });
     return this.toReadProvider(provider);
@@ -73,7 +73,7 @@ export class ProviderRepository {
   }
 
   async findConventionPath(id: number, tx?: DbClient): Promise<string | null> {
-    const provider = await this.client(tx).prestataire.findUniqueOrThrow({
+    const provider = await this.client(tx).prestataire.findFirstOrThrow({
       where: { id },
       select: { conventionPath: true },
     });

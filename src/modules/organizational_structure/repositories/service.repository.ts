@@ -45,7 +45,7 @@ export class ServiceRepository {
   }
 
   async findByID(codeService:string,tx?:DbClient):Promise<ReadService|null>{
-    const service = await this.client(tx).service.findUnique({where:{codeService}})
+    const service = await this.client(tx).service.findFirst({where:{codeService}})
     return service ?  this.toReadService(service) : null
   }
 

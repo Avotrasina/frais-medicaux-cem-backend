@@ -80,7 +80,7 @@ export class AgentRepository {
   }
 
   async findByID(id: number, tx?: DbClient): Promise<ReadAgent> {
-    const agent = await this.client(tx).agent.findUniqueOrThrow({
+    const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { id },
     });
     return this.toReadAgent(agent);
@@ -116,7 +116,7 @@ export class AgentRepository {
     id: number,
     tx?: DbClient,
   ): Promise<ReadPersonneAgent> {
-    const agent = await this.client(tx).agent.findUniqueOrThrow({
+    const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { id },
       include: { personne: true },
     });
@@ -127,7 +127,7 @@ export class AgentRepository {
     matricule: number,
     tx?: DbClient,
   ): Promise<ReadAgent> {
-    const agent = await this.client(tx).agent.findUniqueOrThrow({
+    const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { matricule },
     });
     return this.toReadAgent(agent)
@@ -137,7 +137,7 @@ export class AgentRepository {
     matricule: number,
     tx?: DbClient,
   ):Promise<ReadPersonneAgent>{
-    const agent = await this.client(tx).agent.findUniqueOrThrow({
+    const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { matricule },
       include:{personne:true}
     });

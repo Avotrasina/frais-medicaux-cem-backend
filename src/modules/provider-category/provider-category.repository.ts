@@ -34,7 +34,7 @@ export class ProviderCategoryRepository {
   async readbyID(id: number, tx?: DbClient): Promise<ReadProviderCategory> {
     const category = await this.client(
       tx,
-    ).categoriePrestataire.findUniqueOrThrow({
+    ).categoriePrestataire.findFirstOrThrow({
       where: { id },
     });
     return this.toReadProviderCategory(category);

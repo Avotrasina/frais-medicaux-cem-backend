@@ -53,7 +53,7 @@ export class StructureOrganisationnelleRepository {
   }
 
   async findByID(id: string, tx?: DbClient): Promise<ReadStructureName> {
-    const structure = await this.client(tx).structureOrganisationnelle.findUniqueOrThrow({
+    const structure = await this.client(tx).structureOrganisationnelle.findFirstOrThrow({
       where: { id },
       include: STRUCTURE_WITH_NAMES_INCLUDE,
     });

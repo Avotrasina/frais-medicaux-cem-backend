@@ -63,7 +63,7 @@ export class ConjointRepository {
   }
 
   async findByID(id: number, tx?: DbClient): Promise<ReadConjoint> {
-    const conjoint = await this.client(tx).conjoint.findUniqueOrThrow({
+    const conjoint = await this.client(tx).conjoint.findFirstOrThrow({
       where: { id },
       include: { familleAgent: { include: { personne: true } } },
     });

@@ -48,7 +48,7 @@ export class EnfantRepository {
   }
 
   async findByID(id: number, tx?: DbClient): Promise<ReadEnfant> {
-    const enfant = await this.client(tx).enfant.findUniqueOrThrow({
+    const enfant = await this.client(tx).enfant.findFirstOrThrow({
       where: { id },
       include: { familleAgent: { include: { personne: true } } },
     });

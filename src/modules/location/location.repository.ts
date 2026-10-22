@@ -30,7 +30,7 @@ export class LocationRepository {
   }
 
   async findByID(id: number, tx?: DbClient): Promise<ReadLieu> {
-    const lieu = await this.client(tx).lieu.findUniqueOrThrow({
+    const lieu = await this.client(tx).lieu.findFirstOrThrow({
       where: { id },
     });
     return this.toReadLieu(lieu);

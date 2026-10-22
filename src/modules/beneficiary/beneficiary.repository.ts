@@ -138,7 +138,7 @@ export class BeneficiaryRepository {
     idp: string,
     tx?: DbClient,
   ): Promise<ReadBeneficiary> {
-    const beneficiary = await this.client(tx).beneficiaire.findUniqueOrThrow({
+    const beneficiary = await this.client(tx).beneficiaire.findFirstOrThrow({
       where: { idp },
       include: BENEFICIARY_INCLUDE,
     });

@@ -99,7 +99,7 @@ export class AttestationRepository {
   }
 
   async delete(id:number, tx?: DbClient): Promise<string | null> {
-    const pathAttestation = await this.client(tx).attestation.findUniqueOrThrow(
+    const pathAttestation = await this.client(tx).attestation.findFirstOrThrow(
       {where:{
         id
       }}
