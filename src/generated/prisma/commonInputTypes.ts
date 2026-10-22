@@ -58,6 +58,18 @@ export type EnumSexeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSexeFilter<$PrismaModel> | $Enums.Sexe
 }
 
+export type EnumSuppresionStatutNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SuppresionStatut | Prisma.EnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSuppresionStatutNullableFilter<$PrismaModel> | $Enums.SuppresionStatut | null
+}
+
+export type SortOrderInput = {
+  sort: Prisma.SortOrder
+  nulls?: Prisma.NullsOrder
+}
+
 export type IntWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -116,6 +128,16 @@ export type EnumSexeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumSexeFilter<$PrismaModel>
 }
 
+export type EnumSuppresionStatutNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SuppresionStatut | Prisma.EnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSuppresionStatutNullableWithAggregatesFilter<$PrismaModel> | $Enums.SuppresionStatut | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSuppresionStatutNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSuppresionStatutNullableFilter<$PrismaModel>
+}
+
 export type StringNullableFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
@@ -143,11 +165,6 @@ export type EnumAgentTypeFilter<$PrismaModel = never> = {
   in?: $Enums.AgentType[] | Prisma.ListEnumAgentTypeFieldRefInput<$PrismaModel>
   notIn?: $Enums.AgentType[] | Prisma.ListEnumAgentTypeFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumAgentTypeFilter<$PrismaModel> | $Enums.AgentType
-}
-
-export type SortOrderInput = {
-  sort: Prisma.SortOrder
-  nulls?: Prisma.NullsOrder
 }
 
 export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -307,6 +324,13 @@ export type NestedEnumSexeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSexeFilter<$PrismaModel> | $Enums.Sexe
 }
 
+export type NestedEnumSuppresionStatutNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SuppresionStatut | Prisma.EnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSuppresionStatutNullableFilter<$PrismaModel> | $Enums.SuppresionStatut | null
+}
+
 export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -375,6 +399,27 @@ export type NestedEnumSexeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumSexeFilter<$PrismaModel>
 }
 
+export type NestedEnumSuppresionStatutNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SuppresionStatut | Prisma.EnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SuppresionStatut[] | Prisma.ListEnumSuppresionStatutFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSuppresionStatutNullableWithAggregatesFilter<$PrismaModel> | $Enums.SuppresionStatut | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSuppresionStatutNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSuppresionStatutNullableFilter<$PrismaModel>
+}
+
+export type NestedIntNullableFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
+  in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
+  notIn?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
+  lt?: number | Prisma.IntFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.IntFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedIntNullableFilter<$PrismaModel> | number | null
+}
+
 export type NestedStringNullableFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
@@ -418,17 +463,6 @@ export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedStringNullableFilter<$PrismaModel>
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
-}
-
-export type NestedIntNullableFilter<$PrismaModel = never> = {
-  equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
-  in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
-  notIn?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
-  lt?: number | Prisma.IntFieldRefInput<$PrismaModel>
-  lte?: number | Prisma.IntFieldRefInput<$PrismaModel>
-  gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
-  gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedIntNullableFilter<$PrismaModel> | number | null
 }
 
 export type NestedEnumStatutPECWithAggregatesFilter<$PrismaModel = never> = {

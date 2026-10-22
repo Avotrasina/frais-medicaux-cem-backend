@@ -16,6 +16,7 @@ model Prestataire {
   dateDebutConvention DateTime          @map("dt_debut_convention")
   dateFinConvention   DateTime          @map("dt_fin_convention")
   listePrestation     String            @map("liste_prestation")
+  suppressionStatut   SuppresionStatut?
 
   attestations   Attestation[]
   conventionPath String        @map("convention_path")
@@ -34,8 +35,9 @@ model Prestataire {
 }
 
 model Lieu {
-  id  Int    @id @default(autoincrement())
-  nom String @map("nom")
+  id                Int               @id @default(autoincrement())
+  nom               String            @map("nom")
+  suppressionStatut SuppresionStatut?
 
   prestataires Prestataire[]
 
@@ -47,8 +49,9 @@ model Lieu {
 }
 
 model CategoriePrestataire {
-  id  Int    @id @default(autoincrement())
-  nom String @map("nom")
+  id                Int               @id @default(autoincrement())
+  nom               String            @map("nom")
+  suppressionStatut SuppresionStatut?
 
   prestataires Prestataire[]
 

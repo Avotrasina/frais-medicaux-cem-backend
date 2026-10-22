@@ -27,6 +27,7 @@ export type AggregateDirection = {
 export type DirectionMinAggregateOutputType = {
   codeDirection: string | null
   nom: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -34,6 +35,7 @@ export type DirectionMinAggregateOutputType = {
 export type DirectionMaxAggregateOutputType = {
   codeDirection: string | null
   nom: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -41,6 +43,7 @@ export type DirectionMaxAggregateOutputType = {
 export type DirectionCountAggregateOutputType = {
   codeDirection: number
   nom: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -50,6 +53,7 @@ export type DirectionCountAggregateOutputType = {
 export type DirectionMinAggregateInputType = {
   codeDirection?: true
   nom?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -57,6 +61,7 @@ export type DirectionMinAggregateInputType = {
 export type DirectionMaxAggregateInputType = {
   codeDirection?: true
   nom?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -64,6 +69,7 @@ export type DirectionMaxAggregateInputType = {
 export type DirectionCountAggregateInputType = {
   codeDirection?: true
   nom?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -144,6 +150,7 @@ export type DirectionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type DirectionGroupByOutputType = {
   codeDirection: string
   nom: string
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: DirectionCountAggregateOutputType | null
@@ -172,6 +179,7 @@ export type DirectionWhereInput = {
   NOT?: Prisma.DirectionWhereInput | Prisma.DirectionWhereInput[]
   codeDirection?: Prisma.StringFilter<"Direction"> | string
   nom?: Prisma.StringFilter<"Direction"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Direction"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Direction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Direction"> | Date | string
   services?: Prisma.ServiceListRelationFilter
@@ -181,6 +189,7 @@ export type DirectionWhereInput = {
 export type DirectionOrderByWithRelationInput = {
   codeDirection?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   services?: Prisma.ServiceOrderByRelationAggregateInput
@@ -193,6 +202,7 @@ export type DirectionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DirectionWhereInput[]
   NOT?: Prisma.DirectionWhereInput | Prisma.DirectionWhereInput[]
   nom?: Prisma.StringFilter<"Direction"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Direction"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Direction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Direction"> | Date | string
   services?: Prisma.ServiceListRelationFilter
@@ -202,6 +212,7 @@ export type DirectionWhereUniqueInput = Prisma.AtLeast<{
 export type DirectionOrderByWithAggregationInput = {
   codeDirection?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DirectionCountOrderByAggregateInput
@@ -215,12 +226,14 @@ export type DirectionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DirectionScalarWhereWithAggregatesInput | Prisma.DirectionScalarWhereWithAggregatesInput[]
   codeDirection?: Prisma.StringWithAggregatesFilter<"Direction"> | string
   nom?: Prisma.StringWithAggregatesFilter<"Direction"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Direction"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Direction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Direction"> | Date | string
 }
 
 export type DirectionCreateInput = {
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.ServiceCreateNestedManyWithoutDirectionInput
@@ -230,6 +243,7 @@ export type DirectionCreateInput = {
 export type DirectionUncheckedCreateInput = {
   codeDirection: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutDirectionInput
@@ -237,6 +251,7 @@ export type DirectionUncheckedCreateInput = {
 
 export type DirectionUpdateInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUpdateManyWithoutDirectionNestedInput
@@ -246,6 +261,7 @@ export type DirectionUpdateInput = {
 export type DirectionUncheckedUpdateInput = {
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUncheckedUpdateManyWithoutDirectionNestedInput
@@ -254,12 +270,14 @@ export type DirectionUncheckedUpdateInput = {
 export type DirectionCreateManyInput = {
   codeDirection: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type DirectionUpdateManyMutationInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -267,6 +285,7 @@ export type DirectionUpdateManyMutationInput = {
 export type DirectionUncheckedUpdateManyInput = {
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -274,6 +293,7 @@ export type DirectionUncheckedUpdateManyInput = {
 export type DirectionCountOrderByAggregateInput = {
   codeDirection?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -281,6 +301,7 @@ export type DirectionCountOrderByAggregateInput = {
 export type DirectionMaxOrderByAggregateInput = {
   codeDirection?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -288,6 +309,7 @@ export type DirectionMaxOrderByAggregateInput = {
 export type DirectionMinOrderByAggregateInput = {
   codeDirection?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -350,6 +372,7 @@ export type DirectionUncheckedUpdateOneWithoutStructureNestedInput = {
 
 export type DirectionCreateWithoutServicesInput = {
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   structure: Prisma.StructureOrganisationnelleCreateNestedOneWithoutDirectionInput
@@ -358,6 +381,7 @@ export type DirectionCreateWithoutServicesInput = {
 export type DirectionUncheckedCreateWithoutServicesInput = {
   codeDirection: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -380,6 +404,7 @@ export type DirectionUpdateToOneWithWhereWithoutServicesInput = {
 
 export type DirectionUpdateWithoutServicesInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   structure?: Prisma.StructureOrganisationnelleUpdateOneRequiredWithoutDirectionNestedInput
@@ -388,12 +413,14 @@ export type DirectionUpdateWithoutServicesInput = {
 export type DirectionUncheckedUpdateWithoutServicesInput = {
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type DirectionCreateWithoutStructureInput = {
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.ServiceCreateNestedManyWithoutDirectionInput
@@ -401,6 +428,7 @@ export type DirectionCreateWithoutStructureInput = {
 
 export type DirectionUncheckedCreateWithoutStructureInput = {
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutDirectionInput
@@ -424,6 +452,7 @@ export type DirectionUpdateToOneWithWhereWithoutStructureInput = {
 
 export type DirectionUpdateWithoutStructureInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUpdateManyWithoutDirectionNestedInput
@@ -431,6 +460,7 @@ export type DirectionUpdateWithoutStructureInput = {
 
 export type DirectionUncheckedUpdateWithoutStructureInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUncheckedUpdateManyWithoutDirectionNestedInput
@@ -470,6 +500,7 @@ export type DirectionCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Ty
 export type DirectionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   codeDirection?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   services?: boolean | Prisma.Direction$servicesArgs<ExtArgs>
@@ -480,6 +511,7 @@ export type DirectionSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type DirectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   codeDirection?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
@@ -488,6 +520,7 @@ export type DirectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type DirectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   codeDirection?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
@@ -496,11 +529,12 @@ export type DirectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type DirectionSelectScalar = {
   codeDirection?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DirectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeDirection" | "nom" | "createdAt" | "updatedAt", ExtArgs["result"]["direction"]>
+export type DirectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeDirection" | "nom" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["direction"]>
 export type DirectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   services?: boolean | Prisma.Direction$servicesArgs<ExtArgs>
   structure?: boolean | Prisma.StructureOrganisationnelleDefaultArgs<ExtArgs>
@@ -522,6 +556,7 @@ export type $DirectionPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     codeDirection: string
     nom: string
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["direction"]>
@@ -951,6 +986,7 @@ export interface Prisma__DirectionClient<T, Null = never, ExtArgs extends runtim
 export interface DirectionFieldRefs {
   readonly codeDirection: Prisma.FieldRef<"Direction", 'String'>
   readonly nom: Prisma.FieldRef<"Direction", 'String'>
+  readonly suppressionStatut: Prisma.FieldRef<"Direction", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"Direction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Direction", 'DateTime'>
 }

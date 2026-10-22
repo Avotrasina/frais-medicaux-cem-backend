@@ -40,6 +40,7 @@ export type PersonneMinAggregateOutputType = {
   prenom: string | null
   dateNaissance: Date | null
   sexe: $Enums.Sexe | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type PersonneMaxAggregateOutputType = {
   prenom: string | null
   dateNaissance: Date | null
   sexe: $Enums.Sexe | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +62,7 @@ export type PersonneCountAggregateOutputType = {
   prenom: number
   dateNaissance: number
   sexe: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,6 +83,7 @@ export type PersonneMinAggregateInputType = {
   prenom?: true
   dateNaissance?: true
   sexe?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +94,7 @@ export type PersonneMaxAggregateInputType = {
   prenom?: true
   dateNaissance?: true
   sexe?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type PersonneCountAggregateInputType = {
   prenom?: true
   dateNaissance?: true
   sexe?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -197,6 +203,7 @@ export type PersonneGroupByOutputType = {
   prenom: string
   dateNaissance: Date
   sexe: $Enums.Sexe
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: PersonneCountAggregateOutputType | null
@@ -230,6 +237,7 @@ export type PersonneWhereInput = {
   prenom?: Prisma.StringFilter<"Personne"> | string
   dateNaissance?: Prisma.DateTimeFilter<"Personne"> | Date | string
   sexe?: Prisma.EnumSexeFilter<"Personne"> | $Enums.Sexe
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Personne"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Personne"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Personne"> | Date | string
   beneficiaire?: Prisma.XOR<Prisma.BeneficiaireNullableScalarRelationFilter, Prisma.BeneficiaireWhereInput> | null
@@ -243,6 +251,7 @@ export type PersonneOrderByWithRelationInput = {
   prenom?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
   sexe?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   beneficiaire?: Prisma.BeneficiaireOrderByWithRelationInput
@@ -259,6 +268,7 @@ export type PersonneWhereUniqueInput = Prisma.AtLeast<{
   prenom?: Prisma.StringFilter<"Personne"> | string
   dateNaissance?: Prisma.DateTimeFilter<"Personne"> | Date | string
   sexe?: Prisma.EnumSexeFilter<"Personne"> | $Enums.Sexe
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Personne"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Personne"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Personne"> | Date | string
   beneficiaire?: Prisma.XOR<Prisma.BeneficiaireNullableScalarRelationFilter, Prisma.BeneficiaireWhereInput> | null
@@ -272,6 +282,7 @@ export type PersonneOrderByWithAggregationInput = {
   prenom?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
   sexe?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PersonneCountOrderByAggregateInput
@@ -290,6 +301,7 @@ export type PersonneScalarWhereWithAggregatesInput = {
   prenom?: Prisma.StringWithAggregatesFilter<"Personne"> | string
   dateNaissance?: Prisma.DateTimeWithAggregatesFilter<"Personne"> | Date | string
   sexe?: Prisma.EnumSexeWithAggregatesFilter<"Personne"> | $Enums.Sexe
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Personne"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Personne"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Personne"> | Date | string
 }
@@ -299,6 +311,7 @@ export type PersonneCreateInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire?: Prisma.BeneficiaireCreateNestedOneWithoutPersonneInput
@@ -312,6 +325,7 @@ export type PersonneUncheckedCreateInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire?: Prisma.BeneficiaireUncheckedCreateNestedOneWithoutPersonneInput
@@ -324,6 +338,7 @@ export type PersonneUpdateInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUpdateOneWithoutPersonneNestedInput
@@ -337,6 +352,7 @@ export type PersonneUncheckedUpdateInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUncheckedUpdateOneWithoutPersonneNestedInput
@@ -350,6 +366,7 @@ export type PersonneCreateManyInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -359,6 +376,7 @@ export type PersonneUpdateManyMutationInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -369,6 +387,7 @@ export type PersonneUncheckedUpdateManyInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -379,6 +398,7 @@ export type PersonneCountOrderByAggregateInput = {
   prenom?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
   sexe?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -393,6 +413,7 @@ export type PersonneMaxOrderByAggregateInput = {
   prenom?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
   sexe?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -403,6 +424,7 @@ export type PersonneMinOrderByAggregateInput = {
   prenom?: Prisma.SortOrder
   dateNaissance?: Prisma.SortOrder
   sexe?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -426,6 +448,10 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type EnumSexeFieldUpdateOperationsInput = {
   set?: $Enums.Sexe
+}
+
+export type NullableEnumSuppresionStatutFieldUpdateOperationsInput = {
+  set?: $Enums.SuppresionStatut | null
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -483,6 +509,7 @@ export type PersonneCreateWithoutAgentInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire?: Prisma.BeneficiaireCreateNestedOneWithoutPersonneInput
@@ -495,6 +522,7 @@ export type PersonneUncheckedCreateWithoutAgentInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire?: Prisma.BeneficiaireUncheckedCreateNestedOneWithoutPersonneInput
@@ -522,6 +550,7 @@ export type PersonneUpdateWithoutAgentInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUpdateOneWithoutPersonneNestedInput
@@ -534,6 +563,7 @@ export type PersonneUncheckedUpdateWithoutAgentInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUncheckedUpdateOneWithoutPersonneNestedInput
@@ -545,6 +575,7 @@ export type PersonneCreateWithoutFamilleAgentInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire?: Prisma.BeneficiaireCreateNestedOneWithoutPersonneInput
@@ -557,6 +588,7 @@ export type PersonneUncheckedCreateWithoutFamilleAgentInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire?: Prisma.BeneficiaireUncheckedCreateNestedOneWithoutPersonneInput
@@ -584,6 +616,7 @@ export type PersonneUpdateWithoutFamilleAgentInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUpdateOneWithoutPersonneNestedInput
@@ -596,6 +629,7 @@ export type PersonneUncheckedUpdateWithoutFamilleAgentInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUncheckedUpdateOneWithoutPersonneNestedInput
@@ -607,6 +641,7 @@ export type PersonneCreateWithoutBeneficiaireInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentCreateNestedOneWithoutPersonneInput
@@ -619,6 +654,7 @@ export type PersonneUncheckedCreateWithoutBeneficiaireInput = {
   prenom: string
   dateNaissance: Date | string
   sexe: $Enums.Sexe
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedCreateNestedOneWithoutPersonneInput
@@ -646,6 +682,7 @@ export type PersonneUpdateWithoutBeneficiaireInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateOneWithoutPersonneNestedInput
@@ -658,6 +695,7 @@ export type PersonneUncheckedUpdateWithoutBeneficiaireInput = {
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   dateNaissance?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sexe?: Prisma.EnumSexeFieldUpdateOperationsInput | $Enums.Sexe
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUncheckedUpdateOneWithoutPersonneNestedInput
@@ -672,6 +710,7 @@ export type PersonneSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   prenom?: boolean
   dateNaissance?: boolean
   sexe?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   beneficiaire?: boolean | Prisma.Personne$beneficiaireArgs<ExtArgs>
@@ -685,6 +724,7 @@ export type PersonneSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   prenom?: boolean
   dateNaissance?: boolean
   sexe?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["personne"]>
@@ -695,6 +735,7 @@ export type PersonneSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   prenom?: boolean
   dateNaissance?: boolean
   sexe?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["personne"]>
@@ -705,11 +746,12 @@ export type PersonneSelectScalar = {
   prenom?: boolean
   dateNaissance?: boolean
   sexe?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PersonneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "prenom" | "dateNaissance" | "sexe" | "createdAt" | "updatedAt", ExtArgs["result"]["personne"]>
+export type PersonneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "prenom" | "dateNaissance" | "sexe" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["personne"]>
 export type PersonneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   beneficiaire?: boolean | Prisma.Personne$beneficiaireArgs<ExtArgs>
   familleAgent?: boolean | Prisma.Personne$familleAgentArgs<ExtArgs>
@@ -731,6 +773,7 @@ export type $PersonnePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     prenom: string
     dateNaissance: Date
     sexe: $Enums.Sexe
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["personne"]>
@@ -1164,6 +1207,7 @@ export interface PersonneFieldRefs {
   readonly prenom: Prisma.FieldRef<"Personne", 'String'>
   readonly dateNaissance: Prisma.FieldRef<"Personne", 'DateTime'>
   readonly sexe: Prisma.FieldRef<"Personne", 'Sexe'>
+  readonly suppressionStatut: Prisma.FieldRef<"Personne", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"Personne", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Personne", 'DateTime'>
 }

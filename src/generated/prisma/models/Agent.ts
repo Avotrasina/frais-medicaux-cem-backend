@@ -44,6 +44,7 @@ export type AgentMinAggregateOutputType = {
   dateEntree: Date | null
   statutPEC: $Enums.StatutPEC | null
   agentType: $Enums.AgentType | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   structureID: string | null
   serviceID: string | null
   fonction: string | null
@@ -60,6 +61,7 @@ export type AgentMaxAggregateOutputType = {
   dateEntree: Date | null
   statutPEC: $Enums.StatutPEC | null
   agentType: $Enums.AgentType | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   structureID: string | null
   serviceID: string | null
   fonction: string | null
@@ -76,6 +78,7 @@ export type AgentCountAggregateOutputType = {
   dateEntree: number
   statutPEC: number
   agentType: number
+  suppressionStatut: number
   structureID: number
   serviceID: number
   fonction: number
@@ -104,6 +107,7 @@ export type AgentMinAggregateInputType = {
   dateEntree?: true
   statutPEC?: true
   agentType?: true
+  suppressionStatut?: true
   structureID?: true
   serviceID?: true
   fonction?: true
@@ -120,6 +124,7 @@ export type AgentMaxAggregateInputType = {
   dateEntree?: true
   statutPEC?: true
   agentType?: true
+  suppressionStatut?: true
   structureID?: true
   serviceID?: true
   fonction?: true
@@ -136,6 +141,7 @@ export type AgentCountAggregateInputType = {
   dateEntree?: true
   statutPEC?: true
   agentType?: true
+  suppressionStatut?: true
   structureID?: true
   serviceID?: true
   fonction?: true
@@ -239,6 +245,7 @@ export type AgentGroupByOutputType = {
   dateEntree: Date
   statutPEC: $Enums.StatutPEC
   agentType: $Enums.AgentType
+  suppressionStatut: $Enums.SuppresionStatut | null
   structureID: string | null
   serviceID: string | null
   fonction: string | null
@@ -278,6 +285,7 @@ export type AgentWhereInput = {
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
   statutPEC?: Prisma.EnumStatutPECFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFilter<"Agent"> | $Enums.AgentType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Agent"> | $Enums.SuppresionStatut | null
   structureID?: Prisma.StringNullableFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableFilter<"Agent"> | string | null
   fonction?: Prisma.StringNullableFilter<"Agent"> | string | null
@@ -299,6 +307,7 @@ export type AgentOrderByWithRelationInput = {
   dateEntree?: Prisma.SortOrder
   statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   structureID?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceID?: Prisma.SortOrderInput | Prisma.SortOrder
   fonction?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -323,6 +332,7 @@ export type AgentWhereUniqueInput = Prisma.AtLeast<{
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
   statutPEC?: Prisma.EnumStatutPECFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFilter<"Agent"> | $Enums.AgentType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Agent"> | $Enums.SuppresionStatut | null
   structureID?: Prisma.StringNullableFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableFilter<"Agent"> | string | null
   fonction?: Prisma.StringNullableFilter<"Agent"> | string | null
@@ -344,6 +354,7 @@ export type AgentOrderByWithAggregationInput = {
   dateEntree?: Prisma.SortOrder
   statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   structureID?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceID?: Prisma.SortOrderInput | Prisma.SortOrder
   fonction?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -368,6 +379,7 @@ export type AgentScalarWhereWithAggregatesInput = {
   dateEntree?: Prisma.DateTimeWithAggregatesFilter<"Agent"> | Date | string
   statutPEC?: Prisma.EnumStatutPECWithAggregatesFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeWithAggregatesFilter<"Agent"> | $Enums.AgentType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Agent"> | $Enums.SuppresionStatut | null
   structureID?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
   fonction?: Prisma.StringNullableWithAggregatesFilter<"Agent"> | string | null
@@ -383,6 +395,7 @@ export type AgentCreateInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   fonction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -401,6 +414,7 @@ export type AgentUncheckedCreateInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   serviceID?: string | null
   fonction?: string | null
@@ -417,6 +431,7 @@ export type AgentUpdateInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,6 +450,7 @@ export type AgentUncheckedUpdateInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -452,6 +468,7 @@ export type AgentCreateManyInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   serviceID?: string | null
   fonction?: string | null
@@ -467,6 +484,7 @@ export type AgentUpdateManyMutationInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,6 +498,7 @@ export type AgentUncheckedUpdateManyInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -501,6 +520,7 @@ export type AgentCountOrderByAggregateInput = {
   dateEntree?: Prisma.SortOrder
   statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   structureID?: Prisma.SortOrder
   serviceID?: Prisma.SortOrder
   fonction?: Prisma.SortOrder
@@ -522,6 +542,7 @@ export type AgentMaxOrderByAggregateInput = {
   dateEntree?: Prisma.SortOrder
   statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   structureID?: Prisma.SortOrder
   serviceID?: Prisma.SortOrder
   fonction?: Prisma.SortOrder
@@ -538,6 +559,7 @@ export type AgentMinOrderByAggregateInput = {
   dateEntree?: Prisma.SortOrder
   statutPEC?: Prisma.SortOrder
   agentType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   structureID?: Prisma.SortOrder
   serviceID?: Prisma.SortOrder
   fonction?: Prisma.SortOrder
@@ -757,6 +779,7 @@ export type AgentCreateWithoutPersonneInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   fonction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -773,6 +796,7 @@ export type AgentUncheckedCreateWithoutPersonneInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   serviceID?: string | null
   fonction?: string | null
@@ -805,6 +829,7 @@ export type AgentUpdateWithoutPersonneInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -821,6 +846,7 @@ export type AgentUncheckedUpdateWithoutPersonneInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -837,6 +863,7 @@ export type AgentCreateWithoutCategorieInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   fonction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -854,6 +881,7 @@ export type AgentUncheckedCreateWithoutCategorieInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   serviceID?: string | null
   fonction?: string | null
@@ -899,6 +927,7 @@ export type AgentScalarWhereInput = {
   dateEntree?: Prisma.DateTimeFilter<"Agent"> | Date | string
   statutPEC?: Prisma.EnumStatutPECFilter<"Agent"> | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFilter<"Agent"> | $Enums.AgentType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Agent"> | $Enums.SuppresionStatut | null
   structureID?: Prisma.StringNullableFilter<"Agent"> | string | null
   serviceID?: Prisma.StringNullableFilter<"Agent"> | string | null
   fonction?: Prisma.StringNullableFilter<"Agent"> | string | null
@@ -914,6 +943,7 @@ export type AgentCreateWithoutServiceInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   fonction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -931,6 +961,7 @@ export type AgentUncheckedCreateWithoutServiceInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   fonction?: string | null
   categorieID?: string | null
@@ -972,6 +1003,7 @@ export type AgentCreateWithoutFamilleAgentInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   fonction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -989,6 +1021,7 @@ export type AgentUncheckedCreateWithoutFamilleAgentInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   serviceID?: string | null
   fonction?: string | null
@@ -1020,6 +1053,7 @@ export type AgentUpdateWithoutFamilleAgentInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1037,6 +1071,7 @@ export type AgentUncheckedUpdateWithoutFamilleAgentInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1052,6 +1087,7 @@ export type AgentCreateWithoutStructureOrganisationnelleInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   fonction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1069,6 +1105,7 @@ export type AgentUncheckedCreateWithoutStructureOrganisationnelleInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   serviceID?: string | null
   fonction?: string | null
   categorieID?: string | null
@@ -1111,6 +1148,7 @@ export type AgentCreateManyCategorieInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   serviceID?: string | null
   fonction?: string | null
@@ -1125,6 +1163,7 @@ export type AgentUpdateWithoutCategorieInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1142,6 +1181,7 @@ export type AgentUncheckedUpdateWithoutCategorieInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1158,6 +1198,7 @@ export type AgentUncheckedUpdateManyWithoutCategorieInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1173,6 +1214,7 @@ export type AgentCreateManyServiceInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   structureID?: string | null
   fonction?: string | null
   categorieID?: string | null
@@ -1187,6 +1229,7 @@ export type AgentUpdateWithoutServiceInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1204,6 +1247,7 @@ export type AgentUncheckedUpdateWithoutServiceInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1220,6 +1264,7 @@ export type AgentUncheckedUpdateManyWithoutServiceInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   structureID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1235,6 +1280,7 @@ export type AgentCreateManyStructureOrganisationnelleInput = {
   dateEntree: Date | string
   statutPEC: $Enums.StatutPEC
   agentType?: $Enums.AgentType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   serviceID?: string | null
   fonction?: string | null
   categorieID?: string | null
@@ -1249,6 +1295,7 @@ export type AgentUpdateWithoutStructureOrganisationnelleInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1266,6 +1313,7 @@ export type AgentUncheckedUpdateWithoutStructureOrganisationnelleInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1282,6 +1330,7 @@ export type AgentUncheckedUpdateManyWithoutStructureOrganisationnelleInput = {
   dateEntree?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statutPEC?: Prisma.EnumStatutPECFieldUpdateOperationsInput | $Enums.StatutPEC
   agentType?: Prisma.EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   serviceID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categorieID?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1328,6 +1377,7 @@ export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   dateEntree?: boolean
   statutPEC?: boolean
   agentType?: boolean
+  suppressionStatut?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonction?: boolean
@@ -1350,6 +1400,7 @@ export type AgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   dateEntree?: boolean
   statutPEC?: boolean
   agentType?: boolean
+  suppressionStatut?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonction?: boolean
@@ -1370,6 +1421,7 @@ export type AgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   dateEntree?: boolean
   statutPEC?: boolean
   agentType?: boolean
+  suppressionStatut?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonction?: boolean
@@ -1390,6 +1442,7 @@ export type AgentSelectScalar = {
   dateEntree?: boolean
   statutPEC?: boolean
   agentType?: boolean
+  suppressionStatut?: boolean
   structureID?: boolean
   serviceID?: boolean
   fonction?: boolean
@@ -1398,7 +1451,7 @@ export type AgentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matricule" | "observationMatricule" | "carteProfessionnellePath" | "dateEntree" | "statutPEC" | "agentType" | "structureID" | "serviceID" | "fonction" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["agent"]>
+export type AgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "matricule" | "observationMatricule" | "carteProfessionnellePath" | "dateEntree" | "statutPEC" | "agentType" | "suppressionStatut" | "structureID" | "serviceID" | "fonction" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["agent"]>
 export type AgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   familleAgent?: boolean | Prisma.Agent$familleAgentArgs<ExtArgs>
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
@@ -1437,6 +1490,7 @@ export type $AgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     dateEntree: Date
     statutPEC: $Enums.StatutPEC
     agentType: $Enums.AgentType
+    suppressionStatut: $Enums.SuppresionStatut | null
     structureID: string | null
     serviceID: string | null
     fonction: string | null
@@ -1878,6 +1932,7 @@ export interface AgentFieldRefs {
   readonly dateEntree: Prisma.FieldRef<"Agent", 'DateTime'>
   readonly statutPEC: Prisma.FieldRef<"Agent", 'StatutPEC'>
   readonly agentType: Prisma.FieldRef<"Agent", 'AgentType'>
+  readonly suppressionStatut: Prisma.FieldRef<"Agent", 'SuppresionStatut'>
   readonly structureID: Prisma.FieldRef<"Agent", 'String'>
   readonly serviceID: Prisma.FieldRef<"Agent", 'String'>
   readonly fonction: Prisma.FieldRef<"Agent", 'String'>

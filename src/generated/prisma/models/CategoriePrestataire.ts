@@ -37,6 +37,7 @@ export type CategoriePrestataireSumAggregateOutputType = {
 export type CategoriePrestataireMinAggregateOutputType = {
   id: number | null
   nom: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +45,7 @@ export type CategoriePrestataireMinAggregateOutputType = {
 export type CategoriePrestataireMaxAggregateOutputType = {
   id: number | null
   nom: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,6 +53,7 @@ export type CategoriePrestataireMaxAggregateOutputType = {
 export type CategoriePrestataireCountAggregateOutputType = {
   id: number
   nom: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -68,6 +71,7 @@ export type CategoriePrestataireSumAggregateInputType = {
 export type CategoriePrestataireMinAggregateInputType = {
   id?: true
   nom?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -75,6 +79,7 @@ export type CategoriePrestataireMinAggregateInputType = {
 export type CategoriePrestataireMaxAggregateInputType = {
   id?: true
   nom?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +87,7 @@ export type CategoriePrestataireMaxAggregateInputType = {
 export type CategoriePrestataireCountAggregateInputType = {
   id?: true
   nom?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -176,6 +182,7 @@ export type CategoriePrestataireGroupByArgs<ExtArgs extends runtime.Types.Extens
 export type CategoriePrestataireGroupByOutputType = {
   id: number
   nom: string
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: CategoriePrestataireCountAggregateOutputType | null
@@ -206,6 +213,7 @@ export type CategoriePrestataireWhereInput = {
   NOT?: Prisma.CategoriePrestataireWhereInput | Prisma.CategoriePrestataireWhereInput[]
   id?: Prisma.IntFilter<"CategoriePrestataire"> | number
   nom?: Prisma.StringFilter<"CategoriePrestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"CategoriePrestataire"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
   prestataires?: Prisma.PrestataireListRelationFilter
@@ -214,6 +222,7 @@ export type CategoriePrestataireWhereInput = {
 export type CategoriePrestataireOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   prestataires?: Prisma.PrestataireOrderByRelationAggregateInput
@@ -225,6 +234,7 @@ export type CategoriePrestataireWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CategoriePrestataireWhereInput[]
   NOT?: Prisma.CategoriePrestataireWhereInput | Prisma.CategoriePrestataireWhereInput[]
   nom?: Prisma.StringFilter<"CategoriePrestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"CategoriePrestataire"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategoriePrestataire"> | Date | string
   prestataires?: Prisma.PrestataireListRelationFilter
@@ -233,6 +243,7 @@ export type CategoriePrestataireWhereUniqueInput = Prisma.AtLeast<{
 export type CategoriePrestataireOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CategoriePrestataireCountOrderByAggregateInput
@@ -248,12 +259,14 @@ export type CategoriePrestataireScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CategoriePrestataireScalarWhereWithAggregatesInput | Prisma.CategoriePrestataireScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"CategoriePrestataire"> | number
   nom?: Prisma.StringWithAggregatesFilter<"CategoriePrestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"CategoriePrestataire"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CategoriePrestataire"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CategoriePrestataire"> | Date | string
 }
 
 export type CategoriePrestataireCreateInput = {
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prestataires?: Prisma.PrestataireCreateNestedManyWithoutCategorieInput
@@ -262,6 +275,7 @@ export type CategoriePrestataireCreateInput = {
 export type CategoriePrestataireUncheckedCreateInput = {
   id?: number
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prestataires?: Prisma.PrestataireUncheckedCreateNestedManyWithoutCategorieInput
@@ -269,6 +283,7 @@ export type CategoriePrestataireUncheckedCreateInput = {
 
 export type CategoriePrestataireUpdateInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataires?: Prisma.PrestataireUpdateManyWithoutCategorieNestedInput
@@ -277,6 +292,7 @@ export type CategoriePrestataireUpdateInput = {
 export type CategoriePrestataireUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataires?: Prisma.PrestataireUncheckedUpdateManyWithoutCategorieNestedInput
@@ -285,12 +301,14 @@ export type CategoriePrestataireUncheckedUpdateInput = {
 export type CategoriePrestataireCreateManyInput = {
   id?: number
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type CategoriePrestataireUpdateManyMutationInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -298,6 +316,7 @@ export type CategoriePrestataireUpdateManyMutationInput = {
 export type CategoriePrestataireUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -310,6 +329,7 @@ export type CategoriePrestataireScalarRelationFilter = {
 export type CategoriePrestataireCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -321,6 +341,7 @@ export type CategoriePrestataireAvgOrderByAggregateInput = {
 export type CategoriePrestataireMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -328,6 +349,7 @@ export type CategoriePrestataireMaxOrderByAggregateInput = {
 export type CategoriePrestataireMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -352,6 +374,7 @@ export type CategoriePrestataireUpdateOneRequiredWithoutPrestatairesNestedInput 
 
 export type CategoriePrestataireCreateWithoutPrestatairesInput = {
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -359,6 +382,7 @@ export type CategoriePrestataireCreateWithoutPrestatairesInput = {
 export type CategoriePrestataireUncheckedCreateWithoutPrestatairesInput = {
   id?: number
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -381,6 +405,7 @@ export type CategoriePrestataireUpdateToOneWithWhereWithoutPrestatairesInput = {
 
 export type CategoriePrestataireUpdateWithoutPrestatairesInput = {
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,6 +413,7 @@ export type CategoriePrestataireUpdateWithoutPrestatairesInput = {
 export type CategoriePrestataireUncheckedUpdateWithoutPrestatairesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -426,6 +452,7 @@ export type CategoriePrestataireCountOutputTypeCountPrestatairesArgs<ExtArgs ext
 export type CategoriePrestataireSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   prestataires?: boolean | Prisma.CategoriePrestataire$prestatairesArgs<ExtArgs>
@@ -435,6 +462,7 @@ export type CategoriePrestataireSelect<ExtArgs extends runtime.Types.Extensions.
 export type CategoriePrestataireSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["categoriePrestataire"]>
@@ -442,6 +470,7 @@ export type CategoriePrestataireSelectCreateManyAndReturn<ExtArgs extends runtim
 export type CategoriePrestataireSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["categoriePrestataire"]>
@@ -449,11 +478,12 @@ export type CategoriePrestataireSelectUpdateManyAndReturn<ExtArgs extends runtim
 export type CategoriePrestataireSelectScalar = {
   id?: boolean
   nom?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CategoriePrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "createdAt" | "updatedAt", ExtArgs["result"]["categoriePrestataire"]>
+export type CategoriePrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["categoriePrestataire"]>
 export type CategoriePrestataireInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestataires?: boolean | Prisma.CategoriePrestataire$prestatairesArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriePrestataireCountOutputTypeDefaultArgs<ExtArgs>
@@ -469,6 +499,7 @@ export type $CategoriePrestatairePayload<ExtArgs extends runtime.Types.Extension
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nom: string
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["categoriePrestataire"]>
@@ -897,6 +928,7 @@ export interface Prisma__CategoriePrestataireClient<T, Null = never, ExtArgs ext
 export interface CategoriePrestataireFieldRefs {
   readonly id: Prisma.FieldRef<"CategoriePrestataire", 'Int'>
   readonly nom: Prisma.FieldRef<"CategoriePrestataire", 'String'>
+  readonly suppressionStatut: Prisma.FieldRef<"CategoriePrestataire", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"CategoriePrestataire", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CategoriePrestataire", 'DateTime'>
 }

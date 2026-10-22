@@ -40,6 +40,7 @@ export type FamilleAgentMinAggregateOutputType = {
   id: number | null
   agentMatricule: number | null
   carteSocialePath: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +49,7 @@ export type FamilleAgentMaxAggregateOutputType = {
   id: number | null
   agentMatricule: number | null
   carteSocialePath: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +58,7 @@ export type FamilleAgentCountAggregateOutputType = {
   id: number
   agentMatricule: number
   carteSocialePath: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -76,6 +79,7 @@ export type FamilleAgentMinAggregateInputType = {
   id?: true
   agentMatricule?: true
   carteSocialePath?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -84,6 +88,7 @@ export type FamilleAgentMaxAggregateInputType = {
   id?: true
   agentMatricule?: true
   carteSocialePath?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -92,6 +97,7 @@ export type FamilleAgentCountAggregateInputType = {
   id?: true
   agentMatricule?: true
   carteSocialePath?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -187,6 +193,7 @@ export type FamilleAgentGroupByOutputType = {
   id: number
   agentMatricule: number
   carteSocialePath: string
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: FamilleAgentCountAggregateOutputType | null
@@ -218,6 +225,7 @@ export type FamilleAgentWhereInput = {
   id?: Prisma.IntFilter<"FamilleAgent"> | number
   agentMatricule?: Prisma.IntFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"FamilleAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   conjoint?: Prisma.XOR<Prisma.ConjointNullableScalarRelationFilter, Prisma.ConjointWhereInput> | null
@@ -230,6 +238,7 @@ export type FamilleAgentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   conjoint?: Prisma.ConjointOrderByWithRelationInput
@@ -245,6 +254,7 @@ export type FamilleAgentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FamilleAgentWhereInput | Prisma.FamilleAgentWhereInput[]
   agentMatricule?: Prisma.IntFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"FamilleAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   conjoint?: Prisma.XOR<Prisma.ConjointNullableScalarRelationFilter, Prisma.ConjointWhereInput> | null
@@ -257,6 +267,7 @@ export type FamilleAgentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.FamilleAgentCountOrderByAggregateInput
@@ -273,12 +284,14 @@ export type FamilleAgentScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"FamilleAgent"> | number
   agentMatricule?: Prisma.IntWithAggregatesFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringWithAggregatesFilter<"FamilleAgent"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"FamilleAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FamilleAgent"> | Date | string
 }
 
 export type FamilleAgentCreateInput = {
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
@@ -291,6 +304,7 @@ export type FamilleAgentUncheckedCreateInput = {
   id: number
   agentMatricule: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
@@ -299,6 +313,7 @@ export type FamilleAgentUncheckedCreateInput = {
 
 export type FamilleAgentUpdateInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
@@ -311,6 +326,7 @@ export type FamilleAgentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
@@ -321,12 +337,14 @@ export type FamilleAgentCreateManyInput = {
   id: number
   agentMatricule: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type FamilleAgentUpdateManyMutationInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -335,6 +353,7 @@ export type FamilleAgentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -358,6 +377,7 @@ export type FamilleAgentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -371,6 +391,7 @@ export type FamilleAgentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -379,6 +400,7 @@ export type FamilleAgentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   agentMatricule?: Prisma.SortOrder
   carteSocialePath?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -497,6 +519,7 @@ export type FamilleAgentUpdateOneRequiredWithoutEnfantNestedInput = {
 
 export type FamilleAgentCreateWithoutPersonneInput = {
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
@@ -507,6 +530,7 @@ export type FamilleAgentCreateWithoutPersonneInput = {
 export type FamilleAgentUncheckedCreateWithoutPersonneInput = {
   agentMatricule: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
@@ -531,6 +555,7 @@ export type FamilleAgentUpdateToOneWithWhereWithoutPersonneInput = {
 
 export type FamilleAgentUpdateWithoutPersonneInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
@@ -541,6 +566,7 @@ export type FamilleAgentUpdateWithoutPersonneInput = {
 export type FamilleAgentUncheckedUpdateWithoutPersonneInput = {
   agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
@@ -549,6 +575,7 @@ export type FamilleAgentUncheckedUpdateWithoutPersonneInput = {
 
 export type FamilleAgentCreateWithoutAgentInput = {
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
@@ -559,6 +586,7 @@ export type FamilleAgentCreateWithoutAgentInput = {
 export type FamilleAgentUncheckedCreateWithoutAgentInput = {
   id: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
@@ -598,12 +626,14 @@ export type FamilleAgentScalarWhereInput = {
   id?: Prisma.IntFilter<"FamilleAgent"> | number
   agentMatricule?: Prisma.IntFilter<"FamilleAgent"> | number
   carteSocialePath?: Prisma.StringFilter<"FamilleAgent"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"FamilleAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FamilleAgent"> | Date | string
 }
 
 export type FamilleAgentCreateWithoutConjointInput = {
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   enfant?: Prisma.EnfantCreateNestedOneWithoutFamilleAgentInput
@@ -615,6 +645,7 @@ export type FamilleAgentUncheckedCreateWithoutConjointInput = {
   id: number
   agentMatricule: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   enfant?: Prisma.EnfantUncheckedCreateNestedOneWithoutFamilleAgentInput
@@ -638,6 +669,7 @@ export type FamilleAgentUpdateToOneWithWhereWithoutConjointInput = {
 
 export type FamilleAgentUpdateWithoutConjointInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enfant?: Prisma.EnfantUpdateOneWithoutFamilleAgentNestedInput
@@ -649,6 +681,7 @@ export type FamilleAgentUncheckedUpdateWithoutConjointInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enfant?: Prisma.EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput
@@ -656,6 +689,7 @@ export type FamilleAgentUncheckedUpdateWithoutConjointInput = {
 
 export type FamilleAgentCreateWithoutEnfantInput = {
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointCreateNestedOneWithoutFamilleAgentInput
@@ -667,6 +701,7 @@ export type FamilleAgentUncheckedCreateWithoutEnfantInput = {
   id: number
   agentMatricule: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   conjoint?: Prisma.ConjointUncheckedCreateNestedOneWithoutFamilleAgentInput
@@ -690,6 +725,7 @@ export type FamilleAgentUpdateToOneWithWhereWithoutEnfantInput = {
 
 export type FamilleAgentUpdateWithoutEnfantInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
@@ -701,6 +737,7 @@ export type FamilleAgentUncheckedUpdateWithoutEnfantInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   agentMatricule?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
@@ -709,12 +746,14 @@ export type FamilleAgentUncheckedUpdateWithoutEnfantInput = {
 export type FamilleAgentCreateManyAgentInput = {
   id: number
   carteSocialePath: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type FamilleAgentUpdateWithoutAgentInput = {
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUpdateOneWithoutFamilleAgentNestedInput
@@ -725,6 +764,7 @@ export type FamilleAgentUpdateWithoutAgentInput = {
 export type FamilleAgentUncheckedUpdateWithoutAgentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conjoint?: Prisma.ConjointUncheckedUpdateOneWithoutFamilleAgentNestedInput
@@ -734,6 +774,7 @@ export type FamilleAgentUncheckedUpdateWithoutAgentInput = {
 export type FamilleAgentUncheckedUpdateManyWithoutAgentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   carteSocialePath?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -744,6 +785,7 @@ export type FamilleAgentSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   conjoint?: boolean | Prisma.FamilleAgent$conjointArgs<ExtArgs>
@@ -756,6 +798,7 @@ export type FamilleAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
@@ -766,6 +809,7 @@ export type FamilleAgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   personne?: boolean | Prisma.PersonneDefaultArgs<ExtArgs>
@@ -776,11 +820,12 @@ export type FamilleAgentSelectScalar = {
   id?: boolean
   agentMatricule?: boolean
   carteSocialePath?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FamilleAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentMatricule" | "carteSocialePath" | "createdAt" | "updatedAt", ExtArgs["result"]["familleAgent"]>
+export type FamilleAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agentMatricule" | "carteSocialePath" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["familleAgent"]>
 export type FamilleAgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conjoint?: boolean | Prisma.FamilleAgent$conjointArgs<ExtArgs>
   enfant?: boolean | Prisma.FamilleAgent$enfantArgs<ExtArgs>
@@ -808,6 +853,7 @@ export type $FamilleAgentPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: number
     agentMatricule: number
     carteSocialePath: string
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["familleAgent"]>
@@ -1240,6 +1286,7 @@ export interface FamilleAgentFieldRefs {
   readonly id: Prisma.FieldRef<"FamilleAgent", 'Int'>
   readonly agentMatricule: Prisma.FieldRef<"FamilleAgent", 'Int'>
   readonly carteSocialePath: Prisma.FieldRef<"FamilleAgent", 'String'>
+  readonly suppressionStatut: Prisma.FieldRef<"FamilleAgent", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"FamilleAgent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FamilleAgent", 'DateTime'>
 }

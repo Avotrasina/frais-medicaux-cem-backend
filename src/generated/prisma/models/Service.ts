@@ -28,6 +28,7 @@ export type ServiceMinAggregateOutputType = {
   codeService: string | null
   nom: string | null
   codeDirection: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -36,6 +37,7 @@ export type ServiceMaxAggregateOutputType = {
   codeService: string | null
   nom: string | null
   codeDirection: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +46,7 @@ export type ServiceCountAggregateOutputType = {
   codeService: number
   nom: number
   codeDirection: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -54,6 +57,7 @@ export type ServiceMinAggregateInputType = {
   codeService?: true
   nom?: true
   codeDirection?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -62,6 +66,7 @@ export type ServiceMaxAggregateInputType = {
   codeService?: true
   nom?: true
   codeDirection?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,6 +75,7 @@ export type ServiceCountAggregateInputType = {
   codeService?: true
   nom?: true
   codeDirection?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -151,6 +157,7 @@ export type ServiceGroupByOutputType = {
   codeService: string
   nom: string
   codeDirection: string
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: ServiceCountAggregateOutputType | null
@@ -180,6 +187,7 @@ export type ServiceWhereInput = {
   codeService?: Prisma.StringFilter<"Service"> | string
   nom?: Prisma.StringFilter<"Service"> | string
   codeDirection?: Prisma.StringFilter<"Service"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Service"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   direction?: Prisma.XOR<Prisma.DirectionScalarRelationFilter, Prisma.DirectionWhereInput>
@@ -190,6 +198,7 @@ export type ServiceOrderByWithRelationInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   direction?: Prisma.DirectionOrderByWithRelationInput
@@ -203,6 +212,7 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ServiceWhereInput | Prisma.ServiceWhereInput[]
   nom?: Prisma.StringFilter<"Service"> | string
   codeDirection?: Prisma.StringFilter<"Service"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Service"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   direction?: Prisma.XOR<Prisma.DirectionScalarRelationFilter, Prisma.DirectionWhereInput>
@@ -213,6 +223,7 @@ export type ServiceOrderByWithAggregationInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ServiceCountOrderByAggregateInput
@@ -227,6 +238,7 @@ export type ServiceScalarWhereWithAggregatesInput = {
   codeService?: Prisma.StringWithAggregatesFilter<"Service"> | string
   nom?: Prisma.StringWithAggregatesFilter<"Service"> | string
   codeDirection?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Service"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
 }
@@ -234,6 +246,7 @@ export type ServiceScalarWhereWithAggregatesInput = {
 export type ServiceCreateInput = {
   codeService: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   direction: Prisma.DirectionCreateNestedOneWithoutServicesInput
@@ -244,6 +257,7 @@ export type ServiceUncheckedCreateInput = {
   codeService: string
   nom: string
   codeDirection: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutServiceInput
@@ -252,6 +266,7 @@ export type ServiceUncheckedCreateInput = {
 export type ServiceUpdateInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUpdateOneRequiredWithoutServicesNestedInput
@@ -262,6 +277,7 @@ export type ServiceUncheckedUpdateInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUncheckedUpdateManyWithoutServiceNestedInput
@@ -271,6 +287,7 @@ export type ServiceCreateManyInput = {
   codeService: string
   nom: string
   codeDirection: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -278,6 +295,7 @@ export type ServiceCreateManyInput = {
 export type ServiceUpdateManyMutationInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -286,6 +304,7 @@ export type ServiceUncheckedUpdateManyInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -309,6 +328,7 @@ export type ServiceCountOrderByAggregateInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -317,6 +337,7 @@ export type ServiceMaxOrderByAggregateInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -325,6 +346,7 @@ export type ServiceMinOrderByAggregateInput = {
   codeService?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   codeDirection?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -390,6 +412,7 @@ export type ServiceUncheckedUpdateManyWithoutDirectionNestedInput = {
 export type ServiceCreateWithoutAgentsInput = {
   codeService: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   direction: Prisma.DirectionCreateNestedOneWithoutServicesInput
@@ -399,6 +422,7 @@ export type ServiceUncheckedCreateWithoutAgentsInput = {
   codeService: string
   nom: string
   codeDirection: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -422,6 +446,7 @@ export type ServiceUpdateToOneWithWhereWithoutAgentsInput = {
 export type ServiceUpdateWithoutAgentsInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUpdateOneRequiredWithoutServicesNestedInput
@@ -431,6 +456,7 @@ export type ServiceUncheckedUpdateWithoutAgentsInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   codeDirection?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -438,6 +464,7 @@ export type ServiceUncheckedUpdateWithoutAgentsInput = {
 export type ServiceCreateWithoutDirectionInput = {
   codeService: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agents?: Prisma.AgentCreateNestedManyWithoutServiceInput
@@ -446,6 +473,7 @@ export type ServiceCreateWithoutDirectionInput = {
 export type ServiceUncheckedCreateWithoutDirectionInput = {
   codeService: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutServiceInput
@@ -484,6 +512,7 @@ export type ServiceScalarWhereInput = {
   codeService?: Prisma.StringFilter<"Service"> | string
   nom?: Prisma.StringFilter<"Service"> | string
   codeDirection?: Prisma.StringFilter<"Service"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Service"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
 }
@@ -491,6 +520,7 @@ export type ServiceScalarWhereInput = {
 export type ServiceCreateManyDirectionInput = {
   codeService: string
   nom: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -498,6 +528,7 @@ export type ServiceCreateManyDirectionInput = {
 export type ServiceUpdateWithoutDirectionInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUpdateManyWithoutServiceNestedInput
@@ -506,6 +537,7 @@ export type ServiceUpdateWithoutDirectionInput = {
 export type ServiceUncheckedUpdateWithoutDirectionInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUncheckedUpdateManyWithoutServiceNestedInput
@@ -514,6 +546,7 @@ export type ServiceUncheckedUpdateWithoutDirectionInput = {
 export type ServiceUncheckedUpdateManyWithoutDirectionInput = {
   codeService?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -553,6 +586,7 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
@@ -564,6 +598,7 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
@@ -573,6 +608,7 @@ export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
@@ -582,11 +618,12 @@ export type ServiceSelectScalar = {
   codeService?: boolean
   nom?: boolean
   codeDirection?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeService" | "nom" | "codeDirection" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"codeService" | "nom" | "codeDirection" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   direction?: boolean | Prisma.DirectionDefaultArgs<ExtArgs>
   agents?: boolean | Prisma.Service$agentsArgs<ExtArgs>
@@ -609,6 +646,7 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     codeService: string
     nom: string
     codeDirection: string
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["service"]>
@@ -1039,6 +1077,7 @@ export interface ServiceFieldRefs {
   readonly codeService: Prisma.FieldRef<"Service", 'String'>
   readonly nom: Prisma.FieldRef<"Service", 'String'>
   readonly codeDirection: Prisma.FieldRef<"Service", 'String'>
+  readonly suppressionStatut: Prisma.FieldRef<"Service", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"Service", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Service", 'DateTime'>
 }

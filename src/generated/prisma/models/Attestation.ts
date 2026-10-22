@@ -44,6 +44,7 @@ export type AttestationMinAggregateOutputType = {
   servicePrestataire: string | null
   statut: $Enums.StatutAttestation | null
   datePEC: Date | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   prestataireID: number | null
   idpBeneficiaire: string | null
   createdAt: Date | null
@@ -58,6 +59,7 @@ export type AttestationMaxAggregateOutputType = {
   servicePrestataire: string | null
   statut: $Enums.StatutAttestation | null
   datePEC: Date | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   prestataireID: number | null
   idpBeneficiaire: string | null
   createdAt: Date | null
@@ -72,6 +74,7 @@ export type AttestationCountAggregateOutputType = {
   servicePrestataire: number
   statut: number
   datePEC: number
+  suppressionStatut: number
   prestataireID: number
   idpBeneficiaire: number
   createdAt: number
@@ -98,6 +101,7 @@ export type AttestationMinAggregateInputType = {
   servicePrestataire?: true
   statut?: true
   datePEC?: true
+  suppressionStatut?: true
   prestataireID?: true
   idpBeneficiaire?: true
   createdAt?: true
@@ -112,6 +116,7 @@ export type AttestationMaxAggregateInputType = {
   servicePrestataire?: true
   statut?: true
   datePEC?: true
+  suppressionStatut?: true
   prestataireID?: true
   idpBeneficiaire?: true
   createdAt?: true
@@ -126,6 +131,7 @@ export type AttestationCountAggregateInputType = {
   servicePrestataire?: true
   statut?: true
   datePEC?: true
+  suppressionStatut?: true
   prestataireID?: true
   idpBeneficiaire?: true
   createdAt?: true
@@ -227,6 +233,7 @@ export type AttestationGroupByOutputType = {
   servicePrestataire: string | null
   statut: $Enums.StatutAttestation
   datePEC: Date
+  suppressionStatut: $Enums.SuppresionStatut | null
   prestataireID: number
   idpBeneficiaire: string
   createdAt: Date
@@ -264,6 +271,7 @@ export type AttestationWhereInput = {
   servicePrestataire?: Prisma.StringNullableFilter<"Attestation"> | string | null
   statut?: Prisma.EnumStatutAttestationFilter<"Attestation"> | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFilter<"Attestation"> | Date | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Attestation"> | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFilter<"Attestation"> | number
   idpBeneficiaire?: Prisma.StringFilter<"Attestation"> | string
   createdAt?: Prisma.DateTimeFilter<"Attestation"> | Date | string
@@ -280,6 +288,7 @@ export type AttestationOrderByWithRelationInput = {
   servicePrestataire?: Prisma.SortOrderInput | Prisma.SortOrder
   statut?: Prisma.SortOrder
   datePEC?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   prestataireID?: Prisma.SortOrder
   idpBeneficiaire?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -299,6 +308,7 @@ export type AttestationWhereUniqueInput = Prisma.AtLeast<{
   servicePrestataire?: Prisma.StringNullableFilter<"Attestation"> | string | null
   statut?: Prisma.EnumStatutAttestationFilter<"Attestation"> | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFilter<"Attestation"> | Date | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Attestation"> | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFilter<"Attestation"> | number
   idpBeneficiaire?: Prisma.StringFilter<"Attestation"> | string
   createdAt?: Prisma.DateTimeFilter<"Attestation"> | Date | string
@@ -315,6 +325,7 @@ export type AttestationOrderByWithAggregationInput = {
   servicePrestataire?: Prisma.SortOrderInput | Prisma.SortOrder
   statut?: Prisma.SortOrder
   datePEC?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   prestataireID?: Prisma.SortOrder
   idpBeneficiaire?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -337,6 +348,7 @@ export type AttestationScalarWhereWithAggregatesInput = {
   servicePrestataire?: Prisma.StringNullableWithAggregatesFilter<"Attestation"> | string | null
   statut?: Prisma.EnumStatutAttestationWithAggregatesFilter<"Attestation"> | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeWithAggregatesFilter<"Attestation"> | Date | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Attestation"> | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntWithAggregatesFilter<"Attestation"> | number
   idpBeneficiaire?: Prisma.StringWithAggregatesFilter<"Attestation"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Attestation"> | Date | string
@@ -350,6 +362,7 @@ export type AttestationCreateInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prestataire: Prisma.PrestataireCreateNestedOneWithoutAttestationsInput
@@ -364,6 +377,7 @@ export type AttestationUncheckedCreateInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   prestataireID: number
   idpBeneficiaire: string
   createdAt?: Date | string
@@ -377,6 +391,7 @@ export type AttestationUpdateInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataire?: Prisma.PrestataireUpdateOneRequiredWithoutAttestationsNestedInput
@@ -391,6 +406,7 @@ export type AttestationUncheckedUpdateInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFieldUpdateOperationsInput | number
   idpBeneficiaire?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -405,6 +421,7 @@ export type AttestationCreateManyInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   prestataireID: number
   idpBeneficiaire: string
   createdAt?: Date | string
@@ -418,6 +435,7 @@ export type AttestationUpdateManyMutationInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -430,6 +448,7 @@ export type AttestationUncheckedUpdateManyInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFieldUpdateOperationsInput | number
   idpBeneficiaire?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -444,6 +463,7 @@ export type AttestationCountOrderByAggregateInput = {
   servicePrestataire?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   datePEC?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   prestataireID?: Prisma.SortOrder
   idpBeneficiaire?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -463,6 +483,7 @@ export type AttestationMaxOrderByAggregateInput = {
   servicePrestataire?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   datePEC?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   prestataireID?: Prisma.SortOrder
   idpBeneficiaire?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -477,6 +498,7 @@ export type AttestationMinOrderByAggregateInput = {
   servicePrestataire?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   datePEC?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   prestataireID?: Prisma.SortOrder
   idpBeneficiaire?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -597,6 +619,7 @@ export type AttestationCreateWithoutBeneficiaireInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prestataire: Prisma.PrestataireCreateNestedOneWithoutAttestationsInput
@@ -610,6 +633,7 @@ export type AttestationUncheckedCreateWithoutBeneficiaireInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   prestataireID: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -652,6 +676,7 @@ export type AttestationScalarWhereInput = {
   servicePrestataire?: Prisma.StringNullableFilter<"Attestation"> | string | null
   statut?: Prisma.EnumStatutAttestationFilter<"Attestation"> | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFilter<"Attestation"> | Date | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Attestation"> | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFilter<"Attestation"> | number
   idpBeneficiaire?: Prisma.StringFilter<"Attestation"> | string
   createdAt?: Prisma.DateTimeFilter<"Attestation"> | Date | string
@@ -665,6 +690,7 @@ export type AttestationCreateWithoutPrestataireInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaire: Prisma.BeneficiaireCreateNestedOneWithoutAttestationsInput
@@ -678,6 +704,7 @@ export type AttestationUncheckedCreateWithoutPrestataireInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   idpBeneficiaire: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -717,6 +744,7 @@ export type AttestationCreateManyBeneficiaireInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   prestataireID: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -729,6 +757,7 @@ export type AttestationUpdateWithoutBeneficiaireInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestataire?: Prisma.PrestataireUpdateOneRequiredWithoutAttestationsNestedInput
@@ -742,6 +771,7 @@ export type AttestationUncheckedUpdateWithoutBeneficiaireInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -755,6 +785,7 @@ export type AttestationUncheckedUpdateManyWithoutBeneficiaireInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   prestataireID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -768,6 +799,7 @@ export type AttestationCreateManyPrestataireInput = {
   servicePrestataire?: string | null
   statut?: $Enums.StatutAttestation
   datePEC: Date | string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   idpBeneficiaire: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -780,6 +812,7 @@ export type AttestationUpdateWithoutPrestataireInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaire?: Prisma.BeneficiaireUpdateOneRequiredWithoutAttestationsNestedInput
@@ -793,6 +826,7 @@ export type AttestationUncheckedUpdateWithoutPrestataireInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   idpBeneficiaire?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -806,6 +840,7 @@ export type AttestationUncheckedUpdateManyWithoutPrestataireInput = {
   servicePrestataire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutAttestationFieldUpdateOperationsInput | $Enums.StatutAttestation
   datePEC?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   idpBeneficiaire?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -821,6 +856,7 @@ export type AttestationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   servicePrestataire?: boolean
   statut?: boolean
   datePEC?: boolean
+  suppressionStatut?: boolean
   prestataireID?: boolean
   idpBeneficiaire?: boolean
   createdAt?: boolean
@@ -837,6 +873,7 @@ export type AttestationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   servicePrestataire?: boolean
   statut?: boolean
   datePEC?: boolean
+  suppressionStatut?: boolean
   prestataireID?: boolean
   idpBeneficiaire?: boolean
   createdAt?: boolean
@@ -853,6 +890,7 @@ export type AttestationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   servicePrestataire?: boolean
   statut?: boolean
   datePEC?: boolean
+  suppressionStatut?: boolean
   prestataireID?: boolean
   idpBeneficiaire?: boolean
   createdAt?: boolean
@@ -869,13 +907,14 @@ export type AttestationSelectScalar = {
   servicePrestataire?: boolean
   statut?: boolean
   datePEC?: boolean
+  suppressionStatut?: boolean
   prestataireID?: boolean
   idpBeneficiaire?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AttestationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attestationPath" | "dateValidation" | "naturePrestation" | "servicePrestataire" | "statut" | "datePEC" | "prestataireID" | "idpBeneficiaire" | "createdAt" | "updatedAt", ExtArgs["result"]["attestation"]>
+export type AttestationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attestationPath" | "dateValidation" | "naturePrestation" | "servicePrestataire" | "statut" | "datePEC" | "suppressionStatut" | "prestataireID" | "idpBeneficiaire" | "createdAt" | "updatedAt", ExtArgs["result"]["attestation"]>
 export type AttestationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestataire?: boolean | Prisma.PrestataireDefaultArgs<ExtArgs>
   beneficiaire?: boolean | Prisma.BeneficiaireDefaultArgs<ExtArgs>
@@ -903,6 +942,7 @@ export type $AttestationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     servicePrestataire: string | null
     statut: $Enums.StatutAttestation
     datePEC: Date
+    suppressionStatut: $Enums.SuppresionStatut | null
     prestataireID: number
     idpBeneficiaire: string
     createdAt: Date
@@ -1339,6 +1379,7 @@ export interface AttestationFieldRefs {
   readonly servicePrestataire: Prisma.FieldRef<"Attestation", 'String'>
   readonly statut: Prisma.FieldRef<"Attestation", 'StatutAttestation'>
   readonly datePEC: Prisma.FieldRef<"Attestation", 'DateTime'>
+  readonly suppressionStatut: Prisma.FieldRef<"Attestation", 'SuppresionStatut'>
   readonly prestataireID: Prisma.FieldRef<"Attestation", 'Int'>
   readonly idpBeneficiaire: Prisma.FieldRef<"Attestation", 'String'>
   readonly createdAt: Prisma.FieldRef<"Attestation", 'DateTime'>

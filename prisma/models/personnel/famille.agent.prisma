@@ -1,9 +1,10 @@
 model FamilleAgent {
-  id               Int       @id @map("id")
-  agentMatricule   Int       @map("agent_matricule")
-  carteSocialePath String    @map("carte_sociale_path") @db.VarChar(100)
-  conjoint         Conjoint?
-  enfant           Enfant?
+  id                Int               @id @map("id")
+  agentMatricule    Int               @map("agent_matricule")
+  carteSocialePath  String            @map("carte_sociale_path") @db.VarChar(100)
+  conjoint          Conjoint?
+  enfant            Enfant?
+  suppressionStatut SuppresionStatut?
 
   personne Personne @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -17,8 +18,9 @@ model FamilleAgent {
 }
 
 model Conjoint {
-  id          Int @id
-  numConjoint Int @unique @default(autoincrement()) @map("num_conjoint")
+  id                Int               @id
+  numConjoint       Int               @unique @default(autoincrement()) @map("num_conjoint")
+  suppressionStatut SuppresionStatut?
 
   familleAgent FamilleAgent @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -30,8 +32,9 @@ model Conjoint {
 }
 
 model Enfant {
-  id        Int @id
-  numEnfant Int @unique @default(autoincrement()) @map("num_enfant")
+  id                Int               @id
+  numEnfant         Int               @unique @default(autoincrement()) @map("num_enfant")
+  suppressionStatut SuppresionStatut?
 
   familleAgent FamilleAgent @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 

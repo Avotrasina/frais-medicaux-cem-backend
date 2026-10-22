@@ -9,6 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const SuppresionStatut = {
+  EN_ATTENTE: 'EN_ATTENTE',
+  REJETE: 'REJETE'
+} as const
+
+export type SuppresionStatut = (typeof SuppresionStatut)[keyof typeof SuppresionStatut]
+
+
 export const Sexe = {
   MASCULIN: 'MASCULIN',
   FEMININ: 'FEMININ'

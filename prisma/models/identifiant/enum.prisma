@@ -1,0 +1,7 @@
+enum SuppresionStatut {
+  EN_ATTENTE @map("en_attente")
+  REJETE     @map("rejete")
+
+  @@map("suppresion_statut")
+  @@schema("identifiant")
+}

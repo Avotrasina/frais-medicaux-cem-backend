@@ -90,6 +90,7 @@ export const PersonneScalarFieldEnum = {
   prenom: 'prenom',
   dateNaissance: 'dateNaissance',
   sexe: 'sexe',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -105,6 +106,7 @@ export const AgentScalarFieldEnum = {
   dateEntree: 'dateEntree',
   statutPEC: 'statutPEC',
   agentType: 'agentType',
+  suppressionStatut: 'suppressionStatut',
   structureID: 'structureID',
   serviceID: 'serviceID',
   fonction: 'fonction',
@@ -119,6 +121,7 @@ export type AgentScalarFieldEnum = (typeof AgentScalarFieldEnum)[keyof typeof Ag
 export const CategorieAgentScalarFieldEnum = {
   id: 'id',
   codeCategory: 'codeCategory',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -129,6 +132,7 @@ export type CategorieAgentScalarFieldEnum = (typeof CategorieAgentScalarFieldEnu
 export const DirectionScalarFieldEnum = {
   codeDirection: 'codeDirection',
   nom: 'nom',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -140,6 +144,7 @@ export const ServiceScalarFieldEnum = {
   codeService: 'codeService',
   nom: 'nom',
   codeDirection: 'codeDirection',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -151,6 +156,7 @@ export const FamilleAgentScalarFieldEnum = {
   id: 'id',
   agentMatricule: 'agentMatricule',
   carteSocialePath: 'carteSocialePath',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -161,6 +167,7 @@ export type FamilleAgentScalarFieldEnum = (typeof FamilleAgentScalarFieldEnum)[k
 export const ConjointScalarFieldEnum = {
   id: 'id',
   numConjoint: 'numConjoint',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -171,6 +178,7 @@ export type ConjointScalarFieldEnum = (typeof ConjointScalarFieldEnum)[keyof typ
 export const EnfantScalarFieldEnum = {
   id: 'id',
   numEnfant: 'numEnfant',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -181,6 +189,7 @@ export type EnfantScalarFieldEnum = (typeof EnfantScalarFieldEnum)[keyof typeof 
 export const StructureOrganisationnelleScalarFieldEnum = {
   id: 'id',
   structureOrganisationnelleType: 'structureOrganisationnelleType',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -191,6 +200,7 @@ export type StructureOrganisationnelleScalarFieldEnum = (typeof StructureOrganis
 export const AgenceScalarFieldEnum = {
   codeAgence: 'codeAgence',
   nomAgence: 'nomAgence',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -206,6 +216,7 @@ export const AttestationScalarFieldEnum = {
   servicePrestataire: 'servicePrestataire',
   statut: 'statut',
   datePEC: 'datePEC',
+  suppressionStatut: 'suppressionStatut',
   prestataireID: 'prestataireID',
   idpBeneficiaire: 'idpBeneficiaire',
   createdAt: 'createdAt',
@@ -219,6 +230,7 @@ export const BeneficiaireScalarFieldEnum = {
   id: 'id',
   idp: 'idp',
   observationIDP: 'observationIDP',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -236,6 +248,7 @@ export const PrestataireScalarFieldEnum = {
   dateDebutConvention: 'dateDebutConvention',
   dateFinConvention: 'dateFinConvention',
   listePrestation: 'listePrestation',
+  suppressionStatut: 'suppressionStatut',
   conventionPath: 'conventionPath',
   lieuID: 'lieuID',
   categorieID: 'categorieID',
@@ -249,6 +262,7 @@ export type PrestataireScalarFieldEnum = (typeof PrestataireScalarFieldEnum)[key
 export const LieuScalarFieldEnum = {
   id: 'id',
   nom: 'nom',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -259,6 +273,7 @@ export type LieuScalarFieldEnum = (typeof LieuScalarFieldEnum)[keyof typeof Lieu
 export const CategoriePrestataireScalarFieldEnum = {
   id: 'id',
   nom: 'nom',
+  suppressionStatut: 'suppressionStatut',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

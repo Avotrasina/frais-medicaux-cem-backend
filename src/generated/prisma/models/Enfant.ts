@@ -39,6 +39,7 @@ export type EnfantSumAggregateOutputType = {
 export type EnfantMinAggregateOutputType = {
   id: number | null
   numEnfant: number | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +47,7 @@ export type EnfantMinAggregateOutputType = {
 export type EnfantMaxAggregateOutputType = {
   id: number | null
   numEnfant: number | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type EnfantMaxAggregateOutputType = {
 export type EnfantCountAggregateOutputType = {
   id: number
   numEnfant: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -72,6 +75,7 @@ export type EnfantSumAggregateInputType = {
 export type EnfantMinAggregateInputType = {
   id?: true
   numEnfant?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -79,6 +83,7 @@ export type EnfantMinAggregateInputType = {
 export type EnfantMaxAggregateInputType = {
   id?: true
   numEnfant?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -86,6 +91,7 @@ export type EnfantMaxAggregateInputType = {
 export type EnfantCountAggregateInputType = {
   id?: true
   numEnfant?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -180,6 +186,7 @@ export type EnfantGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type EnfantGroupByOutputType = {
   id: number
   numEnfant: number
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: EnfantCountAggregateOutputType | null
@@ -210,6 +217,7 @@ export type EnfantWhereInput = {
   NOT?: Prisma.EnfantWhereInput | Prisma.EnfantWhereInput[]
   id?: Prisma.IntFilter<"Enfant"> | number
   numEnfant?: Prisma.IntFilter<"Enfant"> | number
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Enfant"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
   familleAgent?: Prisma.XOR<Prisma.FamilleAgentScalarRelationFilter, Prisma.FamilleAgentWhereInput>
@@ -218,6 +226,7 @@ export type EnfantWhereInput = {
 export type EnfantOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   familleAgent?: Prisma.FamilleAgentOrderByWithRelationInput
@@ -229,6 +238,7 @@ export type EnfantWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EnfantWhereInput | Prisma.EnfantWhereInput[]
   OR?: Prisma.EnfantWhereInput[]
   NOT?: Prisma.EnfantWhereInput | Prisma.EnfantWhereInput[]
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Enfant"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Enfant"> | Date | string
   familleAgent?: Prisma.XOR<Prisma.FamilleAgentScalarRelationFilter, Prisma.FamilleAgentWhereInput>
@@ -237,6 +247,7 @@ export type EnfantWhereUniqueInput = Prisma.AtLeast<{
 export type EnfantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EnfantCountOrderByAggregateInput
@@ -252,12 +263,14 @@ export type EnfantScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EnfantScalarWhereWithAggregatesInput | Prisma.EnfantScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Enfant"> | number
   numEnfant?: Prisma.IntWithAggregatesFilter<"Enfant"> | number
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Enfant"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Enfant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Enfant"> | Date | string
 }
 
 export type EnfantCreateInput = {
   numEnfant?: number
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   familleAgent: Prisma.FamilleAgentCreateNestedOneWithoutEnfantInput
@@ -266,11 +279,13 @@ export type EnfantCreateInput = {
 export type EnfantUncheckedCreateInput = {
   id: number
   numEnfant?: number
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type EnfantUpdateInput = {
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   familleAgent?: Prisma.FamilleAgentUpdateOneRequiredWithoutEnfantNestedInput
@@ -279,6 +294,7 @@ export type EnfantUpdateInput = {
 export type EnfantUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -286,11 +302,13 @@ export type EnfantUncheckedUpdateInput = {
 export type EnfantCreateManyInput = {
   id: number
   numEnfant?: number
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type EnfantUpdateManyMutationInput = {
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -298,6 +316,7 @@ export type EnfantUpdateManyMutationInput = {
 export type EnfantUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -310,6 +329,7 @@ export type EnfantNullableScalarRelationFilter = {
 export type EnfantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -322,6 +342,7 @@ export type EnfantAvgOrderByAggregateInput = {
 export type EnfantMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -329,6 +350,7 @@ export type EnfantMaxOrderByAggregateInput = {
 export type EnfantMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   numEnfant?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -372,12 +394,14 @@ export type EnfantUncheckedUpdateOneWithoutFamilleAgentNestedInput = {
 
 export type EnfantCreateWithoutFamilleAgentInput = {
   numEnfant?: number
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type EnfantUncheckedCreateWithoutFamilleAgentInput = {
   numEnfant?: number
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -399,12 +423,14 @@ export type EnfantUpdateToOneWithWhereWithoutFamilleAgentInput = {
 }
 
 export type EnfantUpdateWithoutFamilleAgentInput = {
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EnfantUncheckedUpdateWithoutFamilleAgentInput = {
   numEnfant?: Prisma.IntFieldUpdateOperationsInput | number
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,6 +440,7 @@ export type EnfantUncheckedUpdateWithoutFamilleAgentInput = {
 export type EnfantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numEnfant?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
@@ -422,6 +449,7 @@ export type EnfantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type EnfantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numEnfant?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
@@ -430,6 +458,7 @@ export type EnfantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type EnfantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   numEnfant?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
@@ -438,11 +467,12 @@ export type EnfantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type EnfantSelectScalar = {
   id?: boolean
   numEnfant?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EnfantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numEnfant" | "createdAt" | "updatedAt", ExtArgs["result"]["enfant"]>
+export type EnfantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numEnfant" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["enfant"]>
 export type EnfantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   familleAgent?: boolean | Prisma.FamilleAgentDefaultArgs<ExtArgs>
 }
@@ -461,6 +491,7 @@ export type $EnfantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     numEnfant: number
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["enfant"]>
@@ -889,6 +920,7 @@ export interface Prisma__EnfantClient<T, Null = never, ExtArgs extends runtime.T
 export interface EnfantFieldRefs {
   readonly id: Prisma.FieldRef<"Enfant", 'Int'>
   readonly numEnfant: Prisma.FieldRef<"Enfant", 'Int'>
+  readonly suppressionStatut: Prisma.FieldRef<"Enfant", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"Enfant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Enfant", 'DateTime'>
 }

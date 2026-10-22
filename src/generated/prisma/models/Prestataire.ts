@@ -48,6 +48,7 @@ export type PrestataireMinAggregateOutputType = {
   dateDebutConvention: Date | null
   dateFinConvention: Date | null
   listePrestation: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   conventionPath: string | null
   lieuID: number | null
   categorieID: number | null
@@ -65,6 +66,7 @@ export type PrestataireMaxAggregateOutputType = {
   dateDebutConvention: Date | null
   dateFinConvention: Date | null
   listePrestation: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   conventionPath: string | null
   lieuID: number | null
   categorieID: number | null
@@ -82,6 +84,7 @@ export type PrestataireCountAggregateOutputType = {
   dateDebutConvention: number
   dateFinConvention: number
   listePrestation: number
+  suppressionStatut: number
   conventionPath: number
   lieuID: number
   categorieID: number
@@ -113,6 +116,7 @@ export type PrestataireMinAggregateInputType = {
   dateDebutConvention?: true
   dateFinConvention?: true
   listePrestation?: true
+  suppressionStatut?: true
   conventionPath?: true
   lieuID?: true
   categorieID?: true
@@ -130,6 +134,7 @@ export type PrestataireMaxAggregateInputType = {
   dateDebutConvention?: true
   dateFinConvention?: true
   listePrestation?: true
+  suppressionStatut?: true
   conventionPath?: true
   lieuID?: true
   categorieID?: true
@@ -147,6 +152,7 @@ export type PrestataireCountAggregateInputType = {
   dateDebutConvention?: true
   dateFinConvention?: true
   listePrestation?: true
+  suppressionStatut?: true
   conventionPath?: true
   lieuID?: true
   categorieID?: true
@@ -251,6 +257,7 @@ export type PrestataireGroupByOutputType = {
   dateDebutConvention: Date
   dateFinConvention: Date
   listePrestation: string
+  suppressionStatut: $Enums.SuppresionStatut | null
   conventionPath: string
   lieuID: number
   categorieID: number
@@ -291,6 +298,7 @@ export type PrestataireWhereInput = {
   dateDebutConvention?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   dateFinConvention?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   listePrestation?: Prisma.StringFilter<"Prestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Prestataire"> | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFilter<"Prestataire"> | string
   lieuID?: Prisma.IntFilter<"Prestataire"> | number
   categorieID?: Prisma.IntFilter<"Prestataire"> | number
@@ -311,6 +319,7 @@ export type PrestataireOrderByWithRelationInput = {
   dateDebutConvention?: Prisma.SortOrder
   dateFinConvention?: Prisma.SortOrder
   listePrestation?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   conventionPath?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
@@ -334,6 +343,7 @@ export type PrestataireWhereUniqueInput = Prisma.AtLeast<{
   dateDebutConvention?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   dateFinConvention?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   listePrestation?: Prisma.StringFilter<"Prestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Prestataire"> | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFilter<"Prestataire"> | string
   lieuID?: Prisma.IntFilter<"Prestataire"> | number
   categorieID?: Prisma.IntFilter<"Prestataire"> | number
@@ -354,6 +364,7 @@ export type PrestataireOrderByWithAggregationInput = {
   dateDebutConvention?: Prisma.SortOrder
   dateFinConvention?: Prisma.SortOrder
   listePrestation?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   conventionPath?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
@@ -379,6 +390,7 @@ export type PrestataireScalarWhereWithAggregatesInput = {
   dateDebutConvention?: Prisma.DateTimeWithAggregatesFilter<"Prestataire"> | Date | string
   dateFinConvention?: Prisma.DateTimeWithAggregatesFilter<"Prestataire"> | Date | string
   listePrestation?: Prisma.StringWithAggregatesFilter<"Prestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"Prestataire"> | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringWithAggregatesFilter<"Prestataire"> | string
   lieuID?: Prisma.IntWithAggregatesFilter<"Prestataire"> | number
   categorieID?: Prisma.IntWithAggregatesFilter<"Prestataire"> | number
@@ -395,6 +407,7 @@ export type PrestataireCreateInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -413,6 +426,7 @@ export type PrestataireUncheckedCreateInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   lieuID: number
   categorieID: number
@@ -430,6 +444,7 @@ export type PrestataireUpdateInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -448,6 +463,7 @@ export type PrestataireUncheckedUpdateInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
@@ -466,6 +482,7 @@ export type PrestataireCreateManyInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   lieuID: number
   categorieID: number
@@ -482,6 +499,7 @@ export type PrestataireUpdateManyMutationInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -497,6 +515,7 @@ export type PrestataireUncheckedUpdateManyInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
@@ -519,6 +538,7 @@ export type PrestataireCountOrderByAggregateInput = {
   dateDebutConvention?: Prisma.SortOrder
   dateFinConvention?: Prisma.SortOrder
   listePrestation?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   conventionPath?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
@@ -542,6 +562,7 @@ export type PrestataireMaxOrderByAggregateInput = {
   dateDebutConvention?: Prisma.SortOrder
   dateFinConvention?: Prisma.SortOrder
   listePrestation?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   conventionPath?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
@@ -559,6 +580,7 @@ export type PrestataireMinOrderByAggregateInput = {
   dateDebutConvention?: Prisma.SortOrder
   dateFinConvention?: Prisma.SortOrder
   listePrestation?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   conventionPath?: Prisma.SortOrder
   lieuID?: Prisma.SortOrder
   categorieID?: Prisma.SortOrder
@@ -693,6 +715,7 @@ export type PrestataireCreateWithoutAttestationsInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -710,6 +733,7 @@ export type PrestataireUncheckedCreateWithoutAttestationsInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   lieuID: number
   categorieID: number
@@ -742,6 +766,7 @@ export type PrestataireUpdateWithoutAttestationsInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -759,6 +784,7 @@ export type PrestataireUncheckedUpdateWithoutAttestationsInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
@@ -775,6 +801,7 @@ export type PrestataireCreateWithoutLieuInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -792,6 +819,7 @@ export type PrestataireUncheckedCreateWithoutLieuInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   categorieID: number
   createdAt?: Date | string
@@ -838,6 +866,7 @@ export type PrestataireScalarWhereInput = {
   dateDebutConvention?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   dateFinConvention?: Prisma.DateTimeFilter<"Prestataire"> | Date | string
   listePrestation?: Prisma.StringFilter<"Prestataire"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"Prestataire"> | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFilter<"Prestataire"> | string
   lieuID?: Prisma.IntFilter<"Prestataire"> | number
   categorieID?: Prisma.IntFilter<"Prestataire"> | number
@@ -854,6 +883,7 @@ export type PrestataireCreateWithoutCategorieInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -871,6 +901,7 @@ export type PrestataireUncheckedCreateWithoutCategorieInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   lieuID: number
   createdAt?: Date | string
@@ -914,6 +945,7 @@ export type PrestataireCreateManyLieuInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   categorieID: number
   createdAt?: Date | string
@@ -929,6 +961,7 @@ export type PrestataireUpdateWithoutLieuInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -946,6 +979,7 @@ export type PrestataireUncheckedUpdateWithoutLieuInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -963,6 +997,7 @@ export type PrestataireUncheckedUpdateManyWithoutLieuInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   categorieID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -979,6 +1014,7 @@ export type PrestataireCreateManyCategorieInput = {
   dateDebutConvention: Date | string
   dateFinConvention: Date | string
   listePrestation: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   conventionPath: string
   lieuID: number
   createdAt?: Date | string
@@ -994,6 +1030,7 @@ export type PrestataireUpdateWithoutCategorieInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1011,6 +1048,7 @@ export type PrestataireUncheckedUpdateWithoutCategorieInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1028,6 +1066,7 @@ export type PrestataireUncheckedUpdateManyWithoutCategorieInput = {
   dateDebutConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dateFinConvention?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listePrestation?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   conventionPath?: Prisma.StringFieldUpdateOperationsInput | string
   lieuID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1075,6 +1114,7 @@ export type PrestataireSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   dateDebutConvention?: boolean
   dateFinConvention?: boolean
   listePrestation?: boolean
+  suppressionStatut?: boolean
   conventionPath?: boolean
   lieuID?: boolean
   categorieID?: boolean
@@ -1096,6 +1136,7 @@ export type PrestataireSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   dateDebutConvention?: boolean
   dateFinConvention?: boolean
   listePrestation?: boolean
+  suppressionStatut?: boolean
   conventionPath?: boolean
   lieuID?: boolean
   categorieID?: boolean
@@ -1115,6 +1156,7 @@ export type PrestataireSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   dateDebutConvention?: boolean
   dateFinConvention?: boolean
   listePrestation?: boolean
+  suppressionStatut?: boolean
   conventionPath?: boolean
   lieuID?: boolean
   categorieID?: boolean
@@ -1134,6 +1176,7 @@ export type PrestataireSelectScalar = {
   dateDebutConvention?: boolean
   dateFinConvention?: boolean
   listePrestation?: boolean
+  suppressionStatut?: boolean
   conventionPath?: boolean
   lieuID?: boolean
   categorieID?: boolean
@@ -1141,7 +1184,7 @@ export type PrestataireSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "adresse" | "statut" | "nif" | "stat" | "dateDebutConvention" | "dateFinConvention" | "listePrestation" | "conventionPath" | "lieuID" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["prestataire"]>
+export type PrestataireOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "adresse" | "statut" | "nif" | "stat" | "dateDebutConvention" | "dateFinConvention" | "listePrestation" | "suppressionStatut" | "conventionPath" | "lieuID" | "categorieID" | "createdAt" | "updatedAt", ExtArgs["result"]["prestataire"]>
 export type PrestataireInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attestations?: boolean | Prisma.Prestataire$attestationsArgs<ExtArgs>
   lieu?: boolean | Prisma.LieuDefaultArgs<ExtArgs>
@@ -1174,6 +1217,7 @@ export type $PrestatairePayload<ExtArgs extends runtime.Types.Extensions.Interna
     dateDebutConvention: Date
     dateFinConvention: Date
     listePrestation: string
+    suppressionStatut: $Enums.SuppresionStatut | null
     conventionPath: string
     lieuID: number
     categorieID: number
@@ -1614,6 +1658,7 @@ export interface PrestataireFieldRefs {
   readonly dateDebutConvention: Prisma.FieldRef<"Prestataire", 'DateTime'>
   readonly dateFinConvention: Prisma.FieldRef<"Prestataire", 'DateTime'>
   readonly listePrestation: Prisma.FieldRef<"Prestataire", 'String'>
+  readonly suppressionStatut: Prisma.FieldRef<"Prestataire", 'SuppresionStatut'>
   readonly conventionPath: Prisma.FieldRef<"Prestataire", 'String'>
   readonly lieuID: Prisma.FieldRef<"Prestataire", 'Int'>
   readonly categorieID: Prisma.FieldRef<"Prestataire", 'Int'>

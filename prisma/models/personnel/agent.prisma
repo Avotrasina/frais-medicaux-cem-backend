@@ -7,13 +7,14 @@ enum AgentType {
 }
 
 model Agent {
-  id                       Int       @id
-  matricule                Int       @unique
-  observationMatricule     String?   @map("observation_matricule")
-  carteProfessionnellePath String    @map("carte_professionnelle_path") @db.VarChar(100)
-  dateEntree               DateTime  @map("dt_entree")
-  statutPEC                StatutPEC @map("statut_pec")
-  agentType                AgentType @default(AGENT_ACTIF) @map("agent_type")
+  id                       Int               @id
+  matricule                Int               @unique
+  observationMatricule     String?           @map("observation_matricule")
+  carteProfessionnellePath String            @map("carte_professionnelle_path") @db.VarChar(100)
+  dateEntree               DateTime          @map("dt_entree")
+  statutPEC                StatutPEC         @map("statut_pec")
+  agentType                AgentType         @default(AGENT_ACTIF) @map("agent_type")
+  suppressionStatut        SuppresionStatut?
 
   familleAgent FamilleAgent[]
 
@@ -36,9 +37,10 @@ model Agent {
 }
 
 model CategorieAgent {
-  id           Int     @id @default(autoincrement())
-  codeCategory String  @unique @map("code_category")
-  agents       Agent[]
+  id                Int               @id @default(autoincrement())
+  codeCategory      String            @unique @map("code_category")
+  suppressionStatut SuppresionStatut?
+  agents            Agent[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

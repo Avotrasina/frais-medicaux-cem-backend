@@ -37,6 +37,7 @@ export type CategorieAgentSumAggregateOutputType = {
 export type CategorieAgentMinAggregateOutputType = {
   id: number | null
   codeCategory: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +45,7 @@ export type CategorieAgentMinAggregateOutputType = {
 export type CategorieAgentMaxAggregateOutputType = {
   id: number | null
   codeCategory: string | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,6 +53,7 @@ export type CategorieAgentMaxAggregateOutputType = {
 export type CategorieAgentCountAggregateOutputType = {
   id: number
   codeCategory: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -68,6 +71,7 @@ export type CategorieAgentSumAggregateInputType = {
 export type CategorieAgentMinAggregateInputType = {
   id?: true
   codeCategory?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -75,6 +79,7 @@ export type CategorieAgentMinAggregateInputType = {
 export type CategorieAgentMaxAggregateInputType = {
   id?: true
   codeCategory?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +87,7 @@ export type CategorieAgentMaxAggregateInputType = {
 export type CategorieAgentCountAggregateInputType = {
   id?: true
   codeCategory?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -176,6 +182,7 @@ export type CategorieAgentGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type CategorieAgentGroupByOutputType = {
   id: number
   codeCategory: string
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: CategorieAgentCountAggregateOutputType | null
@@ -206,6 +213,7 @@ export type CategorieAgentWhereInput = {
   NOT?: Prisma.CategorieAgentWhereInput | Prisma.CategorieAgentWhereInput[]
   id?: Prisma.IntFilter<"CategorieAgent"> | number
   codeCategory?: Prisma.StringFilter<"CategorieAgent"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"CategorieAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"CategorieAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategorieAgent"> | Date | string
   agents?: Prisma.AgentListRelationFilter
@@ -214,6 +222,7 @@ export type CategorieAgentWhereInput = {
 export type CategorieAgentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   codeCategory?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   agents?: Prisma.AgentOrderByRelationAggregateInput
@@ -225,6 +234,7 @@ export type CategorieAgentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CategorieAgentWhereInput | Prisma.CategorieAgentWhereInput[]
   OR?: Prisma.CategorieAgentWhereInput[]
   NOT?: Prisma.CategorieAgentWhereInput | Prisma.CategorieAgentWhereInput[]
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"CategorieAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"CategorieAgent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CategorieAgent"> | Date | string
   agents?: Prisma.AgentListRelationFilter
@@ -233,6 +243,7 @@ export type CategorieAgentWhereUniqueInput = Prisma.AtLeast<{
 export type CategorieAgentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   codeCategory?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CategorieAgentCountOrderByAggregateInput
@@ -248,12 +259,14 @@ export type CategorieAgentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CategorieAgentScalarWhereWithAggregatesInput | Prisma.CategorieAgentScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"CategorieAgent"> | number
   codeCategory?: Prisma.StringWithAggregatesFilter<"CategorieAgent"> | string
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"CategorieAgent"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CategorieAgent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CategorieAgent"> | Date | string
 }
 
 export type CategorieAgentCreateInput = {
   codeCategory: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agents?: Prisma.AgentCreateNestedManyWithoutCategorieInput
@@ -262,6 +275,7 @@ export type CategorieAgentCreateInput = {
 export type CategorieAgentUncheckedCreateInput = {
   id?: number
   codeCategory: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agents?: Prisma.AgentUncheckedCreateNestedManyWithoutCategorieInput
@@ -269,6 +283,7 @@ export type CategorieAgentUncheckedCreateInput = {
 
 export type CategorieAgentUpdateInput = {
   codeCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUpdateManyWithoutCategorieNestedInput
@@ -277,6 +292,7 @@ export type CategorieAgentUpdateInput = {
 export type CategorieAgentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   codeCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agents?: Prisma.AgentUncheckedUpdateManyWithoutCategorieNestedInput
@@ -285,12 +301,14 @@ export type CategorieAgentUncheckedUpdateInput = {
 export type CategorieAgentCreateManyInput = {
   id?: number
   codeCategory: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type CategorieAgentUpdateManyMutationInput = {
   codeCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -298,6 +316,7 @@ export type CategorieAgentUpdateManyMutationInput = {
 export type CategorieAgentUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   codeCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -310,6 +329,7 @@ export type CategorieAgentNullableScalarRelationFilter = {
 export type CategorieAgentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   codeCategory?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -321,6 +341,7 @@ export type CategorieAgentAvgOrderByAggregateInput = {
 export type CategorieAgentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   codeCategory?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -328,6 +349,7 @@ export type CategorieAgentMaxOrderByAggregateInput = {
 export type CategorieAgentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   codeCategory?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -354,6 +376,7 @@ export type CategorieAgentUpdateOneWithoutAgentsNestedInput = {
 
 export type CategorieAgentCreateWithoutAgentsInput = {
   codeCategory: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -361,6 +384,7 @@ export type CategorieAgentCreateWithoutAgentsInput = {
 export type CategorieAgentUncheckedCreateWithoutAgentsInput = {
   id?: number
   codeCategory: string
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -383,6 +407,7 @@ export type CategorieAgentUpdateToOneWithWhereWithoutAgentsInput = {
 
 export type CategorieAgentUpdateWithoutAgentsInput = {
   codeCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -390,6 +415,7 @@ export type CategorieAgentUpdateWithoutAgentsInput = {
 export type CategorieAgentUncheckedUpdateWithoutAgentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   codeCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -428,6 +454,7 @@ export type CategorieAgentCountOutputTypeCountAgentsArgs<ExtArgs extends runtime
 export type CategorieAgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   codeCategory?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agents?: boolean | Prisma.CategorieAgent$agentsArgs<ExtArgs>
@@ -437,6 +464,7 @@ export type CategorieAgentSelect<ExtArgs extends runtime.Types.Extensions.Intern
 export type CategorieAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   codeCategory?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["categorieAgent"]>
@@ -444,6 +472,7 @@ export type CategorieAgentSelectCreateManyAndReturn<ExtArgs extends runtime.Type
 export type CategorieAgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   codeCategory?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["categorieAgent"]>
@@ -451,11 +480,12 @@ export type CategorieAgentSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type CategorieAgentSelectScalar = {
   id?: boolean
   codeCategory?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CategorieAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "codeCategory" | "createdAt" | "updatedAt", ExtArgs["result"]["categorieAgent"]>
+export type CategorieAgentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "codeCategory" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["categorieAgent"]>
 export type CategorieAgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agents?: boolean | Prisma.CategorieAgent$agentsArgs<ExtArgs>
   _count?: boolean | Prisma.CategorieAgentCountOutputTypeDefaultArgs<ExtArgs>
@@ -471,6 +501,7 @@ export type $CategorieAgentPayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     codeCategory: string
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["categorieAgent"]>
@@ -899,6 +930,7 @@ export interface Prisma__CategorieAgentClient<T, Null = never, ExtArgs extends r
 export interface CategorieAgentFieldRefs {
   readonly id: Prisma.FieldRef<"CategorieAgent", 'Int'>
   readonly codeCategory: Prisma.FieldRef<"CategorieAgent", 'String'>
+  readonly suppressionStatut: Prisma.FieldRef<"CategorieAgent", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"CategorieAgent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CategorieAgent", 'DateTime'>
 }

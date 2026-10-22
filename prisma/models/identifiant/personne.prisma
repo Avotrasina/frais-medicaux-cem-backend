@@ -7,11 +7,12 @@ enum Sexe {
 }
 
 model Personne {
-  id            Int      @id @default(autoincrement())
-  nom           String   @db.VarChar(25)
-  prenom        String   @db.VarChar(100)
-  dateNaissance DateTime @map("dt_naissance")
-  sexe          Sexe
+  id                Int               @id @default(autoincrement())
+  nom               String            @db.VarChar(25)
+  prenom            String            @db.VarChar(100)
+  dateNaissance     DateTime          @map("dt_naissance")
+  sexe              Sexe
+  suppressionStatut SuppresionStatut?
 
   beneficiaire Beneficiaire?
   familleAgent FamilleAgent?

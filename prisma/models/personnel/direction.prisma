@@ -1,7 +1,8 @@
 model Direction {
-  codeDirection String    @id @map("code_direction")
-  nom           String
-  services      Service[]
+  codeDirection     String            @id @map("code_direction")
+  nom               String
+  services          Service[]
+  suppressionStatut SuppresionStatut?
 
   structure StructureOrganisationnelle @relation(fields: [codeDirection], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -13,9 +14,10 @@ model Direction {
 }
 
 model Service {
-  codeService   String @id @map("code_service")
-  nom           String
-  codeDirection String @map("code_direction")
+  codeService       String            @id @map("code_service")
+  nom               String
+  codeDirection     String            @map("code_direction")
+  suppressionStatut SuppresionStatut?
 
   direction Direction @relation(fields: [codeDirection], references: [codeDirection])
 

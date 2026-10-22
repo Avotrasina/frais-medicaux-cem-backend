@@ -27,6 +27,7 @@ export type AggregateStructureOrganisationnelle = {
 export type StructureOrganisationnelleMinAggregateOutputType = {
   id: string | null
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -34,6 +35,7 @@ export type StructureOrganisationnelleMinAggregateOutputType = {
 export type StructureOrganisationnelleMaxAggregateOutputType = {
   id: string | null
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType | null
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -41,6 +43,7 @@ export type StructureOrganisationnelleMaxAggregateOutputType = {
 export type StructureOrganisationnelleCountAggregateOutputType = {
   id: number
   structureOrganisationnelleType: number
+  suppressionStatut: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -50,6 +53,7 @@ export type StructureOrganisationnelleCountAggregateOutputType = {
 export type StructureOrganisationnelleMinAggregateInputType = {
   id?: true
   structureOrganisationnelleType?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -57,6 +61,7 @@ export type StructureOrganisationnelleMinAggregateInputType = {
 export type StructureOrganisationnelleMaxAggregateInputType = {
   id?: true
   structureOrganisationnelleType?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -64,6 +69,7 @@ export type StructureOrganisationnelleMaxAggregateInputType = {
 export type StructureOrganisationnelleCountAggregateInputType = {
   id?: true
   structureOrganisationnelleType?: true
+  suppressionStatut?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -144,6 +150,7 @@ export type StructureOrganisationnelleGroupByArgs<ExtArgs extends runtime.Types.
 export type StructureOrganisationnelleGroupByOutputType = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut: $Enums.SuppresionStatut | null
   createdAt: Date
   updatedAt: Date
   _count: StructureOrganisationnelleCountAggregateOutputType | null
@@ -172,6 +179,7 @@ export type StructureOrganisationnelleWhereInput = {
   NOT?: Prisma.StructureOrganisationnelleWhereInput | Prisma.StructureOrganisationnelleWhereInput[]
   id?: Prisma.StringFilter<"StructureOrganisationnelle"> | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFilter<"StructureOrganisationnelle"> | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"StructureOrganisationnelle"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
   agence?: Prisma.XOR<Prisma.AgenceNullableScalarRelationFilter, Prisma.AgenceWhereInput> | null
@@ -182,6 +190,7 @@ export type StructureOrganisationnelleWhereInput = {
 export type StructureOrganisationnelleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   agence?: Prisma.AgenceOrderByWithRelationInput
@@ -195,6 +204,7 @@ export type StructureOrganisationnelleWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StructureOrganisationnelleWhereInput[]
   NOT?: Prisma.StructureOrganisationnelleWhereInput | Prisma.StructureOrganisationnelleWhereInput[]
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFilter<"StructureOrganisationnelle"> | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableFilter<"StructureOrganisationnelle"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StructureOrganisationnelle"> | Date | string
   agence?: Prisma.XOR<Prisma.AgenceNullableScalarRelationFilter, Prisma.AgenceWhereInput> | null
@@ -205,6 +215,7 @@ export type StructureOrganisationnelleWhereUniqueInput = Prisma.AtLeast<{
 export type StructureOrganisationnelleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StructureOrganisationnelleCountOrderByAggregateInput
@@ -218,6 +229,7 @@ export type StructureOrganisationnelleScalarWhereWithAggregatesInput = {
   NOT?: Prisma.StructureOrganisationnelleScalarWhereWithAggregatesInput | Prisma.StructureOrganisationnelleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StructureOrganisationnelle"> | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeWithAggregatesFilter<"StructureOrganisationnelle"> | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.EnumSuppresionStatutNullableWithAggregatesFilter<"StructureOrganisationnelle"> | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StructureOrganisationnelle"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StructureOrganisationnelle"> | Date | string
 }
@@ -225,6 +237,7 @@ export type StructureOrganisationnelleScalarWhereWithAggregatesInput = {
 export type StructureOrganisationnelleCreateInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agence?: Prisma.AgenceCreateNestedOneWithoutStructureInput
@@ -235,6 +248,7 @@ export type StructureOrganisationnelleCreateInput = {
 export type StructureOrganisationnelleUncheckedCreateInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agence?: Prisma.AgenceUncheckedCreateNestedOneWithoutStructureInput
@@ -245,6 +259,7 @@ export type StructureOrganisationnelleUncheckedCreateInput = {
 export type StructureOrganisationnelleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUpdateOneWithoutStructureNestedInput
@@ -255,6 +270,7 @@ export type StructureOrganisationnelleUpdateInput = {
 export type StructureOrganisationnelleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUncheckedUpdateOneWithoutStructureNestedInput
@@ -265,6 +281,7 @@ export type StructureOrganisationnelleUncheckedUpdateInput = {
 export type StructureOrganisationnelleCreateManyInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -272,6 +289,7 @@ export type StructureOrganisationnelleCreateManyInput = {
 export type StructureOrganisationnelleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -279,6 +297,7 @@ export type StructureOrganisationnelleUpdateManyMutationInput = {
 export type StructureOrganisationnelleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -296,6 +315,7 @@ export type StructureOrganisationnelleScalarRelationFilter = {
 export type StructureOrganisationnelleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -303,6 +323,7 @@ export type StructureOrganisationnelleCountOrderByAggregateInput = {
 export type StructureOrganisationnelleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -310,6 +331,7 @@ export type StructureOrganisationnelleMaxOrderByAggregateInput = {
 export type StructureOrganisationnelleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   structureOrganisationnelleType?: Prisma.SortOrder
+  suppressionStatut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -365,6 +387,7 @@ export type StructureOrganisationnelleUpdateOneRequiredWithoutAgenceNestedInput 
 export type StructureOrganisationnelleCreateWithoutAgentsInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agence?: Prisma.AgenceCreateNestedOneWithoutStructureInput
@@ -374,6 +397,7 @@ export type StructureOrganisationnelleCreateWithoutAgentsInput = {
 export type StructureOrganisationnelleUncheckedCreateWithoutAgentsInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agence?: Prisma.AgenceUncheckedCreateNestedOneWithoutStructureInput
@@ -399,6 +423,7 @@ export type StructureOrganisationnelleUpdateToOneWithWhereWithoutAgentsInput = {
 export type StructureOrganisationnelleUpdateWithoutAgentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUpdateOneWithoutStructureNestedInput
@@ -408,6 +433,7 @@ export type StructureOrganisationnelleUpdateWithoutAgentsInput = {
 export type StructureOrganisationnelleUncheckedUpdateWithoutAgentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUncheckedUpdateOneWithoutStructureNestedInput
@@ -417,6 +443,7 @@ export type StructureOrganisationnelleUncheckedUpdateWithoutAgentsInput = {
 export type StructureOrganisationnelleCreateWithoutDirectionInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agence?: Prisma.AgenceCreateNestedOneWithoutStructureInput
@@ -426,6 +453,7 @@ export type StructureOrganisationnelleCreateWithoutDirectionInput = {
 export type StructureOrganisationnelleUncheckedCreateWithoutDirectionInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agence?: Prisma.AgenceUncheckedCreateNestedOneWithoutStructureInput
@@ -451,6 +479,7 @@ export type StructureOrganisationnelleUpdateToOneWithWhereWithoutDirectionInput 
 export type StructureOrganisationnelleUpdateWithoutDirectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUpdateOneWithoutStructureNestedInput
@@ -460,6 +489,7 @@ export type StructureOrganisationnelleUpdateWithoutDirectionInput = {
 export type StructureOrganisationnelleUncheckedUpdateWithoutDirectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agence?: Prisma.AgenceUncheckedUpdateOneWithoutStructureNestedInput
@@ -469,6 +499,7 @@ export type StructureOrganisationnelleUncheckedUpdateWithoutDirectionInput = {
 export type StructureOrganisationnelleCreateWithoutAgenceInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   direction?: Prisma.DirectionCreateNestedOneWithoutStructureInput
@@ -478,6 +509,7 @@ export type StructureOrganisationnelleCreateWithoutAgenceInput = {
 export type StructureOrganisationnelleUncheckedCreateWithoutAgenceInput = {
   id: string
   structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+  suppressionStatut?: $Enums.SuppresionStatut | null
   createdAt?: Date | string
   updatedAt?: Date | string
   direction?: Prisma.DirectionUncheckedCreateNestedOneWithoutStructureInput
@@ -503,6 +535,7 @@ export type StructureOrganisationnelleUpdateToOneWithWhereWithoutAgenceInput = {
 export type StructureOrganisationnelleUpdateWithoutAgenceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUpdateOneWithoutStructureNestedInput
@@ -512,6 +545,7 @@ export type StructureOrganisationnelleUpdateWithoutAgenceInput = {
 export type StructureOrganisationnelleUncheckedUpdateWithoutAgenceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   structureOrganisationnelleType?: Prisma.EnumStructureOrganisationnelleTypeFieldUpdateOperationsInput | $Enums.StructureOrganisationnelleType
+  suppressionStatut?: Prisma.NullableEnumSuppresionStatutFieldUpdateOperationsInput | $Enums.SuppresionStatut | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   direction?: Prisma.DirectionUncheckedUpdateOneWithoutStructureNestedInput
@@ -552,6 +586,7 @@ export type StructureOrganisationnelleCountOutputTypeCountAgentsArgs<ExtArgs ext
 export type StructureOrganisationnelleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   structureOrganisationnelleType?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agence?: boolean | Prisma.StructureOrganisationnelle$agenceArgs<ExtArgs>
@@ -563,6 +598,7 @@ export type StructureOrganisationnelleSelect<ExtArgs extends runtime.Types.Exten
 export type StructureOrganisationnelleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   structureOrganisationnelleType?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["structureOrganisationnelle"]>
@@ -570,6 +606,7 @@ export type StructureOrganisationnelleSelectCreateManyAndReturn<ExtArgs extends 
 export type StructureOrganisationnelleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   structureOrganisationnelleType?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["structureOrganisationnelle"]>
@@ -577,11 +614,12 @@ export type StructureOrganisationnelleSelectUpdateManyAndReturn<ExtArgs extends 
 export type StructureOrganisationnelleSelectScalar = {
   id?: boolean
   structureOrganisationnelleType?: boolean
+  suppressionStatut?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StructureOrganisationnelleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "structureOrganisationnelleType" | "createdAt" | "updatedAt", ExtArgs["result"]["structureOrganisationnelle"]>
+export type StructureOrganisationnelleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "structureOrganisationnelleType" | "suppressionStatut" | "createdAt" | "updatedAt", ExtArgs["result"]["structureOrganisationnelle"]>
 export type StructureOrganisationnelleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agence?: boolean | Prisma.StructureOrganisationnelle$agenceArgs<ExtArgs>
   direction?: boolean | Prisma.StructureOrganisationnelle$directionArgs<ExtArgs>
@@ -601,6 +639,7 @@ export type $StructureOrganisationnellePayload<ExtArgs extends runtime.Types.Ext
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     structureOrganisationnelleType: $Enums.StructureOrganisationnelleType
+    suppressionStatut: $Enums.SuppresionStatut | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["structureOrganisationnelle"]>
@@ -1031,6 +1070,7 @@ export interface Prisma__StructureOrganisationnelleClient<T, Null = never, ExtAr
 export interface StructureOrganisationnelleFieldRefs {
   readonly id: Prisma.FieldRef<"StructureOrganisationnelle", 'String'>
   readonly structureOrganisationnelleType: Prisma.FieldRef<"StructureOrganisationnelle", 'StructureOrganisationnelleType'>
+  readonly suppressionStatut: Prisma.FieldRef<"StructureOrganisationnelle", 'SuppresionStatut'>
   readonly createdAt: Prisma.FieldRef<"StructureOrganisationnelle", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StructureOrganisationnelle", 'DateTime'>
 }
