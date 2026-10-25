@@ -2,11 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 import { ApplicationExceptionFilter } from './common/filters/application-exception.filter.js';
+import { SoftDeleteExceptionFilter } from './common/filters/soft-delete-exception.filter.js';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new ApplicationExceptionFilter());
+  app.useGlobalFilters(
+    new SoftDeleteExceptionFilter(),
+    new ApplicationExceptionFilter(),
+  );
    app.useGlobalPipes(
      new ValidationPipe({
        transform: true,
