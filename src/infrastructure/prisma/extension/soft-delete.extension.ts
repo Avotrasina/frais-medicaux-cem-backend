@@ -1,4 +1,3 @@
-
 import { AsyncLocalStorage } from "node:async_hooks";
 import { Prisma, type PrismaClient } from "../../../generated/prisma/client.js";
 import { SuppresionStatut } from "../../../generated/prisma/enums.js";
@@ -17,6 +16,7 @@ export interface SoftDeleteConfig {
 }
 
 export const deletionValidationContext = new AsyncLocalStorage<boolean>();
+const internalQueryContext = new AsyncLocalStorage<boolean>();
 
 const SOFT_DELETE_FIELD = "suppressionStatut";
 
@@ -76,16 +76,25 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
 
   const raw = (model: string): any => (base as any)[delegateName(model)];
 
-
+  /**
+   * Vérifie que l'entité n'est pas au statut REJETE.
+   *
+   * IMPORTANT : les promesses Prisma sont "lazy" (la requête ne part qu'au
+   * `.then()`). Le `await` doit donc se faire À L'INTÉRIEUR de `run()`,
+   * sinon la requête s'exécute hors du contexte AsyncLocalStorage et le hook
+   * `$allOperations` ne reconnaît pas l'appel comme interne -> récursion infinie.
+   */
   async function assertNotRejected(
     model: string,
     where?: Record<string, any>,
     delegate: any = raw(model),
   ) {
     if (!where) return;
-    const hit = await delegate.findFirst({
-      where: { AND: [where, { suppressionStatut: SuppresionStatut.REJETE }] },
-      select: { suppressionStatut: true },
+    const hit = await internalQueryContext.run(true, async () => {
+      return await delegate.findFirst({
+        where: { AND: [where, { suppressionStatut: SuppresionStatut.REJETE }] },
+        select: { suppressionStatut: true },
+      });
     });
     if (hit) throw new EntityDeletedError(model);
   }
@@ -198,10 +207,12 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
       },
     },
 
-    // ---------- 2. filtres et gardes sur les autres opérations ----------
+    // ---------- filtres et gardes sur les autres opérations ----------
     query: {
       $allModels: {
         async $allOperations({ model, operation, args, query }: any) {
+          // Requête interne (assertNotRejected) : on ne filtre pas, on exécute tel quel
+          if (internalQueryContext.getStore()) return query(args);
           if (!models.has(model)) return query(args);
           const a = args as Record<string, any>;
 
