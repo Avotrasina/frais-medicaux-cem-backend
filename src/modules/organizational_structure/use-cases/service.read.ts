@@ -11,6 +11,10 @@ export class ReadServiceUseCase {
     return this.serviceRepository.findAll();
   }
 
+  async readDeletionRequests(): Promise<ReadService[]> {
+    return this.serviceRepository.findDeletionRequests();
+  }
+
   async readByDirection(
     input: ReadServicesByDirectionUseCaseInput,
   ): Promise<ReadService[]> {

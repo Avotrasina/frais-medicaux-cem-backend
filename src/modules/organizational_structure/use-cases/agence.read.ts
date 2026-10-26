@@ -9,4 +9,8 @@ export class ReadAllAgencesUseCase {
   async execute(): Promise<ReadAgence[]> {
     return this.agenceRepository.findAll();
   }
+
+  async readDeletionRequests(): Promise<ReadAgence[]> {
+    return this.agenceRepository.findDeletionRequests();
+  }
 }

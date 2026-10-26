@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AgentRepository } from "../repositories/agent.repository.js";
-import { AgentType } from "../types/agent.types.js";
+import { AgentType, type ReadPersonneAgent } from "../types/agent.types.js";
 import type { AgentUseCaseTypes,FilterOptions} from "../types/use-case.agent.types.js";
 import { BackOfficeFrontOffice } from "../dtos/enum.js";
 import { StructureOrganisationnelleRepository } from "../../organizational_structure/repositories/structure-orga.repository.js";
@@ -54,6 +54,10 @@ export class ReadAgentUseCase {
   
   readAll(): Promise<AgentUseCaseTypes[]> {
     return this.fetch(() => this.agentRepository.findAllAgents());
+  }
+
+  readDeletionRequests(): Promise<ReadPersonneAgent[]> {
+    return this.agentRepository.findDeletionRequests();
   }
 
   filter(params: FilterOptions): Promise<AgentUseCaseTypes[]> {

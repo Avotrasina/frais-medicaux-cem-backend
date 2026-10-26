@@ -12,6 +12,7 @@ import type {
   UpdateDirection,
 } from "../types/direction.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
+import { SuppresionStatut } from "../../../generated/prisma/enums.js";
 
 type DirectionWithServices = Prisma.DirectionGetPayload<{
   include: { services: true };
@@ -66,6 +67,19 @@ export class DirectionRepository {
     tx?: DbClient,
   ): Promise<ReadDirectionWithServices[]> {
     const directions = await this.client(tx).direction.findMany({
+      include: { services: { orderBy: { nom: "asc" } } },
+      orderBy: { nom: "asc" },
+    });
+    return directions.map((direction) =>
+      this.toReadDirectionWithServices(direction),
+    );
+  }
+
+  async findDeletionRequestsWithServices(
+    tx?: DbClient,
+  ): Promise<ReadDirectionWithServices[]> {
+    const directions = await this.client(tx).direction.findMany({
+      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
       include: { services: { orderBy: { nom: "asc" } } },
       orderBy: { nom: "asc" },
     });

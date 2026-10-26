@@ -12,6 +12,10 @@ export class ReadAgentCategoryUseCase {
     return this.agentCategoryRepository.findAll();
   }
 
+  async findDeletionRequests(): Promise<ReadAgentCategory[]> {
+    return this.agentCategoryRepository.findDeletionRequests();
+  }
+
   async findByID(id: number): Promise<ReadAgentCategory> {
     return this.agentCategoryRepository.findByID(id);
   }

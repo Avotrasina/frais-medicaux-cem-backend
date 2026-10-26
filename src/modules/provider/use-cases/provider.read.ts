@@ -15,6 +15,10 @@ export class ReadProviderUseCase {
     return this.providerRepository.findAll();
   }
 
+  async readDeletionRequests(): Promise<ReadProvider[]> {
+    return this.providerRepository.findDeletionRequests();
+  }
+
   async filter(filter: FilterProvider): Promise<ReadProvider[]> {
     return this.providerRepository.findByFilter(filter);
   }

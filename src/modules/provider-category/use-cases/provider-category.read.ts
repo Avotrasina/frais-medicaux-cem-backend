@@ -12,6 +12,10 @@ export class ReadProviderCategoryUseCase {
     return this.providerCategoryRepository.findAll();
   }
 
+  async readDeletionRequests(): Promise<ReadProviderCategory[]> {
+    return this.providerCategoryRepository.findDeletionRequests();
+  }
+
   async readById(id: number): Promise<ReadProviderCategory> {
     return this.providerCategoryRepository.readbyID(id);
   }

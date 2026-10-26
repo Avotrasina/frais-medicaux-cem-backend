@@ -9,4 +9,8 @@ export class ReadAllDirectionsUseCase {
   async execute(): Promise<ReadDirectionWithServices[]> {
     return this.directionRepository.findAllWithServices();
   }
+
+  async readDeletionRequests(): Promise<ReadDirectionWithServices[]> {
+    return this.directionRepository.findDeletionRequestsWithServices();
+  }
 }

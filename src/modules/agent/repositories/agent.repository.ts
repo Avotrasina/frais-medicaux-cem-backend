@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
 import type {
   Personne,
   Agent,
   Prisma,
-} from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
+} from '../../../generated/prisma/client.js';
+import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import {
   AgentType,
   StatutPEC,
@@ -13,10 +13,17 @@ import {
   type ReadAgent,
   type ReadPersonneAgent,
   type UpdatePartialAgent,
-} from "../types/agent.types.js";
-import { type ReadPersonne, Sexe } from "../../personne/personne.types.js";
-import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
-import { omitNullish } from "../../../common/utils/omit-nullish.js";
+} from '../types/agent.types.js';
+import { type ReadPersonne, Sexe } from '../../personne/personne.types.js';
+import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
+import { omitNullish } from '../../../common/utils/omit-nullish.js';
+import { executeSoftDeletion } from '../../../infrastructure/prisma/soft-deletion.repository.js';
+import type {
+  DeletionAction,
+  DeletionNode,
+} from '../../../common/types/soft-deletion.types.js';
+import type { AgentDeletionData } from '../types/agent-deletion.types.js';
+import { SuppresionStatut } from '../../../generated/prisma/enums.js';
 
 type AgentWithPersonne = Prisma.AgentGetPayload<{
   include: { personne: true };
@@ -24,7 +31,7 @@ type AgentWithPersonne = Prisma.AgentGetPayload<{
 
 @Injectable()
 @HandlePrismaErrors({
-  exclude: ["toReadAgent", "toReadPersonne", "toReadPersonneAgent"],
+  exclude: ['toReadAgent', 'toReadPersonne', 'toReadPersonneAgent'],
 })
 export class AgentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -68,11 +75,10 @@ export class AgentRepository {
     const agents = await this.client(tx).agent.findMany({
       where,
       include: { personne: true },
-      orderBy: [{ personne: { nom: "asc" } }, { personne: { prenom: "asc" } }],
+      orderBy: [{ personne: { nom: 'asc' } }, { personne: { prenom: 'asc' } }],
     });
     return agents.map((a) => this.toReadPersonneAgent(a));
   }
-
 
   async findAll(tx?: DbClient): Promise<ReadAgent[]> {
     const agents = await this.client(tx).agent.findMany();
@@ -94,7 +100,7 @@ export class AgentRepository {
     if (!value) return [];
 
     return this.findManyWithPersonne(
-      { personne: { nom: { contains: value, mode: "insensitive" } } },
+      { personne: { nom: { contains: value, mode: 'insensitive' } } },
       tx,
     );
   }
@@ -107,7 +113,7 @@ export class AgentRepository {
     if (!value) return [];
 
     return this.findManyWithPersonne(
-      { personne: { prenom: { contains: value, mode: "insensitive" } } },
+      { personne: { prenom: { contains: value, mode: 'insensitive' } } },
       tx,
     );
   }
@@ -123,33 +129,119 @@ export class AgentRepository {
     return this.toReadPersonneAgent(agent);
   }
 
-  async findByMatricule(
-    matricule: number,
-    tx?: DbClient,
-  ): Promise<ReadAgent> {
+  async findByMatricule(matricule: number, tx?: DbClient): Promise<ReadAgent> {
     const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { matricule },
     });
-    return this.toReadAgent(agent)
+    return this.toReadAgent(agent);
   }
 
   async findByMatriculeWithPersonne(
     matricule: number,
     tx?: DbClient,
-  ):Promise<ReadPersonneAgent>{
+  ): Promise<ReadPersonneAgent> {
     const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { matricule },
-      include:{personne:true}
+      include: { personne: true },
     });
-    return this.toReadPersonneAgent(agent)
+    return this.toReadPersonneAgent(agent);
+  }
+
+  async applyDeletionTree(
+    matricule: number,
+    action: DeletionAction,
+    tx?: DbClient,
+  ): Promise<string[]> {
+    const client = this.client(tx) as any;
+    const agent = (await client.agent.findFirstOrThrow({
+      where: { matricule },
+      select: {
+        id: true,
+        matricule: true,
+        carteProfessionnellePath: true,
+        personne: {
+          select: {
+            id: true,
+            beneficiaire: {
+              select: { id: true, attestations: { select: { id: true } } },
+            },
+          },
+        },
+        familleAgent: {
+          select: {
+            id: true,
+            carteSocialePath: true,
+            conjoint: { select: { id: true } },
+            enfant: { select: { id: true } },
+            personne: {
+              select: {
+                id: true,
+                beneficiaire: {
+                  select: { id: true, attestations: { select: { id: true } } },
+                },
+              },
+            },
+          },
+        },
+      },
+    })) as AgentDeletionData;
+
+    await executeSoftDeletion(client, this.deletionNodes(agent), action);
+    return [
+      agent.carteProfessionnellePath,
+      ...agent.familleAgent.map(({ carteSocialePath }) => carteSocialePath),
+    ];
+  }
+
+  private deletionNodes(agent: AgentDeletionData): DeletionNode[] {
+    const nodes: DeletionNode[] = [
+      { model: 'agent', where: { matricule: agent.matricule } },
+      ...this.personDeletionNodes(agent.personne),
+    ];
+    for (const family of agent.familleAgent) {
+      nodes.push({ model: 'familleAgent', where: { id: family.id } });
+      if (family.conjoint)
+        nodes.push({ model: 'conjoint', where: { id: family.conjoint.id } });
+      if (family.enfant)
+        nodes.push({ model: 'enfant', where: { id: family.enfant.id } });
+      nodes.push(...this.personDeletionNodes(family.personne));
+    }
+    return nodes;
+  }
+
+  private personDeletionNodes(
+    person: AgentDeletionData['personne'],
+  ): DeletionNode[] {
+    const nodes: DeletionNode[] = [
+      { model: 'personne', where: { id: person.id } },
+    ];
+    if (!person.beneficiaire) return nodes;
+    nodes.push({
+      model: 'beneficiaire',
+      where: { id: person.beneficiaire.id },
+    });
+    nodes.push(
+      ...person.beneficiaire.attestations.map(({ id }) => ({
+        model: 'attestation',
+        where: { id },
+      })),
+    );
+    return nodes;
   }
 
   async findAllAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
     return this.findManyWithPersonne({}, tx);
   }
 
+  async findDeletionRequests(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne(
+      { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      tx,
+    );
+  }
+
   async findAllRetiredAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
-    return this.findManyWithPersonne({ agentType: "AGENT_RETRAITE" }, tx);
+    return this.findManyWithPersonne({ agentType: 'AGENT_RETRAITE' }, tx);
   }
 
   async findAgentsWithPrsonneByCodeAgence(
@@ -168,7 +260,7 @@ export class AgentRepository {
       {
         structureID: directionID,
         structureOrganisationnelle: {
-          is: { structureOrganisationnelleType: "DIRECTION" },
+          is: { structureOrganisationnelleType: 'DIRECTION' },
         },
         ...(serviceID != null && { serviceID }),
       },
@@ -176,17 +268,14 @@ export class AgentRepository {
     );
   }
 
-  async findAgentCard(agentMatricule: number,tx?:DbClient):Promise<string>{
-    const agent  = await this.client(tx).agent.findFirstOrThrow(
-      {
-        where:{
-          matricule:agentMatricule
-        }
-      }
-    )
+  async findAgentCard(agentMatricule: number, tx?: DbClient): Promise<string> {
+    const agent = await this.client(tx).agent.findFirstOrThrow({
+      where: {
+        matricule: agentMatricule,
+      },
+    });
     return agent.carteProfessionnellePath;
   }
-
 
   async create(agent: CreateAgent, tx?: DbClient): Promise<ReadAgent> {
     const created = await this.client(tx).agent.create({ data: agent });
@@ -198,7 +287,7 @@ export class AgentRepository {
     agent: UpdatePartialAgent,
     tx?: DbClient,
   ): Promise<ReadAgent> {
-    const structureID =agent.structureID;
+    const structureID = agent.structureID;
 
     const data = omitNullish({
       observationMatricule: agent.observationMatricule,

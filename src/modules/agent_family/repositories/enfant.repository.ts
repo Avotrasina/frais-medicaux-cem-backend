@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
+import { Sexe } from "../../personne/personne.types.js";
 import type {
   CreatedEnfantWithAgentFamilyAttribute,
   ReadEnfant,
@@ -8,6 +9,7 @@ import type {
   EnfantWithAgentFamilyPersonne
 } from "../types/enfant.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
+import { SuppresionStatut } from "../../../generated/prisma/enums.js";
 
 @Injectable()
 @HandlePrismaErrors()
@@ -22,11 +24,24 @@ export class EnfantRepository {
     const { familleAgent } = enfant;
     const { personne } = familleAgent;
     return {
-      ...personne,
+      id: enfant.id,
+      nom: personne.nom,
+      prenom: personne.prenom,
+      dateNaissance: personne.dateNaissance,
+      sexe: Sexe[personne.sexe],
       numEnfant: enfant.numEnfant,
       agentMatricule: familleAgent.agentMatricule,
       carteSocialePath: familleAgent.carteSocialePath,
     };
+  }
+
+  async findDeletionRequests(tx?: DbClient): Promise<ReadEnfant[]> {
+    const enfants = await this.client(tx).enfant.findMany({
+      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      include: { familleAgent: { include: { personne: true } } },
+      orderBy: { numEnfant: "asc" },
+    });
+    return enfants.map((enfant) => this.toReadEnfant(enfant));
   }
 
   async create(

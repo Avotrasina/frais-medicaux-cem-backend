@@ -10,6 +10,10 @@ export class ReadLieuUseCase {
     return this.lieuRepository.findAll();
   }
 
+  async readDeletionRequests(): Promise<ReadLieu[]> {
+    return this.lieuRepository.findDeletionRequests();
+  }
+
   async readById(id: number): Promise<ReadLieu> {
     return this.lieuRepository.findByID(id);
   }

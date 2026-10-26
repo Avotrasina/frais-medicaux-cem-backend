@@ -8,6 +8,7 @@ import type {
   UpdateAgence,
 } from "../types/agence.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
+import { SuppresionStatut } from "../../../generated/prisma/enums.js";
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ["toReadAgence"] })
@@ -27,6 +28,14 @@ export class AgenceRepository {
 
   async findAll(tx?: DbClient): Promise<ReadAgence[]> {
     const agences = await this.client(tx).agence.findMany();
+    return agences.map((agence) => this.toReadAgence(agence));
+  }
+
+  async findDeletionRequests(tx?: DbClient): Promise<ReadAgence[]> {
+    const agences = await this.client(tx).agence.findMany({
+      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      orderBy: { nomAgence: "asc" },
+    });
     return agences.map((agence) => this.toReadAgence(agence));
   }
 

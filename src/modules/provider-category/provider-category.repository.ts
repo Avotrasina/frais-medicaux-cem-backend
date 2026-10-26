@@ -8,6 +8,7 @@ import type {
   UpdatePartialProviderCategory,
 } from "./types/provider-category.types.js";
 import { HandlePrismaErrors } from "../../common/decorators/handle-prisma-errors.decorator.js";
+import { SuppresionStatut } from "../../generated/prisma/enums.js";
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ["toReadProviderCategory"] })
@@ -29,6 +30,14 @@ export class ProviderCategoryRepository {
       orderBy: { nom: "asc" },
     });
     return categories.map((c) => this.toReadProviderCategory(c));
+  }
+
+  async findDeletionRequests(tx?: DbClient): Promise<ReadProviderCategory[]> {
+    const categories = await this.client(tx).categoriePrestataire.findMany({
+      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      orderBy: { nom: "asc" },
+    });
+    return categories.map((category) => this.toReadProviderCategory(category));
   }
 
   async readbyID(id: number, tx?: DbClient): Promise<ReadProviderCategory> {

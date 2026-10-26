@@ -11,6 +11,7 @@ import {
 } from "./types/provider.types.js";
 import { HandlePrismaErrors } from "../../common/decorators/handle-prisma-errors.decorator.js";
 import { omitNullish } from "../../common/utils/omit-nullish.js";
+import { SuppresionStatut } from "../../generated/prisma/enums.js";
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ["toReadProvider"] })
@@ -42,6 +43,14 @@ export class ProviderRepository {
       orderBy: { nom: "asc" },
     });
     return providers.map((p) => this.toReadProvider(p));
+  }
+
+  async findDeletionRequests(tx?: DbClient): Promise<ReadProvider[]> {
+    const providers = await this.client(tx).prestataire.findMany({
+      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      orderBy: { nom: "asc" },
+    });
+    return providers.map((provider) => this.toReadProvider(provider));
   }
 
   async findByFilter(

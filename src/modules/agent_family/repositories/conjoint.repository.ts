@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
 import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
+import { Sexe } from "../../personne/personne.types.js";
 import type {
   CreatedConjointWithAgentFamily,
   ReadConjoint,
@@ -8,6 +9,7 @@ import type {
   CreateConjointRecord
 } from "../types/conjoint.types.js";
 import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
+import { SuppresionStatut } from "../../../generated/prisma/enums.js";
 
 @Injectable()
 @HandlePrismaErrors()
@@ -24,11 +26,24 @@ export class ConjointRepository {
     const { familleAgent } = conjoint;
     const { personne } = familleAgent;
     return {
-      ...personne,
+      id: conjoint.id,
+      nom: personne.nom,
+      prenom: personne.prenom,
+      dateNaissance: personne.dateNaissance,
+      sexe: Sexe[personne.sexe],
       numConjoint: conjoint.numConjoint,
       agentMatricule: familleAgent.agentMatricule,
       carteSocialePath: familleAgent.carteSocialePath,
     };
+  }
+
+  async findDeletionRequests(tx?: DbClient): Promise<ReadConjoint[]> {
+    const conjoints = await this.client(tx).conjoint.findMany({
+      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      include: { familleAgent: { include: { personne: true } } },
+      orderBy: { numConjoint: "asc" },
+    });
+    return conjoints.map((conjoint) => this.toReadConjoint(conjoint));
   }
 
   async create(
