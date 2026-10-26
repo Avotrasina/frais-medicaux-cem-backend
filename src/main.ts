@@ -11,17 +11,15 @@ async function bootstrap() {
     new SoftDeleteExceptionFilter(),
     new ApplicationExceptionFilter(),
   );
-   app.useGlobalPipes(
-     new ValidationPipe({
-       transform: true,
-       whitelist: true,
-     }),
-   );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Frais médicaux CEM API')
-    .setDescription(
-      'Documentation de l’API de gestion des frais médicaux du CEM.',
-    )
+    .setTitle('CEM Medical Expenses API')
+    .setDescription('API documentation for CEM medical expense management.')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);

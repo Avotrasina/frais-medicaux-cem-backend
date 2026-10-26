@@ -15,9 +15,9 @@ import { UpdateLieuUseCase } from './use-cases/location.update.js';
 import { ReadLieuUseCase } from './use-cases/location.read.js';
 import { CreateLieuDto, UpdateLieuDto } from './dtos/location.dto.js';
 import type { ReadLieu } from './types/location.types.js';
-import { ProviderTreeDeletionUseCase } from '../provider/provider-tree.delete.js';
+import { ProviderTreeDeletionUseCase } from '../provider/use-cases/provider-tree.delete.js';
 
-@Controller('lieux')
+@Controller('locations')
 export class LieuController {
   constructor(
     private readonly saveLieuUseCase: SaveLieuUseCase,
@@ -32,13 +32,13 @@ export class LieuController {
     await this.deletionUseCase.request('lieu', id);
   }
 
-  @Post(':id/deletion/validate')
+  @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.validate('lieu', id);
   }
 
-  @Post(':id/deletion/reject')
+  @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.reject('lieu', id);
@@ -51,12 +51,12 @@ export class LieuController {
 
   @Get()
   async findAll(): Promise<ReadLieu[]> {
-    return this.readLieuUseCase.readAll();
+    return this.readLieuUseCase.findAll();
   }
 
-  @Get('deletion/requests')
+  @Get('deletion-requests')
   async findDeletionRequests(): Promise<ReadLieu[]> {
-    return this.readLieuUseCase.readDeletionRequests();
+    return this.readLieuUseCase.findDeletionRequests();
   }
 
   @Patch(':id')

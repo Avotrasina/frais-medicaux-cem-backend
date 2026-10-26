@@ -5,10 +5,10 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-} from "class-validator";
-import { Type } from "class-transformer";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { ProviderStatus } from "../types/provider.types.js";
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ProviderStatus } from '../types/provider.types.js';
 
 export class CreateProviderDto {
   @ApiProperty()
@@ -35,12 +35,12 @@ export class CreateProviderDto {
   @IsNotEmpty()
   stat!: string;
 
-  @ApiProperty({ type: String, format: "date", example: "2026-01-01" })
+  @ApiProperty({ type: String, format: 'date', example: '2026-01-01' })
   @Type(() => Date)
   @IsDate()
   dateDebutConvention!: Date;
 
-  @ApiProperty({ type: String, format: "date", example: "2026-12-31" })
+  @ApiProperty({ type: String, format: 'date', example: '2026-12-31' })
   @Type(() => Date)
   @IsDate()
   dateFinConvention!: Date;
@@ -91,13 +91,13 @@ export class UpdateProviderDto {
   @IsNotEmpty()
   stat?: string;
 
-  @ApiPropertyOptional({ type: String, format: "date" })
+  @ApiPropertyOptional({ type: String, format: 'date' })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
   dateDebutConvention?: Date;
 
-  @ApiPropertyOptional({ type: String, format: "date" })
+  @ApiPropertyOptional({ type: String, format: 'date' })
   @IsOptional()
   @Type(() => Date)
   @IsDate()

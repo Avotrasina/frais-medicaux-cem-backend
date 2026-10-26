@@ -1,14 +1,14 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-import { Prisma, type PrismaClient } from "../../../generated/prisma/client.js";
-import { SuppresionStatut } from "../../../generated/prisma/enums.js";
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { Prisma, type PrismaClient } from '../../../generated/prisma/client.js';
+import { SuppresionStatut } from '../../../generated/prisma/enums.js';
 import {
   DeletionNotPendingError,
   DeletionValidationRequiredError,
   EntityDeletedError,
   HardDeleteForbiddenError,
-} from "../../../common/errors/soft-delete.errors.js";
+} from '../../../common/errors/soft-delete.errors.js';
 
-export type SoftDeleteOperation = "find" | "create" | "update" | "delete";
+export type SoftDeleteOperation = 'find' | 'create' | 'update' | 'delete';
 
 export interface SoftDeleteConfig {
   operations: readonly SoftDeleteOperation[];
@@ -18,7 +18,7 @@ export interface SoftDeleteConfig {
 export const deletionValidationContext = new AsyncLocalStorage<boolean>();
 const internalQueryContext = new AsyncLocalStorage<boolean>();
 
-const SOFT_DELETE_FIELD = "suppressionStatut";
+const SOFT_DELETE_FIELD = 'suppressionStatut';
 
 const modelsWithSoftDelete = Object.values(Prisma.ModelName).filter((name) => {
   const fields = (Prisma as any)[`${name}ScalarFieldEnum`];
@@ -26,47 +26,62 @@ const modelsWithSoftDelete = Object.values(Prisma.ModelName).filter((name) => {
 });
 
 const OPERATION_GROUP: Record<string, SoftDeleteOperation> = {
-  findUnique: "find",
-  findUniqueOrThrow: "find",
-  findFirst: "find",
-  findFirstOrThrow: "find",
-  findMany: "find",
-  count: "find",
-  aggregate: "find",
-  groupBy: "find",
-  create: "create",
-  createMany: "create",
-  createManyAndReturn: "create",
-  update: "update",
-  updateMany: "update",
-  updateManyAndReturn: "update",
-  upsert: "update",
+  findUnique: 'find',
+  findUniqueOrThrow: 'find',
+  findFirst: 'find',
+  findFirstOrThrow: 'find',
+  findMany: 'find',
+  count: 'find',
+  aggregate: 'find',
+  groupBy: 'find',
+  create: 'create',
+  createMany: 'create',
+  createManyAndReturn: 'create',
+  update: 'update',
+  updateMany: 'update',
+  updateManyAndReturn: 'update',
+  upsert: 'update',
 };
 
-const LIST_READS = new Set(["findMany", "count", "aggregate", "groupBy"]);
-const BULK_WRITES = new Set(["updateMany", "updateManyAndReturn"]);
+const LIST_READS = new Set(['findMany', 'count', 'aggregate', 'groupBy']);
+const BULK_WRITES = new Set(['updateMany', 'updateManyAndReturn']);
 
 const NOT_REJECTED = {
-  OR: [{ suppressionStatut: null }, { suppressionStatut: SuppresionStatut.EN_ATTENTE }],
+  OR: [
+    { suppressionStatut: null },
+    { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+  ],
 };
 
-const asArray = (v: unknown): unknown[] => (v == null ? [] : Array.isArray(v) ? v : [v]);
+/** Normalizes optional Prisma conditions before composing an AND expression. */
+const asArray = (v: unknown): unknown[] =>
+  v == null ? [] : Array.isArray(v) ? v : [v];
 
+/** Adds the active/pending soft-delete predicate without replacing caller filters. */
 const withActive = (where?: Record<string, any>) => ({
   ...where,
   AND: [...asArray(where?.AND), NOT_REJECTED],
 });
 
-const delegateName = (model: string) => model.charAt(0).toLowerCase() + model.slice(1);
+const delegateName = (model: string) =>
+  model.charAt(0).toLowerCase() + model.slice(1);
 
 const isNotFound = (e: unknown): boolean =>
-  e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2025";
+  e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025';
 
+/** Centralizes the hard-delete prohibition for models managed by this extension. */
 function throwHardDeleteForbidden(model: string): never {
   throw new HardDeleteForbiddenError(model);
 }
 
-export function createSoftDeleteExtension(base: PrismaClient, config: SoftDeleteConfig) {
+/**
+ * Installs model actions and query filters that treat pending/rejected records
+ * consistently while preventing hard deletes and unauthorized validation.
+ */
+export function createSoftDeleteExtension(
+  base: PrismaClient,
+  config: SoftDeleteConfig,
+) {
   const models = new Set<string>(
     config.models
       ? modelsWithSoftDelete.filter((m) => config.models!.includes(m))
@@ -77,12 +92,12 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
   const raw = (model: string): any => (base as any)[delegateName(model)];
 
   /**
-   * Vérifie que l'entité n'est pas au statut REJETE.
+   * Checks that the entity is not in the REJETE status.
    *
-   * IMPORTANT : les promesses Prisma sont "lazy" (la requête ne part qu'au
-   * `.then()`). Le `await` doit donc se faire À L'INTÉRIEUR de `run()`,
-   * sinon la requête s'exécute hors du contexte AsyncLocalStorage et le hook
-   * `$allOperations` ne reconnaît pas l'appel comme interne -> récursion infinie.
+   * IMPORTANT: Prisma promises are lazy (the query starts only when `.then()` is
+   * called). The `await` must therefore happen INSIDE `run()`, otherwise the
+   * query runs outside the AsyncLocalStorage context and `$allOperations` does
+   * not recognize it as an internal call, causing infinite recursion.
    */
   async function assertNotRejected(
     model: string,
@@ -102,17 +117,21 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
   function guardStatus(model: string, data: any) {
     if (!data) return;
     const value = data.suppressionStatut;
-    const next = value && typeof value === "object" ? value.set : value;
-    if (next === SuppresionStatut.REJETE && !deletionValidationContext.getStore()) {
+    const next = value && typeof value === 'object' ? value.set : value;
+    if (
+      next === SuppresionStatut.REJETE &&
+      !deletionValidationContext.getStore()
+    ) {
       throw new DeletionValidationRequiredError(model);
     }
   }
 
   return base.$extends({
-    name: "soft-delete",
+    name: 'soft-delete',
 
     model: {
       $allModels: {
+        /** Routes un-managed models to Prisma's parent and blocks managed hard deletes. */
         async delete(this: any, args: any) {
           const ctx = Prisma.getExtensionContext(this) as any;
           const model: string = ctx.$name;
@@ -124,6 +143,7 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
           return throwHardDeleteForbidden(model);
         },
 
+        /** Applies the same hard-delete rule to bulk deletion. */
         async deleteMany(this: any, args?: any) {
           const ctx = Prisma.getExtensionContext(this) as any;
           const model: string = ctx.$name;
@@ -135,15 +155,18 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
           return throwHardDeleteForbidden(model);
         },
 
+        /** Marks only currently active records as pending deletion. */
         async requestDeletion(this: any, where: Record<string, any>) {
           const ctx = Prisma.getExtensionContext(this) as any;
           const model: string = ctx.$name;
 
           if (!models.has(model)) {
-            throw new Error(`requestDeletion indisponible : ${model} n'a pas de champ ${SOFT_DELETE_FIELD}`);
+            throw new Error(
+              `requestDeletion is unavailable: ${model} has no ${SOFT_DELETE_FIELD} field`,
+            );
           }
           if (!where || Object.keys(where).length === 0) {
-            throw new Error("requestDeletion exige un where");
+            throw new Error('requestDeletion requires a where condition');
           }
 
           return ctx.updateMany({
@@ -154,15 +177,18 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
           });
         },
 
+        /** Confirms a pending request and marks it rejected inside a validation context. */
         async validateDeletion(this: any, where: Record<string, any>) {
           const ctx = Prisma.getExtensionContext(this) as any;
           const model: string = ctx.$name;
 
           if (!models.has(model)) {
-            throw new Error(`validateDeletion indisponible : ${model} n'a pas de champ ${SOFT_DELETE_FIELD}`);
+            throw new Error(
+              `validateDeletion is unavailable: ${model} has no ${SOFT_DELETE_FIELD} field`,
+            );
           }
           if (!where || Object.keys(where).length === 0) {
-            throw new Error("validateDeletion exige un where");
+            throw new Error('validateDeletion requires a where condition');
           }
 
           const pending = await ctx.findFirst({
@@ -179,22 +205,28 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
           return deletionValidationContext.run(true, async () => {
             return await ctx.updateMany({
               where: {
-                AND: [where, { suppressionStatut: SuppresionStatut.EN_ATTENTE }],
+                AND: [
+                  where,
+                  { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+                ],
               },
               data: { suppressionStatut: SuppresionStatut.REJETE },
             });
           });
         },
 
+        /** Clears a pending or rejected request without deleting the record. */
         async rejectDeletion(this: any, where: Record<string, any>) {
           const ctx = Prisma.getExtensionContext(this) as any;
           const model: string = ctx.$name;
 
           if (!models.has(model)) {
-            throw new Error(`rejectDeletion indisponible : ${model} n'a pas de champ ${SOFT_DELETE_FIELD}`);
+            throw new Error(
+              `rejectDeletion is unavailable: ${model} has no ${SOFT_DELETE_FIELD} field`,
+            );
           }
           if (!where || Object.keys(where).length === 0) {
-            throw new Error("rejectDeletion exige un where");
+            throw new Error('rejectDeletion requires a where condition');
           }
 
           return ctx.updateMany({
@@ -207,11 +239,15 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
       },
     },
 
-    // ---------- filtres et gardes sur les autres opérations ----------
+    // ---------- filters and guards for other operations ----------
     query: {
       $allModels: {
+        /**
+         * Adds active-record filters and status guards, then distinguishes a
+         * rejected record from a genuinely missing one for singular reads/writes.
+         */
         async $allOperations({ model, operation, args, query }: any) {
-          // Requête interne (assertNotRejected) : on ne filtre pas, on exécute tel quel
+          // Internal query (assertNotRejected): skip filters and run it as-is.
           if (internalQueryContext.getStore()) return query(args);
           if (!models.has(model)) return query(args);
           const a = args as Record<string, any>;
@@ -220,7 +256,7 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
           if (!group || !blocked.has(group)) return query(args);
 
           // --- find ---
-          if (group === "find") {
+          if (group === 'find') {
             if (LIST_READS.has(operation)) {
               return query({ ...a, where: withActive(a.where) });
             }
@@ -238,13 +274,15 @@ export function createSoftDeleteExtension(base: PrismaClient, config: SoftDelete
           }
 
           // --- create ---
-          if (group === "create") {
+          if (group === 'create') {
             asArray(a.data).forEach((r) => guardStatus(model, r));
             return query(args);
           }
 
           // --- update ---
-          [a.data, a.create, a.update].filter(Boolean).forEach((r) => guardStatus(model, r));
+          [a.data, a.create, a.update]
+            .filter(Boolean)
+            .forEach((r) => guardStatus(model, r));
 
           if (BULK_WRITES.has(operation)) {
             return query({ ...a, where: withActive(a.where) });

@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { AgentCategoryRepository } from "../agent-category.repository.js";
+import { Injectable } from '@nestjs/common';
+import { AgentCategoryRepository } from '../repositories/agent-category.repository.js';
 import type {
   CreateAgentCategory,
   ReadAgentCategory,
-} from "../types/agent-category.types.js";
+} from '../types/agent-category.types.js';
 
 @Injectable()
 export class SaveAgentCategoryUseCase {

@@ -1,7 +1,10 @@
 import { resolve } from 'node:path';
 import { env } from './env.validator.js';
 
-export const IMAGE_CATEGORIES = ['carteProfessionnelle', 'carteSociale'] as const;
+export const IMAGE_CATEGORIES = [
+  'carteProfessionnelle',
+  'carteSociale',
+] as const;
 export type ImageCategory = (typeof IMAGE_CATEGORIES)[number];
 
 export const PDF_CATEGORIES = ['attestation', 'convention'] as const;

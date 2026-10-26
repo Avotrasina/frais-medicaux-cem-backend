@@ -6,10 +6,13 @@ import type {
   DeletionAction,
   DeletionNode,
 } from '../../../common/types/soft-deletion.types.js';
-import type {
-  ProviderDeletionData,
-  ProviderDeletionRoot,
-} from '../types/provider-tree-deletion.types.js';
+import type { ProviderDeletionRoot } from '../types/provider-tree-deletion.types.js';
+
+type ProviderDeletionData = {
+  id: number;
+  conventionPath: string;
+  attestations: { id: number }[];
+};
 
 @Injectable()
 export class ProviderDeletionRepository {
@@ -19,6 +22,10 @@ export class ProviderDeletionRepository {
     return tx ?? this.prisma;
   }
 
+  /**
+   * Applies the action to the root (provider, location, or category), its
+   * providers, and their attestations, then returns the affected files.
+   */
   async applyTreeDeletion(
     rootModel: ProviderDeletionRoot,
     id: number,
@@ -35,6 +42,7 @@ export class ProviderDeletionRepository {
     return providers.map(({ conventionPath }) => conventionPath);
   }
 
+  /** Loads providers directly or through the root entity relation. */
   private async findProviders(
     rootModel: ProviderDeletionRoot,
     id: number,
@@ -60,6 +68,7 @@ export class ProviderDeletionRepository {
     return root.prestataires as ProviderDeletionData[];
   }
 
+  /** Enumerates the root, child providers, and their attestations. */
   private deletionNodes(
     rootModel: ProviderDeletionRoot,
     id: number,

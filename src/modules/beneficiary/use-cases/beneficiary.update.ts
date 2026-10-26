@@ -1,6 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { BeneficiaryRepository } from "../beneficiary.repository.js";
-import type { UpdateObservationBenefficiaryUseCaseTYpe,ReadBeneficiaryUseCaseType } from "../types/beneficiary.use-case.types.js";
+import { Injectable } from '@nestjs/common';
+import { BeneficiaryRepository } from '../repositories/beneficiary.repository.js';
+import type {
+  ReadBeneficiary,
+  UpdateObservationBeneficiary,
+} from '../types/beneficiary.types.js';
 
 @Injectable()
 export class UpdateBeneficiaryUseCase {
@@ -8,8 +11,8 @@ export class UpdateBeneficiaryUseCase {
 
   async updateObservation(
     idp: string,
-    input: UpdateObservationBenefficiaryUseCaseTYpe,
-  ): Promise<ReadBeneficiaryUseCaseType> {
+    input: UpdateObservationBeneficiary,
+  ): Promise<ReadBeneficiary> {
     return await this.beneficiaryRepository.updateObservation(idp, {
       observationIDP: input.observationIDP ?? null,
     });

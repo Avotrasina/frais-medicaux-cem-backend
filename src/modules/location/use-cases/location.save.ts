@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { LocationRepository } from "../location.repository.js";
-import type { CreateLieu, ReadLieu } from "../types/location.types.js";
+import { Injectable } from '@nestjs/common';
+import { LocationRepository } from '../repositories/location.repository.js';
+import type { CreateLieu, ReadLieu } from '../types/location.types.js';
 
 @Injectable()
 export class SaveLieuUseCase {

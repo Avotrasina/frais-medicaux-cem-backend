@@ -1,132 +1,187 @@
-import { Injectable } from "@nestjs/common";
-import {env} from "../../../common/settings/env.validator.js"
-import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
-import {BeneficiaryRepository} from "../../beneficiary/beneficiary.repository.js"
-import {ProviderRepository} from "../../provider/provider.repository.js"
-import {StructureOrganisationnelleRepository} from '../../organizational_structure/repositories/structure-orga.repository.js'
-import {AgentRepository} from "../../agent/repositories/agent.repository.js"
-import {LocationRepository} from "../../location/location.repository.js"
-import type{AttestationData,FamilleData,AgentData} from "../types/attestation.types.js"
-import {BackOfficeFrontOffice, type CreateAttestation} from "../types/attestation.types.js"
-import type {CreateAttestationUseCaseType} from "../types/attestation.use-case.types.js"
-import { AttestationPdfService } from "../services/attesatation-pdf.service.js";
-import { CodeFamille } from "../../beneficiary/types/idp.types.js";
-import { AttestationRepository } from "../repositories/attestation.repository.js";
+import { Injectable } from '@nestjs/common';
+import { env } from '../../../common/settings/env.validator.js';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import { BeneficiaryRepository } from '../../beneficiary/repositories/beneficiary.repository.js';
+import { ProviderRepository } from '../../provider/repositories/provider.repository.js';
+import { StructureOrganisationnelleRepository } from '../../organizational-structure/repositories/structure-orga.repository.js';
+import { AgentRepository } from '../../agent/repositories/agent.repository.js';
+import { LocationRepository } from '../../location/repositories/location.repository.js';
+import type {
+  AttestationData,
+  FamilleData,
+  AgentData,
+} from '../types/attestation.types.js';
+import {
+  BackOfficeFrontOffice,
+  type CreateAttestation,
+} from '../types/attestation.types.js';
+import type { CreateAttestationUseCaseType } from '../types/attestation.use-case.types.js';
+import { AttestationPdfService } from '../services/attesatation-pdf.service.js';
+import { CodeFamille } from '../../beneficiary/types/idp.types.js';
+import { AttestationRepository } from '../repositories/attestation.repository.js';
 
 @Injectable()
-export class SaveAttestation{
-    constructor(
-        private readonly prisma : PrismaService,
-        private readonly beneficiaryRepository: BeneficiaryRepository,
-        private readonly providerRepository: ProviderRepository,
-        private readonly agentRepository: AgentRepository,
-        private readonly structureRepository :  StructureOrganisationnelleRepository,
-        private readonly lieuRepository : LocationRepository,
-        private readonly attestationService : AttestationPdfService,
-        private readonly attestationRepository : AttestationRepository
-    ){}
+export class SaveAttestationUseCase {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly beneficiaryRepository: BeneficiaryRepository,
+    private readonly providerRepository: ProviderRepository,
+    private readonly agentRepository: AgentRepository,
+    private readonly structureRepository: StructureOrganisationnelleRepository,
+    private readonly lieuRepository: LocationRepository,
+    private readonly attestationService: AttestationPdfService,
+    private readonly attestationRepository: AttestationRepository,
+  ) {}
 
-    async execute(input:CreateAttestationUseCaseType):Promise<void>{
-        let attestationPath :string | null = null;
-        const actualYear = new Date().getFullYear();
+  async execute(input: CreateAttestationUseCaseType): Promise<void> {
+    let attestationPath: string | null = null;
+    const actualYear = new Date().getFullYear();
 
-        await this.prisma.$transaction(async(tx)=>{
-            const beneficiary = await this.beneficiaryRepository.findByIDP(input.idpBeneficiaire,tx)
-            const provider = await this.providerRepository.readbyID(input.providerID,tx)
-            const nomLocation = (await this.lieuRepository.findByID(provider.lieuID,tx)).nom
-            const agentObject = await this.agentRepository.findByMatriculeWithPersonne(beneficiary.matricule,tx)
-            const familleData : FamilleData | null = beneficiary.codeFamille == "AGENT" ? null : {
-                sexe : beneficiary.sexe,
-                nom : beneficiary.nom,
-                prenom : beneficiary.prenom,
-                dateNaissance : beneficiary.dateNaissance
-            }
-            if(agentObject.agent.agentType == "AGENT_ACTIF" && agentObject.agent.fonction && agentObject.agent.structureID){
-                const structureObject = await this.structureRepository.findByID(agentObject.agent.structureID,tx);
-                const nomAgence = structureObject.nomAgence;
-                const nomDirection = structureObject.nomDirection;
-                
-                const nomFonction = agentObject.agent.fonction;
-                const agentData : AgentData = {
-                    sexe: agentObject.sexe,
-                    nom:agentObject.nom,
-                    prenom:agentObject.prenom,
-                    matricule:agentObject.agent.matricule,
-                    statusPEC:agentObject.agent.statutPEC,
-                    backofficefrontoffice: nomDirection ? BackOfficeFrontOffice["DIRECTION"] : BackOfficeFrontOffice["AGENCE"],
-                    nomFonction,
-                    nomDirection,
-                    nomAgence,
-                    acte:input.naturePrestation,
-                    service_prestataire:input.servicePrestataire,
-                    nomEtablissement:provider.nom,
-                    localite: nomLocation,
-                }
-                const newAttestation = await this.attestationRepository.create({
-                    attestationPath:null,
-                    naturePrestation: input.naturePrestation,
-                    servicePrestataire:input.servicePrestataire,
-                    idpBeneficiaire:beneficiary.idp,
-                    providerID:provider.id,
-                    datePEC:new Date(input.datePEC)
-                },tx)
-                const attestatonRef = `${actualYear} - ${newAttestation.id}`
-                const attestionData : AttestationData = {
-                    reference:attestatonRef,
-                    image:beneficiary.carteProfessionnellePath ?? beneficiary.carteSocialePath,
-                    codeFamille : CodeFamille[beneficiary.codeFamille],
-                    famille:familleData ?? null,
-                    agent:agentData,
-                    idp:beneficiary.idp,
-                    datePEC:newAttestation.datePEC
-                    
-                }
-                attestationPath = await this.attestationService.generateAndSave(attestionData)
-                await this.attestationRepository.updateByID(newAttestation.id,{attestationPath},tx)
-            }
-            else if (agentObject.agent.agentType === "AGENT_RETRAITE") {
-                const agentData : AgentData = {
-                    sexe: agentObject.sexe,
-                    nom:agentObject.nom,
-                    prenom:agentObject.prenom,
-                    matricule:agentObject.agent.matricule,
-                    statusPEC:agentObject.agent.statutPEC,
-                    backofficefrontoffice: BackOfficeFrontOffice["RETRAITE"],
-                    nomFonction:null,
-                    nomDirection:null,
-                    nomAgence:null,
-                    acte:input.naturePrestation,
-                    service_prestataire:input.servicePrestataire,
-                    nomEtablissement:provider.nom,
-                    localite: nomLocation,
-                }
-                const newAttestation = await this.attestationRepository.create({
-                    attestationPath:null,
-                    naturePrestation: input.naturePrestation,
-                    servicePrestataire:input.servicePrestataire,
-                    idpBeneficiaire:beneficiary.idp,
-                    providerID:provider.id,
-                    datePEC : new Date(input.datePEC)
-                },tx)
-                const attestatonRef = `${actualYear} - ${newAttestation.id}`
-                const attestionData : AttestationData = {
-                    reference:attestatonRef,
-                    image:beneficiary.carteProfessionnellePath ?? beneficiary.carteSocialePath,
-                    codeFamille : CodeFamille[beneficiary.codeFamille],
-                    famille:familleData ?? null,
-                    agent:agentData,
-                    idp:beneficiary.idp,
-                    datePEC:newAttestation.datePEC,
-                }
-                attestationPath = await this.attestationService.generateAndSave(attestionData)
-                await this.attestationRepository.updateByID(newAttestation.id,{attestationPath},tx)
-            }
+    await this.prisma
+      .$transaction(
+        async (tx) => {
+          const beneficiary = await this.beneficiaryRepository.findByIdp(
+            input.idpBeneficiaire,
+            tx,
+          );
+          const provider = await this.providerRepository.findById(
+            input.providerID,
+            tx,
+          );
+          const nomLocation = (
+            await this.lieuRepository.findById(provider.lieuID, tx)
+          ).nom;
+          const agentObject =
+            await this.agentRepository.findByMatriculeWithPersonne(
+              beneficiary.matricule,
+              tx,
+            );
+          const familleData: FamilleData | null =
+            beneficiary.codeFamille == 'AGENT'
+              ? null
+              : {
+                  sexe: beneficiary.sexe,
+                  nom: beneficiary.nom,
+                  prenom: beneficiary.prenom,
+                  dateNaissance: beneficiary.dateNaissance,
+                };
+          if (
+            agentObject.agent.agentType == 'AGENT_ACTIF' &&
+            agentObject.agent.fonction &&
+            agentObject.agent.structureID
+          ) {
+            const structureObject = await this.structureRepository.findById(
+              agentObject.agent.structureID,
+              tx,
+            );
+            const nomAgence = structureObject.nomAgence;
+            const nomDirection = structureObject.nomDirection;
 
-        },{timeout:env.TRANSACTION_TIMEOUT,maxWait:env.TRANSACTION_MAX_WAIT }).catch(async (error: unknown) => {
-            if (attestationPath != null) {
-                await this.attestationService.delete(attestationPath).catch(() => undefined)
-            }
-            throw error
-        })
-    }
+            const nomFonction = agentObject.agent.fonction;
+            const agentData: AgentData = {
+              sexe: agentObject.sexe,
+              nom: agentObject.nom,
+              prenom: agentObject.prenom,
+              matricule: agentObject.agent.matricule,
+              statusPEC: agentObject.agent.statutPEC,
+              backofficefrontoffice: nomDirection
+                ? BackOfficeFrontOffice['DIRECTION']
+                : BackOfficeFrontOffice['AGENCE'],
+              nomFonction,
+              nomDirection,
+              nomAgence,
+              acte: input.naturePrestation,
+              service_prestataire: input.servicePrestataire,
+              nomEtablissement: provider.nom,
+              localite: nomLocation,
+            };
+            const newAttestation = await this.attestationRepository.create(
+              {
+                attestationPath: null,
+                naturePrestation: input.naturePrestation,
+                servicePrestataire: input.servicePrestataire,
+                idpBeneficiaire: beneficiary.idp,
+                providerID: provider.id,
+                datePEC: new Date(input.datePEC),
+              },
+              tx,
+            );
+            const attestatonRef = `${actualYear} - ${newAttestation.id}`;
+            const attestionData: AttestationData = {
+              reference: attestatonRef,
+              image:
+                beneficiary.carteProfessionnellePath ??
+                beneficiary.carteSocialePath,
+              codeFamille: CodeFamille[beneficiary.codeFamille],
+              famille: familleData ?? null,
+              agent: agentData,
+              idp: beneficiary.idp,
+              datePEC: newAttestation.datePEC,
+            };
+            attestationPath =
+              await this.attestationService.generateAndSave(attestionData);
+            await this.attestationRepository.updateById(
+              newAttestation.id,
+              { attestationPath },
+              tx,
+            );
+          } else if (agentObject.agent.agentType === 'AGENT_RETRAITE') {
+            const agentData: AgentData = {
+              sexe: agentObject.sexe,
+              nom: agentObject.nom,
+              prenom: agentObject.prenom,
+              matricule: agentObject.agent.matricule,
+              statusPEC: agentObject.agent.statutPEC,
+              backofficefrontoffice: BackOfficeFrontOffice['RETRAITE'],
+              nomFonction: null,
+              nomDirection: null,
+              nomAgence: null,
+              acte: input.naturePrestation,
+              service_prestataire: input.servicePrestataire,
+              nomEtablissement: provider.nom,
+              localite: nomLocation,
+            };
+            const newAttestation = await this.attestationRepository.create(
+              {
+                attestationPath: null,
+                naturePrestation: input.naturePrestation,
+                servicePrestataire: input.servicePrestataire,
+                idpBeneficiaire: beneficiary.idp,
+                providerID: provider.id,
+                datePEC: new Date(input.datePEC),
+              },
+              tx,
+            );
+            const attestatonRef = `${actualYear} - ${newAttestation.id}`;
+            const attestionData: AttestationData = {
+              reference: attestatonRef,
+              image:
+                beneficiary.carteProfessionnellePath ??
+                beneficiary.carteSocialePath,
+              codeFamille: CodeFamille[beneficiary.codeFamille],
+              famille: familleData ?? null,
+              agent: agentData,
+              idp: beneficiary.idp,
+              datePEC: newAttestation.datePEC,
+            };
+            attestationPath =
+              await this.attestationService.generateAndSave(attestionData);
+            await this.attestationRepository.updateById(
+              newAttestation.id,
+              { attestationPath },
+              tx,
+            );
+          }
+        },
+        { timeout: env.TRANSACTION_TIMEOUT, maxWait: env.TRANSACTION_MAX_WAIT },
+      )
+      .catch(async (error: unknown) => {
+        if (attestationPath != null) {
+          await this.attestationService
+            .delete(attestationPath)
+            .catch(() => undefined);
+        }
+        throw error;
+      });
+  }
 }

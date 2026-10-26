@@ -1,6 +1,6 @@
 export enum Sexe {
-  MASCULIN = "MASCULIN",
-  FEMININ = "FEMININ",
+  MASCULIN = 'MASCULIN',
+  FEMININ = 'FEMININ',
 }
 
 export type CreatePersonne = {

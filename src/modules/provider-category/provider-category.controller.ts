@@ -18,7 +18,7 @@ import {
   UpdateProviderCategoryDto,
 } from './dtos/provider-category.dto.js';
 import type { ReadProviderCategory } from './types/provider-category.types.js';
-import { ProviderTreeDeletionUseCase } from '../provider/provider-tree.delete.js';
+import { ProviderTreeDeletionUseCase } from '../provider/use-cases/provider-tree.delete.js';
 
 @Controller('provider-categories')
 export class ProviderCategoryController {
@@ -35,13 +35,13 @@ export class ProviderCategoryController {
     await this.deletionUseCase.request('categoriePrestataire', id);
   }
 
-  @Post(':id/deletion/validate')
+  @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.validate('categoriePrestataire', id);
   }
 
-  @Post(':id/deletion/reject')
+  @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.reject('categoriePrestataire', id);
@@ -56,12 +56,12 @@ export class ProviderCategoryController {
 
   @Get()
   async findAll(): Promise<ReadProviderCategory[]> {
-    return this.readProviderCategoryUseCase.readAll();
+    return this.readProviderCategoryUseCase.findAll();
   }
 
-  @Get('deletion/requests')
+  @Get('deletion-requests')
   async findDeletionRequests(): Promise<ReadProviderCategory[]> {
-    return this.readProviderCategoryUseCase.readDeletionRequests();
+    return this.readProviderCategoryUseCase.findDeletionRequests();
   }
 
   @Patch(':id')

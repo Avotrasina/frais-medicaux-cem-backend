@@ -1,20 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
-import type {
-  Personne,
-  Agent,
-  Prisma,
-} from '../../../generated/prisma/client.js';
+import type { Prisma } from '../../../generated/prisma/client.js';
 import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import {
-  AgentType,
-  StatutPEC,
   type CreateAgent,
   type ReadAgent,
   type ReadPersonneAgent,
   type UpdatePartialAgent,
 } from '../types/agent.types.js';
-import { type ReadPersonne, Sexe } from '../../personne/personne.types.js';
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
 import { omitNullish } from '../../../common/utils/omit-nullish.js';
 import { executeSoftDeletion } from '../../../infrastructure/prisma/soft-deletion.repository.js';
@@ -22,50 +15,43 @@ import type {
   DeletionAction,
   DeletionNode,
 } from '../../../common/types/soft-deletion.types.js';
-import type { AgentDeletionData } from '../types/agent-deletion.types.js';
 import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import {
+  mapAgentToRead,
+  mapAgentWithPersonneToRead,
+} from '../mappers/agent.mapper.js';
 
-type AgentWithPersonne = Prisma.AgentGetPayload<{
-  include: { personne: true };
-}>;
+type AgentPersonDeletionData = {
+  id: number;
+  beneficiaire: {
+    id: number;
+    attestations: { id: number }[];
+  } | null;
+};
+
+type AgentFamilyDeletionData = {
+  id: number;
+  carteSocialePath: string;
+  conjoint: { id: number } | null;
+  enfant: { id: number } | null;
+  personne: AgentPersonDeletionData;
+};
+
+type AgentDeletionData = {
+  id: number;
+  matricule: number;
+  carteProfessionnellePath: string;
+  personne: AgentPersonDeletionData;
+  familleAgent: AgentFamilyDeletionData[];
+};
 
 @Injectable()
-@HandlePrismaErrors({
-  exclude: ['toReadAgent', 'toReadPersonne', 'toReadPersonneAgent'],
-})
+@HandlePrismaErrors()
 export class AgentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;
-  }
-
-  private toReadPersonne(personne: Personne): ReadPersonne {
-    return { ...personne, sexe: Sexe[personne.sexe] };
-  }
-
-  private toReadAgent(agent: Agent): ReadAgent {
-    return {
-      id: agent.id,
-      matricule: agent.matricule,
-      observationMatricule: agent.observationMatricule,
-      carteProfessionnellePath: agent.carteProfessionnellePath,
-      dateEntree: agent.dateEntree,
-      statutPEC: StatutPEC[agent.statutPEC],
-      agentType: AgentType[agent.agentType],
-      structureID: agent.structureID,
-      codeService: agent.serviceID,
-      fonction: agent.fonction,
-      categorieID: agent.categorieID,
-    };
-  }
-
-  private toReadPersonneAgent(a: AgentWithPersonne): ReadPersonneAgent {
-    const { personne, ...agent } = a;
-    return {
-      ...this.toReadPersonne(personne),
-      agent: this.toReadAgent(agent),
-    };
   }
 
   private async findManyWithPersonne(
@@ -77,19 +63,19 @@ export class AgentRepository {
       include: { personne: true },
       orderBy: [{ personne: { nom: 'asc' } }, { personne: { prenom: 'asc' } }],
     });
-    return agents.map((a) => this.toReadPersonneAgent(a));
+    return agents.map(mapAgentWithPersonneToRead);
   }
 
   async findAll(tx?: DbClient): Promise<ReadAgent[]> {
     const agents = await this.client(tx).agent.findMany();
-    return agents.map((agent) => this.toReadAgent(agent));
+    return agents.map(mapAgentToRead);
   }
 
-  async findByID(id: number, tx?: DbClient): Promise<ReadAgent> {
+  async findById(id: number, tx?: DbClient): Promise<ReadAgent> {
     const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { id },
     });
-    return this.toReadAgent(agent);
+    return mapAgentToRead(agent);
   }
 
   async findByLastNameWithPersonne(
@@ -118,7 +104,7 @@ export class AgentRepository {
     );
   }
 
-  async findByIDWithPersonne(
+  async findByIdWithPersonne(
     id: number,
     tx?: DbClient,
   ): Promise<ReadPersonneAgent> {
@@ -126,14 +112,14 @@ export class AgentRepository {
       where: { id },
       include: { personne: true },
     });
-    return this.toReadPersonneAgent(agent);
+    return mapAgentWithPersonneToRead(agent);
   }
 
   async findByMatricule(matricule: number, tx?: DbClient): Promise<ReadAgent> {
     const agent = await this.client(tx).agent.findFirstOrThrow({
       where: { matricule },
     });
-    return this.toReadAgent(agent);
+    return mapAgentToRead(agent);
   }
 
   async findByMatriculeWithPersonne(
@@ -144,9 +130,13 @@ export class AgentRepository {
       where: { matricule },
       include: { personne: true },
     });
-    return this.toReadPersonneAgent(agent);
+    return mapAgentWithPersonneToRead(agent);
   }
 
+  /**
+   * Applies a deletion request to the agent and its dependencies, then returns
+   * the card paths to remove from storage.
+   */
   async applyDeletionTree(
     matricule: number,
     action: DeletionAction,
@@ -193,6 +183,7 @@ export class AgentRepository {
     ];
   }
 
+  /** Builds deletion targets for the agent and their family members. */
   private deletionNodes(agent: AgentDeletionData): DeletionNode[] {
     const nodes: DeletionNode[] = [
       { model: 'agent', where: { matricule: agent.matricule } },
@@ -209,6 +200,7 @@ export class AgentRepository {
     return nodes;
   }
 
+  /** Adds the person, optional beneficiary, and attestations to the deletion tree. */
   private personDeletionNodes(
     person: AgentDeletionData['personne'],
   ): DeletionNode[] {
@@ -244,7 +236,7 @@ export class AgentRepository {
     return this.findManyWithPersonne({ agentType: 'AGENT_RETRAITE' }, tx);
   }
 
-  async findAgentsWithPrsonneByCodeAgence(
+  async findAgentsByAgencyCode(
     codeAgence: string,
     tx?: DbClient,
   ): Promise<ReadPersonneAgent[]> {
@@ -279,7 +271,7 @@ export class AgentRepository {
 
   async create(agent: CreateAgent, tx?: DbClient): Promise<ReadAgent> {
     const created = await this.client(tx).agent.create({ data: agent });
-    return this.toReadAgent(created);
+    return mapAgentToRead(created);
   }
 
   async updatePartial(
@@ -304,7 +296,7 @@ export class AgentRepository {
       where: { id },
       data,
     });
-    return this.toReadAgent(updated);
+    return mapAgentToRead(updated);
   }
 
   async updateProfCard(
@@ -316,7 +308,7 @@ export class AgentRepository {
       where: { id },
       data: { carteProfessionnellePath: newCardPath },
     });
-    return this.toReadAgent(updated);
+    return mapAgentToRead(updated);
   }
 
   async updateStructureByService(

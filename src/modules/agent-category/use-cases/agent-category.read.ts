@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { AgentCategoryRepository } from "../agent-category.repository.js";
-import type { ReadAgentCategory } from "../types/agent-category.types.js";
+import { Injectable } from '@nestjs/common';
+import { AgentCategoryRepository } from '../repositories/agent-category.repository.js';
+import type { ReadAgentCategory } from '../types/agent-category.types.js';
 
 @Injectable()
 export class ReadAgentCategoryUseCase {
@@ -16,7 +16,7 @@ export class ReadAgentCategoryUseCase {
     return this.agentCategoryRepository.findDeletionRequests();
   }
 
-  async findByID(id: number): Promise<ReadAgentCategory> {
-    return this.agentCategoryRepository.findByID(id);
+  async findById(id: number): Promise<ReadAgentCategory> {
+    return this.agentCategoryRepository.findById(id);
   }
 }

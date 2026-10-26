@@ -1,10 +1,10 @@
-import { Logger } from "@nestjs/common";
+import { Logger } from '@nestjs/common';
 import {
   isPrismaError,
   translatePrismaError,
-} from "../errors/prisma-error.translator.js";
+} from '../errors/prisma-error.translator.js';
 
-const logger = new Logger("HandlePrismaErrors");
+const logger = new Logger('HandlePrismaErrors');
 
 export interface HandlePrismaErrorsOptions {
   entity?: string;
@@ -14,23 +14,29 @@ export interface HandlePrismaErrorsClassOptions extends HandlePrismaErrorsOption
   exclude?: string[];
 }
 
-const WRAPPED = Symbol.for("cem.handlePrismaErrors.wrapped");
+const WRAPPED = Symbol.for('cem.handlePrismaErrors.wrapped');
 
 type AnyFunction = (this: object, ...args: unknown[]) => unknown;
 
+/** Derives a user-facing entity name unless the caller supplied one explicitly. */
 function resolveEntity(className: string, explicit?: string): string {
   if (explicit) return explicit;
-  return className.replace(/Repository$/, "") || className;
+  return className.replace(/Repository$/, '') || className;
 }
 
+/** Detects thenables so the wrapper can translate both sync and async failures. */
 function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    typeof (value as { then?: unknown }).then === "function"
+    typeof (value as { then?: unknown }).then === 'function'
   );
 }
 
+/**
+ * Wraps a method while preserving its receiver and translating Prisma failures
+ * from both synchronous throws and rejected promises.
+ */
 function wrap(
   original: AnyFunction,
   getEntity: (self: object) => string,
@@ -38,11 +44,15 @@ function wrap(
   const translate = (error: unknown, self: object): unknown => {
     if (isPrismaError(error)) {
       const entity = getEntity(self);
-      const method = original.name || "anonymous";
-      const details = error instanceof Error
-        ? `${error.name}: ${error.message}`
-        : String(error);
-      logger.error(`Prisma error in ${entity}.${method}: ${details}`, error instanceof Error ? error.stack : undefined);
+      const method = original.name || 'anonymous';
+      const details =
+        error instanceof Error
+          ? `${error.name}: ${error.message}`
+          : String(error);
+      logger.error(
+        `Prisma error in ${entity}.${method}: ${details}`,
+        error instanceof Error ? error.stack : undefined,
+      );
     }
     return translatePrismaError(error, getEntity(self));
   };
@@ -61,15 +71,17 @@ function wrap(
     }
   };
 
-  Object.defineProperty(wrapped, "name", { value: original.name });
+  Object.defineProperty(wrapped, 'name', { value: original.name });
   Object.defineProperty(wrapped, WRAPPED, { value: true });
   return wrapped;
 }
 
+/** Marks methods already wrapped so nested decorator application stays idempotent. */
 function isWrapped(fn: AnyFunction): boolean {
   return (fn as unknown as Record<symbol, unknown>)[WRAPPED] === true;
 }
 
+/** Wraps all class methods except explicitly excluded mapping/helper methods. */
 export function HandlePrismaErrors(
   options: HandlePrismaErrorsClassOptions = {},
 ): ClassDecorator {
@@ -80,10 +92,10 @@ export function HandlePrismaErrors(
     const prototype = target.prototype as Record<string, unknown>;
 
     for (const name of Object.getOwnPropertyNames(prototype)) {
-      if (name === "constructor" || exclude.has(name)) continue;
+      if (name === 'constructor' || exclude.has(name)) continue;
 
       const descriptor = Object.getOwnPropertyDescriptor(prototype, name);
-      if (!descriptor || typeof descriptor.value !== "function") continue; 
+      if (!descriptor || typeof descriptor.value !== 'function') continue;
 
       const original = descriptor.value as AnyFunction;
       if (isWrapped(original)) continue;
@@ -96,12 +108,13 @@ export function HandlePrismaErrors(
   };
 }
 
+/** Applies the same error translation to one method instead of a whole class. */
 export function HandlePrismaError(
   options: HandlePrismaErrorsOptions = {},
 ): MethodDecorator {
   return (_target, _propertyKey, descriptor) => {
     const original = descriptor.value as unknown;
-    if (typeof original !== "function" || isWrapped(original as AnyFunction)) {
+    if (typeof original !== 'function' || isWrapped(original as AnyFunction)) {
       return descriptor;
     }
 

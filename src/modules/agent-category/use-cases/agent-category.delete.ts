@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
 import { FileStorageService } from '../../../infrastructure/storage/file-storage.service.js';
 import { AgentRepository } from '../../agent/repositories/agent.repository.js';
-import { AgentCategoryRepository } from '../agent-category.repository.js';
+import { AgentCategoryRepository } from '../repositories/agent-category.repository.js';
 import type { DeletionAction } from '../../../common/types/soft-deletion.types.js';
 
 @Injectable()

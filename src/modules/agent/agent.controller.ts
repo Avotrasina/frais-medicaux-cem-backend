@@ -38,7 +38,7 @@ import type { ReadPersonneAgent } from './types/agent.types.js';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { ApiProduces } from '@nestjs/swagger';
 
-@Controller('agent')
+@Controller('agents')
 export class AgentController {
   constructor(
     private readonly saveAgentUseCase: SaveAgentUseCase,
@@ -49,7 +49,7 @@ export class AgentController {
     private readonly getAgentCardUseCase: GetAgentCardUseCase,
   ) {}
 
-  @Post('/create/')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentCreateMultipartDto })
@@ -71,9 +71,9 @@ export class AgentController {
     }
   }
 
-  @Patch('/information/:matricule')
+  @Patch(':matricule')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updateAgentInformation(
+  async update(
     @Param('matricule', ParseIntPipe) matricule: number,
     @Body() dto: AgentUpdateDto,
   ): Promise<void> {
@@ -82,15 +82,15 @@ export class AgentController {
       matricule,
     };
 
-    await this.updateAgentUseCase.changePartialAttribut(inputUseCase);
+    await this.updateAgentUseCase.updatePartial(inputUseCase);
   }
 
-  @Patch('/card/:matricule')
+  @Patch(':matricule/card')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentCardMultipartDto })
   @UseInterceptors(ImageUploadInterceptor('image'))
-  async updateAgentProfCard(
+  async updateProfessionalCard(
     @Param('matricule', ParseIntPipe) matricule: number,
     @UploadedFile(createImageFilePipe()) image: Express.Multer.File,
   ): Promise<void> {
@@ -104,7 +104,7 @@ export class AgentController {
     };
 
     try {
-      await this.updateAgentUseCase.changeAgentProfCard(inputUseCase);
+      await this.updateAgentUseCase.updateProfessionalCard(inputUseCase);
     } catch (error) {
       await this.fileStorage.deleteImage(carteProfessionnellePath);
       throw error;
@@ -113,62 +113,56 @@ export class AgentController {
 
   @Delete(':matricule')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async requestAgentDeletion(
-    @Param('matricule', ParseIntPipe) matricule: number,
-  ) {
+  async requestDeletion(@Param('matricule', ParseIntPipe) matricule: number) {
     await this.deleteAgentUseCase.request(matricule);
   }
 
-  @Post(':matricule/deletion/validate')
+  @Post(':matricule/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async validateAgentDeletion(
-    @Param('matricule', ParseIntPipe) matricule: number,
-  ) {
+  async validateDeletion(@Param('matricule', ParseIntPipe) matricule: number) {
     await this.deleteAgentUseCase.validate(matricule);
   }
 
-  @Post(':matricule/deletion/reject')
+  @Post(':matricule/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async rejectAgentDeletion(
-    @Param('matricule', ParseIntPipe) matricule: number,
-  ) {
+  async rejectDeletion(@Param('matricule', ParseIntPipe) matricule: number) {
     await this.deleteAgentUseCase.reject(matricule);
   }
 
-  @Get('all')
+  @Get()
   @HttpCode(HttpStatus.OK)
-  async getAll() {
-    return await this.readAgentUseCase.readAll();
+  async findAll() {
+    return await this.readAgentUseCase.findAll();
   }
 
-  @Get('deletion/requests')
+  @Get('deletion-requests')
   @HttpCode(HttpStatus.OK)
-  async getDeletionRequests(): Promise<ReadPersonneAgent[]> {
-    return this.readAgentUseCase.readDeletionRequests();
+  async findDeletionRequests(): Promise<ReadPersonneAgent[]> {
+    return this.readAgentUseCase.findDeletionRequests();
   }
 
-  @Get('all/filtered')
+  @Get('search')
   @HttpCode(HttpStatus.OK)
-  async getAllFiltered(@Query('filter') filter: FilterOptions) {
-    return await this.readAgentUseCase.filter(filter);
+  async search(@Query('filter') filter: FilterOptions) {
+    return await this.readAgentUseCase.findByFilter(filter);
   }
 
   @Get('search/last-name')
   @HttpCode(HttpStatus.OK)
-  async getByLastName(@Query() query: AgentSearchNameDto) {
+  async findByLastName(@Query() query: AgentSearchNameDto) {
     return await this.readAgentUseCase.findByLastName(query.value);
   }
 
   @Get('search/first-name')
   @HttpCode(HttpStatus.OK)
-  async getByFirstName(@Query() query: AgentSearchNameDto) {
+  async findByFirstName(@Query() query: AgentSearchNameDto) {
     return await this.readAgentUseCase.findByFirstName(query.value);
   }
 
   @Get(':matricule/card')
   @HttpCode(HttpStatus.OK)
   @ApiProduces('image/png', 'image/jpeg', 'image/webp')
-  async getAgentCard(
+  async getProfessionalCard(
     @Param('matricule', ParseIntPipe) matricule: number,
   ): Promise<StreamableFile> {
     const { stream, mimeType, fileName } =

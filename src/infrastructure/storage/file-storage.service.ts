@@ -1,23 +1,26 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { randomUUID } from "node:crypto";
-import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
-import { join, resolve, sep  } from "node:path";
-import { UnsupportedImageTypeException } from "../../common/errors/unsupported-image-type.exception.js";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
+import { join, resolve, sep } from 'node:path';
+import { UnsupportedImageTypeException } from '../../common/errors/unsupported-image-type.exception.js';
 import {
   IMAGE_EXTENSION_BY_MIME,
   STORAGE_SETTINGS,
   type ImageCategory,
   type PdfCategory,
-} from "../../common/settings/storage.settings.js";
-import type { StorableImage, StorablePdf } from "./file-storage.types.js";
-import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
-import type { Readable } from "node:stream";
+} from '../../common/settings/storage.settings.js';
+import type { StorableImage, StorablePdf } from './file-storage.types.js';
+import { createReadStream } from 'node:fs';
+import { stat } from 'node:fs/promises';
+import type { Readable } from 'node:stream';
 
 @Injectable()
 export class FileStorageService {
-
-  async saveImage(file: StorableImage, category: ImageCategory): Promise<string> {
+  /** Validates the MIME type and stores the image under a generated safe name. */
+  async saveImage(
+    file: StorableImage,
+    category: ImageCategory,
+  ): Promise<string> {
     const extension = IMAGE_EXTENSION_BY_MIME[file.mimetype];
     if (!extension) {
       throw new UnsupportedImageTypeException(file.mimetype);
@@ -34,6 +37,7 @@ export class FileStorageService {
     await this.remove(relativePath);
   }
 
+  /** Checks that a resolved image stays within storage before opening its stream. */
   async openImage(relativePath: string): Promise<Readable | null> {
     const root = STORAGE_SETTINGS.root;
     const full = resolve(root, relativePath);
@@ -49,14 +53,15 @@ export class FileStorageService {
     return createReadStream(full);
   }
 
+  /** Checks the PDF signature and stores the file with a sanitized optional prefix. */
   async savePdf(file: StorablePdf, category: PdfCategory): Promise<string> {
-    if (file.buffer.subarray(0, 5).toString("ascii") !== "%PDF-") {
-      throw new BadRequestException("Le fichier fourni n'est pas un PDF valide");
+    if (file.buffer.subarray(0, 5).toString('ascii') !== '%PDF-') {
+      throw new BadRequestException('The provided file is not a valid PDF');
     }
     const directory = `${STORAGE_SETTINGS.pdfDir}/${STORAGE_SETTINGS.pdfDirs[category]}`;
     const prefix = file.name
-      ? `${file.name.replace(/[^A-Za-z0-9_-]/g, "_")}-`
-      : "";
+      ? `${file.name.replace(/[^A-Za-z0-9_-]/g, '_')}-`
+      : '';
     const relativePath = `${directory}/${prefix}${randomUUID()}.pdf`;
 
     await this.write(directory, relativePath, file.buffer);
@@ -67,6 +72,7 @@ export class FileStorageService {
     await this.remove(relativePath);
   }
 
+  /** Reads only files inside the configured root and verifies their PDF signature. */
   async readPdf(relativePath: string): Promise<Buffer | null> {
     const root = resolve(STORAGE_SETTINGS.root);
     const full = resolve(root, relativePath);
@@ -75,13 +81,15 @@ export class FileStorageService {
 
     try {
       const buffer = await readFile(full);
-      return buffer.subarray(0, 5).toString("ascii") === "%PDF-" ? buffer : null;
+      return buffer.subarray(0, 5).toString('ascii') === '%PDF-'
+        ? buffer
+        : null;
     } catch {
       return null;
     }
   }
 
-
+  /** Creates the category directory before writing the supplied file contents. */
   private async write(
     directory: string,
     relativePath: string,
@@ -91,6 +99,7 @@ export class FileStorageService {
     await writeFile(join(STORAGE_SETTINGS.root, relativePath), buffer);
   }
 
+  /** Removes a stored file; missing paths are treated as already-cleaned files. */
   private async remove(relativePath: string): Promise<void> {
     await unlink(join(STORAGE_SETTINGS.root, relativePath)).catch(
       () => undefined,

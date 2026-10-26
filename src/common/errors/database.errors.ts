@@ -1,76 +1,76 @@
 /* ========================================================================== */
-/* Classe mère                                                                */
+/* Base class                                                                 */
 /* ========================================================================== */
 
 export abstract class DatabaseError extends Error {
   constructor(message: string, cause?: unknown) {
     super(message, { cause });
-    // Le nom de la classe fille (ex. "UniqueConstraintError") sert dans les logs et les réponses.
+    // The subclass name (e.g. "UniqueConstraintError") is used in logs and responses.
     this.name = this.constructor.name;
   }
 }
 
 /* ========================================================================== */
-/* 1. Erreurs de connexion / infrastructure (5xx)                             */
-/*    Ne jamais détailler le message technique au client, seulement le logger. */
+/* 1. Connection / infrastructure errors (5xx)                                */
+/*    Never expose technical details to clients; only log them.               */
 /* ========================================================================== */
 
 export abstract class DatabaseConnectionError extends DatabaseError {}
 
-/** Base injoignable ou connexion coupée. Prisma : P1001, P1017. */
+/** Database unreachable or connection closed. Prisma: P1001, P1017. */
 export class DatabaseUnavailableError extends DatabaseConnectionError {
   constructor(cause?: unknown) {
-    super("Base de données indisponible", cause);
+    super('Database unavailable', cause);
   }
 }
 
-/** Délai de connexion ou d'opération dépassé. Prisma : P1002, P1008. */
+/** Connection or operation timed out. Prisma: P1002, P1008. */
 export class DatabaseTimeoutError extends DatabaseConnectionError {
   constructor(cause?: unknown) {
-    super("Délai d'attente de la base de données dépassé", cause);
+    super('Database connection or operation timed out', cause);
   }
 }
 
-/** Pool de connexions épuisé. Prisma : P2024. */
+/** Connection pool exhausted. Prisma: P2024. */
 export class ConnectionPoolExhaustedError extends DatabaseConnectionError {
   constructor(cause?: unknown) {
-    super("Trop de connexions simultanées à la base de données", cause);
+    super('Too many concurrent database connections', cause);
   }
 }
 
-/** Identifiants de connexion refusés. Prisma : P1000, SQLSTATE 28P01. */
+/** Database credentials rejected. Prisma: P1000, SQLSTATE 28P01. */
 export class DatabaseAuthenticationError extends DatabaseConnectionError {
   constructor(cause?: unknown) {
-    super("Authentification à la base de données refusée", cause);
+    super('Database authentication failed', cause);
   }
 }
 
 /* ========================================================================== */
-/* 2. Erreurs de transaction                                                  */
+/* 2. Transaction errors                                                      */
 /* ========================================================================== */
 
 export abstract class TransactionError extends DatabaseError {}
 
-/** Transaction interactive trop longue ou expirée. Prisma : P2028. */
+/** Interactive transaction exceeded its time limit or expired. Prisma: P2028. */
 export class TransactionTimeoutError extends TransactionError {
   constructor(cause?: unknown) {
-    super("La transaction a expiré", cause);
+    super('The transaction has expired', cause);
   }
 }
 
 /**
- * Conflit d'écriture, deadlock ou échec de sérialisation.
- * Prisma : P2034, SQLSTATE 40001 / 40P01.
- * La requête peut généralement être rejouée.
+ * Write conflict, deadlock, or serialization failure.
+ * Prisma: P2034, SQLSTATE 40001 / 40P01.
+ * The operation can usually be retried.
  */
 export class TransactionConflictError extends TransactionError {
   constructor(cause?: unknown) {
-    super("Conflit entre transactions, veuillez réessayer", cause);
+    super('Transaction conflict; please retry', cause);
   }
 }
 
 /* ========================================================================== */
-/* 3. Erreurs de contraintes de la base (clé primaire, unicité, clé étrangère, NOT NULL) */
+/* 3. Database constraint errors (primary key, unique, foreign key, NOT NULL) */
 /* ========================================================================== */
 
 export abstract class ConstraintError extends DatabaseError {
@@ -84,9 +84,9 @@ export abstract class ConstraintError extends DatabaseError {
 }
 
 /**
- * Doublon sur une clé primaire ou une contrainte d'unicité
+ * Duplicate primary key or unique constraint
  * (matricule, numConjoint, numEnfant, codeCategory...).
- * Prisma : P2002, SQLSTATE 23505.
+ * Prisma: P2002, SQLSTATE 23505.
  */
 export class UniqueConstraintError extends ConstraintError {
   constructor(
@@ -97,17 +97,17 @@ export class UniqueConstraintError extends ConstraintError {
     super(
       entity,
       fields.length > 0
-        ? `${entity} existe déjà (${fields.join(", ")})`
-        : `${entity} existe déjà`,
+        ? `${entity} already exists (${fields.join(', ')})`
+        : `${entity} already exists`,
       cause,
     );
   }
 }
 
 /**
- * Clé étrangère invalide (référence inexistante) ou enregistrement encore référencé
- * (suppression d'une Personne encore liée à un Agent, structureID inexistant...).
- * Prisma : P2003, SQLSTATE 23503.
+ * Invalid foreign key (missing reference) or a record that is still referenced
+ * (deleting a Personne still linked to an Agent, missing structureID, etc.).
+ * Prisma: P2003, SQLSTATE 23503.
  */
 export class ForeignKeyError extends ConstraintError {
   constructor(
@@ -118,14 +118,14 @@ export class ForeignKeyError extends ConstraintError {
     super(
       entity,
       field
-        ? `Référence invalide ou enregistrement encore utilisé (${entity}.${field})`
-        : `Référence invalide ou enregistrement encore utilisé (${entity})`,
+        ? `Invalid reference or record still in use (${entity}.${field})`
+        : `Invalid reference or record still in use (${entity})`,
       cause,
     );
   }
 }
 
-/** Champ obligatoire absent (valeur NULL). Prisma : P2011, SQLSTATE 23502. */
+/** Required field is missing (NULL value). Prisma: P2011, SQLSTATE 23502. */
 export class NotNullConstraintError extends ConstraintError {
   constructor(
     entity: string,
@@ -135,23 +135,23 @@ export class NotNullConstraintError extends ConstraintError {
     super(
       entity,
       fields.length > 0
-        ? `Champ obligatoire manquant (${entity}: ${fields.join(", ")})`
-        : `Champ obligatoire manquant (${entity})`,
+        ? `Required field missing (${entity}: ${fields.join(', ')})`
+        : `Required field missing (${entity})`,
       cause,
     );
   }
 }
 
 /* ========================================================================== */
-/* 4. Erreurs de contraintes CHECK                                            */
-/*    Les CHECK sont écrits à la main dans les migrations SQL et doivent avoir */
-/*    un nom explicite. Le message lisible vient de CHECK_CONSTRAINT_MESSAGES. */
+/* 4. CHECK constraint errors                                                  */
+/*    CHECK constraints are defined manually in SQL migrations and must have   */
+/*    an explicit name. The readable message comes from CHECK_CONSTRAINT_MESSAGES. */
 /* ========================================================================== */
 
 /**
- * Violation d'une contrainte CHECK. SQLSTATE 23514 (Prisma : P2004 ou erreur inconnue).
- * - constraintName : nom de la contrainte SQL (ex. "chk_agent_date_entree")
- * - userMessage    : message lisible associé, s'il existe dans la table de messages
+ * CHECK constraint violation. SQLSTATE 23514 (Prisma: P2004 or unknown error).
+ * - constraintName: SQL constraint name (e.g. "chk_agent_date_entree")
+ * - userMessage: associated readable message, if one exists in the message map
  */
 export class CheckConstraintError extends ConstraintError {
   constructor(
@@ -162,16 +162,15 @@ export class CheckConstraintError extends ConstraintError {
   ) {
     super(
       entity,
-      userMessage ??
-        `Contrainte non respectée : ${constraintName ?? entity}`,
+      userMessage ?? `Constraint violation: ${constraintName ?? entity}`,
       cause,
     );
   }
 }
 
 /* ========================================================================== */
-/* 5. Erreurs de champs (valeur incorrecte pour la colonne)                   */
-/*    Souvent le signe d'une validation manquante dans les DTO.               */
+/* 5. Field errors (invalid column value)                                       */
+/*    Often indicates missing validation in the DTOs.                          */
 /* ========================================================================== */
 
 export abstract class FieldError extends DatabaseError {
@@ -185,37 +184,37 @@ export abstract class FieldError extends DatabaseError {
   }
 }
 
-/** Valeur trop longue pour la colonne (ex. varchar(50) dépassé). Prisma : P2000, SQLSTATE 22001. */
+/** Value exceeds the column length (e.g. varchar(50)). Prisma: P2000, SQLSTATE 22001. */
 export class ValueTooLongError extends FieldError {
   constructor(entity: string, field?: string, cause?: unknown) {
     super(
       entity,
       field,
       field
-        ? `Valeur trop longue pour le champ ${entity}.${field}`
-        : `Valeur trop longue (${entity})`,
+        ? `Value too long for field ${entity}.${field}`
+        : `Value too long (${entity})`,
       cause,
     );
   }
 }
 
-/** Valeur numérique ou date hors limites (entier trop grand...). Prisma : P2020, SQLSTATE 22003. */
+/** Numeric or date value out of range (e.g. integer too large). Prisma: P2020, SQLSTATE 22003. */
 export class ValueOutOfRangeError extends FieldError {
   constructor(entity: string, field?: string, cause?: unknown) {
     super(
       entity,
       field,
       field
-        ? `Valeur hors limites pour le champ ${entity}.${field}`
-        : `Valeur hors limites (${entity})`,
+        ? `Value out of range for field ${entity}.${field}`
+        : `Value out of range (${entity})`,
       cause,
     );
   }
 }
 
 /**
- * Valeur mal formée : mauvais type, date invalide, valeur d'enum inconnue.
- * Prisma : P2023, SQLSTATE 22P02 / 22007 / 22008.
+ * Malformed value: wrong type, invalid date, or unknown enum value.
+ * Prisma: P2023, SQLSTATE 22P02 / 22007 / 22008.
  */
 export class InvalidValueFormatError extends FieldError {
   constructor(entity: string, field?: string, cause?: unknown) {
@@ -223,15 +222,15 @@ export class InvalidValueFormatError extends FieldError {
       entity,
       field,
       field
-        ? `Format invalide pour le champ ${entity}.${field}`
-        : `Format de valeur invalide (${entity})`,
+        ? `Invalid format for field ${entity}.${field}`
+        : `Invalid value format (${entity})`,
       cause,
     );
   }
 }
 
 /* ========================================================================== */
-/* 6. Erreurs d'enregistrement                                                */
+/* 6. Record errors                                                           */
 /* ========================================================================== */
 
 export abstract class RecordError extends DatabaseError {
@@ -244,50 +243,54 @@ export abstract class RecordError extends DatabaseError {
   }
 }
 
-/** Enregistrement introuvable lors d'un update / delete / findUniqueOrThrow. Prisma : P2025. */
+/** Record not found during update / delete / findUniqueOrThrow. Prisma: P2025. */
 export class RecordNotFoundError extends RecordError {
   constructor(entity: string, cause?: unknown) {
-    super(entity, `${entity} introuvable`, cause);
+    super(entity, `${entity} not found`, cause);
   }
 }
 
-/** Enregistrement lié requis introuvable (ex. `connect` vers un id inexistant). Prisma : P2018. */
+/** Required related record not found (e.g. `connect` to a missing ID). Prisma: P2018. */
 export class RelatedRecordNotFoundError extends RecordError {
   constructor(entity: string, cause?: unknown) {
-    super(entity, `Enregistrement lié introuvable (${entity})`, cause);
+    super(entity, `Related record not found (${entity})`, cause);
   }
 }
 
-/** La modification violerait une relation obligatoire entre deux modèles. Prisma : P2014. */
+/** The update would violate a required relation between two models. Prisma: P2014. */
 export class RequiredRelationViolationError extends RecordError {
   constructor(entity: string, cause?: unknown) {
-    super(entity, `Cette modification violerait une relation obligatoire (${entity})`, cause);
+    super(
+      entity,
+      `This update would violate a required relation (${entity})`,
+      cause,
+    );
   }
 }
 
 /* ========================================================================== */
-/* 7. Erreurs de schéma (problème de déploiement, pas de données)             */
+/* 7. Schema errors (deployment issue, not a data issue)                       */
 /* ========================================================================== */
 
 export abstract class DatabaseSchemaError extends DatabaseError {}
 
 /**
- * Table ou colonne absente : migration non appliquée ou client Prisma désynchronisé.
- * Prisma : P2021, P2022, SQLSTATE 42P01 / 42703.
+ * Missing table or column: migration not applied or Prisma client out of sync.
+ * Prisma: P2021, P2022, SQLSTATE 42P01 / 42703.
  */
 export class SchemaMismatchError extends DatabaseSchemaError {
   constructor(cause?: unknown) {
-    super("Le schéma de la base de données ne correspond pas à l'application", cause);
+    super('The database schema does not match the application', cause);
   }
 }
 
 /* ========================================================================== */
-/* 8. Erreur non reconnue                                                     */
+/* 8. Unrecognized error                                                      */
 /* ========================================================================== */
 
-/** Erreur de la base que le traducteur ne sait pas classer. À loguer, jamais détailler au client. */
+/** Database error the translator cannot classify. Log it; never expose details to clients. */
 export class UnknownDatabaseError extends DatabaseError {
   constructor(cause?: unknown) {
-    super("Erreur inattendue de la base de données", cause);
+    super('Unexpected database error', cause);
   }
 }

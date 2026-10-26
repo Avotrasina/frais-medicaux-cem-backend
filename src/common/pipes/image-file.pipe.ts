@@ -2,11 +2,11 @@ import {
   FileTypeValidator,
   MaxFileSizeValidator,
   ParseFilePipe,
-} from "@nestjs/common";
+} from '@nestjs/common';
 import {
   IMAGE_MIME_REGEX,
   STORAGE_SETTINGS,
-} from "../settings/storage.settings.js";
+} from '../settings/storage.settings.js';
 
 export const createImageFilePipe = () =>
   new ParseFilePipe({

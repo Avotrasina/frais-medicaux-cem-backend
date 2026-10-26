@@ -1,18 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { BeneficiaryRepository } from "../beneficiary.repository.js";
-import type { ReadBeneficiaryUseCaseType } from "../types/beneficiary.use-case.types.js";
+import { Injectable } from '@nestjs/common';
+import { BeneficiaryRepository } from '../repositories/beneficiary.repository.js';
+import type { ReadBeneficiary } from '../types/beneficiary.types.js';
 
 @Injectable()
 export class ReadBeneficiaryUseCase {
   constructor(private readonly beneficiaryRepository: BeneficiaryRepository) {}
 
-  async readByMatricule(
-    matricule: number,
-  ): Promise<ReadBeneficiaryUseCaseType[]> {
+  async findByMatricule(matricule: number): Promise<ReadBeneficiary[]> {
     return this.beneficiaryRepository.findByMatricule(matricule);
   }
 
-  async readByIDP(idp: string): Promise<ReadBeneficiaryUseCaseType> {
-    return this.beneficiaryRepository.findByIDP(idp);
+  async findByIdp(idp: string): Promise<ReadBeneficiary> {
+    return this.beneficiaryRepository.findByIdp(idp);
   }
 }

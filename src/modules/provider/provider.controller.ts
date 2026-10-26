@@ -35,7 +35,7 @@ import { ReadProviderUseCase } from './use-cases/provider.read.js';
 import { CreateProviderDto, UpdateProviderDto } from './dtos/provider.dto.js';
 import type { ReadProvider } from './types/provider.types.js';
 import { UpdateProviderConventionUseCase } from './use-cases/provider-convention.update.js';
-import { ProviderTreeDeletionUseCase } from './provider-tree.delete.js';
+import { ProviderTreeDeletionUseCase } from './use-cases/provider-tree.delete.js';
 
 @Controller('providers')
 @ApiExtraModels(CreateProviderDto)
@@ -49,26 +49,26 @@ export class ProviderController {
     private readonly deletionUseCase: ProviderTreeDeletionUseCase,
   ) {}
 
-  @Delete(':idProvider')
+  @Delete(':id-provider')
   @HttpCode(HttpStatus.NO_CONTENT)
   async requestDeletion(
-    @Param('idProvider', ParseIntPipe) id: number,
+    @Param('id-provider', ParseIntPipe) id: number,
   ): Promise<void> {
     await this.deletionUseCase.request('prestataire', id);
   }
 
-  @Post(':idProvider/deletion/validate')
+  @Post(':id-provider/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async validateDeletion(
-    @Param('idProvider', ParseIntPipe) id: number,
+    @Param('id-provider', ParseIntPipe) id: number,
   ): Promise<void> {
     await this.deletionUseCase.validate('prestataire', id);
   }
 
-  @Post(':idProvider/deletion/reject')
+  @Post(':id-provider/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
   async rejectDeletion(
-    @Param('idProvider', ParseIntPipe) id: number,
+    @Param('id-provider', ParseIntPipe) id: number,
   ): Promise<void> {
     await this.deletionUseCase.reject('prestataire', id);
   }
@@ -98,9 +98,7 @@ export class ProviderController {
         file.mimetype === PDF_MIME_TYPE
           ? callback(null, true)
           : callback(
-              new BadRequestException(
-                'Le fichier de convention doit être un PDF',
-              ),
+              new BadRequestException('The agreement file must be a PDF'),
               false,
             ),
     }),
@@ -110,7 +108,7 @@ export class ProviderController {
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<ReadProvider> {
     if (!file) {
-      throw new BadRequestException('Le PDF de convention est requis');
+      throw new BadRequestException('The agreement PDF is required');
     }
     let path: string | undefined;
     try {
@@ -124,45 +122,45 @@ export class ProviderController {
 
   @Get()
   async findAll(): Promise<ReadProvider[]> {
-    return this.readProviderUseCase.readAll();
+    return this.readProviderUseCase.findAll();
   }
 
-  @Get('deletion/requests')
+  @Get('deletion-requests')
   async findDeletionRequests(): Promise<ReadProvider[]> {
-    return this.readProviderUseCase.readDeletionRequests();
+    return this.readProviderUseCase.findDeletionRequests();
   }
 
-  @Get('filter')
-  async filter(
+  @Get('search')
+  async search(
     @Query('lieuID', new ParseIntPipe({ optional: true })) lieuID?: number,
     @Query('categorieID', new ParseIntPipe({ optional: true }))
     categorieID?: number,
   ): Promise<ReadProvider[]> {
-    return this.readProviderUseCase.filter({ lieuID, categorieID });
+    return this.readProviderUseCase.findByFilter({ lieuID, categorieID });
   }
 
-  @Get(':idProvider/convention')
+  @Get(':id-provider/convention')
   @ApiProduces('application/pdf')
   async getConvention(
-    @Param('idProvider', ParseIntPipe) idProvider: number,
+    @Param('id-provider', ParseIntPipe) idProvider: number,
   ): Promise<StreamableFile> {
     const { buffer, fileName } =
-      await this.readProviderUseCase.readConvention(idProvider);
+      await this.readProviderUseCase.findConvention(idProvider);
     return new StreamableFile(buffer, {
       type: PDF_MIME_TYPE,
       disposition: `inline; filename="${fileName}"`,
     });
   }
 
-  @Patch('information/:idProvider')
+  @Patch(':id-provider')
   async update(
-    @Param('idProvider', ParseIntPipe) idProvider: number,
+    @Param('id-provider', ParseIntPipe) idProvider: number,
     @Body() body: UpdateProviderDto,
   ): Promise<ReadProvider> {
     return this.updateProviderUseCase.updatePartial(idProvider, body);
   }
 
-  @Patch('convention/:idProvider')
+  @Patch(':id-provider/convention')
   @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -182,19 +180,17 @@ export class ProviderController {
         file.mimetype === PDF_MIME_TYPE
           ? callback(null, true)
           : callback(
-              new BadRequestException(
-                'Le fichier de convention doit être un PDF',
-              ),
+              new BadRequestException('The agreement file must be a PDF'),
               false,
             ),
     }),
   )
   async updateConvention(
-    @Param('idProvider', ParseIntPipe) idProvider: number,
+    @Param('id-provider', ParseIntPipe) idProvider: number,
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<ReadProvider> {
     if (!file) {
-      throw new BadRequestException('Le PDF de convention est requis');
+      throw new BadRequestException('The agreement PDF is required');
     }
 
     let newPath: string | undefined;

@@ -1,6 +1,7 @@
-import type { Sexe } from "../../personne/personne.types.js";
-import type { StatutPEC, BackOfficeFrontOffice } from "./agent.enum.types.js";
-import type { Readable } from "node:stream";
+import type { Sexe } from '../../personne/personne.types.js';
+import type { BackOfficeFrontOffice } from './agent.enum.types.js';
+import type { StatutPEC } from './agent.types.js';
+import type { Readable } from 'node:stream';
 
 export type AgentCardFile = {
   stream: Readable;
@@ -22,11 +23,11 @@ export type AgentUseCaseTypes = {
 
   fonction?: string | null;
   categorieID?: string | null;
-  structureID?:string | null;
+  structureID?: string | null;
   codeService?: string | null;
 };
 
-export type AgentUpdatePartial= {
+export type AgentUpdatePartial = {
   matricule: number;
   nom?: string | null;
   prenom?: string | null;
@@ -39,14 +40,14 @@ export type AgentUpdatePartial= {
 
   fonction?: string | null;
   categorieID?: string | null;
-  structureID?:string | null;
+  structureID?: string | null;
   codeService?: string | null;
-}
+};
 
-export type AgentUpdateProfCard ={
-    matricule: number;
-    carteProfessionnellePath: string;
-}
+export type AgentUpdateProfCard = {
+  matricule: number;
+  carteProfessionnellePath: string;
+};
 export type FilterOptions = {
   backOfficeFrontOffice?: BackOfficeFrontOffice | null;
   codeDirection?: string | null;

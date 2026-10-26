@@ -1,9 +1,15 @@
-import { Type } from "class-transformer";
-import { IsInt, IsOptional, IsString, MaxLength, Min,IsDate } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { Type } from 'class-transformer';
+import {
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+  IsDate,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdatePartialAttestationDto {
-
   @IsOptional()
   @IsString()
   @MaxLength(255)
@@ -23,7 +29,7 @@ export class UpdatePartialAttestationDto {
   @IsString()
   idpBeneficiaire?: string | null;
 
-  @ApiProperty({ type: String, format: "date-time" })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Type(() => Date)
   @IsDate()
   datePEC!: Date;

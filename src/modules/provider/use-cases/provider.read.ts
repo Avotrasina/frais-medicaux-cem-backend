@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { basename } from "node:path";
-import { ProviderRepository } from "../provider.repository.js";
-import type { FilterProvider, ReadProvider } from "../types/provider.types.js";
-import { FileStorageService } from "../../../infrastructure/storage/file-storage.service.js";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { basename } from 'node:path';
+import { ProviderRepository } from '../repositories/provider.repository.js';
+import type { FilterProvider, ReadProvider } from '../types/provider.types.js';
+import { FileStorageService } from '../../../infrastructure/storage/file-storage.service.js';
 
 @Injectable()
 export class ReadProviderUseCase {
@@ -11,23 +11,26 @@ export class ReadProviderUseCase {
     private readonly fileStorage: FileStorageService,
   ) {}
 
-  async readAll(): Promise<ReadProvider[]> {
+  async findAll(): Promise<ReadProvider[]> {
     return this.providerRepository.findAll();
   }
 
-  async readDeletionRequests(): Promise<ReadProvider[]> {
+  async findDeletionRequests(): Promise<ReadProvider[]> {
     return this.providerRepository.findDeletionRequests();
   }
 
-  async filter(filter: FilterProvider): Promise<ReadProvider[]> {
+  async findByFilter(filter: FilterProvider): Promise<ReadProvider[]> {
     return this.providerRepository.findByFilter(filter);
   }
 
-  async readConvention(idProvider: number): Promise<{ buffer: Buffer; fileName: string }> {
+  async findConvention(
+    idProvider: number,
+  ): Promise<{ buffer: Buffer; fileName: string }> {
     const path = await this.providerRepository.findConventionPath(idProvider);
-    if (!path) throw new NotFoundException("Aucune convention PDF trouvée pour ce provider");
+    if (!path)
+      throw new NotFoundException('No agreement PDF found for this provider');
     const buffer = await this.fileStorage.readPdf(path);
-    if (!buffer) throw new NotFoundException("PDF de convention introuvable sur le disque");
+    if (!buffer) throw new NotFoundException('Agreement PDF not found on disk');
     return { buffer, fileName: basename(path) };
   }
 }

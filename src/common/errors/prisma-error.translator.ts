@@ -1,4 +1,4 @@
-import { Prisma } from "../../generated/prisma/client.js";
+import { Prisma } from '../../generated/prisma/client.js';
 import {
   CheckConstraintError,
   ConnectionPoolExhaustedError,
@@ -19,102 +19,104 @@ import {
   UnknownDatabaseError,
   ValueOutOfRangeError,
   ValueTooLongError,
-} from "./database.errors.js";
+} from './database.errors.js';
 
-import { CHECK_CONSTRAINT_MESSAGES } from "./check-constraint.messages.js";
-
-
+import { CHECK_CONSTRAINT_MESSAGES } from './check-constraint.messages.js';
 
 type Concept =
-  | "unique"
-  | "foreignKey"
-  | "notNull"
-  | "check"
-  | "tooLong"
-  | "outOfRange"
-  | "invalidFormat"
-  | "notFound"
-  | "relatedNotFound"
-  | "requiredRelation"
-  | "conflict"
-  | "transactionTimeout"
-  | "unavailable"
-  | "timeout"
-  | "pool"
-  | "auth"
-  | "schema";
+  | 'unique'
+  | 'foreignKey'
+  | 'notNull'
+  | 'check'
+  | 'tooLong'
+  | 'outOfRange'
+  | 'invalidFormat'
+  | 'notFound'
+  | 'relatedNotFound'
+  | 'requiredRelation'
+  | 'conflict'
+  | 'transactionTimeout'
+  | 'unavailable'
+  | 'timeout'
+  | 'pool'
+  | 'auth'
+  | 'schema';
 
 const SQLSTATE_MAP: Record<string, Concept> = {
-  "23505": "unique",
-  "23503": "foreignKey",
-  "23502": "notNull",
-  "23514": "check",
-  "22001": "tooLong",
-  "22003": "outOfRange",
-  "22P02": "invalidFormat",
-  "22007": "invalidFormat",
-  "22008": "invalidFormat",
-  "40001": "conflict",
-  "40P01": "conflict",
-  "28000": "auth",
-  "28P01": "auth",
-  "42P01": "schema",
-  "42703": "schema",
-  "53300": "pool",
-  "57014": "timeout",
-  "57P01": "unavailable",
-  "57P03": "unavailable",
+  '23505': 'unique',
+  '23503': 'foreignKey',
+  '23502': 'notNull',
+  '23514': 'check',
+  '22001': 'tooLong',
+  '22003': 'outOfRange',
+  '22P02': 'invalidFormat',
+  '22007': 'invalidFormat',
+  '22008': 'invalidFormat',
+  '40001': 'conflict',
+  '40P01': 'conflict',
+  '28000': 'auth',
+  '28P01': 'auth',
+  '42P01': 'schema',
+  '42703': 'schema',
+  '53300': 'pool',
+  '57014': 'timeout',
+  '57P01': 'unavailable',
+  '57P03': 'unavailable',
 };
 
 const ADAPTER_KIND_MAP: Record<string, Concept> = {
-  UniqueConstraintViolation: "unique",
-  ForeignKeyConstraintViolation: "foreignKey",
-  NullConstraintViolation: "notNull",
-  ValueOutOfRange: "outOfRange",
-  InvalidInputValue: "invalidFormat",
-  InconsistentColumnData: "invalidFormat",
-  TransactionWriteConflict: "conflict",
-  TableDoesNotExist: "schema",
-  ColumnNotFound: "schema",
-  TooManyConnections: "pool",
-  SocketTimeout: "timeout",
-  AuthenticationFailed: "auth",
-  DatabaseAccessDenied: "auth",
+  UniqueConstraintViolation: 'unique',
+  ForeignKeyConstraintViolation: 'foreignKey',
+  NullConstraintViolation: 'notNull',
+  ValueOutOfRange: 'outOfRange',
+  InvalidInputValue: 'invalidFormat',
+  InconsistentColumnData: 'invalidFormat',
+  TransactionWriteConflict: 'conflict',
+  TableDoesNotExist: 'schema',
+  ColumnNotFound: 'schema',
+  TooManyConnections: 'pool',
+  SocketTimeout: 'timeout',
+  AuthenticationFailed: 'auth',
+  DatabaseAccessDenied: 'auth',
 };
 
 const PRISMA_CODE_MAP: Record<string, Concept> = {
-  P2002: "unique",
-  P2003: "foreignKey",
-  P2011: "notNull",
-  P2004: "check",
-  P2000: "tooLong",
-  P2020: "outOfRange",
-  P2023: "invalidFormat",
-  P2025: "notFound",
-  P2018: "relatedNotFound",
-  P2014: "requiredRelation",
-  P2034: "conflict",
-  P2028: "transactionTimeout",
-  P2024: "pool",
-  P1000: "auth",
-  P1001: "unavailable",
-  P1017: "unavailable",
-  P1002: "timeout",
-  P1008: "timeout",
-  P2021: "schema",
-  P2022: "schema",
+  P2002: 'unique',
+  P2003: 'foreignKey',
+  P2011: 'notNull',
+  P2004: 'check',
+  P2000: 'tooLong',
+  P2020: 'outOfRange',
+  P2023: 'invalidFormat',
+  P2025: 'notFound',
+  P2018: 'relatedNotFound',
+  P2014: 'requiredRelation',
+  P2034: 'conflict',
+  P2028: 'transactionTimeout',
+  P2024: 'pool',
+  P1000: 'auth',
+  P1001: 'unavailable',
+  P1017: 'unavailable',
+  P1002: 'timeout',
+  P1008: 'timeout',
+  P2021: 'schema',
+  P2022: 'schema',
 };
-
 
 type Node = Record<string, unknown>;
 
 const PRISMA_CODE_PATTERN = /^P\d{4}$/;
 const SQLSTATE_PATTERN = /^[0-9A-Z]{5}$/;
 
+/** Narrow unknown adapter payloads to indexable objects before inspecting them. */
 function isNode(value: unknown): value is Node {
-  return typeof value === "object" && value !== null;
+  return typeof value === 'object' && value !== null;
 }
 
+/**
+ * Traverse Prisma and adapter error wrappers without looping on cyclic causes.
+ * A depth bound prevents unexpectedly large driver payloads from being scanned.
+ */
 function* walk(root: unknown, maxDepth = 6): Generator<Node> {
   const seen = new Set<unknown>();
   const queue: Array<[unknown, number]> = [[root, 0]];
@@ -124,19 +126,25 @@ function* walk(root: unknown, maxDepth = 6): Generator<Node> {
     if (!isNode(value) || seen.has(value) || depth > maxDepth) continue;
     seen.add(value);
     yield value;
-    for (const key of ["meta", "driverAdapterError", "cause", "originalError"]) {
+    for (const key of [
+      'meta',
+      'driverAdapterError',
+      'cause',
+      'originalError',
+    ]) {
       queue.push([value[key], depth + 1]);
     }
   }
 }
 
+/** Finds PostgreSQL's SQLSTATE while avoiding Prisma's own Pxxxx `code`. */
 function extractSqlState(root: unknown): string | undefined {
   for (const node of walk(root)) {
-    for (const key of ["originalCode", "sqlState", "code"]) {
-      if (node === root && key === "code") continue;
+    for (const key of ['originalCode', 'sqlState', 'code']) {
+      if (node === root && key === 'code') continue;
       const value = node[key];
       if (
-        typeof value === "string" &&
+        typeof value === 'string' &&
         SQLSTATE_PATTERN.test(value) &&
         !PRISMA_CODE_PATTERN.test(value)
       ) {
@@ -147,13 +155,15 @@ function extractSqlState(root: unknown): string | undefined {
   return undefined;
 }
 
+/** Reads the adapter-specific error kind from nested driver metadata. */
 function extractAdapterKind(root: unknown): string | undefined {
   for (const node of walk(root)) {
-    if (typeof node.kind === "string") return node.kind;
+    if (typeof node.kind === 'string') return node.kind;
   }
   return undefined;
 }
 
+/** Returns a Prisma code only for error classes that define one reliably. */
 function extractPrismaCode(error: unknown): string | undefined {
   if (error instanceof Prisma.PrismaClientKnownRequestError) return error.code;
   if (error instanceof Prisma.PrismaClientInitializationError) {
@@ -162,20 +172,21 @@ function extractPrismaCode(error: unknown): string | undefined {
   return undefined;
 }
 
+/** Finds constraint names from structured metadata or PostgreSQL messages. */
 function extractConstraintName(root: unknown): string | undefined {
   for (const node of walk(root)) {
     const constraint = node.constraint;
-    if (typeof constraint === "string") return constraint;
+    if (typeof constraint === 'string') return constraint;
     if (isNode(constraint)) {
-      if (typeof constraint.name === "string") return constraint.name;
-      if (typeof constraint.index === "string") return constraint.index;
+      if (typeof constraint.name === 'string') return constraint.name;
+      if (typeof constraint.index === 'string') return constraint.index;
     }
   }
 
   for (const node of walk(root)) {
-    for (const key of ["message", "originalMessage", "detail"]) {
+    for (const key of ['message', 'originalMessage', 'detail']) {
       const text = node[key];
-      if (typeof text === "string") {
+      if (typeof text === 'string') {
         const match = /constraint "([^"]+)"/.exec(text);
         if (match) return match[1];
       }
@@ -184,72 +195,84 @@ function extractConstraintName(root: unknown): string | undefined {
   return undefined;
 }
 
+/** Extracts affected columns across Prisma, adapter and PostgreSQL error shapes. */
 function extractFields(root: unknown): string[] {
   for (const node of walk(root)) {
     const constraint = node.constraint;
     if (isNode(constraint) && Array.isArray(constraint.fields)) {
-      return constraint.fields.filter((f): f is string => typeof f === "string");
+      return constraint.fields.filter(
+        (f): f is string => typeof f === 'string',
+      );
     }
     const target = node.target;
     if (Array.isArray(target)) {
-      return target.filter((f): f is string => typeof f === "string");
+      return target.filter((f): f is string => typeof f === 'string');
     }
-    if (typeof target === "string") return [target];
-    if (typeof node.column === "string") return [node.column];
+    if (typeof target === 'string') return [target];
+    if (typeof node.column === 'string') return [node.column];
   }
   for (const node of walk(root)) {
     const detail = node.detail;
-    if (typeof detail === "string") {
+    if (typeof detail === 'string') {
       const match = /Key \(([^)]+)\)=/.exec(detail);
-      if (match) return match[1].split(",").map((f) => f.trim());
+      if (match) return match[1].split(',').map((f) => f.trim());
     }
   }
   return [];
 }
 
-function build(concept: Concept, entity: string, error: unknown): DatabaseError {
+/** Creates the domain error matching the normalized database failure concept. */
+function build(
+  concept: Concept,
+  entity: string,
+  error: unknown,
+): DatabaseError {
   switch (concept) {
-    case "unique":
+    case 'unique':
       return new UniqueConstraintError(entity, extractFields(error), error);
-    case "foreignKey":
+    case 'foreignKey':
       return new ForeignKeyError(entity, extractFields(error)[0], error);
-    case "notNull":
+    case 'notNull':
       return new NotNullConstraintError(entity, extractFields(error), error);
-    case "check": {
+    case 'check': {
       const name = extractConstraintName(error);
       const message = name ? CHECK_CONSTRAINT_MESSAGES[name] : undefined;
       return new CheckConstraintError(entity, name, message, error);
     }
-    case "tooLong":
+    case 'tooLong':
       return new ValueTooLongError(entity, extractFields(error)[0], error);
-    case "outOfRange":
+    case 'outOfRange':
       return new ValueOutOfRangeError(entity, extractFields(error)[0], error);
-    case "invalidFormat":
-      return new InvalidValueFormatError(entity, extractFields(error)[0], error);
-    case "notFound":
+    case 'invalidFormat':
+      return new InvalidValueFormatError(
+        entity,
+        extractFields(error)[0],
+        error,
+      );
+    case 'notFound':
       return new RecordNotFoundError(entity, error);
-    case "relatedNotFound":
+    case 'relatedNotFound':
       return new RelatedRecordNotFoundError(entity, error);
-    case "requiredRelation":
+    case 'requiredRelation':
       return new RequiredRelationViolationError(entity, error);
-    case "conflict":
+    case 'conflict':
       return new TransactionConflictError(error);
-    case "transactionTimeout":
+    case 'transactionTimeout':
       return new TransactionTimeoutError(error);
-    case "unavailable":
+    case 'unavailable':
       return new DatabaseUnavailableError(error);
-    case "timeout":
+    case 'timeout':
       return new DatabaseTimeoutError(error);
-    case "pool":
+    case 'pool':
       return new ConnectionPoolExhaustedError(error);
-    case "auth":
+    case 'auth':
       return new DatabaseAuthenticationError(error);
-    case "schema":
+    case 'schema':
       return new SchemaMismatchError(error);
   }
 }
 
-
+/** Checks known Prisma error classes, excluding validation and application errors. */
 export function isPrismaError(error: unknown): boolean {
   return (
     error instanceof Prisma.PrismaClientKnownRequestError ||
@@ -259,37 +282,37 @@ export function isPrismaError(error: unknown): boolean {
 }
 
 /**
- * Convertit une erreur Prisma en erreur applicative.
+ * Converts a Prisma error into an application error.
  *
- * - Déjà une `DatabaseError` : renvoyée telle quelle (évite de traduire deux fois
- *   quand un repository en appelle un autre).
- * - Pas une erreur Prisma (bug de code, `PrismaClientValidationError`, erreur métier...) :
- *   renvoyée telle quelle.
- * - Erreur Prisma non reconnue : `UnknownDatabaseError` (l'erreur d'origine reste dans `cause`).
+ * - Existing `DatabaseError`: returned as-is (prevents duplicate translation
+ *   when one repository calls another).
+ * - Not a Prisma error (code bug, `PrismaClientValidationError`, domain error, etc.):
+ *   returned as-is.
+ * - Unrecognized Prisma error: `UnknownDatabaseError` (the original error remains in `cause`).
  *
- * @param error  l'erreur interceptée
- * @param entity nom de l'entité du repository (ex. "Agent"), pour des messages précis
+ * @param error  the intercepted error
+ * @param entity repository entity name (e.g. "Agent"), for specific messages
  */
 export function translatePrismaError(error: unknown, entity: string): unknown {
   if (error instanceof DatabaseError) return error;
   if (!isPrismaError(error)) return error;
 
-  // 1. SQLSTATE PostgreSQL (le plus précis)
+  // 1. PostgreSQL SQLSTATE (most specific)
   const sqlState = extractSqlState(error);
   if (sqlState) {
     const concept = SQLSTATE_MAP[sqlState];
     if (concept) return build(concept, entity, error);
-    // Classe 08 : exception de connexion
-    if (sqlState.startsWith("08")) return build("unavailable", entity, error);
+    // Class 08: connection exception
+    if (sqlState.startsWith('08')) return build('unavailable', entity, error);
   }
 
-  // 2. « kind » de l'adapter pg
+  // 2. pg adapter "kind"
   const kind = extractAdapterKind(error);
   if (kind && ADAPTER_KIND_MAP[kind]) {
     return build(ADAPTER_KIND_MAP[kind], entity, error);
   }
 
-  // 3. Code Prisma Pxxxx
+  // 3. Prisma Pxxxx code
   const code = extractPrismaCode(error);
   if (code && PRISMA_CODE_MAP[code]) {
     return build(PRISMA_CODE_MAP[code], entity, error);

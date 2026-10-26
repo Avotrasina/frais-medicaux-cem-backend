@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../infrastructure/prisma/prisma.module.js';
 import { AgentCategoryController } from './agent-category.controller.js';
-import { AgentCategoryRepository } from './agent-category.repository.js';
-import { AgentRepository } from '../agent/repositories/agent.repository.js';
+import { AgentCategoryRepository } from './repositories/agent-category.repository.js';
 import { AgentModule } from '../agent/agent.module.js';
 import { SaveAgentCategoryUseCase } from './use-cases/agent-category.save.js';
 import { UpdateAgentCategoryUseCase } from './use-cases/agent-category.update.js';

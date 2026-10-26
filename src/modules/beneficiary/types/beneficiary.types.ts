@@ -1,9 +1,9 @@
-import type { Sexe } from "../../personne/personne.types.js";
-import type { CodeFamille } from "./idp.types.js";
+import type { Sexe } from '../../personne/personne.types.js';
+import type { CodeFamille } from './idp.types.js';
 
 export type CreateBeneficiary = {
   id: number;
-  agentMatricule:number;
+  agentMatricule: number;
   observationIDP?: string | null;
   codeFamille: CodeFamille;
   numConjoint?: number | null;
@@ -21,21 +21,21 @@ export type ReadBeneficiaryBase = {
 };
 
 export type BeneficiaryLien =
-  | { type: "AGENT"; matricule: number }
+  | { type: 'AGENT'; matricule: number }
   | {
-      type: "CONJOINT";
+      type: 'CONJOINT';
       numConjoint: number;
       agentMatricule: number;
       carteSocialePath: string;
     }
   | {
-      type: "ENFANT";
+      type: 'ENFANT';
       numEnfant: number;
       agentMatricule: number;
       carteSocialePath: string;
     };
 
-  export type ReadBeneficiary = {
+export type ReadBeneficiary = {
   nom: string;
   prenom: string;
   dateNaissance: Date;

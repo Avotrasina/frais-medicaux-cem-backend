@@ -1,12 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { AgentRepository } from "../repositories/agent.repository.js";
-import { AgentType, type ReadPersonneAgent } from "../types/agent.types.js";
-import type { AgentUseCaseTypes,FilterOptions} from "../types/use-case.agent.types.js";
-import { BackOfficeFrontOffice } from "../dtos/enum.js";
-import { StructureOrganisationnelleRepository } from "../../organizational_structure/repositories/structure-orga.repository.js";
+import { Injectable } from '@nestjs/common';
+import { AgentRepository } from '../repositories/agent.repository.js';
+import { AgentType, type ReadPersonneAgent } from '../types/agent.types.js';
+import type {
+  AgentUseCaseTypes,
+  FilterOptions,
+} from '../types/use-case.agent.types.js';
+import { BackOfficeFrontOffice } from '../types/agent.enum.types.js';
+import { StructureOrganisationnelleRepository } from '../../organizational-structure/repositories/structure-orga.repository.js';
 
 type PersonneAgent = Awaited<
-  ReturnType<AgentRepository["findAllAgents"]>
+  ReturnType<AgentRepository['findAllAgents']>
 >[number];
 
 @Injectable()
@@ -27,11 +30,12 @@ export class ReadAgentUseCase {
     agent,
     id: _p,
     ...personne
-  }: PersonneAgent):Promise<AgentUseCaseTypes> {
+  }: PersonneAgent): Promise<AgentUseCaseTypes> {
     const { structureID, id: _a, agentType, ...resteAgent } = agent;
-    const structure = structureID && agentType !== AgentType.AGENT_RETRAITE
-      ? await this.structureRepository.findByID(structureID)
-      : null;
+    const structure =
+      structureID && agentType !== AgentType.AGENT_RETRAITE
+        ? await this.structureRepository.findById(structureID)
+        : null;
 
     return {
       ...personne,
@@ -40,9 +44,12 @@ export class ReadAgentUseCase {
     };
   }
 
+  /** Determines the front-office from retirement status or the linked structure. */
   private resolveBackOffice(
     agentType: AgentType,
-    structure: Awaited<ReturnType<StructureOrganisationnelleRepository["findByID"]>> | null,
+    structure: Awaited<
+      ReturnType<StructureOrganisationnelleRepository['findById']>
+    > | null,
   ): BackOfficeFrontOffice {
     if (agentType === AgentType.AGENT_RETRAITE) {
       return BackOfficeFrontOffice.RETRAITE;
@@ -51,16 +58,16 @@ export class ReadAgentUseCase {
     if (structure?.nomDirection) return BackOfficeFrontOffice.DIRECTION;
     return BackOfficeFrontOffice.AGENCE;
   }
-  
-  readAll(): Promise<AgentUseCaseTypes[]> {
+
+  findAll(): Promise<AgentUseCaseTypes[]> {
     return this.fetch(() => this.agentRepository.findAllAgents());
   }
 
-  readDeletionRequests(): Promise<ReadPersonneAgent[]> {
+  findDeletionRequests(): Promise<ReadPersonneAgent[]> {
     return this.agentRepository.findDeletionRequests();
   }
 
-  filter(params: FilterOptions): Promise<AgentUseCaseTypes[]> {
+  findByFilter(params: FilterOptions): Promise<AgentUseCaseTypes[]> {
     const { backOfficeFrontOffice, codeAgence, codeDirection, codeService } =
       params;
 
@@ -69,15 +76,18 @@ export class ReadAgentUseCase {
     }
     if (codeAgence != null) {
       return this.fetch(() =>
-        this.agentRepository.findAgentsWithPrsonneByCodeAgence(codeAgence),
+        this.agentRepository.findAgentsByAgencyCode(codeAgence),
       );
     }
     if (codeDirection != null) {
       return this.fetch(() =>
-        this.agentRepository.findAgentsWithPersonneByDirection(codeDirection, codeService),
+        this.agentRepository.findAgentsWithPersonneByDirection(
+          codeDirection,
+          codeService,
+        ),
       );
     }
-    return this.readAll();
+    return this.findAll();
   }
 
   findByLastName(lastName: string): Promise<AgentUseCaseTypes[]> {
@@ -91,5 +101,4 @@ export class ReadAgentUseCase {
       this.agentRepository.findByFirstNameWithPersonne(firstName),
     );
   }
-
 }

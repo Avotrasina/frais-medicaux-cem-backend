@@ -3,7 +3,10 @@ import type {
   DeletionNode,
 } from '../../common/types/soft-deletion.types.js';
 
-/** Encapsule les méthodes Prisma ajoutées par l'extension de suppression. */
+/**
+ * Applies the same deletion action to every target in the tree, using the
+ * transaction client supplied by the caller.
+ */
 export async function executeSoftDeletion(
   tx: unknown,
   nodes: DeletionNode[],

@@ -1,19 +1,19 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../../infrastructure/prisma/prisma.service.js";
-import type { Attestation } from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import type { Attestation } from '../../../generated/prisma/client.js';
+import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import {
   StatutAttestation,
   type CreateAttestation,
   type DecisionAttestation,
   type ReadAttestation,
   type UpdatePartialAttestation,
-} from "../types/attestation.types.js";
-import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
-import { omitNullish } from "../../../common/utils/omit-nullish.js";
+} from '../types/attestation.types.js';
+import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
+import { omitNullish } from '../../../common/utils/omit-nullish.js';
 
 @Injectable()
-@HandlePrismaErrors({ exclude: ["toReadAttestation"] })
+@HandlePrismaErrors({ exclude: ['toReadAttestation'] })
 export class AttestationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -24,15 +24,14 @@ export class AttestationRepository {
   private toReadAttestation(attestation: Attestation): ReadAttestation {
     return {
       id: attestation.id,
-      attestationPath: attestation.attestationPath ,
+      attestationPath: attestation.attestationPath,
       dateValidation: attestation.dateValidation,
       naturePrestation: attestation.naturePrestation,
       servicePrestataire: attestation.servicePrestataire,
       statut: StatutAttestation[attestation.statut],
       prestataireID: attestation.prestataireID,
       idpBeneficiaire: attestation.idpBeneficiaire,
-      datePEC:attestation.datePEC,
-      
+      datePEC: attestation.datePEC,
     };
   }
 
@@ -53,37 +52,34 @@ export class AttestationRepository {
     return this.toReadAttestation(created);
   }
 
-  async findByID(
-    id:number,
-    tx?:DbClient
-  ):Promise<ReadAttestation>{
+  async findById(id: number, tx?: DbClient): Promise<ReadAttestation> {
     const attestation = await this.client(tx).attestation.findFirstOrThrow({
-      where:{id}
-    })
-    return this.toReadAttestation(attestation)
+      where: { id },
+    });
+    return this.toReadAttestation(attestation);
   }
 
-  async updateByID(
+  async updateById(
     id: number,
     attestation: UpdatePartialAttestation,
     tx?: DbClient,
   ): Promise<ReadAttestation> {
     const updated = await this.client(tx).attestation.update({
-      where: { id},
+      where: { id },
       data: omitNullish({
         attestationPath: attestation.attestationPath,
         naturePrestation: attestation.naturePrestation,
         servicePrestataire: attestation.servicePrestataire,
         prestataireID: attestation.prestataireID,
-        idpBeneficiary:attestation.idpBenificiaire,
-        datePEC:attestation.datePEC
+        idpBeneficiary: attestation.idpBenificiaire,
+        datePEC: attestation.datePEC,
       }),
     });
     return this.toReadAttestation(updated);
   }
 
-  async updateStatut(
-    id:number,
+  async updateStatus(
+    id: number,
     decision: DecisionAttestation,
     tx?: DbClient,
   ): Promise<ReadAttestation> {
@@ -98,38 +94,40 @@ export class AttestationRepository {
     return this.toReadAttestation(updated);
   }
 
-  async delete(id:number, tx?: DbClient): Promise<string | null> {
-    const pathAttestation = await this.client(tx).attestation.findFirstOrThrow(
-      {where:{
-        id
-      }}
-    )
+  async delete(id: number, tx?: DbClient): Promise<string | null> {
+    const pathAttestation = await this.client(tx).attestation.findFirstOrThrow({
+      where: {
+        id,
+      },
+    });
     await this.client(tx).attestation.delete({ where: { id } });
-    return pathAttestation.attestationPath
+    return pathAttestation.attestationPath;
   }
 
   async findAll(tx?: DbClient): Promise<ReadAttestation[]> {
     const attestations = await this.client(tx).attestation.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     });
     return attestations.map((a) => this.toReadAttestation(a));
   }
-
 
   async findPending(tx?: DbClient): Promise<ReadAttestation[]> {
     const attestations = await this.client(tx).attestation.findMany({
       where: { statut: StatutAttestation.EN_ATTENTE },
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: 'asc' },
     });
     return attestations.map((a) => this.toReadAttestation(a));
   }
 
-  async findBeneficiaryValidateAttestion(beneficiaryIdp:string,tx?:DbClient){
+  async findValidatedByBeneficiaryIdp(
+    beneficiaryIdp: string,
+    tx?: DbClient,
+  ): Promise<ReadAttestation[]> {
     const attestations = await this.client(tx).attestation.findMany({
-      where:{idpBeneficiaire:beneficiaryIdp
-        , statut:"VALIDEE"
-      }
-    })
-    return attestations.map((a)=>{return this.toReadAttestation(a)});
+      where: { idpBeneficiaire: beneficiaryIdp, statut: 'VALIDEE' },
+    });
+    return attestations.map((attestation) =>
+      this.toReadAttestation(attestation),
+    );
   }
 }

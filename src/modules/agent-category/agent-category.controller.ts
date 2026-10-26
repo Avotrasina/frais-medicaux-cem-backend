@@ -35,13 +35,13 @@ export class AgentCategoryController {
     await this.deleteAgentCategoryUseCase.request(id);
   }
 
-  @Post(':id/deletion/validate')
+  @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteAgentCategoryUseCase.validate(id);
   }
 
-  @Post(':id/deletion/reject')
+  @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteAgentCategoryUseCase.reject(id);
@@ -59,16 +59,16 @@ export class AgentCategoryController {
     return this.readAgentCategoryUseCase.findAll();
   }
 
-  @Get('deletion/requests')
+  @Get('deletion-requests')
   async findDeletionRequests(): Promise<ReadAgentCategory[]> {
     return this.readAgentCategoryUseCase.findDeletionRequests();
   }
 
   @Get(':id')
-  async findOne(
+  async findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ReadAgentCategory> {
-    return this.readAgentCategoryUseCase.findByID(id);
+    return this.readAgentCategoryUseCase.findById(id);
   }
 
   @Patch(':id')

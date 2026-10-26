@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { ProviderRepository } from "../provider.repository.js";
-import { omitNullish } from "../../../common/utils/omit-nullish.js";
+import { Injectable } from '@nestjs/common';
+import { ProviderRepository } from '../repositories/provider.repository.js';
+import { omitNullish } from '../../../common/utils/omit-nullish.js';
 import type {
   ReadProvider,
   UpdatePartialProvider,
-} from "../types/provider.types.js";
+} from '../types/provider.types.js';
 
 @Injectable()
 export class UpdateProviderUseCase {
@@ -14,9 +14,9 @@ export class UpdateProviderUseCase {
     id: number,
     input: UpdatePartialProvider,
   ): Promise<ReadProvider> {
-    // aucun champ fourni : pas d'UPDATE inutile, on renvoie l'existant
+    // No fields were provided: skip an unnecessary UPDATE and return the existing record.
     if (Object.keys(omitNullish(input)).length === 0) {
-      return this.providerRepository.readbyID(id);
+      return this.providerRepository.findById(id);
     }
     return this.providerRepository.updatePartial(id, input);
   }

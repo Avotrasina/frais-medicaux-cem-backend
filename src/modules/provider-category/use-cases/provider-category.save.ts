@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { ProviderCategoryRepository } from "../provider-category.repository.js";
+import { Injectable } from '@nestjs/common';
+import { ProviderCategoryRepository } from '../repositories/provider-category.repository.js';
 import type {
   CreateProviderCategory,
   ReadProviderCategory,
-} from "../types/provider-category.types.js";
+} from '../types/provider-category.types.js';
 
 @Injectable()
 export class SaveProviderCategoryUseCase {

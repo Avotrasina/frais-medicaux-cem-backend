@@ -1,21 +1,20 @@
-import type { ReadPersonne } from "../../personne/personne.types.js";
+import type { ReadPersonne } from '../../personne/personne.types.js';
 
 export type ReadPersonneAgent = ReadPersonne & {
   agent: ReadAgent;
 };
 
-
 export const AgentType = {
-  AGENT_ACTIF: "AGENT_ACTIF",
-  AGENT_RETRAITE: "AGENT_RETRAITE",
+  AGENT_ACTIF: 'AGENT_ACTIF',
+  AGENT_RETRAITE: 'AGENT_RETRAITE',
 } as const;
 export type AgentType = (typeof AgentType)[keyof typeof AgentType];
 
 export const StatutPEC = {
-  AGENT: "AGENT",
-  DIRECTEUR: "DIRECTEUR",
-  CHEF_SERVICE: "CHEF_SERVICE",
-  CHEF_AGENCE: "CHEF_AGENCE",
+  AGENT: 'AGENT',
+  DIRECTEUR: 'DIRECTEUR',
+  CHEF_SERVICE: 'CHEF_SERVICE',
+  CHEF_AGENCE: 'CHEF_AGENCE',
 } as const;
 export type StatutPEC = (typeof StatutPEC)[keyof typeof StatutPEC];
 
@@ -60,4 +59,3 @@ export type UpdatePartialAgent = {
   codeService?: string | null;
   categorieID?: string | null;
 };
-

@@ -1,4 +1,13 @@
-import { CreateAttestation,UpdatePartialAttestation} from "./attestation.types.js"
+import {
+  CreateAttestation,
+  UpdatePartialAttestation,
+} from './attestation.types.js';
 
-export type CreateAttestationUseCaseType = Omit<CreateAttestation, "attestationPath">
-export type UpdateAttestationUseCaseType = Omit<UpdatePartialAttestation,"attestationPath">
+export type CreateAttestationUseCaseType = Omit<
+  CreateAttestation,
+  'attestationPath'
+>;
+export type UpdateAttestationUseCaseType = Omit<
+  UpdatePartialAttestation,
+  'attestationPath'
+>;

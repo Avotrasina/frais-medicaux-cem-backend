@@ -1,6 +1,6 @@
 export const ProviderStatus = {
-  PRIVE: "PRIVE",
-  PUBLIC: "PUBLIC",
+  PRIVE: 'PRIVE',
+  PUBLIC: 'PUBLIC',
 } as const;
 export type ProviderStatus =
   (typeof ProviderStatus)[keyof typeof ProviderStatus];
@@ -19,7 +19,9 @@ export type CreateProvider = {
   conventionPath: string;
 };
 
-export type UpdatePartialProvider = Partial<Omit<CreateProvider, "conventionPath">>;
+export type UpdatePartialProvider = Partial<
+  Omit<CreateProvider, 'conventionPath'>
+>;
 
 export type ReadProvider = {
   id: number;
@@ -39,4 +41,3 @@ export type FilterProvider = {
   lieuID?: number;
   categorieID?: number;
 };
-

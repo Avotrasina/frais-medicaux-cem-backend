@@ -1,25 +1,24 @@
-import {
-  CodeFamille,
-  SUFFIXE_CODE,
-} from "../types/idp.types.js";
+import { CodeFamille, SUFFIXE_CODE } from '../types/idp.types.js';
 
 function assertEntierPositif(value: number, label: string): void {
   if (!Number.isInteger(value) || value < 0) {
-    throw new Error(`${label} doit être un entier positif (reçu : ${value})`);
+    throw new Error(
+      `${label} must be a non-negative integer (received: ${value})`,
+    );
   }
 }
 
 function formatMatricule(matricule: number): string {
-  assertEntierPositif(matricule, "matricule");
-  return String(matricule).padStart(3, "0");
+  assertEntierPositif(matricule, 'employee ID');
+  return String(matricule).padStart(3, '0');
 }
 
 function formatNumero(numero: number): string {
-  assertEntierPositif(numero, "numéro");
+  assertEntierPositif(numero, 'number');
   if (numero > 99) {
-    throw new Error(`numéro doit être compris entre 0 et 999 (reçu : ${numero})`);
+    throw new Error(`number must be between 0 and 999 (received: ${numero})`);
   }
-  return String(numero).padStart(2, "0");
+  return String(numero).padStart(2, '0');
 }
 
 export function buildCodeFamille(
@@ -36,13 +35,13 @@ export function buildCodeFamille(
       break;
     case CodeFamille.CONJOINT:
       if (numConjoint == null) {
-        throw new Error("numConjoint est requis pour un conjoint");
+        throw new Error('numConjoint is required for a spouse');
       }
       num = numConjoint;
       break;
     case CodeFamille.ENFANT:
       if (numEnfant == null) {
-        throw new Error("numEnfant est requis pour un enfant");
+        throw new Error('numEnfant is required for a child');
       }
       num = numEnfant;
       break;
