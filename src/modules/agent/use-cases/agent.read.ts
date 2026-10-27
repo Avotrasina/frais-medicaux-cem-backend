@@ -40,6 +40,7 @@ export class ReadAgentUseCase {
     return {
       ...personne,
       ...resteAgent,
+      structureID,
       backOfficeFrontOffice: this.resolveBackOffice(agentType, structure),
     };
   }
