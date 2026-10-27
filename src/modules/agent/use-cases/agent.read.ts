@@ -75,6 +75,12 @@ export class ReadAgentUseCase {
     if (backOfficeFrontOffice === BackOfficeFrontOffice.RETRAITE) {
       return this.fetch(() => this.agentRepository.findAllRetiredAgents());
     }
+    if (backOfficeFrontOffice === BackOfficeFrontOffice.AGENCE) {
+      return this.fetch(() => this.agentRepository.findAllAgencyAgents());
+    }
+    if (backOfficeFrontOffice === BackOfficeFrontOffice.DIRECTION) {
+      return this.fetch(() => this.agentRepository.findAllDirectionAgents());
+    }
     if (codeAgence != null) {
       return this.fetch(() =>
         this.agentRepository.findAgentsByAgencyCode(codeAgence),
