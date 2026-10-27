@@ -21,6 +21,7 @@ import {
   AgentInputDto,
   AgentUpdateDto,
   AgentSearchNameDto,
+  AgentSearchFilterDto,
   AgentCreateMultipartDto,
   AgentCardMultipartDto,
 } from './dtos/agent.dto.js';
@@ -30,13 +31,13 @@ import { GetAgentCardUseCase } from './use-cases/agent.get-card.js';
 import type {
   AgentUpdatePartial,
   AgentUpdateProfCard,
-  FilterOptions,
 } from './types/use-case.agent.types.js';
 import { DeleteAgentUseCase } from './use-cases/agent.delete.js';
 import { ReadAgentUseCase } from './use-cases/agent.read.js';
 import type { ReadPersonneAgent } from './types/agent.types.js';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
 import { ApiProduces } from '@nestjs/swagger';
+import { BackOfficeFrontOffice } from './types/agent.enum.types.js';
 
 @Controller('agents')
 export class AgentController {
@@ -143,18 +144,38 @@ export class AgentController {
 
   @Get('search')
   @HttpCode(HttpStatus.OK)
-  async search(@Query('filter') filter: FilterOptions) {
+  @ApiQuery({
+    name: 'backOfficeFrontOffice',
+    required: false,
+    enum: BackOfficeFrontOffice,
+  })
+  @ApiQuery({ name: 'codeDirection', required: false, type: String })
+  @ApiQuery({ name: 'codeService', required: false, type: String })
+  @ApiQuery({ name: 'codeAgence', required: false, type: String })
+  async search(@Query() filter: AgentSearchFilterDto) {
     return await this.readAgentUseCase.findByFilter(filter);
   }
 
   @Get('search/last-name')
   @HttpCode(HttpStatus.OK)
+  @ApiQuery({
+    name: 'value',
+    required: true,
+    type: String,
+    description: 'Nom à rechercher',
+  })
   async findByLastName(@Query() query: AgentSearchNameDto) {
     return await this.readAgentUseCase.findByLastName(query.value);
   }
 
   @Get('search/first-name')
   @HttpCode(HttpStatus.OK)
+  @ApiQuery({
+    name: 'value',
+    required: true,
+    type: String,
+    description: 'Prénom à rechercher',
+  })
   async findByFirstName(@Query() query: AgentSearchNameDto) {
     return await this.readAgentUseCase.findByFirstName(query.value);
   }

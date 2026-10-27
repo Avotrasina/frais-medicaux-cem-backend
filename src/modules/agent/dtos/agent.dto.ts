@@ -12,7 +12,7 @@ import { Sexe } from '../../personne/personne.types.js';
 import { BackOfficeFrontOffice } from '../types/agent.enum.types.js';
 import { StatutPEC } from '../types/agent.types.js';
 import { Transform } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class AgentInputDto {
   @IsNotEmpty()
@@ -88,6 +88,28 @@ export class AgentSearchNameDto {
   @IsString()
   @IsNotEmpty()
   value!: string;
+}
+
+export class AgentSearchFilterDto {
+  @ApiPropertyOptional({ enum: BackOfficeFrontOffice })
+  @IsOptional()
+  @IsEnum(BackOfficeFrontOffice)
+  backOfficeFrontOffice?: BackOfficeFrontOffice;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  codeDirection?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  codeService?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  codeAgence?: string;
 }
 
 export class AgentCreateMultipartDto extends AgentInputDto {

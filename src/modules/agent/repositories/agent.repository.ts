@@ -236,11 +236,41 @@ export class AgentRepository {
     return this.findManyWithPersonne({ agentType: 'AGENT_RETRAITE' }, tx);
   }
 
+  async findAllAgencyAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne(
+      {
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'AGENCE' },
+        },
+      },
+      tx,
+    );
+  }
+
+  async findAllDirectionAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne(
+      {
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'DIRECTION' },
+        },
+      },
+      tx,
+    );
+  }
+
   async findAgentsByAgencyCode(
     codeAgence: string,
     tx?: DbClient,
   ): Promise<ReadPersonneAgent[]> {
-    return this.findManyWithPersonne({ structureID: codeAgence }, tx);
+    return this.findManyWithPersonne(
+      {
+        structureID: codeAgence,
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'AGENCE' },
+        },
+      },
+      tx,
+    );
   }
 
   async findAgentsWithPersonneByDirection(
