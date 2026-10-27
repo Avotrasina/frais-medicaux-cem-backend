@@ -32,6 +32,7 @@ export class AttestationRepository {
       prestataireID: attestation.prestataireID,
       idpBeneficiaire: attestation.idpBeneficiaire,
       datePEC: attestation.datePEC,
+      createdAt: attestation.createdAt,
     };
   }
 

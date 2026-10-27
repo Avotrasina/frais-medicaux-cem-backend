@@ -49,6 +49,7 @@ export type ReadAttestation = {
   prestataireID: number;
   idpBeneficiaire: string;
   datePEC: Date;
+  createdAt: Date;
 };
 
 export type FamilleData = {
