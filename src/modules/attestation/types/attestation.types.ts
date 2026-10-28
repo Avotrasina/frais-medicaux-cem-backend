@@ -21,6 +21,7 @@ export type DecisionAttestation = Extract<
   'VALIDEE' | 'REFUSEE'
 >;
 
+
 export type CreateAttestation = {
   attestationPath: string | null;
   naturePrestation: string;
@@ -50,6 +51,7 @@ export type ReadAttestation = {
   idpBeneficiaire: string;
   datePEC: Date;
   createdAt: Date;
+  attestationStatut: StatutAttestation;
 };
 
 export type FamilleData = {

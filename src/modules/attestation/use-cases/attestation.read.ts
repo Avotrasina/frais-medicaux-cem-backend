@@ -5,12 +5,12 @@ import { AttestationRepository } from '../repositories/attestation.repository.js
 export class ReadAttestationUseCase {
   constructor(private readonly attestationRepository: AttestationRepository) {}
 
-  async findPending() {
-    return this.attestationRepository.findPending();
+   findAll(){
+    return this.attestationRepository.findAll();
   }
 
-  async findValidatedByBeneficiaryIdp(beneficiaryIdp: string) {
-    return this.attestationRepository.findValidatedByBeneficiaryIdp(
+   findByBeneficiaryIdp(beneficiaryIdp: string) {
+    return this.attestationRepository.findByBeneficiaryIdp(
       beneficiaryIdp,
     );
   }

@@ -33,6 +33,7 @@ export class AttestationRepository {
       idpBeneficiaire: attestation.idpBeneficiaire,
       datePEC: attestation.datePEC,
       createdAt: attestation.createdAt,
+      attestationStatut:attestation.statut
     };
   }
 
@@ -112,20 +113,12 @@ export class AttestationRepository {
     return attestations.map((a) => this.toReadAttestation(a));
   }
 
-  async findPending(tx?: DbClient): Promise<ReadAttestation[]> {
-    const attestations = await this.client(tx).attestation.findMany({
-      where: { statut: StatutAttestation.EN_ATTENTE },
-      orderBy: { createdAt: 'asc' },
-    });
-    return attestations.map((a) => this.toReadAttestation(a));
-  }
-
-  async findValidatedByBeneficiaryIdp(
+  async findByBeneficiaryIdp(
     beneficiaryIdp: string,
     tx?: DbClient,
   ): Promise<ReadAttestation[]> {
     const attestations = await this.client(tx).attestation.findMany({
-      where: { idpBeneficiaire: beneficiaryIdp, statut: 'VALIDEE' },
+      where: { idpBeneficiaire: beneficiaryIdp},
     });
     return attestations.map((attestation) =>
       this.toReadAttestation(attestation),

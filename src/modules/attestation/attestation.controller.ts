@@ -64,16 +64,18 @@ export class AttestationController {
     await this.attestationDeleteUseCase.execute(id);
   }
 
-  @Get('pending')
+
+    @Get('/')
   @HttpCode(HttpStatus.OK)
-  async findAllPending() {
-    return await this.attestationReadUseCase.findPending();
+  async findAll() {
+    return await this.attestationReadUseCase.findAll();
   }
+
 
   @Get('beneficiaries/:idp')
   @HttpCode(HttpStatus.OK)
   async findByBeneficiary(@Param('idp') idp: string) {
-    return await this.attestationReadUseCase.findValidatedByBeneficiaryIdp(idp);
+    return await this.attestationReadUseCase.findByBeneficiaryIdp(idp);
   }
 
   @Get(':id/preview')
