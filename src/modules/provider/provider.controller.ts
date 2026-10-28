@@ -49,26 +49,26 @@ export class ProviderController {
     private readonly deletionUseCase: ProviderTreeDeletionUseCase,
   ) {}
 
-  @Delete(':id-provider')
+  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async requestDeletion(
-    @Param('id-provider', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
     await this.deletionUseCase.request('prestataire', id);
   }
 
-  @Post(':id-provider/deletion-validation')
+  @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async validateDeletion(
-    @Param('id-provider', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
     await this.deletionUseCase.validate('prestataire', id);
   }
 
-  @Post(':id-provider/deletion-rejection')
+  @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
   async rejectDeletion(
-    @Param('id-provider', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
     await this.deletionUseCase.reject('prestataire', id);
   }
@@ -139,10 +139,10 @@ export class ProviderController {
     return this.readProviderUseCase.findByFilter({ lieuID, categorieID });
   }
 
-  @Get(':id-provider/convention')
+  @Get(':id/convention')
   @ApiProduces('application/pdf')
   async getConvention(
-    @Param('id-provider', ParseIntPipe) idProvider: number,
+    @Param('id', ParseIntPipe) idProvider: number,
   ): Promise<StreamableFile> {
     const { buffer, fileName } =
       await this.readProviderUseCase.findConvention(idProvider);
@@ -152,15 +152,15 @@ export class ProviderController {
     });
   }
 
-  @Patch(':id-provider')
+  @Patch(':id')
   async update(
-    @Param('id-provider', ParseIntPipe) idProvider: number,
+    @Param('id', ParseIntPipe) idProvider: number,
     @Body() body: UpdateProviderDto,
   ): Promise<ReadProvider> {
     return this.updateProviderUseCase.updatePartial(idProvider, body);
   }
 
-  @Patch(':id-provider/convention')
+  @Patch(':id/convention')
   @HttpCode(HttpStatus.OK)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -186,7 +186,7 @@ export class ProviderController {
     }),
   )
   async updateConvention(
-    @Param('id-provider', ParseIntPipe) idProvider: number,
+    @Param('id', ParseIntPipe) idProvider: number,
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<ReadProvider> {
     if (!file) {
