@@ -1,7 +1,7 @@
-enum SuppresionStatut {
+enum SuppressionStatut {
   EN_ATTENTE @map("en_attente")
   REJETE     @map("rejete")
 
-  @@map("suppresion_statut")
+  @@map("suppression_statut")
   @@schema("identifiant")
 }
