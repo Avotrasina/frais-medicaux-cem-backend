@@ -10,7 +10,7 @@ import type {
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
 import { executeSoftDeletion } from '../../../infrastructure/prisma/soft-deletion.repository.js';
 import type { DeletionAction } from '../../../common/types/soft-deletion.types.js';
-import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import { SuppressionStatut } from '../../../generated/prisma/enums.js';
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ['toReadAgentCategory'] })
@@ -34,7 +34,7 @@ export class AgentCategoryRepository {
 
   async findDeletionRequests(tx?: DbClient): Promise<ReadAgentCategory[]> {
     const categories = await this.client(tx).categorieAgent.findMany({
-      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      where: { suppressionStatut: SuppressionStatut.EN_ATTENTE },
       orderBy: { codeCategory: 'asc' },
     });
     return categories.map((category) => this.toReadAgentCategory(category));

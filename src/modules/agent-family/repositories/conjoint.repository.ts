@@ -5,7 +5,7 @@ import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js'
 import { Sexe } from '../../personne/personne.types.js';
 import type { ReadConjoint, CreateConjoint } from '../types/conjoint.types.js';
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
-import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import { SuppressionStatut } from '../../../generated/prisma/enums.js';
 
 type ConjointWithFamilyPerson = Prisma.ConjointGetPayload<{
   include: { familleAgent: { include: { personne: true } } };
@@ -45,7 +45,7 @@ export class ConjointRepository {
 
   async findDeletionRequests(tx?: DbClient): Promise<ReadConjoint[]> {
     const conjoints = await this.client(tx).conjoint.findMany({
-      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      where: { suppressionStatut: SuppressionStatut.EN_ATTENTE },
       include: { familleAgent: { include: { personne: true } } },
       orderBy: { numConjoint: 'asc' },
     });

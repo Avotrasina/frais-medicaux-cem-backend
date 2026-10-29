@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { Prisma, type PrismaClient } from '../../../generated/prisma/client.js';
-import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import {SuppressionStatut } from '../../../generated/prisma/enums.js';
 import {
   DeletionNotPendingError,
   DeletionValidationRequiredError,
@@ -49,7 +49,7 @@ const BULK_WRITES = new Set(['updateMany', 'updateManyAndReturn']);
 const NOT_REJECTED = {
   OR: [
     { suppressionStatut: null },
-    { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+    { suppressionStatut: SuppressionStatut.EN_ATTENTE },
   ],
 };
 
@@ -107,7 +107,7 @@ export function createSoftDeleteExtension(
     if (!where) return;
     const hit = await internalQueryContext.run(true, async () => {
       return await delegate.findFirst({
-        where: { AND: [where, { suppressionStatut: SuppresionStatut.REJETE }] },
+        where: { AND: [where, { suppressionStatut: SuppressionStatut.REJETE }] },
         select: { suppressionStatut: true },
       });
     });
@@ -119,7 +119,7 @@ export function createSoftDeleteExtension(
     const value = data.suppressionStatut;
     const next = value && typeof value === 'object' ? value.set : value;
     if (
-      next === SuppresionStatut.REJETE &&
+      next === SuppressionStatut.REJETE &&
       !deletionValidationContext.getStore()
     ) {
       throw new DeletionValidationRequiredError(model);
@@ -173,7 +173,7 @@ export function createSoftDeleteExtension(
             where: {
               AND: [where, { suppressionStatut: null }],
             },
-            data: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+            data: { suppressionStatut: SuppressionStatut.EN_ATTENTE },
           });
         },
 
@@ -193,7 +193,7 @@ export function createSoftDeleteExtension(
 
           const pending = await ctx.findFirst({
             where: {
-              AND: [where, { suppressionStatut: SuppresionStatut.EN_ATTENTE }],
+              AND: [where, { suppressionStatut: SuppressionStatut.EN_ATTENTE }],
             },
             select: { suppressionStatut: true },
           });
@@ -207,10 +207,10 @@ export function createSoftDeleteExtension(
               where: {
                 AND: [
                   where,
-                  { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+                  { suppressionStatut: SuppressionStatut.EN_ATTENTE },
                 ],
               },
-              data: { suppressionStatut: SuppresionStatut.REJETE },
+              data: { suppressionStatut: SuppressionStatut.REJETE },
             });
           });
         },

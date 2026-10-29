@@ -8,7 +8,7 @@ import type {
   UpdateService,
 } from '../types/service.types.js';
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
-import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import { SuppressionStatut } from '../../../generated/prisma/enums.js';
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ['toReadService'] })
@@ -36,7 +36,7 @@ export class ServiceRepository {
 
   async findDeletionRequests(tx?: DbClient): Promise<ReadService[]> {
     const services = await this.client(tx).service.findMany({
-      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      where: { suppressionStatut: SuppressionStatut.EN_ATTENTE },
       orderBy: [{ codeDirection: 'asc' }, { nom: 'asc' }],
     });
     return services.map((service) => this.toReadService(service));

@@ -15,7 +15,7 @@ import type {
   DeletionAction,
   DeletionNode,
 } from '../../../common/types/soft-deletion.types.js';
-import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import { SuppressionStatut } from '../../../generated/prisma/enums.js';
 import {
   mapAgentToRead,
   mapAgentWithPersonneToRead,
@@ -227,7 +227,7 @@ export class AgentRepository {
 
   async findDeletionRequests(tx?: DbClient): Promise<ReadPersonneAgent[]> {
     return this.findManyWithPersonne(
-      { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      { suppressionStatut: SuppressionStatut.EN_ATTENTE },
       tx,
     );
   }

@@ -8,7 +8,7 @@ import type {
   UpdatePartialLieu,
 } from '../types/location.types.js';
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
-import { SuppresionStatut } from '../../../generated/prisma/enums.js';
+import { SuppressionStatut } from '../../../generated/prisma/enums.js';
 
 @Injectable()
 @HandlePrismaErrors({ exclude: ['toReadLieu'] })
@@ -32,7 +32,7 @@ export class LocationRepository {
 
   async findDeletionRequests(tx?: DbClient): Promise<ReadLieu[]> {
     const lieux = await this.client(tx).lieu.findMany({
-      where: { suppressionStatut: SuppresionStatut.EN_ATTENTE },
+      where: { suppressionStatut: SuppressionStatut.EN_ATTENTE },
       orderBy: { nom: 'asc' },
     });
     return lieux.map((lieu) => this.toReadLieu(lieu));
