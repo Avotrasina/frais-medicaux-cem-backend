@@ -10,7 +10,6 @@ import {
   type UpdatePartialProvider,
 } from '../types/provider.types.js';
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
-import { omitNullish } from '../../../common/utils/omit-nullish.js';
 import { SuppressionStatut } from '../../../generated/prisma/enums.js';
 
 @Injectable()
@@ -33,6 +32,9 @@ export class ProviderRepository {
       dateDebutConvention: provider.dateDebutConvention,
       dateFinConvention: provider.dateFinConvention,
       listePrestation: provider.listePrestation,
+      echeanceRenouvellement: provider.echeanceRenouvellement,
+      echeanceResiliation: provider.echeanceResiliation,
+      observation: provider.observation,
       lieuID: provider.lieuID,
       categorieID: provider.categorieID,
     };
@@ -108,7 +110,9 @@ export class ProviderRepository {
   ): Promise<ReadProvider> {
     const updated = await this.client(tx).prestataire.update({
       where: { id },
-      data: omitNullish(provider),
+      data: Object.fromEntries(
+        Object.entries(provider).filter(([, value]) => value !== undefined),
+      ),
     });
     return this.toReadProvider(updated);
   }

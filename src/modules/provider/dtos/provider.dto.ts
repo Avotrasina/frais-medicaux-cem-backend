@@ -50,6 +50,21 @@ export class CreateProviderDto {
   @IsNotEmpty()
   listePrestation!: string;
 
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  @IsString()
+  echeanceRenouvellement?: string | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  @IsString()
+  echeanceResiliation?: string | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  @IsString()
+  observation?: string | null;
+
   @ApiProperty({ type: Number })
   @Type(() => Number)
   @IsInt()
@@ -108,6 +123,21 @@ export class UpdateProviderDto {
   @IsString()
   @IsNotEmpty()
   listePrestation?: string;
+
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  @IsString()
+  echeanceRenouvellement?: string | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  @IsString()
+  echeanceResiliation?: string | null;
+
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
+  @IsString()
+  observation?: string | null;
 
   @ApiPropertyOptional({ type: Number })
   @IsOptional()

@@ -14,6 +14,9 @@ export type CreateProvider = {
   dateDebutConvention: Date;
   dateFinConvention: Date;
   listePrestation: string;
+  echeanceRenouvellement?: string | null;
+  echeanceResiliation?: string | null;
+  observation?: string | null;
   lieuID: number;
   categorieID: number;
   conventionPath: string;
@@ -33,6 +36,9 @@ export type ReadProvider = {
   dateDebutConvention: Date;
   dateFinConvention: Date;
   listePrestation: string;
+  echeanceRenouvellement: string | null;
+  echeanceResiliation: string | null;
+  observation: string | null;
   lieuID: number;
   categorieID: number;
 };
