@@ -1,0 +1,9 @@
+model CategorieActe {
+  id           Int       @id @default(autoincrement())
+  nomCategorie String    @unique @map("nom_categorie")
+  actes        Acte[]
+  plafonds     Plafond[]
+
+  @@map("categorie_actes")
+  @@schema("acte")
+}
