@@ -21,8 +21,9 @@ model Prestataire {
   observation            String?
   suppressionStatut      SuppressionStatut?
 
-  attestations   Attestation[]
-  conventionPath String        @map("convention_path")
+  attestations     Attestation[]
+  facturesGlobales FactureGlobale[]
+  conventionPath   String           @map("convention_path")
 
   lieuID      Int @map("lieu_id")
   categorieID Int @map("categorie_id")

@@ -1,0 +1,23 @@
+model Utilisateur {
+  id   Int            @id @default(autoincrement())
+  nom  String
+  role RoleUtilisateur
+
+  facturesEnregistrees FactureGlobale[]   @relation("FactureEnregistreePar")
+  facturesValidees     FactureGlobale[]   @relation("FactureValideePar")
+  mouvementsEffectues  MouvementFacture[] @relation("MouvementEffectuePar")
+  mouvementsRecus      MouvementFacture[] @relation("MouvementAdresseA")
+  lignesSuivi          LigneSuivi[]
+
+  @@map("utilisateur")
+  @@schema("utilisateur")
+}
+
+enum RoleUtilisateur {
+  OPERATEUR @map("operateur")
+  ADJOINT   @map("adjoint")
+  CHEF      @map("chef")
+
+  @@map("role_utilisateur")
+  @@schema("utilisateur")
+}

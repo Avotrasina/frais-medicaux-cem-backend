@@ -1,0 +1,14 @@
+model PieceJointeFacture {
+  id               Int      @id @default(autoincrement())
+  factureGlobaleId Int      @map("facture_globale_id")
+  path             String
+  nomFichier       String?  @map("nom_fichier")
+  typeFichier      String   @map("type_fichier")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  factureGlobale FactureGlobale @relation(fields: [factureGlobaleId], references: [id], onDelete: Cascade)
+
+  @@index([factureGlobaleId])
+  @@map("piece_jointe_facture")
+  @@schema("facturation")
+}

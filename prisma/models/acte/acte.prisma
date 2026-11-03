@@ -19,7 +19,9 @@ model Acte {
   categorieActe   CategorieActe @relation(fields: [categorieActeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   // Relation Acte - Plafond
-  plafonds Plafond[]
+  plafonds              Plafond[]
+  facturesIndividuelles FactureIndividuelle[]
+  lignesSuivi           LigneSuivi[]
 
   @@map("actes")
   @@schema("acte")

@@ -16,18 +16,20 @@ enum UnitePlafond {
 
 model Plafond {
   id              Int           @id @default(autoincrement())
-  porteePlafond   PorteePlafond @default(PAR_ACTE)
+  porteePlafond   PorteePlafond @default(PAR_ACTE) @map("portee_plafond")
   unite           UnitePlafond  @default(MONTANT)
+  dateEffet       DateTime      @map("date_effet") @db.Date
+  dateFin         DateTime?     @map("date_fin") @db.Date
   montant         Decimal?      @db.Decimal(15, 2)
-  nbSeances       Int?
+  nbSeances       Int?          @map("nb_seances")
   acteID          Int?          @map("acte_id")
   categorieActeID Int?          @map("categorie_acte_id")
 
   acte          Acte?          @relation(fields: [acteID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categorieActe CategorieActe? @relation(fields: [categorieActeID], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@unique([acteID, porteePlafond])
-  @@unique([categorieActeID, porteePlafond])
+  @@index([acteID, porteePlafond, dateEffet])
+  @@index([categorieActeID, porteePlafond, dateEffet])
   @@map("plafonds")
   @@schema("acte")
 }
