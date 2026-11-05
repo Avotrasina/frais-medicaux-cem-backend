@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { RoleUtilisateur } from '../../generated/prisma/enums.js';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
+import { RoleUtilisateur } from '../../../generated/prisma/enums.js';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
 
 interface RequeteAvecUtilisateur extends Request {
   user?: { id: number; role: RoleUtilisateur };

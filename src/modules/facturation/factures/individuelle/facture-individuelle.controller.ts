@@ -18,14 +18,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { ActeurFacture } from './facture-globale.service.js';
-import { FactureRoleGuard } from './facture-role.guard.js';
+import type { ActeurFacture } from '../globale/facture-globale.service.js';
+import { FactureRoleGuard } from '../../shared/facture-role.guard.js';
 import {
   AffecterRetenueDto,
   CreerFactureIndividuelleDto,
   ModifierFactureIndividuelleDto,
   PropositionDepassementDto,
-} from './dtos/facture-individuelle.dto.js';
+} from '../../dtos/facture-individuelle.dto.js';
 import { FactureIndividuelleService } from './facture-individuelle.service.js';
 
 interface RequeteAvecUtilisateur {

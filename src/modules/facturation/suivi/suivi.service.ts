@@ -5,16 +5,16 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
+import { Prisma } from '../../../generated/prisma/client.js';
 import {
   PorteePlafond,
   StatutFacture,
   UnitePlafond,
-} from '../../generated/prisma/enums.js';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
-import type { ActeurFacture } from './facture-globale.service.js';
-import { ActionFacture } from './action-facture.js';
-import { FacturePermissionsService } from './facture-permissions.service.js';
+} from '../../../generated/prisma/enums.js';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import type { ActeurFacture } from '../factures/globale/facture-globale.service.js';
+import { ActionFacture } from '../shared/action-facture.js';
+import { FacturePermissionsService } from '../shared/facture-permissions.service.js';
 import {
   SuiviCalculService,
   type LigneSuiviCalculee,
@@ -24,11 +24,11 @@ import {
   PlafondResolutionService,
   type CiblePlafond,
   type VersionPlafond,
-} from '../plafond/plafond-resolution.service.js';
+} from '../../plafond/plafond-resolution.service.js';
 import type {
   CreerLigneSuiviDto,
   ModifierLigneSuiviDto,
-} from './dtos/suivi.dto.js';
+} from '../dtos/suivi.dto.js';
 
 const STATUTS_ECRITURE_INTERDITE: readonly StatutFacture[] = [
   StatutFacture.RETOURNEE,

@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { RoleUtilisateur } from '../../generated/prisma/enums.js';
+import { RoleUtilisateur } from '../../../generated/prisma/enums.js';
 import { ActionFacture } from './action-facture.js';
 
 /** Rôles hérités du workflow actuel; ils restent à confirmer par le métier. */

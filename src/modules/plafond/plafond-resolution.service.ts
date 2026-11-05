@@ -2,7 +2,7 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import type { Plafond } from '../../generated/prisma/client.js';
 import { PorteePlafond, UnitePlafond } from '../../generated/prisma/enums.js';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
-import { determinerModeleSuivi } from '../facturation/suivi-modele.js';
+import { determinerModeleSuivi } from '../facturation/suivi/suivi-modele.js';
 
 export type CiblePlafond =
   | { type: 'ACTE'; id: number; categorieActeId: number }

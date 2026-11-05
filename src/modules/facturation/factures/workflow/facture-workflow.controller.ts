@@ -13,8 +13,8 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import type { ActeurFacture } from './facture-globale.service.js';
-import { FactureGlobaleService } from './facture-globale.service.js';
+import type { ActeurFacture } from '../globale/facture-globale.service.js';
+import { FactureGlobaleService } from '../globale/facture-globale.service.js';
 import {
   EnvoiValidationDto,
   ModifierFactureGlobaleDto,
@@ -24,9 +24,9 @@ import {
   RemarqueOptionnelleDto,
   SortieFactureDto,
   ValidationFactureDto,
-} from './dtos/facture-workflow.dto.js';
-import { FactureRoleGuard } from './facture-role.guard.js';
-import { serialiserMontants } from './serialiser-montants.js';
+} from '../../dtos/facture-workflow.dto.js';
+import { FactureRoleGuard } from '../../shared/facture-role.guard.js';
+import { serialiserMontants } from '../../shared/serialiser-montants.js';
 
 interface RequeteAvecUtilisateur {
   user?: ActeurFacture;

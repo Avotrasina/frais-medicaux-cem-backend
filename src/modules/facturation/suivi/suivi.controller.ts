@@ -17,9 +17,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import type { ActeurFacture } from './facture-globale.service.js';
-import { FactureRoleGuard } from './facture-role.guard.js';
-import { CreerLigneSuiviDto, ModifierLigneSuiviDto } from './dtos/suivi.dto.js';
+import type { ActeurFacture } from '../factures/globale/facture-globale.service.js';
+import { FactureRoleGuard } from '../shared/facture-role.guard.js';
+import { CreerLigneSuiviDto, ModifierLigneSuiviDto } from '../dtos/suivi.dto.js';
 import { SuiviService } from './suivi.service.js';
 
 interface RequeteAvecUtilisateur {

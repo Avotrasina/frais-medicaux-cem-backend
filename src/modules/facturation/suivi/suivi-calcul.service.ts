@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
-import { UnitePlafond } from '../../generated/prisma/enums.js';
+import { Prisma } from '../../../generated/prisma/client.js';
+import { UnitePlafond } from '../../../generated/prisma/enums.js';
 
 export interface PlafondSuiviCalcul {
   unite: UnitePlafond;

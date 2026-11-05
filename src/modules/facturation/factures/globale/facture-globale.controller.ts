@@ -11,14 +11,14 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreerFactureGlobaleDto } from './dtos/creer-facture-globale.dto.js';
+import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import { FactureGlobaleService } from './facture-globale.service.js';
 import type { FactureGlobaleCreee } from './facture-globale.service.js';
 import {
   MontantsSerialises,
   serialiserMontants,
-} from './serialiser-montants.js';
-import { StatutFacture } from '../../generated/prisma/enums.js';
+} from '../../shared/serialiser-montants.js';
+import { StatutFacture } from '../../../../generated/prisma/enums.js';
 
 interface RequeteAvecUtilisateur {
   user?: { id: number };

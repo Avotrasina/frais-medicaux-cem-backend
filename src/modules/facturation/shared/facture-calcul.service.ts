@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
-import { TypeRegle } from '../../generated/prisma/enums.js';
+import { Prisma } from '../../../generated/prisma/client.js';
+import { TypeRegle } from '../../../generated/prisma/enums.js';
 
 export interface PartsFacture {
   reste: Prisma.Decimal;

@@ -5,18 +5,18 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
-import type { FactureGlobale } from '../../generated/prisma/client.js';
+import { Prisma } from '../../../../generated/prisma/client.js';
+import type { FactureGlobale } from '../../../../generated/prisma/client.js';
 import {
   RoleUtilisateur,
   ServiceSortie,
   StatutFacture,
   TypeMouvement,
-} from '../../generated/prisma/enums.js';
-import { RefSocialService } from '../../facturation/ref-social/ref-social.service.js';
-import { RegleService } from '../../regles-prise-en-charge/regle.service.js';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
-import { CreerFactureGlobaleDto } from './dtos/creer-facture-globale.dto.js';
+} from '../../../../generated/prisma/enums.js';
+import { RefSocialService } from '../../../../facturation/ref-social/ref-social.service.js';
+import { RegleService } from '../../../../regles-prise-en-charge/regle.service.js';
+import { PrismaService } from '../../../../infrastructure/prisma/prisma.service.js';
+import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import type {
   EnvoiValidationDto,
   ModifierFactureGlobaleDto,
@@ -26,15 +26,15 @@ import type {
   RemarqueOptionnelleDto,
   SortieFactureDto,
   ValidationFactureDto,
-} from './dtos/facture-workflow.dto.js';
-import { FactureCalculService } from './facture-calcul.service.js';
-import { FactureIndividuelleService } from './facture-individuelle.service.js';
-import { MouvementFactureService } from './mouvement-facture.service.js';
-import type { NouveauMouvementFacture } from './mouvement-facture.service.js';
+} from '../../dtos/facture-workflow.dto.js';
+import { FactureCalculService } from '../../shared/facture-calcul.service.js';
+import { FactureIndividuelleService } from '../individuelle/facture-individuelle.service.js';
+import { MouvementFactureService } from '../../shared/mouvement-facture.service.js';
+import type { NouveauMouvementFacture } from '../../shared/mouvement-facture.service.js';
 import {
   ActionFacture,
   FactureWorkflowService,
-} from './facture-workflow.service.js';
+} from '../workflow/facture-workflow.service.js';
 
 const FUSEAU_HORAIRE_ENREGISTREMENT = 'Indian/Antananarivo';
 

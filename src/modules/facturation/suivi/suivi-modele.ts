@@ -1,4 +1,4 @@
-import { UnitePlafond } from '../../generated/prisma/enums.js';
+import { UnitePlafond } from '../../../generated/prisma/enums.js';
 
 export type ModeleSuivi =
   'PLAFOND_ANNUEL' | 'SEANCES' | 'PLAFOND_ACTE_ET_ANNUEL';

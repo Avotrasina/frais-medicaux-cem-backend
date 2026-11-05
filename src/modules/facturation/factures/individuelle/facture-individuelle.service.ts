@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
+import { Prisma } from '../../../../generated/prisma/client.js';
 import {
   AgentType,
   AgentConcerne,
@@ -13,26 +13,26 @@ import {
   StatutFacture,
   TypeRegle,
   TypeMouvement,
-} from '../../generated/prisma/enums.js';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
-import { RegleService } from '../../regles-prise-en-charge/regle.service.js';
+} from '../../../../generated/prisma/enums.js';
+import { PrismaService } from '../../../../infrastructure/prisma/prisma.service.js';
+import { RegleService } from '../../../../regles-prise-en-charge/regle.service.js';
 import {
   FactureCalculService,
   type CalculLigneFacture,
-} from './facture-calcul.service.js';
-import { FacturePermissionsService } from './facture-permissions.service.js';
-import { MouvementFactureService } from './mouvement-facture.service.js';
-import { SuiviService } from './suivi.service.js';
-import { ActionFacture } from './action-facture.js';
-import { FactureWorkflowService } from './facture-workflow.service.js';
-import type { ActeurFacture } from './facture-globale.service.js';
-import type { DbClient } from '../../infrastructure/prisma/db-client.type.js';
+} from '../../shared/facture-calcul.service.js';
+import { FacturePermissionsService } from '../../shared/facture-permissions.service.js';
+import { MouvementFactureService } from '../../shared/mouvement-facture.service.js';
+import { SuiviService } from '../../suivi/suivi.service.js';
+import { ActionFacture } from '../../shared/action-facture.js';
+import { FactureWorkflowService } from '../workflow/facture-workflow.service.js';
+import type { ActeurFacture } from '../globale/facture-globale.service.js';
+import type { DbClient } from '../../../../infrastructure/prisma/db-client.type.js';
 import type {
   AffecterRetenueDto,
   CreerFactureIndividuelleDto,
   ModifierFactureIndividuelleDto,
   PropositionDepassementDto,
-} from './dtos/facture-individuelle.dto.js';
+} from '../../dtos/facture-individuelle.dto.js';
 
 export interface LigneFactureCalculee {
   id: number;

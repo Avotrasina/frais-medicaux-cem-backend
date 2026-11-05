@@ -6,11 +6,11 @@ import {
 import {
   RoleUtilisateur,
   StatutFacture,
-} from '../../generated/prisma/enums.js';
-import { FacturePermissionsService } from './facture-permissions.service.js';
-import { ActionFacture } from './action-facture.js';
+} from '../../../../generated/prisma/enums.js';
+import { FacturePermissionsService } from '../../shared/facture-permissions.service.js';
+import { ActionFacture } from '../../shared/action-facture.js';
 
-export { ActionFacture } from './action-facture.js';
+export { ActionFacture } from '../../shared/action-facture.js';
 
 interface TransitionAutorisee {
   statutSuivant: StatutFacture;

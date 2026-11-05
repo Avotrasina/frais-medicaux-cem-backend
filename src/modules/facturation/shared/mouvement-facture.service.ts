@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import type {
   Prisma,
   MouvementFacture,
-} from '../../generated/prisma/client.js';
-import { ServiceSortie, TypeMouvement } from '../../generated/prisma/enums.js';
+} from '../../../generated/prisma/client.js';
+import { ServiceSortie, TypeMouvement } from '../../../generated/prisma/enums.js';
 
 export interface NouveauMouvementFacture {
   factureGlobaleId: number;
