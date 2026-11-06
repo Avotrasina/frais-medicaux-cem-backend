@@ -8,7 +8,6 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post,
   Req,
   UseGuards,
   UsePipes,
@@ -24,15 +23,9 @@ import type {
 } from '../globale/facture-globale.service.js';
 import { FactureGlobaleService } from '../globale/facture-globale.service.js';
 import {
-  EnvoiValidationDto,
   ActionFactureDto,
   ModifierFactureGlobaleDto,
   ModifierMontantsFactureDto,
-  RemarqueObligatoireDto,
-  MotifObligatoireDto,
-  RemarqueOptionnelleDto,
-  SortieFactureDto,
-  ValidationFactureDto,
   TYPES_ACTION_AVEC_DATE,
 } from '../../dtos/facture-workflow.dto.js';
 import { FactureRoleGuard } from '../../shared/facture-role.guard.js';
@@ -77,142 +70,11 @@ export const VALIDATION_ACTION = new ValidationPipe({
 export class FactureWorkflowController {
   constructor(private readonly factureGlobaleService: FactureGlobaleService) {}
 
-  @Post(':id/retour-prestataire')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async retourPrestataire(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: RemarqueObligatoireDto,
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.retourPrestataire(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture a été marquée comme retournée au prestataire.',
-    });
-  }
-
-  @Post(':id/envoi-validation')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async envoyerValidation(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: EnvoiValidationDto,
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.envoyerValidation(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture a été envoyée en validation.',
-    });
-  }
-
-  @Post(':id/validation')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async valider(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: ValidationFactureDto = new ValidationFactureDto(),
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.valider(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture a été validée.',
-    });
-  }
-
-  @Post(':id/retour-correction')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async retournerCorrection(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: RemarqueObligatoireDto,
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.retournerCorrection(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture a été retournée pour correction.',
-    });
-  }
-
-  @Post(':id/sortie')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async sortir(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: SortieFactureDto,
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.sortir(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture a été marquée comme sortie.',
-    });
-  }
-
-  @Post(':id/demande-suppression')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async demanderSuppression(@Param('id', PIPE_IDENTIFIANT) id: number, @Body() donnees: MotifObligatoireDto, @Req() requete: RequeteAvecUtilisateur) {
-    const facture = await this.factureGlobaleService.demanderSuppression(id, this.obtenirActeur(requete), donnees);
-    return serialiserMontants({ ...facture, message: 'La suppression de la facture a été demandée.' });
-  }
-
-  @Post(':id/validation-suppression')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async validerSuppression(@Param('id', PIPE_IDENTIFIANT) id: number, @Body() donnees: RemarqueOptionnelleDto = new RemarqueOptionnelleDto(), @Req() requete: RequeteAvecUtilisateur) {
-    const facture = await this.factureGlobaleService.validerSuppression(id, this.obtenirActeur(requete), donnees);
-    return serialiserMontants({ ...facture, message: 'La facture a été supprimée logiquement.' });
-  }
-
-  @Post(':id/refus-suppression')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async refuserSuppression(@Param('id', PIPE_IDENTIFIANT) id: number, @Body() donnees: RemarqueOptionnelleDto = new RemarqueOptionnelleDto(), @Req() requete: RequeteAvecUtilisateur) {
-    const facture = await this.factureGlobaleService.refuserSuppression(id, this.obtenirActeur(requete), donnees);
-    return serialiserMontants({ ...facture, message: 'La demande de suppression a été refusée.' });
-  }
-
   @Patch(':id/statut')
+  @ApiOperation({
+    summary: 'Exécuter une action sur une facture',
+    description: 'Applique une action métier autorisée et retourne la facture ainsi que le mouvement créé.',
+  })
   @HttpCode(HttpStatus.OK)
   @UseGuards(FactureRoleGuard)
   @UsePipes(VALIDATION_ACTION)
@@ -338,6 +200,10 @@ export class FactureWorkflowController {
   }
 
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Modifier les informations d’une facture',
+    description: 'Modifie les informations générales et replace la facture au statut ENREGISTREE.',
+  })
   @UseGuards(FactureRoleGuard)
   @UsePipes(VALIDATION_PAYLOAD)
   async modifierInformations(
@@ -357,6 +223,10 @@ export class FactureWorkflowController {
   }
 
   @Patch(':id/montants')
+  @ApiOperation({
+    summary: 'Modifier les montants d’une facture',
+    description: 'Met à jour les montants globaux et replace la facture au statut ENREGISTREE.',
+  })
   @UseGuards(FactureRoleGuard)
   @UsePipes(VALIDATION_PAYLOAD)
   async modifierMontants(

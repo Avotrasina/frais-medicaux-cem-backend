@@ -103,13 +103,19 @@ export class PieceJointeFactureController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lister les pièces jointes d’une facture' })
+  @ApiOperation({
+    summary: 'Lister les pièces jointes d’une facture',
+    description: 'Retourne les métadonnées des fichiers associés à la facture.',
+  })
   async lister(@Param('id', ParseIntPipe) factureId: number) {
     return this.piecesJointes.lister(factureId);
   }
 
   @Get(':pieceId')
-  @ApiOperation({ summary: 'Ouvrir une pièce jointe de la facture' })
+  @ApiOperation({
+    summary: 'Ouvrir une pièce jointe de la facture',
+    description: 'Diffuse le fichier PDF, JPEG ou PNG demandé.',
+  })
   @ApiResponse({ status: 404, description: 'Pièce jointe introuvable.' })
   async ouvrir(
     @Param('id', ParseIntPipe) factureId: number,
@@ -131,7 +137,10 @@ export class PieceJointeFactureController {
 
   @Delete(':pieceId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Supprimer une pièce jointe modifiable' })
+  @ApiOperation({
+    summary: 'Supprimer une pièce jointe modifiable',
+    description: 'Supprime un fichier lorsque le statut de la facture l’autorise.',
+  })
   @ApiResponse({ status: 204, description: 'Pièce jointe supprimée.' })
   @ApiResponse({
     status: 409,

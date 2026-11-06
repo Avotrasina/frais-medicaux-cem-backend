@@ -28,22 +28,21 @@ export class FactureGlobaleController {
   constructor(private readonly factureGlobaleService: FactureGlobaleService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Lister les factures',
+    description: 'Retourne les factures, avec un filtrage optionnel par statut.',
+  })
   async lister(@Query('statut') statut?: string) {
     return serialiserMontants(
       await this.factureGlobaleService.lister(this.validerStatut(statut)),
     );
   }
 
-  @Get(':id/historique')
-  @ApiOperation({ deprecated: true })
-  async historique(
-    @Param('id', ParseIntPipe) id: number,
-    @Query('type') type?: TypeMouvement,
-  ) {
-    return this.factureGlobaleService.historique(id, this.validerTypeMouvement(type));
-  }
-
   @Get(':id/mouvements')
+  @ApiOperation({
+    summary: 'Lister les mouvements d’une facture',
+    description: 'Retourne l’historique des actions de la facture, filtrable par type de mouvement.',
+  })
   async mouvements(
     @Param('id', ParseIntPipe) id: number,
     @Query('type') type?: TypeMouvement,
@@ -52,16 +51,28 @@ export class FactureGlobaleController {
   }
 
   @Get(':id/transitions')
+  @ApiOperation({
+    summary: 'Lister les actions disponibles',
+    description: 'Retourne les actions autorisées selon le statut courant de la facture et le rôle de l’utilisateur.',
+  })
   async transitions(@Param('id', ParseIntPipe) id: number) {
     return this.factureGlobaleService.transitions(id);
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Consulter une facture',
+    description: 'Retourne le détail d’une facture globale.',
+  })
   async obtenir(@Param('id', ParseIntPipe) id: number) {
     return serialiserMontants(await this.factureGlobaleService.obtenir(id));
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'Créer une facture',
+    description: 'Enregistre une facture globale et génère sa référence sociale.',
+  })
   @UsePipes(
     new ValidationPipe({
       transform: true,
