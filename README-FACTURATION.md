@@ -4,7 +4,9 @@ Ce seed prépare une base de développement pour les essais du frontend :
 
 - trois utilisateurs : `OPERATEUR`, `ADJOINT` et `CHEF` ;
 - deux règles de prise en charge applicables depuis le 1er janvier 2026 ;
-- catégories, actes et plafonds importés par le script SQL fourni.
+- catégories, actes et plafonds importés par le script SQL fourni ;
+- un agent/bénéficiaire synthétique, trois attestations et une facture T6 de
+  démonstration avec trois lignes.
 
 Les utilisateurs et règles sont réutilisés à chaque exécution. Le seed refuse
 d’écraser un utilisateur ou une règle sans rapport avec les fixtures. Les IDs
@@ -35,6 +37,13 @@ npm run seed:facturation-demo
 La commande compile le script puis l’exécute contre la base indiquée par les
 variables `DB_*`. Elle est réservée au développement et refuse explicitement
 `NODE_ENV=production`.
+
+La facture T6 utilise un prestataire déjà présent dans la base, et les actes
+`CON-01`, `LAB-01` et `IMG-01` du catalogue. Elle est recréée à chaque exécution
+avec un nouveau numéro de référence sociale. Son IDP est
+`DEMO-FACTURATION-T6-001` ; les trois lignes ont un ID d’attestation. La
+première ligne a une `RefPaie` déjà renseignée, les deux autres sont vides pour
+tester la saisie. Le seed affiche l’ID et la référence sociale de la facture.
 
 ## Utilisateur de test des routes
 
