@@ -20,6 +20,7 @@ import { UtilisateurController } from './utilisateur.controller.js';
 import { StorageModule } from '../../infrastructure/storage/storage.module.js';
 import { PieceJointeFactureController } from './pieces-jointes/piece-jointe-facture.controller.js';
 import { PieceJointeFactureService } from './pieces-jointes/piece-jointe-facture.service.js';
+import { UtilisateurService } from './utilisateur.service.js';
 
 @Module({
   imports: [PrismaModule, PlafondModule, ReglesPriseEnChargeModule, StorageModule],
@@ -43,6 +44,7 @@ import { PieceJointeFactureService } from './pieces-jointes/piece-jointe-facture
     SuiviService,
     SuiviCalculService,
     PieceJointeFactureService,
+    UtilisateurService,
   ],
   exports: [FactureGlobaleService],
 })

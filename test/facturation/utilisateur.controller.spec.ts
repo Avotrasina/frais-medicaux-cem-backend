@@ -1,36 +1,27 @@
 import { BadRequestException } from '@nestjs/common';
+import { describe, expect, it, vi } from 'vitest';
 import { RoleUtilisateur } from '../../src/generated/prisma/enums.js';
-import { PrismaService } from '../../src/infrastructure/prisma/prisma.service.js';
 import { UtilisateurController } from '../../src/modules/facturation/utilisateur.controller.js';
 
-vi.mock('../../src/infrastructure/prisma/prisma.service.js', () => ({
-  PrismaService: class PrismaService {},
+vi.mock('../../src/modules/facturation/utilisateur.service.js', () => ({
+  UtilisateurService: class UtilisateurService {},
 }));
 
 describe('UtilisateurController', () => {
-  it('retourne uniquement les utilisateurs aux rôles demandés', async () => {
-    const findMany = vi.fn().mockResolvedValue([]);
-    const controller = new UtilisateurController({
-      utilisateur: { findMany },
-    } as unknown as PrismaService);
+  it('filtre les utilisateurs par rôles', async () => {
+    const lister = vi.fn().mockResolvedValue([]);
+    const controller = new UtilisateurController({ lister } as never);
 
     await controller.lister('ADJOINT,CHEF');
 
-    expect(findMany).toHaveBeenCalledWith({
-      where: {
-        role: {
-          in: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
-        },
-      },
-      select: { id: true, nom: true, role: true },
-      orderBy: [{ role: 'asc' }, { nom: 'asc' }, { id: 'asc' }],
-    });
+    expect(lister).toHaveBeenCalledWith([
+      RoleUtilisateur.ADJOINT,
+      RoleUtilisateur.CHEF,
+    ]);
   });
 
   it('refuse un rôle inconnu', () => {
-    const controller = new UtilisateurController({
-      utilisateur: { findMany: vi.fn() },
-    } as unknown as PrismaService);
+    const controller = new UtilisateurController({ lister: vi.fn() } as never);
 
     expect(() => controller.lister('ADJOINT,INCONNU')).toThrow(
       BadRequestException,
