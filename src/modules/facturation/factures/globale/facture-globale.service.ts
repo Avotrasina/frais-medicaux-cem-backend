@@ -186,13 +186,6 @@ export class FactureGlobaleService {
     if (Number.isNaN(date.getTime())) {
       throw new BadRequestException('La date du mouvement est invalide.');
     }
-    const aujourdHui = dateMetierDuJour();
-    if (date.getTime() > aujourdHui.getTime()) {
-      throw new BadRequestException(
-        'La date du mouvement ne peut pas être dans le futur.',
-      );
-    }
-
     const facture = await this.prisma.factureGlobale.findUnique({
       where: { id },
       select: { id: true },
@@ -323,27 +316,6 @@ export class FactureGlobaleService {
     );
   }
 
-  async receptionApresModification(
-    id: number,
-    acteur: ActeurFacture,
-    donnees: RemarqueOptionnelleDto,
-    options: OptionsActionFacture = {},
-  ): Promise<FactureWorkflowLue> {
-    return this.effectuerTransition(
-      id,
-      acteur,
-      ActionFacture.RECEPTION_APRES_MODIFICATION,
-      {
-        type: TypeMouvement.RECEPTION_APRES_MODIFICATION,
-        ...(donnees.remarque === undefined
-          ? {}
-          : { remarque: donnees.remarque }),
-      },
-      {},
-      options,
-    );
-  }
-
   async envoyerValidation(
     id: number,
     acteur: ActeurFacture,
@@ -459,18 +431,6 @@ export class FactureGlobaleService {
       type: TypeMouvement.SORTIE,
       service: donnees.service,
     }, {}, options);
-  }
-
-  async reouvrir(
-    id: number,
-    acteur: ActeurFacture,
-    donnees: MotifObligatoireDto,
-    options: OptionsActionFacture = {},
-  ): Promise<FactureWorkflowLue> {
-    return this.effectuerTransition(id, acteur, ActionFacture.REOUVERTURE, {
-      type: TypeMouvement.REOUVERTURE,
-      remarque: donnees.motif,
-    }, { dateValidation: null, valideParId: null }, options);
   }
 
   async demanderSuppression(
@@ -800,7 +760,6 @@ export class FactureGlobaleService {
       );
     }
 
-    const revalidationNecessaire = facture.statut === StatutFacture.A_CORRIGER;
     data.updatedAt = this.prochaineDateMiseAJour(facture.updatedAt);
     const miseAJour = await tx.factureGlobale.updateMany({
       where: {
@@ -810,12 +769,9 @@ export class FactureGlobaleService {
       },
       data: {
         ...data,
-        statut: revalidationNecessaire
-          ? StatutFacture.ENREGISTREE
-          : statutSuivant,
-        ...(revalidationNecessaire
-          ? { dateValidation: null, valideParId: null }
-          : {}),
+        statut: statutSuivant,
+        dateValidation: null,
+        valideParId: null,
       },
     });
     this.verifierEcritureConditionnelle(miseAJour.count, facture.statut);

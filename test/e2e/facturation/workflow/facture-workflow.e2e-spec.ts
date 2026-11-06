@@ -173,21 +173,6 @@ describe.skipIf(!TESTS_HTTP_ACTIFS)(
         });
     });
 
-    it('PATCH /statut réceptionne une facture corrigée', async () => {
-      identifiantActeur = operateurId;
-      const id = await creerFacture(StatutFacture.RETOURNEE);
-      await request(application.getHttpServer())
-        .patch(`/factures/${id}/statut`)
-        .send({
-          type: TypeMouvement.RECEPTION_APRES_MODIFICATION,
-          remarque: 'Correction reçue',
-        })
-        .expect(200)
-        .expect(({ body }) => {
-          expect(body.statut).toBe(StatutFacture.ENREGISTREE);
-        });
-    });
-
     it('PATCH /statut bloque l’envoi en validation sans ligne T6', async () => {
       identifiantActeur = operateurId;
       const id = await creerFacture();

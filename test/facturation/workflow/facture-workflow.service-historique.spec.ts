@@ -12,20 +12,20 @@ describe('FactureWorkflowService', () => {
   const service = new FactureWorkflowService();
   afterEach(() => delete process.env.PERMISSIONS_ROLES_ACTIVES);
 
-  it('rouvre une facture validée en A_CORRIGER, puis autorise son envoi en validation', () => {
+  it('permet de modifier une facture validée puis de la renvoyer en validation', () => {
     delete process.env.PERMISSIONS_ROLES_ACTIVES;
     expect(
       service.determinerTransition(
         StatutFacture.VALIDEE,
-        ActionFacture.REOUVERTURE,
+        ActionFacture.MODIFIER_INFORMATIONS,
         RoleUtilisateur.OPERATEUR,
       ),
-    ).toBe(StatutFacture.A_CORRIGER);
+    ).toBe(StatutFacture.ENREGISTREE);
     expect(
       service.determinerTransition(
-        StatutFacture.A_CORRIGER,
+        StatutFacture.ENREGISTREE,
         ActionFacture.ENVOI_VALIDATION,
-        RoleUtilisateur.CHEF,
+        RoleUtilisateur.OPERATEUR,
       ),
     ).toBe(StatutFacture.EN_VALIDATION);
     expect(

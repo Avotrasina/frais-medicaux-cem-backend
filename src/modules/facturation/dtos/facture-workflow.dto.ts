@@ -59,10 +59,8 @@ const TYPES_ACTION_FACTURE = [
   TypeMouvement.ENVOI_VALIDATION,
   TypeMouvement.RETOUR_POUR_CORRECTION,
   TypeMouvement.RETOUR_PRESTATAIRE,
-  TypeMouvement.RECEPTION_APRES_MODIFICATION,
   TypeMouvement.VALIDATION,
   TypeMouvement.SORTIE,
-  TypeMouvement.REOUVERTURE,
   TypeMouvement.DEMANDE_SUPPRESSION,
   TypeMouvement.REFUS_SUPPRESSION,
   TypeMouvement.SUPPRESSION,
@@ -71,7 +69,6 @@ const TYPES_ACTION_FACTURE = [
 export const TYPES_ACTION_AVEC_DATE = [
   TypeMouvement.ENVOI_VALIDATION,
   TypeMouvement.RETOUR_PRESTATAIRE,
-  TypeMouvement.RECEPTION_APRES_MODIFICATION,
   TypeMouvement.RETOUR_POUR_CORRECTION,
   TypeMouvement.SORTIE,
 ];
@@ -89,7 +86,6 @@ export class ActionFactureDto {
     [
       TypeMouvement.RETOUR_POUR_CORRECTION,
       TypeMouvement.RETOUR_PRESTATAIRE,
-      TypeMouvement.REOUVERTURE,
       TypeMouvement.DEMANDE_SUPPRESSION,
     ].some((type) => type === objet.type),
   )

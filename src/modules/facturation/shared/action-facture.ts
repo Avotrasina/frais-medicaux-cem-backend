@@ -1,11 +1,9 @@
 export enum ActionFacture {
   RETOUR_PRESTATAIRE = 'retour-prestataire',
-  RECEPTION_APRES_MODIFICATION = 'reception-apres-modification',
   ENVOI_VALIDATION = 'envoi-validation',
   VALIDATION = 'validation',
   RETOUR_CORRECTION = 'retour-correction',
   SORTIE = 'sortie',
-  REOUVERTURE = 'reouverture',
   DEMANDE_SUPPRESSION = 'demande-suppression',
   VALIDATION_SUPPRESSION = 'validation-suppression',
   REFUS_SUPPRESSION = 'refus-suppression',

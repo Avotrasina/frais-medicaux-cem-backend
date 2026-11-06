@@ -172,13 +172,13 @@ export class FactureIndividuelleService {
         contexte.regle,
         donnees.montantCemIntegral ?? ligne.montantCemIntegral,
       );
-      if (ligne.factureGlobale.statut === StatutFacture.A_CORRIGER)
-        await this.enregistrerModificationFactureEnCorrection(
+      await this.enregistrerModificationFacture(
           tx,
           idFacture,
           acteur,
+          ligne.factureGlobale.statut,
           `Modification de la ligne ${ligne.numLigne}.`,
-        );
+      );
       const updated = await tx.factureIndividuelle.update({
         where: { id: ligneId },
         data: {
@@ -215,14 +215,13 @@ export class FactureIndividuelleService {
           `La ligne ${ligneId} est introuvable dans la facture ${idFacture}.`,
         );
       this.workflow.verifierEditionLigne(ligne.factureGlobale.statut);
-      if (ligne.factureGlobale.statut === StatutFacture.A_CORRIGER) {
-        await this.enregistrerModificationFactureEnCorrection(
-          tx,
-          idFacture,
-          acteur,
-          `Suppression de la ligne ${ligne.numLigne}.`,
-        );
-      }
+      await this.enregistrerModificationFacture(
+        tx,
+        idFacture,
+        acteur,
+        ligne.factureGlobale.statut,
+        `Suppression de la ligne ${ligne.numLigne}.`,
+      );
       await tx.factureIndividuelle.delete({ where: { id: ligneId } });
     });
   }
@@ -357,6 +356,13 @@ export class FactureIndividuelleService {
         throw new NotFoundException(
           'Une ou plusieurs lignes ne sont pas rattachées à cette facture.',
         );
+      await this.enregistrerModificationFacture(
+        tx,
+        idFacture,
+        acteur,
+        facture.statut,
+        'Modification de la retenue sur salaire.',
+      );
       await tx.factureIndividuelle.updateMany({
         where: { id: { in: donnees.ligneIds }, factureGlobaleId: idFacture },
         data: {
@@ -502,11 +508,11 @@ export class FactureIndividuelleService {
         priseEnChargeId: donnees.numPec ?? null,
       },
     });
-    if (contexte.statut === StatutFacture.A_CORRIGER)
-      await this.enregistrerModificationFactureEnCorrection(
+      await this.enregistrerModificationFacture(
         tx,
         idFacture,
         acteur,
+          contexte.statut,
         `Création de la ligne ${numLigne}.`,
       );
     return this.formaterLigne(tx, ligne.id, calcule, contexte);
@@ -624,14 +630,15 @@ export class FactureIndividuelleService {
     };
   }
 
-  private async enregistrerModificationFactureEnCorrection(
+  private async enregistrerModificationFacture(
     tx: Prisma.TransactionClient,
     idFacture: number,
     acteur: ActeurFacture,
+    statutActuel: StatutFacture,
     remarque: string,
   ): Promise<void> {
     const miseAJour = await tx.factureGlobale.updateMany({
-      where: { id: idFacture, statut: StatutFacture.A_CORRIGER },
+      where: { id: idFacture, statut: statutActuel },
       data: {
         statut: StatutFacture.ENREGISTREE,
         dateValidation: null,

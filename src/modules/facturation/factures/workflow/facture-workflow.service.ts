@@ -37,16 +37,6 @@ const TRANSITIONS: Record<ActionFacture, DefinitionAction> = {
       },
     },
   },
-  [ActionFacture.RECEPTION_APRES_MODIFICATION]: {
-    type: TypeMouvement.RECEPTION_APRES_MODIFICATION,
-    champsRequis: [],
-    depuis: {
-      [StatutFacture.RETOURNEE]: {
-        statutSuivant: StatutFacture.ENREGISTREE,
-        roles: [RoleUtilisateur.OPERATEUR],
-      },
-    },
-  },
   [ActionFacture.ENVOI_VALIDATION]: {
     type: TypeMouvement.ENVOI_VALIDATION,
     champsRequis: ['destinataireId'],
@@ -88,24 +78,6 @@ const TRANSITIONS: Record<ActionFacture, DefinitionAction> = {
       [StatutFacture.VALIDEE]: {
         statutSuivant: StatutFacture.SORTIE,
         roles: [RoleUtilisateur.OPERATEUR],
-      },
-    },
-  },
-  [ActionFacture.REOUVERTURE]: {
-    type: TypeMouvement.REOUVERTURE,
-    champsRequis: ['remarque'],
-    depuis: {
-      [StatutFacture.EN_VALIDATION]: {
-        statutSuivant: StatutFacture.A_CORRIGER,
-        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
-      },
-      [StatutFacture.VALIDEE]: {
-        statutSuivant: StatutFacture.A_CORRIGER,
-        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
-      },
-      [StatutFacture.SORTIE]: {
-        statutSuivant: StatutFacture.A_CORRIGER,
-        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
       },
     },
   },
@@ -161,31 +133,23 @@ const TRANSITIONS: Record<ActionFacture, DefinitionAction> = {
   [ActionFacture.MODIFIER_INFORMATIONS]: {
     champsRequis: [],
     depuis: {
-      [StatutFacture.ENREGISTREE]: {
-        statutSuivant: StatutFacture.ENREGISTREE,
-        roles: [RoleUtilisateur.OPERATEUR],
-      },
-      [StatutFacture.RETOURNEE]: {
-        statutSuivant: StatutFacture.RETOURNEE,
-        roles: [RoleUtilisateur.OPERATEUR],
-      },
-      [StatutFacture.A_CORRIGER]: {
-        statutSuivant: StatutFacture.ENREGISTREE,
-        roles: [RoleUtilisateur.OPERATEUR],
-      },
+      [StatutFacture.ENREGISTREE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.EN_VALIDATION]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.RETOURNEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.VALIDEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.SORTIE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.A_CORRIGER]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
     },
   },
   [ActionFacture.MODIFIER_MONTANTS]: {
     champsRequis: [],
     depuis: {
-      [StatutFacture.ENREGISTREE]: {
-        statutSuivant: StatutFacture.ENREGISTREE,
-        roles: [RoleUtilisateur.OPERATEUR],
-      },
-      [StatutFacture.A_CORRIGER]: {
-        statutSuivant: StatutFacture.ENREGISTREE,
-        roles: [RoleUtilisateur.OPERATEUR],
-      },
+      [StatutFacture.ENREGISTREE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.EN_VALIDATION]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.RETOURNEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.VALIDEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.SORTIE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.A_CORRIGER]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
     },
   },
   [ActionFacture.SUIVI_CREER]: { champsRequis: [], depuis: {} },
@@ -203,31 +167,13 @@ export class FactureWorkflowService {
   ) {}
 
   verifierEditionLigne(statut: StatutFacture): void {
-    if (
-      statut === StatutFacture.ENREGISTREE ||
-      statut === StatutFacture.A_CORRIGER
-    ) {
-      return;
-    }
-
-    throw new ConflictException(
-      'Les lignes ne sont modifiables que lorsque la facture est enregistrée ou à corriger.',
-    );
+    if (statut !== StatutFacture.SUPPRESSION_DEMANDEE && statut !== StatutFacture.SUPPRIMEE) return;
+    throw new ConflictException('La facture est verrouillée par sa suppression.');
   }
 
   verifierModificationRetenue(statut: StatutFacture): void {
-    if (
-      statut === StatutFacture.ENREGISTREE ||
-      statut === StatutFacture.A_CORRIGER ||
-      statut === StatutFacture.VALIDEE ||
-      statut === StatutFacture.SORTIE
-    ) {
-      return;
-    }
-
-    throw new ConflictException(
-      'La retenue ne peut pas être modifiée pour le statut actuel de la facture.',
-    );
+    if (statut !== StatutFacture.SUPPRESSION_DEMANDEE && statut !== StatutFacture.SUPPRIMEE) return;
+    throw new ConflictException('La facture est verrouillée par sa suppression.');
   }
 
   determinerTransition(

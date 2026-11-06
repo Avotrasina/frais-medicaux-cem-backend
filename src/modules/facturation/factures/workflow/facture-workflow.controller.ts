@@ -98,27 +98,6 @@ export class FactureWorkflowController {
     });
   }
 
-  @Post(':id/reception-apres-modification')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async receptionApresModification(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: RemarqueOptionnelleDto = new RemarqueOptionnelleDto(),
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.receptionApresModification(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture corrigée a été réceptionnée.',
-    });
-  }
-
   @Post(':id/envoi-validation')
   @ApiOperation({ deprecated: true })
   @HttpCode(HttpStatus.OK)
@@ -200,27 +179,6 @@ export class FactureWorkflowController {
     return serialiserMontants({
       ...facture,
       message: 'La facture a été marquée comme sortie.',
-    });
-  }
-
-  @Post(':id/reouverture')
-  @ApiOperation({ deprecated: true })
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async reouvrir(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: MotifObligatoireDto,
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.reouvrir(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'La facture a été rouverte pour revalidation.',
     });
   }
 
@@ -328,14 +286,6 @@ export class FactureWorkflowController {
           options,
         );
         break;
-      case TypeMouvement.RECEPTION_APRES_MODIFICATION:
-        facture = await this.factureGlobaleService.receptionApresModification(
-          id,
-          acteur,
-          { remarque: donnees.remarque },
-          options,
-        );
-        break;
       case TypeMouvement.VALIDATION:
         facture = await this.factureGlobaleService.valider(
           id,
@@ -351,14 +301,6 @@ export class FactureWorkflowController {
           id,
           acteur,
           { service: this.obtenirServiceSortie(donnees) },
-          options,
-        );
-        break;
-      case TypeMouvement.REOUVERTURE:
-        facture = await this.factureGlobaleService.reouvrir(
-          id,
-          acteur,
-          { motif: this.obtenirRemarqueObligatoire(donnees) },
           options,
         );
         break;

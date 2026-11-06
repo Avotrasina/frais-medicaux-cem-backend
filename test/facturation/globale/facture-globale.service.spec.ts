@@ -143,31 +143,8 @@ describe('FactureGlobaleService - modifications en correction', () => {
     });
 
     expect(resultat.statut).toBe(StatutFacture.ENREGISTREE);
-    expect(facture.dateValidation).toEqual(
-      new Date('2026-11-05T08:00:00.000Z'),
-    );
-    expect(facture.valideParId).toBe(7);
-    expect(mouvements.ecrire).toHaveBeenCalledTimes(1);
-  });
-
-  it('ne laisse passer qu’une seule transition simultanée', async () => {
-    const { service, mouvements } = creerService(StatutFacture.VALIDEE);
-
-    const resultats = await Promise.allSettled([
-      service.reouvrir(21, {
-        id: 5,
-        role: RoleUtilisateur.CHEF,
-      }, { motif: 'Correction requise' }),
-      service.reouvrir(21, {
-        id: 6,
-        role: RoleUtilisateur.CHEF,
-      }, { motif: 'Autre correction' }),
-    ]);
-
-    expect(resultats.filter((resultat) => resultat.status === 'fulfilled'))
-      .toHaveLength(1);
-    expect(resultats.filter((resultat) => resultat.status === 'rejected'))
-      .toHaveLength(1);
+    expect(facture.dateValidation).toBeNull();
+    expect(facture.valideParId).toBeNull();
     expect(mouvements.ecrire).toHaveBeenCalledTimes(1);
   });
 
@@ -217,7 +194,7 @@ describe('FactureGlobaleService - modifications en correction', () => {
     expect(tx.factureGlobale.updateMany).not.toHaveBeenCalled();
   });
 
-  it('refuse une date antérieure à l’enregistrement ou future', async () => {
+  it('refuse une date antérieure et accepte une date future', async () => {
     const prisma = {
       factureGlobale: {
         findUnique: vi.fn().mockResolvedValue({ id: 21 }),
@@ -241,9 +218,9 @@ describe('FactureGlobaleService - modifications en correction', () => {
     await expect(
       service.validerDateAction(21, '2000-12-31'),
     ).rejects.toBeInstanceOf(BadRequestException);
-    await expect(
-      service.validerDateAction(21, '2099-01-01'),
-    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(service.validerDateAction(21, '2099-01-01')).resolves.toEqual(
+      new Date('2099-01-01T00:00:00.000Z'),
+    );
   });
 
   it('filtre les mouvements par type et les ordonne par identifiant', async () => {
@@ -264,10 +241,10 @@ describe('FactureGlobaleService - modifications en correction', () => {
       {} as FactureIndividuelleService,
     );
 
-    await service.historique(21, TypeMouvement.REOUVERTURE);
+    await service.historique(21, TypeMouvement.VALIDATION);
 
     expect(findMany).toHaveBeenCalledWith({
-      where: { factureGlobaleId: 21, type: TypeMouvement.REOUVERTURE },
+      where: { factureGlobaleId: 21, type: TypeMouvement.VALIDATION },
       include: { effectuePar: true, adresseA: true },
       orderBy: { id: 'asc' },
     });

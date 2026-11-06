@@ -183,16 +183,14 @@ describe.skipIf(!TESTS_POSTGRES_ACTIFS)(
       ]);
     });
 
-    it('retourne au prestataire puis réceptionne la correction sans changer la référence sociale', async () => {
+    it('permet de modifier une facture retournée sans changer la référence sociale', async () => {
       const facture = await creerFacture();
       await service.retourPrestataire(facture.id, operateur, {
         remarque: 'Document illisible',
       });
-      const resultat = await service.receptionApresModification(
-        facture.id,
-        operateur,
-        { remarque: 'Document corrigé reçu' },
-      );
+      const resultat = await service.modifierInformations(facture.id, operateur, {
+        remarque: 'Document corrigé reçu',
+      });
 
       expect(resultat.refSociale).toBe(facture.refSociale);
       expect(resultat.statut).toBe(StatutFacture.ENREGISTREE);
@@ -228,7 +226,6 @@ describe.skipIf(!TESTS_POSTGRES_ACTIFS)(
 
     it('modifie une facture validée, invalide sa validation et écrit le motif et les changements', async () => {
       const facture = await creerFacture(StatutFacture.VALIDEE);
-      await service.reouvrir(facture.id, adjoint, { motif: 'Correction nécessaire' });
       const resultat = await service.modifierMontants(facture.id, operateur, {
         montantTotal: 1_100_000,
         motif: 'Correction du montant facturé',
@@ -240,7 +237,7 @@ describe.skipIf(!TESTS_POSTGRES_ACTIFS)(
         },
       });
 
-      expect(resultat.statut).toBe(StatutFacture.A_CORRIGER);
+      expect(resultat.statut).toBe(StatutFacture.ENREGISTREE);
       expect(resultat.dateValidation).toBeNull();
       expect(resultat.valideParId).toBeNull();
       expect(mouvement.remarque).toContain('Correction du montant facturé');

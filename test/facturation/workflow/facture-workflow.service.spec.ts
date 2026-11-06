@@ -19,39 +19,6 @@ function creerWorkflow(): FactureWorkflowService {
 describe('FactureWorkflowService', () => {
   const workflow = creerWorkflow();
 
-  it.each([
-    StatutFacture.EN_VALIDATION,
-    StatutFacture.VALIDEE,
-    StatutFacture.SORTIE,
-  ])('autorise la réouverture depuis %s vers A_CORRIGER', (statut) => {
-    expect(
-      workflow.determinerTransition(
-        statut,
-        ActionFacture.REOUVERTURE,
-        RoleUtilisateur.CHEF,
-      ),
-    ).toBe(StatutFacture.A_CORRIGER);
-  });
-
-  it('refuse la réouverture depuis les autres statuts', () => {
-    const statutsAutorisés: StatutFacture[] = [
-      StatutFacture.EN_VALIDATION,
-      StatutFacture.VALIDEE,
-      StatutFacture.SORTIE,
-    ];
-
-    for (const statut of Object.values(StatutFacture)) {
-      if (statutsAutorisés.includes(statut)) continue;
-      expect(() =>
-        workflow.determinerTransition(
-          statut,
-          ActionFacture.REOUVERTURE,
-          RoleUtilisateur.CHEF,
-        ),
-      ).toThrow(ConflictException);
-    }
-  });
-
   it('retourne une facture en correction et permet son envoi en validation', () => {
     expect(
       workflow.determinerTransition(
@@ -72,11 +39,11 @@ describe('FactureWorkflowService', () => {
   it.each([
     ActionFacture.MODIFIER_INFORMATIONS,
     ActionFacture.MODIFIER_MONTANTS,
-  ])('exige une réouverture avant %s en VALIDEE ou SORTIE', (action) => {
+  ])('permet de modifier une facture en %s', (action) => {
     for (const statut of [StatutFacture.VALIDEE, StatutFacture.SORTIE]) {
-      expect(() =>
-        workflow.determinerTransition(statut, action, RoleUtilisateur.CHEF),
-      ).toThrow(ConflictException);
+      expect(
+        workflow.determinerTransition(statut, action, RoleUtilisateur.OPERATEUR),
+      ).toBe(StatutFacture.ENREGISTREE);
     }
   });
 
@@ -103,13 +70,8 @@ describe('FactureWorkflowService', () => {
       [TypeMouvement.ENVOI_VALIDATION, ActionFacture.ENVOI_VALIDATION],
       [TypeMouvement.RETOUR_POUR_CORRECTION, ActionFacture.RETOUR_CORRECTION],
       [TypeMouvement.RETOUR_PRESTATAIRE, ActionFacture.RETOUR_PRESTATAIRE],
-      [
-        TypeMouvement.RECEPTION_APRES_MODIFICATION,
-        ActionFacture.RECEPTION_APRES_MODIFICATION,
-      ],
       [TypeMouvement.VALIDATION, ActionFacture.VALIDATION],
       [TypeMouvement.SORTIE, ActionFacture.SORTIE],
-      [TypeMouvement.REOUVERTURE, ActionFacture.REOUVERTURE],
       [TypeMouvement.DEMANDE_SUPPRESSION, ActionFacture.DEMANDE_SUPPRESSION],
       [TypeMouvement.REFUS_SUPPRESSION, ActionFacture.REFUS_SUPPRESSION],
       [TypeMouvement.SUPPRESSION, ActionFacture.VALIDATION_SUPPRESSION],
