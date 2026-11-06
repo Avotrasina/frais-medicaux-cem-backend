@@ -6,10 +6,12 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { Prisma } from '../../../../generated/prisma/client.js';
-import type { FactureGlobale } from '../../../../generated/prisma/client.js';
+import type {
+  FactureGlobale,
+  MouvementFacture,
+} from '../../../../generated/prisma/client.js';
 import {
   RoleUtilisateur,
-  ServiceSortie,
   StatutFacture,
   TypeMouvement,
 } from '../../../../generated/prisma/enums.js';
@@ -64,6 +66,26 @@ function convertirDateIso(dateIso: string): Date {
   return new Date(`${dateIso}T00:00:00.000Z`);
 }
 
+function dateMetierDuJour(): Date {
+  const date = new Intl.DateTimeFormat('en-CA', {
+    timeZone: FUSEAU_HORAIRE_ENREGISTREMENT,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+  return convertirDateIso(date);
+}
+
+function dateJourMetier(date: Date): Date {
+  const dateFormatee = new Intl.DateTimeFormat('en-CA', {
+    timeZone: FUSEAU_HORAIRE_ENREGISTREMENT,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+  return convertirDateIso(dateFormatee);
+}
+
 function premierJourDuMois(dateIso: string): Date {
   return convertirDateIso(`${dateIso.slice(0, 7)}-01`);
 }
@@ -83,6 +105,11 @@ export type FactureWorkflowLue = Prisma.FactureGlobaleGetPayload<{
 export interface ActeurFacture {
   id: number;
   role: RoleUtilisateur;
+}
+
+export interface OptionsActionFacture {
+  date?: Date;
+  capturerMouvement?: (mouvement: MouvementFacture) => void;
 }
 
 interface ChampModifie {
@@ -117,9 +144,66 @@ export class FactureGlobaleService {
     return facture;
   }
 
-  async historique(id: number): Promise<Prisma.MouvementFactureGetPayload<{ include: { effectuePar: true; adresseA: true } }>[]> {
+  async historique(
+    id: number,
+    type?: TypeMouvement,
+  ): Promise<Prisma.MouvementFactureGetPayload<{ include: { effectuePar: true; adresseA: true } }>[]> {
     await this.obtenir(id);
-    return this.prisma.mouvementFacture.findMany({ where: { factureGlobaleId: id }, include: { effectuePar: true, adresseA: true }, orderBy: { date: 'asc' } });
+    return this.prisma.mouvementFacture.findMany({
+      where: { factureGlobaleId: id, ...(type === undefined ? {} : { type }) },
+      include: { effectuePar: true, adresseA: true },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  async transitions(id: number) {
+    const facture = await this.obtenir(id);
+    return this.factureWorkflowService.listerTransitions(
+      facture.statut,
+      facture.statutAvantSuppression ?? undefined,
+    );
+  }
+
+  async validerDateAction(id: number, dateSaisie?: string): Promise<Date> {
+    const date = dateSaisie === undefined
+      ? dateMetierDuJour()
+      : new Date(`${dateSaisie}T00:00:00.000Z`);
+    if (Number.isNaN(date.getTime())) {
+      throw new BadRequestException('La date du mouvement est invalide.');
+    }
+    const aujourdHui = dateMetierDuJour();
+    if (date.getTime() > aujourdHui.getTime()) {
+      throw new BadRequestException(
+        'La date du mouvement ne peut pas être dans le futur.',
+      );
+    }
+
+    const facture = await this.prisma.factureGlobale.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (facture === null) {
+      throw new NotFoundException(`La facture ${id} est introuvable.`);
+    }
+    const enregistrement = await this.prisma.mouvementFacture.findFirst({
+      where: {
+        factureGlobaleId: id,
+        type: TypeMouvement.ENREGISTREMENT,
+      },
+      orderBy: { id: 'asc' },
+      select: { date: true },
+    });
+    if (enregistrement === null) {
+      throw new ConflictException(
+        "La date d'enregistrement de la facture est introuvable.",
+      );
+    }
+    if (date.getTime() < dateJourMetier(enregistrement.date).getTime()) {
+      throw new BadRequestException(
+        "La date du mouvement ne peut pas être antérieure à la date d'enregistrement de la facture.",
+      );
+    }
+    return date;
   }
 
   async creer(
@@ -186,15 +270,13 @@ export class FactureGlobaleService {
         include: { prestataire: { select: { id: true, nom: true } } },
       });
 
-      await tx.mouvementFacture.create({
-        data: {
-          factureGlobaleId: facture.id,
-          type: TypeMouvement.ENREGISTREMENT,
-          effectueParId: utilisateurId,
-          ...(donnees.remarque === undefined
-            ? {}
-            : { remarque: donnees.remarque }),
-        },
+      await this.mouvementFactureService.ecrire(tx, {
+        factureGlobaleId: facture.id,
+        type: TypeMouvement.ENREGISTREMENT,
+        effectueParId: utilisateurId,
+        ...(donnees.remarque === undefined
+          ? {}
+          : { remarque: donnees.remarque }),
       });
 
       const doublons = await tx.factureGlobale.findMany({
@@ -220,12 +302,15 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: RemarqueObligatoireDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.effectuerTransition(
       id,
       acteur,
       ActionFacture.RETOUR_PRESTATAIRE,
       { type: TypeMouvement.RETOUR_PRESTATAIRE, remarque: donnees.remarque },
+      {},
+      options,
     );
   }
 
@@ -233,6 +318,7 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: RemarqueOptionnelleDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.effectuerTransition(
       id,
@@ -244,6 +330,8 @@ export class FactureGlobaleService {
           ? {}
           : { remarque: donnees.remarque }),
       },
+      {},
+      options,
     );
   }
 
@@ -251,6 +339,7 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: EnvoiValidationDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const factureAvantControle = await this.obtenirDansTransaction(tx, id);
@@ -259,20 +348,24 @@ export class FactureGlobaleService {
         ActionFacture.ENVOI_VALIDATION,
         acteur.role,
       );
-      const remarqueTotaux =
-        await this.factureIndividuelleService.verifierAvantValidation(
-          tx,
-          id,
-          donnees.confirmerEcartTotaux ?? false,
-          donnees.remarque,
-        );
+      await this.factureIndividuelleService.verifierAvantValidation(tx, id);
       const destinataire = donnees.destinataireId === undefined ? null : await tx.utilisateur.findUnique({
         where: { id: donnees.destinataireId },
-        select: { id: true },
+        select: { id: true, role: true },
       });
       if (donnees.destinataireId !== undefined && destinataire === null) {
         throw new NotFoundException(
           `Le destinataire ${donnees.destinataireId} est introuvable.`,
+        );
+      }
+      if (
+        destinataire === null ||
+        ![RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF].some(
+          (role) => role === destinataire.role,
+        )
+      ) {
+        throw new UnprocessableEntityException(
+          'Le destinataire doit avoir le rôle ADJOINT ou CHEF.',
         );
       }
       return this.effectuerTransitionDansTransaction(
@@ -283,8 +376,11 @@ export class FactureGlobaleService {
         {
           type: TypeMouvement.ENVOI_VALIDATION,
           adresseAId: destinataire?.id,
-          ...(remarqueTotaux === undefined ? {} : { remarque: remarqueTotaux }),
+          ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
         },
+        {},
+        undefined,
+        options,
       );
     });
   }
@@ -293,6 +389,7 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: ValidationFactureDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const factureAvantControle = await this.obtenirDansTransaction(tx, id);
@@ -301,13 +398,7 @@ export class FactureGlobaleService {
         ActionFacture.VALIDATION,
         acteur.role,
       );
-      const remarqueTotaux =
-        await this.factureIndividuelleService.verifierAvantValidation(
-          tx,
-          id,
-          donnees.confirmerEcartTotaux ?? false,
-          donnees.remarque,
-        );
+      await this.factureIndividuelleService.verifierAvantValidation(tx, id);
       return this.effectuerTransitionDansTransaction(
         tx,
         id,
@@ -315,9 +406,11 @@ export class FactureGlobaleService {
         ActionFacture.VALIDATION,
         {
           type: TypeMouvement.VALIDATION,
-          ...(remarqueTotaux === undefined ? {} : { remarque: remarqueTotaux }),
+          ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
         },
         { dateValidation: new Date(), valideParId: acteur.id },
+        undefined,
+        options,
       );
     });
   }
@@ -326,6 +419,7 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: RemarqueObligatoireDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
@@ -339,6 +433,9 @@ export class FactureGlobaleService {
           remarque: donnees.remarque,
           adresseAId: facture.enregistreParId,
         },
+        {},
+        undefined,
+        options,
       );
     });
   }
@@ -347,25 +444,32 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: SortieFactureDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.effectuerTransition(id, acteur, ActionFacture.SORTIE, {
       type: TypeMouvement.SORTIE,
       service: donnees.service,
-    });
+    }, {}, options);
   }
 
   async reouvrir(
     id: number,
     acteur: ActeurFacture,
     donnees: MotifObligatoireDto,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.effectuerTransition(id, acteur, ActionFacture.REOUVERTURE, {
       type: TypeMouvement.REOUVERTURE,
       remarque: donnees.motif,
-    }, { dateValidation: null, valideParId: null });
+    }, { dateValidation: null, valideParId: null }, options);
   }
 
-  async demanderSuppression(id: number, acteur: ActeurFacture, donnees: MotifObligatoireDto): Promise<FactureWorkflowLue> {
+  async demanderSuppression(
+    id: number,
+    acteur: ActeurFacture,
+    donnees: MotifObligatoireDto,
+    options: OptionsActionFacture = {},
+  ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
       if (facture.statut === StatutFacture.SUPPRESSION_DEMANDEE || facture.statut === StatutFacture.SUPPRIMEE) {
@@ -375,25 +479,35 @@ export class FactureGlobaleService {
       if (lignes > 0) throw new ConflictException('La suppression est refusée car la facture possède déjà des lignes individuelles.');
       return this.effectuerTransitionDansTransaction(tx, id, acteur, ActionFacture.DEMANDE_SUPPRESSION, {
         type: TypeMouvement.DEMANDE_SUPPRESSION, remarque: donnees.motif,
-      }, { statutAvantSuppression: facture.statut });
+      }, { statutAvantSuppression: facture.statut }, undefined, options);
     });
   }
 
-  async validerSuppression(id: number, acteur: ActeurFacture, donnees: RemarqueOptionnelleDto): Promise<FactureWorkflowLue> {
+  async validerSuppression(
+    id: number,
+    acteur: ActeurFacture,
+    donnees: RemarqueOptionnelleDto,
+    options: OptionsActionFacture = {},
+  ): Promise<FactureWorkflowLue> {
     return this.effectuerTransition(id, acteur, ActionFacture.VALIDATION_SUPPRESSION, {
       type: TypeMouvement.SUPPRESSION,
       ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
-    }, { statutAvantSuppression: null });
+    }, { statutAvantSuppression: null }, options);
   }
 
-  async refuserSuppression(id: number, acteur: ActeurFacture, donnees: RemarqueOptionnelleDto): Promise<FactureWorkflowLue> {
+  async refuserSuppression(
+    id: number,
+    acteur: ActeurFacture,
+    donnees: RemarqueOptionnelleDto,
+    options: OptionsActionFacture = {},
+  ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
       if (facture.statutAvantSuppression === null) throw new ConflictException('Le statut avant suppression est introuvable.');
       return this.effectuerTransitionDansTransaction(tx, id, acteur, ActionFacture.REFUS_SUPPRESSION, {
         type: TypeMouvement.REFUS_SUPPRESSION,
         ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
-      }, { statut: facture.statutAvantSuppression, statutAvantSuppression: null });
+      }, { statutAvantSuppression: null }, facture.statutAvantSuppression, options);
     });
   }
 
@@ -601,6 +715,7 @@ export class FactureGlobaleService {
       'factureGlobaleId' | 'effectueParId'
     >,
     modificationsFacture: Prisma.FactureGlobaleUncheckedUpdateManyInput = {},
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction((tx) =>
       this.effectuerTransitionDansTransaction(
@@ -610,6 +725,8 @@ export class FactureGlobaleService {
         action,
         mouvement,
         modificationsFacture,
+        undefined,
+        options,
       ),
     );
   }
@@ -624,28 +741,33 @@ export class FactureGlobaleService {
       'factureGlobaleId' | 'effectueParId'
     >,
     modificationsFacture: Prisma.FactureGlobaleUncheckedUpdateManyInput = {},
+    statutSuivantDynamique?: StatutFacture,
+    options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     const facture = await this.obtenirDansTransaction(tx, id);
     const statutCalcule = this.factureWorkflowService.determinerTransition(
       facture.statut,
       action,
       acteur.role,
+      statutSuivantDynamique,
     );
     const miseAJour = await tx.factureGlobale.updateMany({
       where: { id, statut: facture.statut, updatedAt: facture.updatedAt },
       data: {
         ...modificationsFacture,
         updatedAt: this.prochaineDateMiseAJour(facture.updatedAt),
-        statut: (modificationsFacture.statut as StatutFacture | undefined) ?? statutCalcule,
+        statut: statutCalcule,
       },
     });
     this.verifierEcritureConditionnelle(miseAJour.count, facture.statut);
 
-    await this.mouvementFactureService.ecrire(tx, {
+    const mouvementCree = await this.mouvementFactureService.ecrire(tx, {
       ...mouvement,
+      ...(options.date === undefined ? {} : { date: options.date }),
       factureGlobaleId: id,
       effectueParId: acteur.id,
     });
+    options.capturerMouvement?.(mouvementCree);
     return this.obtenirApresMiseAJour(tx, id);
   }
 
@@ -664,7 +786,7 @@ export class FactureGlobaleService {
       );
     }
 
-    const revalidationNecessaire = facture.statut === StatutFacture.A_REVALIDER;
+    const revalidationNecessaire = facture.statut === StatutFacture.A_CORRIGER;
     data.updatedAt = this.prochaineDateMiseAJour(facture.updatedAt);
     const miseAJour = await tx.factureGlobale.updateMany({
       where: {
@@ -672,7 +794,15 @@ export class FactureGlobaleService {
         statut: facture.statut,
         updatedAt: facture.updatedAt,
       },
-      data: { ...data, statut: statutSuivant },
+      data: {
+        ...data,
+        statut: revalidationNecessaire
+          ? StatutFacture.ENREGISTREE
+          : statutSuivant,
+        ...(revalidationNecessaire
+          ? { dateValidation: null, valideParId: null }
+          : {}),
+      },
     });
     this.verifierEcritureConditionnelle(miseAJour.count, facture.statut);
 

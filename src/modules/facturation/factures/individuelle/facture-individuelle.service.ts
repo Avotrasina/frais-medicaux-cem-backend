@@ -170,7 +170,15 @@ export class FactureIndividuelleService {
         depActe,
         depPlafond,
         contexte.regle,
+        donnees.montantCemIntegral ?? ligne.montantCemIntegral,
       );
+      if (ligne.factureGlobale.statut === StatutFacture.A_CORRIGER)
+        await this.enregistrerModificationFactureEnCorrection(
+          tx,
+          idFacture,
+          acteur,
+          `Modification de la ligne ${ligne.numLigne}.`,
+        );
       const updated = await tx.factureIndividuelle.update({
         where: { id: ligneId },
         data: {
@@ -187,13 +195,6 @@ export class FactureIndividuelleService {
           priseEnChargeId: donnees.numPec,
         },
       });
-      if (ligne.factureGlobale.statut === StatutFacture.A_REVALIDER)
-        await this.mouvements.ecrire(tx, {
-          factureGlobaleId: idFacture,
-          type: TypeMouvement.MODIFICATION,
-          effectueParId: acteur.id,
-          remarque: `Modification de la ligne ${ligne.numLigne}.`,
-        });
       return this.formaterLigne(tx, updated.id, calcule, contexte);
     });
   }
@@ -214,15 +215,15 @@ export class FactureIndividuelleService {
           `La ligne ${ligneId} est introuvable dans la facture ${idFacture}.`,
         );
       this.workflow.verifierEditionLigne(ligne.factureGlobale.statut);
-      await tx.factureIndividuelle.delete({ where: { id: ligneId } });
-      if (ligne.factureGlobale.statut === StatutFacture.A_REVALIDER) {
-        await this.mouvements.ecrire(tx, {
-          factureGlobaleId: idFacture,
-          type: TypeMouvement.MODIFICATION,
-          effectueParId: acteur.id,
-          remarque: `Suppression de la ligne ${ligne.numLigne}.`,
-        });
+      if (ligne.factureGlobale.statut === StatutFacture.A_CORRIGER) {
+        await this.enregistrerModificationFactureEnCorrection(
+          tx,
+          idFacture,
+          acteur,
+          `Suppression de la ligne ${ligne.numLigne}.`,
+        );
       }
+      await tx.factureIndividuelle.delete({ where: { id: ligneId } });
     });
   }
 
@@ -323,7 +324,11 @@ export class FactureIndividuelleService {
     idFacture: number,
     acteur: ActeurFacture,
     donnees: AffecterRetenueDto,
-  ): Promise<{ ligneIds: number[]; refPaie: string; moisAffectation: string }> {
+  ): Promise<{
+    ligneIds: number[];
+    refPaie: string;
+    moisAffectation?: string;
+  }> {
     this.permissions.verifier(ActionFacture.SUIVI_MODIFIER, acteur.role);
     if (donnees.ligneIds.length === 0)
       throw new BadRequestException(
@@ -333,7 +338,10 @@ export class FactureIndividuelleService {
       throw new BadRequestException(
         'La liste des lignes ne peut pas contenir de doublons.',
       );
-    const mois = convertirMois(donnees.moisAffectation);
+    const mois =
+      donnees.moisAffectation === undefined
+        ? undefined
+        : convertirMois(donnees.moisAffectation);
     await this.prisma.$transaction(async (tx) => {
       const facture = await tx.factureGlobale.findUnique({
         where: { id: idFacture },
@@ -351,13 +359,18 @@ export class FactureIndividuelleService {
         );
       await tx.factureIndividuelle.updateMany({
         where: { id: { in: donnees.ligneIds }, factureGlobaleId: idFacture },
-        data: { refPaie: donnees.refPaie, moisAffectation: mois },
+        data: {
+          refPaie: donnees.refPaie,
+          ...(mois === undefined ? {} : { moisAffectation: mois }),
+        },
       });
     });
     return {
       ligneIds: donnees.ligneIds,
       refPaie: donnees.refPaie,
-      moisAffectation: mois.toISOString().slice(0, 10),
+      ...(mois === undefined
+        ? {}
+        : { moisAffectation: mois.toISOString().slice(0, 10) }),
     };
   }
 
@@ -426,16 +439,13 @@ export class FactureIndividuelleService {
   async verifierAvantValidation(
     tx: Prisma.TransactionClient,
     idFacture: number,
-    confirmer: boolean,
-    remarque?: string | null,
-  ): Promise<string | undefined> {
+  ): Promise<void> {
     const controle = await this.controleTotaux(idFacture, tx);
-    if (controle.concordant) return remarque ?? undefined;
-    if (!confirmer || remarque?.trim() === undefined || remarque.trim() === '')
+    if (!controle.concordant) {
       throw new ConflictException(
-        'Les totaux de la facture ne concordent pas ou la facture ne contient aucune ligne. Une confirmation avec remarque est obligatoire.',
+        `La validation est refusée car les totaux de la facture ne concordent pas${controle.nombreLignes === 0 ? ' et la facture ne contient aucune ligne' : ''}. Écarts : montantActe=${controle.ecarts.montantActe}, montantCemIntegral=${controle.ecarts.montantCemIntegral}, dépassement=${controle.ecarts.depassement}.`,
       );
-    return `${remarque.trim()}\nÉcart de totaux confirmé : montantActe=${controle.ecarts.montantActe}, montantCemIntegral=${controle.ecarts.montantCemIntegral}, dépassement=${controle.ecarts.depassement}.`;
+    }
   }
 
   private async creerDansTransaction(
@@ -462,6 +472,11 @@ export class FactureIndividuelleService {
       donnees.montantDepassementActe ?? 0,
       donnees.montantDepassementPlafond ?? 0,
       contexte.regle,
+      donnees.montantCemIntegral,
+    );
+    const createdAt = new Date();
+    const moisAffectation = new Date(
+      Date.UTC(createdAt.getUTCFullYear(), createdAt.getUTCMonth(), 1),
     );
     const ligne = await tx.factureIndividuelle.create({
       data: {
@@ -477,17 +492,18 @@ export class FactureIndividuelleService {
         observationDepassement: donnees.observationDepassement,
         tauxCem: calcule.tauxCem,
         montantCemIntegral: calcule.montantCemIntegral,
+        createdAt,
+        moisAffectation,
         priseEnChargeId: donnees.numPec ?? null,
       },
     });
-    if (contexte.statut === StatutFacture.A_REVALIDER) {
-      await this.mouvements.ecrire(tx, {
-        factureGlobaleId: idFacture,
-        type: TypeMouvement.MODIFICATION,
-        effectueParId: acteur.id,
-        remarque: `Création de la ligne ${numLigne}.`,
-      });
-    }
+    if (contexte.statut === StatutFacture.A_CORRIGER)
+      await this.enregistrerModificationFactureEnCorrection(
+        tx,
+        idFacture,
+        acteur,
+        `Création de la ligne ${numLigne}.`,
+      );
     return this.formaterLigne(tx, ligne.id, calcule, contexte);
   }
 
@@ -601,6 +617,33 @@ export class FactureIndividuelleService {
       regle: { type: regle.type, tauxCem: regle.tauxCem },
       avertissements,
     };
+  }
+
+  private async enregistrerModificationFactureEnCorrection(
+    tx: Prisma.TransactionClient,
+    idFacture: number,
+    acteur: ActeurFacture,
+    remarque: string,
+  ): Promise<void> {
+    const miseAJour = await tx.factureGlobale.updateMany({
+      where: { id: idFacture, statut: StatutFacture.A_CORRIGER },
+      data: {
+        statut: StatutFacture.ENREGISTREE,
+        dateValidation: null,
+        valideParId: null,
+      },
+    });
+    if (miseAJour.count === 0) {
+      throw new ConflictException(
+        `La facture n'est plus au statut ${StatutFacture.A_CORRIGER}; elle a été modifiée par une autre action.`,
+      );
+    }
+    await this.mouvements.ecrire(tx, {
+      factureGlobaleId: idFacture,
+      type: TypeMouvement.MODIFICATION,
+      effectueParId: acteur.id,
+      remarque,
+    });
   }
 
   private async resoudreContexteLecture(

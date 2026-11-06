@@ -94,11 +94,15 @@ exige `nbSeances` et exclut `montant`.
 
 ### Workflow Facturation
 
-Nouvelles routes : `POST /factures/:id/reouverture`,
-`POST /factures/:id/demande-suppression`,
-`POST /factures/:id/validation-suppression` et
-`POST /factures/:id/refus-suppression`. `POST /factures/:id/annulation` est
-supprimée. Les deux demandes utilisent le champ `motif` obligatoire.
+Les actions de workflow passent par `PATCH /factures/:id/statut`, avec un
+`type` et les champs propres à l’action. `GET /factures/:id/transitions` expose
+les actions disponibles et leurs champs requis. `GET /factures/:id/mouvements`
+renvoie l’historique (filtrable par `type`) dans l’ordre de création; la date
+du mouvement est métier et `createdAt` est son horodatage technique.
+Les dix routes d’action `POST` et `GET /factures/:id/historique` restent
+disponibles mais sont dépréciées. `GET /utilisateurs?role=ADJOINT,CHEF` fournit
+les valideurs disponibles. Les dates d’action sont limitées à la date
+d’enregistrement de la facture et à aujourd’hui.
 
 Les listes excluent `SUPPRIMEE` par défaut; `?statut=SUPPRIMEE` permet de
 l’inclure. Les rôles sont désactivés par défaut; `PERMISSIONS_ROLES_ACTIVES=true`
@@ -126,14 +130,17 @@ Les lignes d’une facture globale sont adressées par son identifiant :
 `POST /factures/:id/lignes`, `PUT /factures/:id/lignes/:ligneId`,
 `DELETE /factures/:id/lignes/:ligneId` et `GET /factures/:id/lignes`.
 Les montants calculés sont renvoyés comme chaînes à deux décimales. Les lignes
-sont modifiables uniquement en `ENREGISTREE` ou `A_REVALIDER`; leur suppression
+sont modifiables uniquement en `ENREGISTREE` ou `A_CORRIGER`; leur suppression
 est physique. `GET /factures/:id/lignes/proposition?idp=&acteId=&dateActe=`
 lit les dépassements T5_x sans les recopier automatiquement.
 `numPec` est l’identifiant entier d’une `Attestation`; une attestation
 introuvable ou déjà affectée à une autre ligne produit un avertissement.
 
-`PATCH /factures/:id/retenue` affecte `refPaie` et le premier jour du
-`moisAffectation` à plusieurs identifiants de ligne.
+`PATCH /factures/:id/retenue` affecte `refPaie` à plusieurs lignes et peut
+modifier leur `moisAffectation` lorsqu’il est fourni. À la création d’une
+ligne, `moisAffectation` est automatiquement fixé au premier jour du mois de
+création.
 `GET /factures/:id/controle-totaux` compare les sommes des lignes aux montants
 de la facture. L’envoi en validation et la validation exigent des totaux
-concordants, ou `confirmerEcartTotaux: true` accompagné d’une `remarque`.
+concordants. Tout écart ou toute facture sans ligne bloque l’envoi en validation
+et la validation.

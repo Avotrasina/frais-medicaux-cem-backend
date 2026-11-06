@@ -32,6 +32,7 @@ export class FactureCalculService {
     montantDepassementActe: number | string | Prisma.Decimal,
     montantDepassementPlafond: number | string | Prisma.Decimal,
     regle: { type: TypeRegle; tauxCem: Prisma.Decimal },
+    montantCemIntegralSaisi?: number | string | Prisma.Decimal,
   ): CalculLigneFacture {
     const montant = new Prisma.Decimal(String(montantActe));
     const depassementActe = new Prisma.Decimal(String(montantDepassementActe));
@@ -53,35 +54,41 @@ export class FactureCalculService {
       );
     }
     const base = montant.minus(depassementActe).minus(depassementPlafond);
+    const montantCemIntegral =
+      montantCemIntegralSaisi === undefined
+        ? regle.type === TypeRegle.CHARGE_TOTALE_CEM
+          ? base
+          : new Prisma.Decimal(0)
+        : new Prisma.Decimal(String(montantCemIntegralSaisi));
+    if (montantCemIntegral.isNegative() || montantCemIntegral.greaterThan(base)) {
+      throw new BadRequestException(
+        'Le montant CEM intégral doit être compris entre zéro et la base de l’acte.',
+      );
+    }
     return {
       montantActe: montant,
       montantDepassementActe: depassementActe,
       montantDepassementPlafond: depassementPlafond,
       tauxCem: regle.tauxCem,
-      montantCemIntegral:
-        regle.type === TypeRegle.CHARGE_TOTALE_CEM
-          ? base
-          : new Prisma.Decimal(0),
+      montantCemIntegral,
     };
   }
 
   calculerPartsLigne(ligne: CalculLigneFacture): PartsLigneFacture {
-    const base = ligne.montantActe
-      .minus(ligne.montantDepassementActe)
-      .minus(ligne.montantDepassementPlafond);
-    const montantCem = ligne.montantCemIntegral.isZero()
-      ? base
-          .mul(ligne.tauxCem)
-          .div(100)
-          .toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP)
-      : ligne.montantCemIntegral;
-    const montantAgent = base.minus(montantCem);
     const montantDepassement = ligne.montantDepassementActe.plus(
       ligne.montantDepassementPlafond,
     );
+    const reste = ligne.montantActe
+      .minus(ligne.montantCemIntegral)
+      .minus(montantDepassement);
+    const partCem80 = reste
+      .mul(ligne.tauxCem)
+      .div(100)
+      .toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
+    const montantAgent = reste.minus(partCem80);
 
     return {
-      montantCem,
+      montantCem: ligne.montantCemIntegral.plus(partCem80),
       montantAgent,
       montantDepassement,
       totalChargeAgent: montantAgent.plus(montantDepassement),

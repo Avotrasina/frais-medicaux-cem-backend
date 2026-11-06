@@ -16,6 +16,7 @@ import { FacturePermissionsService } from './shared/facture-permissions.service.
 import { SuiviController } from './suivi/suivi.controller.js';
 import { SuiviService } from './suivi/suivi.service.js';
 import { SuiviCalculService } from './suivi/suivi-calcul.service.js';
+import { UtilisateurController } from './utilisateur.controller.js';
 
 @Module({
   imports: [PrismaModule, PlafondModule, ReglesPriseEnChargeModule],
@@ -24,6 +25,7 @@ import { SuiviCalculService } from './suivi/suivi-calcul.service.js';
     FactureIndividuelleController,
     FactureWorkflowController,
     SuiviController,
+    UtilisateurController,
   ],
   providers: [
     FactureGlobaleService,

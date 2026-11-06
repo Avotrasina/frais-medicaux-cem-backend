@@ -1,11 +1,8 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import {
   RoleUtilisateur,
   StatutFacture,
+  TypeMouvement,
 } from '../../../../generated/prisma/enums.js';
 import { FacturePermissionsService } from '../../shared/facture-permissions.service.js';
 import { ActionFacture } from '../../shared/action-facture.js';
@@ -13,115 +10,187 @@ import { ActionFacture } from '../../shared/action-facture.js';
 export { ActionFacture } from '../../shared/action-facture.js';
 
 interface TransitionAutorisee {
-  statutSuivant: StatutFacture;
+  statutSuivant?: StatutFacture;
   roles: readonly RoleUtilisateur[];
 }
 
-const TRANSITIONS: Record<
-  ActionFacture,
-  Partial<Record<StatutFacture, TransitionAutorisee>>
-> = {
+interface DefinitionAction {
+  type?: TypeMouvement;
+  champsRequis: readonly string[];
+  depuis: Partial<Record<StatutFacture, TransitionAutorisee>>;
+}
+
+export interface TransitionFactureDisponible {
+  type: TypeMouvement;
+  statutResultat: StatutFacture;
+  champsRequis: readonly string[];
+}
+
+const TRANSITIONS: Record<ActionFacture, DefinitionAction> = {
   [ActionFacture.RETOUR_PRESTATAIRE]: {
-    [StatutFacture.ENREGISTREE]: {
-      statutSuivant: StatutFacture.RETOURNEE,
-      roles: [RoleUtilisateur.OPERATEUR],
+    type: TypeMouvement.RETOUR_PRESTATAIRE,
+    champsRequis: ['remarque'],
+    depuis: {
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.RETOURNEE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.RECEPTION_APRES_MODIFICATION]: {
-    [StatutFacture.RETOURNEE]: {
-      statutSuivant: StatutFacture.ENREGISTREE,
-      roles: [RoleUtilisateur.OPERATEUR],
+    type: TypeMouvement.RECEPTION_APRES_MODIFICATION,
+    champsRequis: [],
+    depuis: {
+      [StatutFacture.RETOURNEE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.ENVOI_VALIDATION]: {
-    [StatutFacture.ENREGISTREE]: {
-      statutSuivant: StatutFacture.EN_VALIDATION,
-      roles: [RoleUtilisateur.OPERATEUR],
-    },
-    [StatutFacture.A_REVALIDER]: {
-      statutSuivant: StatutFacture.EN_VALIDATION,
-      roles: [RoleUtilisateur.OPERATEUR],
+    type: TypeMouvement.ENVOI_VALIDATION,
+    champsRequis: ['destinataireId'],
+    depuis: {
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.EN_VALIDATION,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.A_CORRIGER]: {
+        statutSuivant: StatutFacture.EN_VALIDATION,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.VALIDATION]: {
-    [StatutFacture.EN_VALIDATION]: {
-      statutSuivant: StatutFacture.VALIDEE,
-      roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+    type: TypeMouvement.VALIDATION,
+    champsRequis: [],
+    depuis: {
+      [StatutFacture.EN_VALIDATION]: {
+        statutSuivant: StatutFacture.VALIDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
     },
   },
   [ActionFacture.RETOUR_CORRECTION]: {
-    [StatutFacture.EN_VALIDATION]: {
-      statutSuivant: StatutFacture.ENREGISTREE,
-      roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+    type: TypeMouvement.RETOUR_POUR_CORRECTION,
+    champsRequis: ['remarque'],
+    depuis: {
+      [StatutFacture.EN_VALIDATION]: {
+        statutSuivant: StatutFacture.A_CORRIGER,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
     },
   },
   [ActionFacture.SORTIE]: {
-    [StatutFacture.VALIDEE]: {
-      statutSuivant: StatutFacture.SORTIE,
-      roles: [RoleUtilisateur.OPERATEUR],
+    type: TypeMouvement.SORTIE,
+    champsRequis: ['service'],
+    depuis: {
+      [StatutFacture.VALIDEE]: {
+        statutSuivant: StatutFacture.SORTIE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.REOUVERTURE]: {
-    [StatutFacture.VALIDEE]: { statutSuivant: StatutFacture.A_REVALIDER, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
-    [StatutFacture.SORTIE]: { statutSuivant: StatutFacture.A_REVALIDER, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
+    type: TypeMouvement.REOUVERTURE,
+    champsRequis: ['remarque'],
+    depuis: {
+      [StatutFacture.EN_VALIDATION]: {
+        statutSuivant: StatutFacture.A_CORRIGER,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.VALIDEE]: {
+        statutSuivant: StatutFacture.A_CORRIGER,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.SORTIE]: {
+        statutSuivant: StatutFacture.A_CORRIGER,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+    },
   },
   [ActionFacture.DEMANDE_SUPPRESSION]: {
-    [StatutFacture.ENREGISTREE]: { statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
-    [StatutFacture.EN_VALIDATION]: { statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
-    [StatutFacture.RETOURNEE]: { statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
-    [StatutFacture.VALIDEE]: { statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
-    [StatutFacture.SORTIE]: { statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
-    [StatutFacture.A_REVALIDER]: { statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
+    type: TypeMouvement.DEMANDE_SUPPRESSION,
+    champsRequis: ['remarque'],
+    depuis: {
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.EN_VALIDATION]: {
+        statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.RETOURNEE]: {
+        statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.VALIDEE]: {
+        statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.SORTIE]: {
+        statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+      [StatutFacture.A_CORRIGER]: {
+        statutSuivant: StatutFacture.SUPPRESSION_DEMANDEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+    },
   },
   [ActionFacture.VALIDATION_SUPPRESSION]: {
-    [StatutFacture.SUPPRESSION_DEMANDEE]: { statutSuivant: StatutFacture.SUPPRIMEE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
+    type: TypeMouvement.SUPPRESSION,
+    champsRequis: [],
+    depuis: {
+      [StatutFacture.SUPPRESSION_DEMANDEE]: {
+        statutSuivant: StatutFacture.SUPPRIMEE,
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+    },
   },
   [ActionFacture.REFUS_SUPPRESSION]: {
-    [StatutFacture.SUPPRESSION_DEMANDEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF] },
+    type: TypeMouvement.REFUS_SUPPRESSION,
+    champsRequis: [],
+    depuis: {
+      [StatutFacture.SUPPRESSION_DEMANDEE]: {
+        roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+      },
+    },
   },
   [ActionFacture.MODIFIER_INFORMATIONS]: {
-    [StatutFacture.ENREGISTREE]: {
-      statutSuivant: StatutFacture.ENREGISTREE,
-      roles: [RoleUtilisateur.OPERATEUR],
-    },
-    [StatutFacture.RETOURNEE]: {
-      statutSuivant: StatutFacture.RETOURNEE,
-      roles: [RoleUtilisateur.OPERATEUR],
-    },
-    [StatutFacture.A_REVALIDER]: {
-      statutSuivant: StatutFacture.A_REVALIDER,
-      roles: [RoleUtilisateur.OPERATEUR],
-    },
-    [StatutFacture.VALIDEE]: {
-      statutSuivant: StatutFacture.EN_VALIDATION,
-      roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
-    },
-    [StatutFacture.SORTIE]: {
-      statutSuivant: StatutFacture.EN_VALIDATION,
-      roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+    champsRequis: [],
+    depuis: {
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.RETOURNEE]: {
+        statutSuivant: StatutFacture.RETOURNEE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.A_CORRIGER]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.MODIFIER_MONTANTS]: {
-    [StatutFacture.ENREGISTREE]: {
-      statutSuivant: StatutFacture.ENREGISTREE,
-      roles: [RoleUtilisateur.OPERATEUR],
-    },
-    [StatutFacture.A_REVALIDER]: {
-      statutSuivant: StatutFacture.A_REVALIDER,
-      roles: [RoleUtilisateur.OPERATEUR],
-    },
-    [StatutFacture.VALIDEE]: {
-      statutSuivant: StatutFacture.EN_VALIDATION,
-      roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
-    },
-    [StatutFacture.SORTIE]: {
-      statutSuivant: StatutFacture.EN_VALIDATION,
-      roles: [RoleUtilisateur.ADJOINT, RoleUtilisateur.CHEF],
+    champsRequis: [],
+    depuis: {
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.A_CORRIGER]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
-  [ActionFacture.SUIVI_CREER]: {},
-  [ActionFacture.SUIVI_MODIFIER]: {},
-  [ActionFacture.SUIVI_SUPPRIMER]: {},
+  [ActionFacture.SUIVI_CREER]: { champsRequis: [], depuis: {} },
+  [ActionFacture.SUIVI_MODIFIER]: { champsRequis: [], depuis: {} },
+  [ActionFacture.SUIVI_SUPPRIMER]: { champsRequis: [], depuis: {} },
 };
 
 /** Décide des transitions facture sans accès à la base de données. */
@@ -136,20 +205,20 @@ export class FactureWorkflowService {
   verifierEditionLigne(statut: StatutFacture): void {
     if (
       statut === StatutFacture.ENREGISTREE ||
-      statut === StatutFacture.A_REVALIDER
+      statut === StatutFacture.A_CORRIGER
     ) {
       return;
     }
 
     throw new ConflictException(
-      'Les lignes ne sont modifiables que lorsque la facture est enregistrée ou à revalider.',
+      'Les lignes ne sont modifiables que lorsque la facture est enregistrée ou à corriger.',
     );
   }
 
   verifierModificationRetenue(statut: StatutFacture): void {
     if (
       statut === StatutFacture.ENREGISTREE ||
-      statut === StatutFacture.A_REVALIDER ||
+      statut === StatutFacture.A_CORRIGER ||
       statut === StatutFacture.VALIDEE ||
       statut === StatutFacture.SORTIE
     ) {
@@ -165,16 +234,62 @@ export class FactureWorkflowService {
     statutActuel: StatutFacture,
     action: ActionFacture,
     role: RoleUtilisateur,
+    statutSuivantDynamique?: StatutFacture,
   ): StatutFacture {
     this.permissions.verifier(action, role);
 
-    const transition = TRANSITIONS[action][statutActuel];
+    const transition = TRANSITIONS[action].depuis[statutActuel];
     if (transition === undefined) {
       throw new ConflictException(
         `L'action ${action} est interdite lorsque la facture est au statut ${statutActuel}.`,
       );
     }
 
-    return transition.statutSuivant;
+    return this.resoudreStatutSuivant(
+      transition,
+      action,
+      statutActuel,
+      statutSuivantDynamique,
+    );
+  }
+
+  listerTransitions(
+    statutActuel: StatutFacture,
+    statutSuivantDynamique?: StatutFacture,
+  ): TransitionFactureDisponible[] {
+    return (Object.keys(TRANSITIONS) as ActionFacture[]).flatMap((action) => {
+      const definition = TRANSITIONS[action];
+      if (definition.type === undefined) return [];
+      const transition = definition.depuis[statutActuel];
+      if (transition === undefined) return [];
+      return [
+        {
+          type: definition.type,
+          statutResultat: this.resoudreStatutSuivant(
+            transition,
+            action,
+            statutActuel,
+            statutSuivantDynamique,
+          ),
+          champsRequis: definition.champsRequis,
+        },
+      ];
+    });
+  }
+
+  private resoudreStatutSuivant(
+    transition: TransitionAutorisee,
+    action: ActionFacture,
+    statutActuel: StatutFacture,
+    statutSuivantDynamique?: StatutFacture,
+  ): StatutFacture {
+    const statutSuivant = transition.statutSuivant ?? statutSuivantDynamique;
+    if (statutSuivant === undefined) {
+      throw new ConflictException(
+        `L'action ${action} n'a pas de statut cible défini pour le statut ${statutActuel}.`,
+      );
+    }
+
+    return statutSuivant;
   }
 }

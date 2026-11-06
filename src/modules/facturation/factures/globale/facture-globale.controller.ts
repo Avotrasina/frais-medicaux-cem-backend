@@ -1,5 +1,6 @@
 import {
   Body,
+  BadRequestException,
   Controller,
   Get,
   Param,
@@ -11,6 +12,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import { FactureGlobaleService } from './facture-globale.service.js';
 import type { FactureGlobaleCreee } from './facture-globale.service.js';
@@ -18,7 +20,7 @@ import {
   MontantsSerialises,
   serialiserMontants,
 } from '../../shared/serialiser-montants.js';
-import { StatutFacture } from '../../../../generated/prisma/enums.js';
+import { StatutFacture, TypeMouvement } from '../../../../generated/prisma/enums.js';
 
 interface RequeteAvecUtilisateur {
   user?: { id: number };
@@ -59,8 +61,25 @@ export class FactureGlobaleController {
   }
 
   @Get(':id/historique')
-  async historique(@Param('id', ParseIntPipe) id: number) {
-    return this.factureGlobaleService.historique(id);
+  @ApiOperation({ deprecated: true })
+  async historique(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('type') type?: TypeMouvement,
+  ) {
+    return this.factureGlobaleService.historique(id, this.validerTypeMouvement(type));
+  }
+
+  @Get(':id/mouvements')
+  async mouvements(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('type') type?: TypeMouvement,
+  ) {
+    return this.factureGlobaleService.historique(id, this.validerTypeMouvement(type));
+  }
+
+  @Get(':id/transitions')
+  async transitions(@Param('id', ParseIntPipe) id: number) {
+    return this.factureGlobaleService.transitions(id);
   }
 
   @Get(':id')
@@ -87,5 +106,13 @@ export class FactureGlobaleController {
       utilisateurId,
     );
     return serialiserMontants(facture);
+  }
+
+  private validerTypeMouvement(
+    type?: TypeMouvement,
+  ): TypeMouvement | undefined {
+    if (type === undefined) return undefined;
+    if (Object.values(TypeMouvement).includes(type)) return type;
+    throw new BadRequestException('Le type de mouvement est invalide.');
   }
 }

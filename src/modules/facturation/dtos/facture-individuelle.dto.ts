@@ -63,6 +63,16 @@ export class CreerFactureIndividuelleDto {
   @Min(0)
   montantDepassementPlafond?: number;
 
+  @ApiPropertyOptional({
+    type: Number,
+    minimum: 0,
+    description: 'Part de la base prise en charge intégralement par la CEM.',
+  })
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  montantCemIntegral?: number;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -118,6 +128,16 @@ export class ModifierFactureIndividuelleDto {
   @Min(0)
   montantDepassementPlafond?: number;
 
+  @ApiPropertyOptional({
+    type: Number,
+    minimum: 0,
+    description: 'Part de la base prise en charge intégralement par la CEM.',
+  })
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  montantCemIntegral?: number;
+
   @ApiPropertyOptional({ nullable: true })
   @IsOptional()
   @IsString()
@@ -154,8 +174,9 @@ export class AffecterRetenueDto {
   @IsNotEmpty()
   refPaie!: string;
 
-  @ApiProperty({ type: String, format: 'month', example: '2026-01' })
+  @ApiPropertyOptional({ type: String, format: 'month', example: '2026-01' })
+  @IsOptional()
   @IsString()
   @Matches(/^\d{4}-(0[1-9]|1[0-2])$/)
-  moisAffectation!: string;
+  moisAffectation?: string;
 }

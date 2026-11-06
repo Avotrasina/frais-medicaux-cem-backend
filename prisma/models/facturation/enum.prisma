@@ -4,7 +4,7 @@ enum StatutFacture {
   RETOURNEE     @map("retournee")
   VALIDEE       @map("validee")
   SORTIE        @map("sortie")
-  A_REVALIDER   @map("a_revalider")
+  A_CORRIGER    @map("a_corriger")
   SUPPRESSION_DEMANDEE @map("suppression_demandee")
   SUPPRIMEE     @map("supprimee")
 

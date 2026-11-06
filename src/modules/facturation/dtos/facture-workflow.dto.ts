@@ -1,9 +1,9 @@
 import {
   IsDateString,
-  IsBoolean,
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsIn,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -12,7 +12,8 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { ServiceSortie } from '../../../generated/prisma/enums.js';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { TypeMouvement } from '../../../generated/prisma/enums.js';
 
 const MESSAGE_DATE = 'La date doit respecter le format AAAA-MM-JJ.';
 const MESSAGE_TAUX_MONTANT =
@@ -40,22 +41,13 @@ export class RemarqueOptionnelleDto {
 }
 
 export class EnvoiValidationDto {
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @IsInt({ message: 'Le destinataire doit être un identifiant entier.' })
   @IsPositive({ message: 'Le destinataire doit être un identifiant positif.' })
-  destinataireId?: number;
+  destinataireId!: number;
 
   @ApiPropertyOptional({
-    description:
-      'Autorise l’envoi malgré un écart de totaux, à justifier par une remarque.',
-  })
-  @IsOptional()
-  @IsBoolean()
-  confirmerEcartTotaux?: boolean;
-
-  @ApiPropertyOptional({
-    description: 'Obligatoire si un écart de totaux est confirmé.',
+    description: 'Remarque facultative associée à l’envoi en validation.',
   })
   @IsOptional()
   @IsString()
@@ -63,14 +55,72 @@ export class EnvoiValidationDto {
   remarque?: string;
 }
 
-export class ValidationFactureDto extends RemarqueOptionnelleDto {
-  @ApiPropertyOptional({
-    description:
-      'Autorise la validation malgré un écart de totaux, à justifier par une remarque.',
+const TYPES_ACTION_FACTURE = [
+  TypeMouvement.ENVOI_VALIDATION,
+  TypeMouvement.RETOUR_POUR_CORRECTION,
+  TypeMouvement.RETOUR_PRESTATAIRE,
+  TypeMouvement.RECEPTION_APRES_MODIFICATION,
+  TypeMouvement.VALIDATION,
+  TypeMouvement.SORTIE,
+  TypeMouvement.REOUVERTURE,
+  TypeMouvement.DEMANDE_SUPPRESSION,
+  TypeMouvement.REFUS_SUPPRESSION,
+  TypeMouvement.SUPPRESSION,
+] as const;
+
+export const TYPES_ACTION_AVEC_DATE = [
+  TypeMouvement.ENVOI_VALIDATION,
+  TypeMouvement.RETOUR_PRESTATAIRE,
+  TypeMouvement.RECEPTION_APRES_MODIFICATION,
+  TypeMouvement.RETOUR_POUR_CORRECTION,
+  TypeMouvement.SORTIE,
+];
+
+export class ActionFactureDto {
+  @ApiProperty({ enum: TYPES_ACTION_FACTURE })
+  @IsIn(TYPES_ACTION_FACTURE, {
+    message: 'Le type de mouvement ne correspond pas à une action.',
   })
-  @IsOptional()
-  @IsBoolean()
-  confirmerEcartTotaux?: boolean;
+  type!: (typeof TYPES_ACTION_FACTURE)[number];
+
+  @ApiPropertyOptional()
+  @ValidateIf((objet: ActionFactureDto) =>
+    objet.remarque !== undefined ||
+    [
+      TypeMouvement.RETOUR_POUR_CORRECTION,
+      TypeMouvement.RETOUR_PRESTATAIRE,
+      TypeMouvement.REOUVERTURE,
+      TypeMouvement.DEMANDE_SUPPRESSION,
+    ].some((type) => type === objet.type),
+  )
+  @IsString({ message: 'La remarque doit être une chaîne de caractères.' })
+  @IsNotEmpty({ message: 'La remarque est obligatoire.' })
+  @Matches(/\S/, { message: 'La remarque ne peut pas être vide.' })
+  remarque?: string;
+
+  @ApiPropertyOptional()
+  @ValidateIf(
+    (objet: ActionFactureDto) =>
+      objet.type === TypeMouvement.ENVOI_VALIDATION,
+  )
+  @IsInt({ message: 'Le destinataire doit être un identifiant entier.' })
+  @IsPositive({ message: 'Le destinataire doit être un identifiant positif.' })
+  destinataireId?: number;
+
+  @ApiPropertyOptional({ enum: ServiceSortie })
+  @ValidateIf((objet: ActionFactureDto) => objet.type === TypeMouvement.SORTIE)
+  @IsEnum(ServiceSortie, { message: 'Le service de sortie est invalide.' })
+  service?: ServiceSortie;
+
+  @ApiPropertyOptional({ example: '2026-11-06' })
+  @ValidateIf((objet: ActionFactureDto) => objet.date !== undefined)
+  @IsDateString({ strict: true }, { message: MESSAGE_DATE })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: MESSAGE_DATE })
+  date?: string;
+
+}
+
+export class ValidationFactureDto extends RemarqueOptionnelleDto {
 }
 
 export class SortieFactureDto {
