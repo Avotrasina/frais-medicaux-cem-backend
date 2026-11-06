@@ -144,3 +144,18 @@ création.
 de la facture. L’envoi en validation et la validation exigent des totaux
 concordants. Tout écart ou toute facture sans ligne bloque l’envoi en validation
 et la validation.
+
+### Pièces jointes des factures
+
+`POST /factures/:id/pieces-jointes` accepte un fichier multipart nommé
+`fichier` (PDF, JPEG ou PNG, 10 Mo maximum). Le contenu est validé par sa
+signature, indépendamment de son nom et du MIME déclaré. Une facture peut
+contenir au plus 20 pièces jointes; l’ajout est permis dans tout statut sauf
+`SUPPRIMEE`. Les fichiers sont stockés sous un nom UUID dans la catégorie
+`factures` et leur nom d’origine est conservé après nettoyage.
+
+`GET /factures/:id/pieces-jointes` liste les pièces; la route avec `:pieceId`
+sert le fichier en ligne uniquement s’il appartient à la facture demandée.
+`DELETE /factures/:id/pieces-jointes/:pieceId` est permis en `ENREGISTREE`,
+`A_CORRIGER` ou `RETOURNEE`. Le détail `GET /factures/:id` expose aussi
+`nombrePiecesJointes`.

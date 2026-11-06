@@ -4,11 +4,15 @@ model PieceJointeFacture {
   path             String
   nomFichier       String?  @map("nom_fichier")
   typeFichier      String   @map("type_fichier")
+  tailleOctets     Int      @map("taille_octets")
+  ajouteParId      Int?     @map("ajoute_par_id")
   createdAt        DateTime @default(now()) @map("created_at")
 
   factureGlobale FactureGlobale @relation(fields: [factureGlobaleId], references: [id], onDelete: Cascade)
+  ajoutePar      Utilisateur?   @relation(fields: [ajouteParId], references: [id], onDelete: SetNull)
 
   @@index([factureGlobaleId])
+  @@index([ajouteParId])
   @@map("piece_jointe_facture")
   @@schema("facturation")
 }

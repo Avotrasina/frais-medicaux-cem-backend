@@ -8,6 +8,7 @@ model Utilisateur {
   mouvementsEffectues  MouvementFacture[] @relation("MouvementEffectuePar")
   mouvementsRecus      MouvementFacture[] @relation("MouvementAdresseA")
   lignesSuivi          LigneSuivi[]
+  piecesJointesAjoutees PieceJointeFacture[]
 
   @@map("utilisateur")
   @@schema("utilisateur")

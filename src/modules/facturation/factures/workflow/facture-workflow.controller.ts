@@ -18,7 +18,10 @@ import {
 import { ApiOperation } from '@nestjs/swagger';
 import { TypeMouvement } from '../../../../generated/prisma/enums.js';
 import type { MouvementFacture } from '../../../../generated/prisma/client.js';
-import type { ActeurFacture } from '../globale/facture-globale.service.js';
+import type {
+  ActeurFacture,
+  FactureWorkflowLue,
+} from '../globale/facture-globale.service.js';
 import { FactureGlobaleService } from '../globale/facture-globale.service.js';
 import {
   EnvoiValidationDto,
@@ -296,9 +299,7 @@ export class FactureWorkflowController {
       },
     };
     const acteur = this.obtenirActeur(requete);
-    let facture:
-      | Awaited<ReturnType<FactureGlobaleService['obtenir']>>
-      | undefined;
+    let facture: FactureWorkflowLue | undefined;
     switch (donnees.type) {
       case TypeMouvement.ENVOI_VALIDATION:
         facture = await this.factureGlobaleService.envoyerValidation(

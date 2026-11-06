@@ -8,7 +8,6 @@ import {
   Post,
   Query,
   Req,
-  UnauthorizedException,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -21,35 +20,8 @@ import {
   serialiserMontants,
 } from '../../shared/serialiser-montants.js';
 import { StatutFacture, TypeMouvement } from '../../../../generated/prisma/enums.js';
-
-interface RequeteAvecUtilisateur {
-  user?: { id: number };
-}
-
-function obtenirUtilisateurId(requete: RequeteAvecUtilisateur): number {
-  const utilisateurId = requete.user?.id;
-  if (utilisateurId !== undefined && Number.isInteger(utilisateurId)) {
-    return utilisateurId;
-  }
-
-  const utilisateurTestId = process.env.FACTURATION_UTILISATEUR_TEST_ID;
-  if (process.env.NODE_ENV === 'development' && utilisateurTestId !== undefined) {
-    if (!/^[1-9]\d*$/.test(utilisateurTestId)) {
-      throw new UnauthorizedException(
-        'FACTURATION_UTILISATEUR_TEST_ID doit être un identifiant entier positif.',
-      );
-    }
-
-    const identifiant = Number(utilisateurTestId);
-    if (Number.isSafeInteger(identifiant)) {
-      return identifiant;
-    }
-  }
-
-  throw new UnauthorizedException(
-    'Aucun utilisateur authentifié n’est disponible. En développement, définissez FACTURATION_UTILISATEUR_TEST_ID avec l’identifiant d’un utilisateur existant.',
-  );
-}
+import { obtenirUtilisateurId } from '../../shared/utilisateur-facture.js';
+import type { RequeteAvecUtilisateur } from '../../shared/utilisateur-facture.js';
 
 @Controller('factures')
 export class FactureGlobaleController {

@@ -138,17 +138,32 @@ export class FactureGlobaleService {
     });
   }
 
-  async obtenir(id: number): Promise<FactureWorkflowLue> {
-    const facture = await this.prisma.factureGlobale.findUnique({ where: { id }, include: { prestataire: { select: { id: true, nom: true } } } });
+  async obtenir(
+    id: number,
+  ): Promise<FactureWorkflowLue & { nombrePiecesJointes: number }> {
+    const facture = await this.prisma.factureGlobale.findUnique({
+      where: { id },
+      include: {
+        prestataire: { select: { id: true, nom: true } },
+        _count: { select: { piecesJointes: true } },
+      },
+    });
     if (facture === null) throw new NotFoundException(`La facture ${id} est introuvable.`);
-    return facture;
+    const { _count, ...donneesFacture } = facture;
+    return { ...donneesFacture, nombrePiecesJointes: _count.piecesJointes };
   }
 
   async historique(
     id: number,
     type?: TypeMouvement,
   ): Promise<Prisma.MouvementFactureGetPayload<{ include: { effectuePar: true; adresseA: true } }>[]> {
-    await this.obtenir(id);
+    const facture = await this.prisma.factureGlobale.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (facture === null) {
+      throw new NotFoundException(`La facture ${id} est introuvable.`);
+    }
     return this.prisma.mouvementFacture.findMany({
       where: { factureGlobaleId: id, ...(type === undefined ? {} : { type }) },
       include: { effectuePar: true, adresseA: true },

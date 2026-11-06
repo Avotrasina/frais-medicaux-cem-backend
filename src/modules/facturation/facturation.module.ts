@@ -17,15 +17,19 @@ import { SuiviController } from './suivi/suivi.controller.js';
 import { SuiviService } from './suivi/suivi.service.js';
 import { SuiviCalculService } from './suivi/suivi-calcul.service.js';
 import { UtilisateurController } from './utilisateur.controller.js';
+import { StorageModule } from '../../infrastructure/storage/storage.module.js';
+import { PieceJointeFactureController } from './pieces-jointes/piece-jointe-facture.controller.js';
+import { PieceJointeFactureService } from './pieces-jointes/piece-jointe-facture.service.js';
 
 @Module({
-  imports: [PrismaModule, PlafondModule, ReglesPriseEnChargeModule],
+  imports: [PrismaModule, PlafondModule, ReglesPriseEnChargeModule, StorageModule],
   controllers: [
     FactureGlobaleController,
     FactureIndividuelleController,
     FactureWorkflowController,
     SuiviController,
     UtilisateurController,
+    PieceJointeFactureController,
   ],
   providers: [
     FactureGlobaleService,
@@ -38,6 +42,7 @@ import { UtilisateurController } from './utilisateur.controller.js';
     FacturePermissionsService,
     SuiviService,
     SuiviCalculService,
+    PieceJointeFactureService,
   ],
   exports: [FactureGlobaleService],
 })

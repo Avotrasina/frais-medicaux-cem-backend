@@ -4,10 +4,11 @@ import { env } from './env.validator.js';
 export const IMAGE_CATEGORIES = [
   'carteProfessionnelle',
   'carteSociale',
+  'factures',
 ] as const;
 export type ImageCategory = (typeof IMAGE_CATEGORIES)[number];
 
-export const PDF_CATEGORIES = ['attestation', 'convention'] as const;
+export const PDF_CATEGORIES = ['attestation', 'convention', 'factures'] as const;
 export type PdfCategory = (typeof PDF_CATEGORIES)[number];
 
 export const STORAGE_SETTINGS = {
@@ -18,10 +19,12 @@ export const STORAGE_SETTINGS = {
   imageSubDirs: {
     carteProfessionnelle: env.STORAGE_CARTES_PROFESSIONNELLES_DIR,
     carteSociale: env.STORAGE_CARTES_SOCIALES_DIR,
+    factures: 'factures',
   } satisfies Record<ImageCategory, string>,
   pdfDirs: {
     attestation: env.STORAGE_PDF_ATTESTATION_DIR,
     convention: env.STORAGE_PDF_CONVENTION_DIR,
+    factures: 'factures',
   } satisfies Record<PdfCategory, string>,
   maxPdfSize: env.UPLOAD_MAX_PDF_SIZE,
 } as const;
