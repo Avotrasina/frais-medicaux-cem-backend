@@ -270,10 +270,7 @@ export class FactureGlobaleService {
           ...(donnees.refAgence === undefined
             ? {}
             : { refAgence: donnees.refAgence }),
-          ...(donnees.remarque === undefined
-            ? {}
-            : { remarque: donnees.remarque }),
-          montantTotal: donnees.montantTotal,
+          montantTotal: null,
           total100Cem: 0,
           totalDepassement: 0,
           tauxCem,
@@ -289,9 +286,6 @@ export class FactureGlobaleService {
         factureGlobaleId: facture.id,
         type: TypeMouvement.ENREGISTREMENT,
         effectueParId: utilisateurId,
-        ...(donnees.remarque === undefined
-          ? {}
-          : { remarque: donnees.remarque }),
       });
 
       const doublons = await tx.factureGlobale.findMany({
@@ -670,6 +664,11 @@ export class FactureGlobaleService {
         donnees.totalDepassement === undefined
           ? facture.totalDepassement
           : new Prisma.Decimal(String(donnees.totalDepassement));
+      if (montantTotal === null) {
+        throw new BadRequestException(
+          'Le montant total doit être saisi avant les autres montants.',
+        );
+      }
       this.validerMontants(montantTotal, total100Cem, totalDepassement);
 
       const data: Prisma.FactureGlobaleUncheckedUpdateManyInput = {};
@@ -712,7 +711,7 @@ export class FactureGlobaleService {
         donnees.motif,
       );
       const parts = this.factureCalculService.calculerParts(
-        factureModifiee.montantTotal,
+        montantTotal,
         factureModifiee.total100Cem,
         factureModifiee.totalDepassement,
         factureModifiee.tauxCem,

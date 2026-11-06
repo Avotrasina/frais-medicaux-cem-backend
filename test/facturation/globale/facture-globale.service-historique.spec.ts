@@ -33,8 +33,6 @@ describe('FactureGlobaleService', () => {
     dateReception: '2026-12-31',
     moisPrestation: '2026-12-28',
     refAgence: 'AG-01',
-    montantTotal: 6_000_000,
-    remarque: 'Vérifiée physiquement',
   };
   const factureCreee = {
     id: 42,
@@ -45,8 +43,8 @@ describe('FactureGlobaleService', () => {
     dateFacture: new Date('2026-12-20T00:00:00.000Z'),
     moisPrestation: new Date('2026-12-01T00:00:00.000Z'),
     refAgence: donnees.refAgence,
-    remarque: donnees.remarque,
-    montantTotal: new Prisma.Decimal('6000000.00'),
+    remarque: null,
+    montantTotal: null,
     total100Cem: new Prisma.Decimal(0),
     totalDepassement: new Prisma.Decimal(0),
     tauxCem: new Prisma.Decimal(80),
@@ -165,7 +163,6 @@ describe('FactureGlobaleService', () => {
         factureGlobaleId: factureCreee.id,
         type: TypeMouvement.ENREGISTREMENT,
         effectueParId: 3,
-        remarque: donnees.remarque,
       },
     });
     expect(resultat.avertissements).toEqual([]);

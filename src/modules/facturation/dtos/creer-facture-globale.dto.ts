@@ -2,9 +2,7 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   Matches,
   Min,
@@ -40,18 +38,4 @@ export class CreerFactureGlobaleDto {
   @IsOptional()
   @IsString({ message: "La référence d'agence doit être une chaîne." })
   refAgence?: string;
-
-  @IsNumber(
-    { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
-    {
-      message:
-        'Le montant total doit être un nombre avec deux décimales au maximum.',
-    },
-  )
-  @IsPositive({ message: 'Le montant total doit être strictement positif.' })
-  montantTotal!: number;
-
-  @IsOptional()
-  @IsString({ message: 'La remarque doit être une chaîne.' })
-  remarque?: string;
 }

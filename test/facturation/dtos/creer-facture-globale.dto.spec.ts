@@ -9,7 +9,6 @@ describe('CreerFactureGlobaleDto', () => {
       dateFacture: '2026-12-20',
       dateReception: '2026-12-31',
       moisPrestation: '2026-12-01',
-      montantTotal: 6_000_000,
     });
   }
 
@@ -41,15 +40,4 @@ describe('CreerFactureGlobaleDto', () => {
     );
   });
 
-  it('rejette un montant avec plus de deux décimales', async () => {
-    const donnees = Object.assign(creerDonneesValides(), {
-      montantTotal: 12.345,
-    });
-
-    await expect(validate(donnees)).resolves.toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ property: 'montantTotal' }),
-      ]),
-    );
-  });
 });

@@ -8,7 +8,7 @@ model FactureGlobale {
   moisPrestation   DateTime      @map("mois_prestation") @db.Date
   refAgence        String?       @map("ref_agence")
   remarque         String?
-  montantTotal     Decimal       @map("montant_total") @db.Decimal(15, 2)
+  montantTotal     Decimal?      @map("montant_total") @db.Decimal(15, 2)
   total100Cem      Decimal       @default(0) @map("total_100_cem") @db.Decimal(15, 2)
   totalDepassement Decimal       @default(0) @map("total_depassement") @db.Decimal(15, 2)
   tauxCem          Decimal       @map("taux_cem") @db.Decimal(5, 2)

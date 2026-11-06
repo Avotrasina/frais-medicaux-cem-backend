@@ -385,6 +385,11 @@ export class FactureIndividuelleService {
     });
     if (facture === null)
       throw new NotFoundException(`La facture ${idFacture} est introuvable.`);
+    if (facture.montantTotal === null) {
+      throw new ConflictException(
+        'Le contrôle des totaux est impossible tant que le montant total n’est pas saisi.',
+      );
+    }
     const lignes = await client.factureIndividuelle.findMany({
       where: { factureGlobaleId: idFacture },
       select: {
