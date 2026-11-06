@@ -28,8 +28,10 @@ export class FactureGlobaleController {
   constructor(private readonly factureGlobaleService: FactureGlobaleService) {}
 
   @Get()
-  async lister(@Query('statut') statut?: StatutFacture) {
-    return serialiserMontants(await this.factureGlobaleService.lister(statut));
+  async lister(@Query('statut') statut?: string) {
+    return serialiserMontants(
+      await this.factureGlobaleService.lister(this.validerStatut(statut)),
+    );
   }
 
   @Get(':id/historique')
@@ -86,5 +88,15 @@ export class FactureGlobaleController {
     if (type === undefined) return undefined;
     if (Object.values(TypeMouvement).includes(type)) return type;
     throw new BadRequestException('Le type de mouvement est invalide.');
+  }
+
+  private validerStatut(statut?: string): StatutFacture | undefined {
+    if (statut === undefined) return undefined;
+    if (Object.values(StatutFacture).includes(statut as StatutFacture)) {
+      return statut as StatutFacture;
+    }
+    throw new BadRequestException(
+      `Le statut est invalide. Valeurs acceptées : ${Object.values(StatutFacture).join(', ')}.`,
+    );
   }
 }
