@@ -123,7 +123,7 @@ export class PlafondResolutionService {
         ),
       );
       const plafondParActe = plafondActe ?? plafondCategorie;
-      const plafondParAn = plafondAnnuelActe ?? plafondAnnuelCategorie;
+      const plafondParAn = plafondAnnuelCategorie ?? plafondAnnuelActe;
       const resultat: PlafondsResolus = {
         parActe: plafondParActe ? this.serialiser(plafondParActe) : null,
         parAn: plafondParAn ? this.serialiser(plafondParAn) : null,
@@ -138,7 +138,8 @@ export class PlafondResolutionService {
         resultat.historique = historique
           .filter((plafond) =>
             cible.type === 'ACTE'
-              ? plafond.acteID === cible.id
+              ? plafond.acteID === cible.id ||
+                plafond.categorieActeID === cible.categorieActeId
               : plafond.categorieActeID === cible.id,
           )
           .map((plafond) => ({

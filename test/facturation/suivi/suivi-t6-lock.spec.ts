@@ -69,6 +69,7 @@ describe('Verrou T5_x piloté par les lignes T6', () => {
       acte: {
         code: acte.code,
         nomActe: acte.nomActe,
+        categorieActeId: acte.categorieActeId,
         categorieActe: acte.categorieActe,
       },
     };
@@ -139,7 +140,15 @@ describe('Verrou T5_x piloté par les lignes T6', () => {
       ligneSuivi: { findMany: vi.fn().mockResolvedValue([ligneSuivi]) },
       plafond: {
         findFirst: vi.fn(
-          async (args: { where: { porteePlafond: PorteePlafond } }) =>
+          async (args: {
+            where: {
+              acteID: number | null;
+              categorieActeID: number | null;
+              porteePlafond: PorteePlafond;
+            };
+          }) =>
+            args.where.acteID === acte.id &&
+            args.where.categorieActeID === null &&
             args.where.porteePlafond === PorteePlafond.PAR_AN
               ? {
                   id: 1,

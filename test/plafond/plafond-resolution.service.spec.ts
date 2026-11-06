@@ -61,7 +61,7 @@ function creerService(plafondsEnVigueur: ReturnType<typeof plafond>[]) {
 }
 
 describe('PlafondResolutionService', () => {
-  it('préfère le plafond propre à l’acte à celui de sa catégorie', async () => {
+  it('partage le plafond annuel de catégorie entre ses actes même si un acte a le sien', async () => {
     const { service } = creerService([
       plafond(1, PorteePlafond.PAR_AN, {
         acteID: null,
@@ -90,7 +90,7 @@ describe('PlafondResolutionService', () => {
 
     expect(resultat.get('ACTE:10')).toMatchObject({
       parActe: { id: 4, valeur: '5000.00', source: 'ACTE' },
-      parAn: { id: 2, valeur: '40000.00', source: 'ACTE' },
+      parAn: { id: 1, valeur: '40000.00', source: 'CATEGORIE' },
       modeleSuivi: 'PLAFOND_ACTE_ET_ANNUEL',
     });
     expect(resultat.get('ACTE:10')?.parActe).not.toHaveProperty('dateEffet');
@@ -180,6 +180,34 @@ describe('PlafondResolutionService', () => {
         dateEffet: '2025-01-01',
         dateFin: '2025-12-31',
         source: 'ACTE',
+        porteePlafond: PorteePlafond.PAR_AN,
+      },
+    ]);
+  });
+
+  it('inclut l’historique du plafond annuel de catégorie dans les plafonds résolus d’un acte', async () => {
+    const plafondCategorie = plafond(
+      3,
+      PorteePlafond.PAR_AN,
+      { acteID: null, categorieActeID: 8 },
+      { dateEffet: '2026-01-01', montant: '1000000.00' },
+    );
+    const { service } = creerService([plafondCategorie]);
+
+    const resultat = await service.resoudre(
+      [{ type: 'ACTE', id: 10, categorieActeId: 8 }],
+      date,
+      true,
+    );
+
+    expect(resultat.get('ACTE:10')?.historique).toEqual([
+      {
+        id: 3,
+        unite: UnitePlafond.MONTANT,
+        valeur: '1000000.00',
+        dateEffet: '2026-01-01',
+        dateFin: null,
+        source: 'CATEGORIE',
         porteePlafond: PorteePlafond.PAR_AN,
       },
     ]);

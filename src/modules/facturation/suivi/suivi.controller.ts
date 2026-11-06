@@ -12,13 +12,11 @@ import {
   Post,
   Query,
   Req,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import type { ActeurFacture } from '../factures/globale/facture-globale.service.js';
-import { FactureRoleGuard } from '../shared/facture-role.guard.js';
 import { CreerLigneSuiviDto, ModifierLigneSuiviDto } from '../dtos/suivi.dto.js';
 import { SuiviService } from './suivi.service.js';
 
@@ -32,7 +30,6 @@ const PIPE = new ValidationPipe({
 });
 
 @Controller()
-@UseGuards(FactureRoleGuard)
 export class SuiviController {
   constructor(private readonly suivi: SuiviService) {}
 
@@ -44,6 +41,19 @@ export class SuiviController {
     @Req() requete: RequeteAvecUtilisateur,
   ) {
     return this.suivi.creer(id, this.acteur(requete), donnees);
+  }
+
+  @Get('suivis/cibles')
+  @ApiQuery({
+    name: 'date',
+    required: false,
+    type: String,
+    example: '2026-11-06',
+    description:
+      'Date de référence AAAA-MM-JJ. Par défaut : aujourd’hui, fuseau Indian/Antananarivo.',
+  })
+  async listerCibles(@Query('date') date?: string) {
+    return this.suivi.listerCibles(date);
   }
 
   @Get('suivis')

@@ -6,21 +6,21 @@ import { PrismaService } from '../src/infrastructure/prisma/prisma.service.js';
 import { PrismaClient } from '../src/generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { env } from '../src/common/settings/env.validator.js';
-import { FactureGlobaleService } from '../src/modules/facturation/facture-globale.service.js';
+import { FactureGlobaleService } from '../src/modules/facturation/factures/globale/facture-globale.service.js';
 import {
   SuiviService,
   type FeuilleSuivi,
-} from '../src/modules/facturation/suivi.service.js';
+} from '../src/modules/facturation/suivi/suivi.service.js';
 import { ActeRepository } from '../src/modules/acte/repositories/acte.repository.js';
 import { CategorieActeRepository } from '../src/modules/categorie-acte/repositories/categorie-acte.repository.js';
 import { PlafondRepository } from '../src/modules/plafond/repositories/plafond.repository.js';
 import { RefSocialService } from '../src/facturation/ref-social/ref-social.service.js';
 import { RegleService } from '../src/regles-prise-en-charge/regle.service.js';
-import { FacturePermissionsService } from '../src/modules/facturation/facture-permissions.service.js';
-import { FactureWorkflowService } from '../src/modules/facturation/facture-workflow.service.js';
-import { MouvementFactureService } from '../src/modules/facturation/mouvement-facture.service.js';
-import { FactureCalculService } from '../src/modules/facturation/facture-calcul.service.js';
-import { SuiviCalculService } from '../src/modules/facturation/suivi-calcul.service.js';
+import { FacturePermissionsService } from '../src/modules/facturation/shared/facture-permissions.service.js';
+import { FactureWorkflowService } from '../src/modules/facturation/factures/workflow/facture-workflow.service.js';
+import { MouvementFactureService } from '../src/modules/facturation/shared/mouvement-facture.service.js';
+import { FactureCalculService } from '../src/modules/facturation/shared/facture-calcul.service.js';
+import { SuiviCalculService } from '../src/modules/facturation/suivi/suivi-calcul.service.js';
 import {
   PorteePlafond,
   RoleUtilisateur,
@@ -167,7 +167,7 @@ async function verifierPlafonds(
   const plafond =
     (await prisma.plafond.findFirst({
       where: {
-        acteID: acteId,
+        categorieActeID: acte.categorieActeId,
         porteePlafond: PorteePlafond.PAR_AN,
         ...enVigueur,
       },
@@ -175,7 +175,7 @@ async function verifierPlafonds(
     })) ??
     (await prisma.plafond.findFirst({
       where: {
-        categorieActeID: acte.categorieActeId,
+        acteID: acteId,
         porteePlafond: PorteePlafond.PAR_AN,
         ...enVigueur,
       },
@@ -388,9 +388,8 @@ async function main(): Promise<void> {
       });
       actesDemo.set(acte.code, acte);
     }
-    await plafondRepository.create({
+    const plafondCategorie = await plafondRepository.create({
       dateEffet: '2026-01-01',
-      dateFin: '2026-05-31',
       porteePlafond: PorteePlafond.PAR_AN,
       unite: UnitePlafond.MONTANT,
       montant: 800,
@@ -398,11 +397,13 @@ async function main(): Promise<void> {
       acteID: null,
       categorieActeID: categorie.id,
     });
+    await plafondRepository.update(plafondCategorie.id, {
+      dateFin: '2026-05-31',
+    });
     for (const scenario of SCENARIOS_PLAFOND) {
       const valeur = scenario.cle.startsWith('hausse') ? 900 : 800;
       await plafondRepository.create({
         dateEffet: '2026-06-01',
-        dateFin: null,
         porteePlafond: PorteePlafond.PAR_AN,
         unite: UnitePlafond.MONTANT,
         montant: valeur,

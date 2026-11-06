@@ -12,6 +12,7 @@ import {
   UnitePlafond,
 } from '../../../generated/prisma/enums.js';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import { dateAujourdhuiAntananarivo } from '../../../common/date.util.js';
 import type { ActeurFacture } from '../factures/globale/facture-globale.service.js';
 import { ActionFacture } from '../shared/action-facture.js';
 import { FacturePermissionsService } from '../shared/facture-permissions.service.js';
@@ -23,6 +24,7 @@ import { determinerModeleSuivi, type ModeleSuivi } from './suivi-modele.js';
 import {
   PlafondResolutionService,
   type CiblePlafond,
+  type PlafondsResolus,
   type VersionPlafond,
 } from '../../plafond/plafond-resolution.service.js';
 import type {
@@ -156,6 +158,20 @@ const COLONNES_PAR_MODELE: Record<ModeleSuivi, ColonneSuivi[]> = {
   ],
 };
 
+export interface CibleSuivi {
+  type: 'ACTE' | 'CATEGORIE';
+  id: number;
+  nom: string;
+  code?: string;
+  categorieActeId?: number;
+  categorieActe?: string;
+  plafonds: {
+    parAn: PlafondsResolus['parAn'];
+    parActe: PlafondsResolus['parActe'];
+  };
+  modeleSuivi: ModeleSuivi;
+}
+
 @Injectable()
 export class SuiviService {
   constructor(
@@ -164,6 +180,100 @@ export class SuiviService {
     private readonly permissions: FacturePermissionsService,
     private readonly plafondResolution: PlafondResolutionService,
   ) {}
+
+  async listerCibles(dateTexte?: string): Promise<CibleSuivi[]> {
+    const dateReference = this.dateReferenceCibles(dateTexte);
+    const [actes, categories] = await Promise.all([
+      this.prisma.acte.findMany({
+        include: { categorieActe: true },
+        orderBy: { code: 'asc' },
+      }),
+      this.prisma.categorieActe.findMany({ orderBy: { nomCategorie: 'asc' } }),
+    ]);
+    const cibles: CiblePlafond[] = [
+      ...categories.map((categorie) => ({
+        type: 'CATEGORIE' as const,
+        id: categorie.id,
+      })),
+      ...actes.map((acte) => ({
+        type: 'ACTE' as const,
+        id: acte.id,
+        categorieActeId: acte.categorieActeId,
+      })),
+    ];
+    const resolutions = await this.plafondResolution.resoudre(
+      cibles,
+      dateReference,
+      false,
+    );
+    const resultats: CibleSuivi[] = [];
+    const categoriesSuivies = new Set<number>();
+
+    for (const acte of actes) {
+      const resolution = resolutions.get(`ACTE:${acte.id}`);
+      if (resolution?.parAn === null || resolution === undefined) continue;
+      if (resolution.parAn.source === 'CATEGORIE') {
+        categoriesSuivies.add(acte.categorieActeId);
+        continue;
+      }
+      if (resolution.modeleSuivi === null) continue;
+      resultats.push({
+        type: 'ACTE',
+        id: acte.id,
+        nom: acte.nomActe,
+        code: acte.code,
+        categorieActeId: acte.categorieActeId,
+        categorieActe: acte.categorieActe.nomCategorie,
+        plafonds: {
+          parAn: resolution.parAn,
+          parActe: resolution.parActe,
+        },
+        modeleSuivi: resolution.modeleSuivi,
+      });
+    }
+
+    for (const categorie of categories) {
+      if (!categoriesSuivies.has(categorie.id)) continue;
+      const resolution = resolutions.get(`CATEGORIE:${categorie.id}`);
+      if (
+        resolution?.parAn === null ||
+        resolution === undefined ||
+        resolution.modeleSuivi === null
+      ) {
+        continue;
+      }
+      resultats.push({
+        type: 'CATEGORIE',
+        id: categorie.id,
+        nom: categorie.nomCategorie,
+        plafonds: {
+          parAn: resolution.parAn,
+          parActe: resolution.parActe,
+        },
+        modeleSuivi: resolution.modeleSuivi,
+      });
+    }
+
+    return resultats.sort((gauche, droite) =>
+      gauche.type === droite.type
+        ? gauche.nom.localeCompare(droite.nom, 'fr')
+        : gauche.type === 'CATEGORIE'
+          ? -1
+          : 1,
+    );
+  }
+
+  private dateReferenceCibles(dateTexte?: string): Date {
+    const valeur = dateTexte ?? dateAujourdhuiAntananarivo();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(valeur)) {
+      throw new BadRequestException('La date doit respecter le format AAAA-MM-JJ.');
+    }
+    const date = new Date(`${valeur}T00:00:00.000Z`);
+    if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== valeur) {
+      throw new BadRequestException('La date fournie est invalide.');
+    }
+    return date;
+  }
 
   async creer(
     idFacture: number,
@@ -586,11 +696,15 @@ export class SuiviService {
       PorteePlafond.PAR_AN,
       date,
     );
-    const annuel =
-      acteAnnuel ??
-      (await this.plafond(null, categorieId, PorteePlafond.PAR_AN, date));
+    const annuelCategorie = await this.plafond(
+      null,
+      categorieId,
+      PorteePlafond.PAR_AN,
+      date,
+    );
+    const annuel = annuelCategorie ?? acteAnnuel;
     const cible =
-      acteAnnuel === null ? `categorie:${categorieId}` : `acte:${acteId}`;
+      annuelCategorie !== null ? `categorie:${categorieId}` : `acte:${acteId}`;
     const parActe =
       (await this.plafond(acteId, null, PorteePlafond.PAR_ACTE, date)) ??
       (await this.plafond(null, categorieId, PorteePlafond.PAR_ACTE, date));

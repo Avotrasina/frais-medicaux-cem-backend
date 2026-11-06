@@ -40,7 +40,7 @@ const attenduMontant = (annuel: number, montants: number[], parActe?: number): F
 const attenduSeances = (quota: number, montants: number[]): FixtureLigne[] => montants.map((montant, index) => ({ montant, seance: index + 1, seancesRestantes: Math.max(0, quota - index - 1), total: index < quota ? 0 : montant }));
 
 export const SCENARIOS_REELS: FixtureScenario[] = [
-  { cle: 'analyses', nom: 'Analyses', codes: ['LAB-01', 'LAB-02'], montants: montantsAnalyse, annuel: 1000000, unite: 'MONTANT', attendu: attenduMontant(1000000, montantsAnalyse) },
+  { cle: 'analyses', nom: 'Analyses', codes: ['LAB-01', 'LAB-02', 'LAB-03', 'LAB-04', 'LAB-05', 'LAB-06', 'LAB-07', 'LAB-08', 'LAB-99'], montants: montantsAnalyse, annuel: 1000000, unite: 'MONTANT', attendu: attenduMontant(1000000, montantsAnalyse) },
   { cle: 'protheses', nom: 'Prothèses dentaires', codes: ['DEN-05'], montants: montantsAnalyse, annuel: 800000, unite: 'MONTANT', attendu: attenduMontant(800000, montantsAnalyse) },
   { cle: 'orthodontie', nom: 'Orthodontie', codes: ['DEN-06'], montants: montantsAnalyse, annuel: 1000000, unite: 'MONTANT', attendu: attenduMontant(1000000, montantsAnalyse) },
   { cle: 'detartrage', nom: 'Détartrage', codes: ['DEN-02'], montants: montantsAnalyse, annuel: 2, unite: 'SEANCES', attendu: attenduSeances(2, montantsAnalyse) },

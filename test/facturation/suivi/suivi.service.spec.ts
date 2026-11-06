@@ -26,8 +26,19 @@ interface ConfigurationTest {
     dateEffet?: Date;
     dateFin?: Date | null;
   } | null;
+  annuelCategorie?: {
+    unite: UnitePlafond;
+    valeur: string;
+    dateEffet?: Date;
+  } | null;
   parActe?: { unite: UnitePlafond; valeur: string; dateEffet?: Date } | null;
-  lignes?: Array<{ montant: string; jour: number }>;
+  lignes?: Array<{
+    montant: string;
+    jour: number;
+    acteId?: number;
+    acteCode?: string;
+    acteNom?: string;
+  }>;
   beneficiaire?: Record<string, unknown>;
   versionsAnnuelles?: number;
 }
@@ -60,6 +71,27 @@ function creerService(configuration: ConfigurationTest) {
           categorieActeID: null,
         }),
       )
+    : [];
+  const annuelsCategorie = configuration.annuelCategorie
+    ? [
+        {
+          id: 100,
+          porteePlafond: PorteePlafond.PAR_AN,
+          unite: configuration.annuelCategorie.unite,
+          montant:
+            configuration.annuelCategorie.unite === UnitePlafond.MONTANT
+              ? dec(configuration.annuelCategorie.valeur)
+              : null,
+          nbSeances:
+            configuration.annuelCategorie.unite === UnitePlafond.SEANCES
+              ? Number(configuration.annuelCategorie.valeur)
+              : null,
+          dateEffet: configuration.annuelCategorie.dateEffet ?? date(1),
+          dateFin: null,
+          acteID: null,
+          categorieActeID: 2,
+        },
+      ]
     : [];
   const parActe = configuration.parActe
     ? {
@@ -100,7 +132,7 @@ function creerService(configuration: ConfigurationTest) {
     id: index + 1,
     factureGlobaleId: index + 30,
     beneficiaireId: beneficiaire.id,
-    acteId: acte.id,
+    acteId: ligne.acteId ?? acte.id,
     dateActe: date(ligne.jour),
     libelle: `Acte ${index + 1}`,
     montantActe: dec(ligne.montant),
@@ -110,8 +142,9 @@ function creerService(configuration: ConfigurationTest) {
       statut: StatutFacture.ENREGISTREE,
     },
     acte: {
-      code: acte.code,
-      nomActe: acte.nomActe,
+      code: ligne.acteCode ?? acte.code,
+      nomActe: ligne.acteNom ?? acte.nomActe,
+      categorieActeId: acte.categorieActeId,
       categorieActe: acte.categorieActe,
     },
   }));
@@ -123,18 +156,20 @@ function creerService(configuration: ConfigurationTest) {
       dateEffet: { lte: Date };
     };
   }) => {
-    if (
-      query.where.acteID !== acte.id ||
-      query.where.categorieActeID !== null
-    ) {
+    const plafondActe = query.where.acteID === acte.id;
+    const plafondCategorie =
+      query.where.acteID === null &&
+      query.where.categorieActeID === acte.categorieActeId;
+    if (!plafondActe && !plafondCategorie) {
       return null;
     }
-    const plafonds =
-      query.where.porteePlafond === PorteePlafond.PAR_AN
-        ? annuels
-        : parActe === null
-          ? []
-          : [parActe];
+    const plafonds = query.where.porteePlafond === PorteePlafond.PAR_AN
+      ? plafondCategorie
+        ? annuelsCategorie
+        : annuels
+      : plafondCategorie || parActe === null
+        ? []
+        : [parActe];
     return (
       plafonds
         .filter(
@@ -157,7 +192,15 @@ function creerService(configuration: ConfigurationTest) {
       findFirst: vi.fn(async (query: Parameters<typeof plafondMatching>[0]) =>
         plafondMatching(query),
       ),
-      findMany: vi.fn(async () => annuels.map(({ id }) => ({ id }))),
+      findMany: vi.fn(
+        async (query: {
+          where: { acteID: number | null; categorieActeID: number | null };
+        }) =>
+          (query.where.categorieActeID === acte.categorieActeId
+            ? annuelsCategorie
+            : annuels
+          ).map(({ id }) => ({ id })),
+      ),
     },
     factureIndividuelle: {
       findFirst: vi.fn().mockResolvedValue(null),
@@ -200,6 +243,39 @@ function creerService(configuration: ConfigurationTest) {
 }
 
 describe('SuiviService - représentation des feuilles T5_x', () => {
+  it('partage le plafond annuel de catégorie entre deux actes malgré un plafond propre à l’un d’eux', async () => {
+    const { service } = creerService({
+      annuel: { unite: UnitePlafond.MONTANT, valeur: '900000' },
+      annuelCategorie: {
+        unite: UnitePlafond.MONTANT,
+        valeur: '1000000',
+      },
+      lignes: [
+        { montant: '600000', jour: 1 },
+        {
+          montant: '600000',
+          jour: 2,
+          acteId: 7,
+          acteCode: 'ACT-07',
+          acteNom: 'Autre acte de la catégorie',
+        },
+      ],
+    });
+
+    const feuille = await service.lire('IDP-15', 6, 2026);
+
+    expect(feuille.cible).toEqual({
+      type: 'categorie',
+      id: 2,
+      nom: 'Catégorie de test',
+    });
+    expect(feuille.plafonds.parAn.valeur).toBe('1000000.00');
+    expect(feuille.lignes.map((ligne) => ligne.totalDepassement)).toEqual([
+      '0.00',
+      '200000.00',
+    ]);
+  });
+
   it('T5_1 : cumule 1900000 d’actes sous un plafond de 1000000 et calcule 900000 de dépassements', async () => {
     const { service } = creerService({
       annuel: { unite: UnitePlafond.MONTANT, valeur: '1000000' },
