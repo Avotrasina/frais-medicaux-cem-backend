@@ -170,7 +170,7 @@ describe('FactureIndividuelleService - suppression T6', () => {
       ).rejects.toThrow('montantActe=-1.00');
     });
 
-    it('refuse une facture sans ligne même si ses totaux valent zéro', async () => {
+    it('accepte une facture sans ligne lorsque les montants sont saisis manuellement', async () => {
       const { service, tx } = creerServiceControle(
         { montantTotal: 0, total100Cem: 0, totalDepassement: 0 },
         [],
@@ -181,7 +181,7 @@ describe('FactureIndividuelleService - suppression T6', () => {
           tx as unknown as Prisma.TransactionClient,
           21,
         ),
-      ).rejects.toThrow('la facture ne contient aucune ligne');
+      ).resolves.toBeUndefined();
     });
   });
 

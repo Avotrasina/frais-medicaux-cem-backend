@@ -452,6 +452,10 @@ export class FactureIndividuelleService {
     idFacture: number,
   ): Promise<void> {
     const controle = await this.controleTotaux(idFacture, tx);
+    // Une facture globale peut être validée sans lignes : ses montants sont
+    // alors saisis et contrôlés manuellement. Le contrôle détaillé ne
+    // s'applique que lorsqu'au moins une ligne est enregistrée.
+    if (controle.nombreLignes === 0) return;
     if (!controle.concordant) {
       throw new ConflictException(
         `La validation est refusée car les totaux de la facture ne concordent pas${controle.nombreLignes === 0 ? ' et la facture ne contient aucune ligne' : ''}. Écarts : montantActe=${controle.ecarts.montantActe}, montantCemIntegral=${controle.ecarts.montantCemIntegral}, dépassement=${controle.ecarts.depassement}.`,

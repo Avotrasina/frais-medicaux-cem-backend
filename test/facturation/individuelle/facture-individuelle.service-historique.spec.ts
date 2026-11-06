@@ -104,13 +104,11 @@ describe('FactureIndividuelleService - contrôle des totaux', () => {
     ).rejects.toThrow('montantActe=-10000.00');
   });
 
-  it('refuse une facture sans ligne même si ses totaux valent zéro', async () => {
+  it('accepte une facture sans ligne lorsque les montants sont saisis manuellement', async () => {
     const service = creerService(facture, []);
     const tx = creerTransaction(facture, []);
 
-    await expect(
-      service.verifierAvantValidation(tx, 7),
-    ).rejects.toThrow('aucune ligne');
+    await expect(service.verifierAvantValidation(tx, 7)).resolves.toBeUndefined();
   });
 });
 
