@@ -102,6 +102,21 @@ export type FactureWorkflowLue = Prisma.FactureGlobaleGetPayload<{
   include: { prestataire: { select: { id: true; nom: true } } };
 }>;
 
+export type FactureListee = Prisma.FactureGlobaleGetPayload<{
+  include: {
+    prestataire: { select: { id: true; nom: true } };
+    piecesJointes: {
+      select: {
+        id: true;
+        nomFichier: true;
+        typeFichier: true;
+        tailleOctets: true;
+        createdAt: true;
+      };
+    };
+  };
+}>;
+
 export interface ActeurFacture {
   id: number;
   role: RoleUtilisateur;
@@ -130,10 +145,22 @@ export class FactureGlobaleService {
     private readonly factureIndividuelleService: FactureIndividuelleService,
   ) {}
 
-  async lister(statut?: StatutFacture): Promise<FactureWorkflowLue[]> {
+  async lister(statut?: StatutFacture): Promise<FactureListee[]> {
     return this.prisma.factureGlobale.findMany({
       where: statut === undefined ? { statut: { not: StatutFacture.SUPPRIMEE } } : { statut },
-      include: { prestataire: { select: { id: true, nom: true } } },
+      include: {
+        prestataire: { select: { id: true, nom: true } },
+        piecesJointes: {
+          select: {
+            id: true,
+            nomFichier: true,
+            typeFichier: true,
+            tailleOctets: true,
+            createdAt: true,
+          },
+          orderBy: { id: 'asc' },
+        },
+      },
       orderBy: { id: 'desc' },
     });
   }
