@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
-import { PorteePlafond, UnitePlafond } from '../../../generated/prisma/enums.js';
-import { validatePlafond } from './plafond.validation.js';
+import { PorteePlafond, UnitePlafond } from '../../../src/generated/prisma/enums.js';
+import { validatePlafond } from '../../../src/modules/plafond/use-cases/plafond.validation.js';
 
 describe('validatePlafond', () => {
   it('accepts a positive amount ceiling owned by an act', () => {

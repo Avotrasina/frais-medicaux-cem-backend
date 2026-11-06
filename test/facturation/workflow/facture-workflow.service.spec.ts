@@ -3,12 +3,12 @@ import {
   RoleUtilisateur,
   StatutFacture,
   TypeMouvement,
-} from '../../../../generated/prisma/enums.js';
-import { FacturePermissionsService } from '../../shared/facture-permissions.service.js';
+} from '../../../src/generated/prisma/enums.js';
+import { FacturePermissionsService } from '../../../src/modules/facturation/shared/facture-permissions.service.js';
 import {
   ActionFacture,
   FactureWorkflowService,
-} from './facture-workflow.service.js';
+} from '../../../src/modules/facturation/factures/workflow/facture-workflow.service.js';
 
 function creerWorkflow(): FactureWorkflowService {
   return new FactureWorkflowService({

@@ -1,6 +1,6 @@
-import { Prisma } from '../../../generated/prisma/client.js';
-import { TypeRegle } from '../../../generated/prisma/enums.js';
-import { FactureCalculService } from './facture-calcul.service.js';
+import { Prisma } from '../../../src/generated/prisma/client.js';
+import { TypeRegle } from '../../../src/generated/prisma/enums.js';
+import { FactureCalculService } from '../../../src/modules/facturation/shared/facture-calcul.service.js';
 
 describe('FactureCalculService.calculerPartsLigne', () => {
   const service = new FactureCalculService();
@@ -11,29 +11,49 @@ describe('FactureCalculService.calculerPartsLigne', () => {
       montantActe: 30000,
       montantCemIntegral: 0,
       depassement: 0,
-      attendu: [24000, 6000, 6000],
+      partCem80: 24000,
+      partAgent: 6000,
+      chargeAgent: 6000,
+      montantCemTotal: 24000,
     },
     {
       montantActe: 4000000,
       montantCemIntegral: 4000000,
       depassement: 0,
-      attendu: [0, 0, 0],
+      partCem80: 0,
+      partAgent: 0,
+      chargeAgent: 0,
+      montantCemTotal: 4000000,
     },
     {
       montantActe: 1970000,
       montantCemIntegral: 0,
       depassement: 1000000,
-      attendu: [776000, 194000, 1194000],
+      partCem80: 776000,
+      partAgent: 194000,
+      chargeAgent: 1194000,
+      montantCemTotal: 776000,
     },
     {
       montantActe: 100000,
       montantCemIntegral: 40000,
       depassement: 10000,
-      attendu: [40000, 10000, 20000],
+      partCem80: 40000,
+      partAgent: 10000,
+      chargeAgent: 20000,
+      montantCemTotal: 80000,
     },
   ])(
-    'calcule les parts T6 pour montant=$montantActe, intégral=$montantCemIntegral et dépassement=$depassement',
-    ({ montantActe, montantCemIntegral, depassement, attendu }) => {
+    'T6 $montantActe, CEM intégral $montantCemIntegral, dépassement $depassement : CEM 80 % $partCem80, agent $partAgent, charge agent $chargeAgent, total CEM $montantCemTotal',
+    ({
+      montantActe,
+      montantCemIntegral,
+      depassement,
+      partCem80,
+      partAgent,
+      chargeAgent,
+      montantCemTotal,
+    }) => {
       const ligne = service.calculerLigne(
         montantActe,
         depassement,
@@ -47,10 +67,8 @@ describe('FactureCalculService.calculerPartsLigne', () => {
         parts.montantCem.minus(ligne.montantCemIntegral).toNumber(),
         parts.montantAgent.toNumber(),
         parts.totalChargeAgent.toNumber(),
-      ]).toEqual(attendu);
-      expect(parts.montantCem.toNumber()).toBe(
-        montantCemIntegral + attendu[0],
-      );
+      ]).toEqual([partCem80, partAgent, chargeAgent]);
+      expect(parts.montantCem.toNumber()).toBe(montantCemTotal);
     },
   );
 

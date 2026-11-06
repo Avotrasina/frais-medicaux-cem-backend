@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
-import { RoleUtilisateur } from '../../generated/prisma/enums.js';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
-import { UtilisateurController } from './utilisateur.controller.js';
+import { RoleUtilisateur } from '../../src/generated/prisma/enums.js';
+import { PrismaService } from '../../src/infrastructure/prisma/prisma.service.js';
+import { UtilisateurController } from '../../src/modules/facturation/utilisateur.controller.js';
 
-vi.mock('../../infrastructure/prisma/prisma.service.js', () => ({
+vi.mock('../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
 }));
 

@@ -1,15 +1,15 @@
-import { Prisma } from '../../generated/prisma/client.js';
-import { PorteePlafond, UnitePlafond } from '../../generated/prisma/enums.js';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
-import { CategorieActeQueryDto } from '../categorie-acte/dtos/categorie-acte-query.dto.js';
-import { CategorieActeRepository } from '../categorie-acte/repositories/categorie-acte.repository.js';
-import { ReadCategorieActeUseCase } from '../categorie-acte/use-cases/categorie-acte.read.js';
+import { Prisma } from '../../src/generated/prisma/client.js';
+import { PorteePlafond, UnitePlafond } from '../../src/generated/prisma/enums.js';
+import { PrismaService } from '../../src/infrastructure/prisma/prisma.service.js';
+import { CategorieActeQueryDto } from '../../src/modules/categorie-acte/dtos/categorie-acte-query.dto.js';
+import { CategorieActeRepository } from '../../src/modules/categorie-acte/repositories/categorie-acte.repository.js';
+import { ReadCategorieActeUseCase } from '../../src/modules/categorie-acte/use-cases/categorie-acte.read.js';
 import {
   PlafondResolutionService,
   type CiblePlafond,
-} from './plafond-resolution.service.js';
+} from '../../src/modules/plafond/plafond-resolution.service.js';
 
-vi.mock('../../infrastructure/prisma/prisma.service.js', () => ({
+vi.mock('../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
 }));
 

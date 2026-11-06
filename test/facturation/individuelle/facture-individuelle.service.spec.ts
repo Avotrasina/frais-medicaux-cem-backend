@@ -3,18 +3,18 @@ import {
   RoleUtilisateur,
   StatutFacture,
   TypeMouvement,
-} from '../../../../generated/prisma/enums.js';
-import { Prisma } from '../../../../generated/prisma/client.js';
-import { PrismaService } from '../../../../infrastructure/prisma/prisma.service.js';
-import { RegleService } from '../../../../regles-prise-en-charge/regle.service.js';
-import { FactureCalculService } from '../../shared/facture-calcul.service.js';
-import { FacturePermissionsService } from '../../shared/facture-permissions.service.js';
-import { MouvementFactureService } from '../../shared/mouvement-facture.service.js';
-import { SuiviService } from '../../suivi/suivi.service.js';
-import { FactureWorkflowService } from '../workflow/facture-workflow.service.js';
-import { FactureIndividuelleService } from './facture-individuelle.service.js';
+} from '../../../src/generated/prisma/enums.js';
+import { Prisma } from '../../../src/generated/prisma/client.js';
+import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
+import { RegleService } from '../../../src/regles-prise-en-charge/regle.service.js';
+import { FactureCalculService } from '../../../src/modules/facturation/shared/facture-calcul.service.js';
+import { FacturePermissionsService } from '../../../src/modules/facturation/shared/facture-permissions.service.js';
+import { MouvementFactureService } from '../../../src/modules/facturation/shared/mouvement-facture.service.js';
+import { SuiviService } from '../../../src/modules/facturation/suivi/suivi.service.js';
+import { FactureWorkflowService } from '../../../src/modules/facturation/factures/workflow/facture-workflow.service.js';
+import { FactureIndividuelleService } from '../../../src/modules/facturation/factures/individuelle/facture-individuelle.service.js';
 
-vi.mock('../../../../infrastructure/prisma/prisma.service.js', () => ({
+vi.mock('../../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
 }));
 

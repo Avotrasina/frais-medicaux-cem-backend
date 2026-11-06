@@ -1,13 +1,13 @@
-import { Prisma } from '../../../generated/prisma/client.js';
+import { Prisma } from '../../../src/generated/prisma/client.js';
 import {
   PorteePlafond,
   UnitePlafond,
-} from '../../../generated/prisma/enums.js';
-import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
-import { PlafondQueryDto } from '../dtos/plafond-query.dto.js';
-import { PlafondRepository } from './plafond.repository.js';
+} from '../../../src/generated/prisma/enums.js';
+import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
+import { PlafondQueryDto } from '../../../src/modules/plafond/dtos/plafond-query.dto.js';
+import { PlafondRepository } from '../../../src/modules/plafond/repositories/plafond.repository.js';
 
-vi.mock('../../../infrastructure/prisma/prisma.service.js', () => ({
+vi.mock('../../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
 }));
 

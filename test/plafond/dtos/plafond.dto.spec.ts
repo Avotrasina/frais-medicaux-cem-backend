@@ -1,5 +1,5 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { CreatePlafondDto, UpdatePlafondDto } from './plafond.dto.js';
+import { CreatePlafondDto, UpdatePlafondDto } from '../../../src/modules/plafond/dtos/plafond.dto.js';
 
 describe('Plafond DTOs', () => {
   it('n’accepte plus dateFin lors de la création', async () => {

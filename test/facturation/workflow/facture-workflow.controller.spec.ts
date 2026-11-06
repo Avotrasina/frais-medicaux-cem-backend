@@ -3,22 +3,22 @@ import {
   RoleUtilisateur,
   ServiceSortie,
   TypeMouvement,
-} from '../../../../generated/prisma/enums.js';
-import type { MouvementFacture } from '../../../../generated/prisma/client.js';
+} from '../../../src/generated/prisma/enums.js';
+import type { MouvementFacture } from '../../../src/generated/prisma/client.js';
 import {
   ActionFactureDto,
-} from '../../dtos/facture-workflow.dto.js';
+} from '../../../src/modules/facturation/dtos/facture-workflow.dto.js';
 import type {
   ActeurFacture,
   OptionsActionFacture,
-} from '../globale/facture-globale.service.js';
-import { FactureGlobaleService } from '../globale/facture-globale.service.js';
+} from '../../../src/modules/facturation/factures/globale/facture-globale.service.js';
+import { FactureGlobaleService } from '../../../src/modules/facturation/factures/globale/facture-globale.service.js';
 import {
   FactureWorkflowController,
   VALIDATION_ACTION,
-} from './facture-workflow.controller.js';
+} from '../../../src/modules/facturation/factures/workflow/facture-workflow.controller.js';
 
-vi.mock('../../../../infrastructure/prisma/prisma.service.js', () => ({
+vi.mock('../../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
 }));
 
