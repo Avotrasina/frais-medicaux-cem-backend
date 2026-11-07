@@ -8,8 +8,8 @@ import {
   TypeMouvement,
 } from '../../../src/generated/prisma/enums.js';
 import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
-import { RefSocialService } from '../../../src/facturation/ref-social/ref-social.service.js';
-import { RegleService } from '../../../src/regles-prise-en-charge/regle.service.js';
+import { RefSocialService } from '../../../src/modules/facturation/shared/ref-social.service.js';
+import { RegleService } from '../../../src/modules/regles-prise-en-charge/regle.service.js';
 import { FactureCalculService } from '../../../src/modules/facturation/shared/facture-calcul.service.js';
 import { MouvementFactureService } from '../../../src/modules/facturation/shared/mouvement-facture.service.js';
 import { FactureIndividuelleService } from '../../../src/modules/facturation/factures/individuelle/facture-individuelle.service.js';

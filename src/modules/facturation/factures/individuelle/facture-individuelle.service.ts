@@ -15,7 +15,7 @@ import {
   TypeMouvement,
 } from '../../../../generated/prisma/enums.js';
 import { PrismaService } from '../../../../infrastructure/prisma/prisma.service.js';
-import { RegleService } from '../../../../regles-prise-en-charge/regle.service.js';
+import { RegleService } from '../../../regles-prise-en-charge/regle.service.js';
 import {
   FactureCalculService,
   type CalculLigneFacture,

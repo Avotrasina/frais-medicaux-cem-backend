@@ -17,7 +17,7 @@ import { SuiviService } from '../../../src/modules/facturation/suivi/suivi.servi
 import { SuiviCalculService } from '../../../src/modules/facturation/suivi/suivi-calcul.service.js';
 import { PlafondResolutionService } from '../../../src/modules/plafond/plafond-resolution.service.js';
 import type { LigneSuiviCalculInput } from '../../../src/modules/facturation/suivi/suivi-calcul.service.js';
-import { RegleService } from '../../../src/regles-prise-en-charge/regle.service.js';
+import { RegleService } from '../../../src/modules/regles-prise-en-charge/regle.service.js';
 
 vi.mock('../../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},

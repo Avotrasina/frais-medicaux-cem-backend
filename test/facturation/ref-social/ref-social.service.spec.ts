@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import type { Prisma } from '../../../src/generated/prisma/client.js';
-import { RefSocialService } from '../../../src/facturation/ref-social/ref-social.service.js';
+import { RefSocialService } from '../../../src/modules/facturation/shared/ref-social.service.js';
 
 type RequeteCompteur = (
   morceaux: TemplateStringsArray,

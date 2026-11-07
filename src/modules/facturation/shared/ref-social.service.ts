@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import type { Prisma } from '../../generated/prisma/client.js';
+import type { Prisma } from '../../../generated/prisma/client.js';
 import { formaterRefSociale } from './ref-social.format.js';
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../infrastructure/prisma/prisma.module.js';
 import { PlafondModule } from '../plafond/plafond.module.js';
-import { RefSocialService } from '../../facturation/ref-social/ref-social.service.js';
-import { ReglesPriseEnChargeModule } from '../../regles-prise-en-charge/regles-prise-en-charge.module.js';
+import { RefSocialService } from './shared/ref-social.service.js';
+import { ReglesPriseEnChargeModule } from '../regles-prise-en-charge/regles-prise-en-charge.module.js';
 import { FactureGlobaleController } from './factures/globale/facture-globale.controller.js';
 import { FactureIndividuelleController } from './factures/individuelle/facture-individuelle.controller.js';
 import { FactureWorkflowController } from './factures/workflow/facture-workflow.controller.js';

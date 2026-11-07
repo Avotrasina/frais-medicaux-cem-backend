@@ -17,7 +17,7 @@ import {
   TypeMouvement,
 } from '../src/generated/prisma/enums.js';
 import { env } from '../src/common/settings/env.validator.js';
-import { RefSocialService } from '../src/facturation/ref-social/ref-social.service.js';
+import { RefSocialService } from '../src/modules/facturation/shared/ref-social.service.js';
 import { MouvementFactureService } from '../src/modules/facturation/shared/mouvement-facture.service.js';
 
 const PREFIXE_DEMO = 'DEMO FACTURATION - ';

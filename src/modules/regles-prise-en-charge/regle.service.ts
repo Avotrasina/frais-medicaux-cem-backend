@@ -4,13 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client.js';
-import type { Regle } from '../generated/prisma/client.js';
+import { Prisma } from '../../generated/prisma/client.js';
+import type { Regle } from '../../generated/prisma/client.js';
 import {
   AgentConcerne,
   TypeRegle,
-} from '../generated/prisma/enums.js';
-import { PrismaService } from '../infrastructure/prisma/prisma.service.js';
+} from '../../generated/prisma/enums.js';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import type {
   CreerRegleDto,
   ModifierRegleDto,

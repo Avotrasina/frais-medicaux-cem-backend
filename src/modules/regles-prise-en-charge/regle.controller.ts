@@ -11,7 +11,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import type { Regle } from '../generated/prisma/client.js';
+import type { Regle } from '../../generated/prisma/client.js';
 import { CreerRegleDto, ModifierRegleDto } from './dtos/regle.dto.js';
 import { RegleService } from './regle.service.js';
 

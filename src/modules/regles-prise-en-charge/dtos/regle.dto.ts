@@ -9,7 +9,7 @@ import {
 import {
   AgentConcerne,
   TypeRegle,
-} from '../../generated/prisma/enums.js';
+} from '../../../generated/prisma/enums.js';
 
 const MESSAGE_DATE = 'La date doit respecter le format AAAA-MM-JJ.';
 

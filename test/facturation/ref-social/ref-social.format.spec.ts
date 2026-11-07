@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { formaterRefSociale } from '../../../src/facturation/ref-social/ref-social.format.js';
+import { formaterRefSociale } from '../../../src/modules/facturation/shared/ref-social.format.js';
 
 describe('formaterRefSociale', () => {
   it.each([

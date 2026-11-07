@@ -15,8 +15,8 @@ import {
   StatutFacture,
   TypeMouvement,
 } from '../../../../generated/prisma/enums.js';
-import { RefSocialService } from '../../../../facturation/ref-social/ref-social.service.js';
-import { RegleService } from '../../../../regles-prise-en-charge/regle.service.js';
+import { RefSocialService } from '../../shared/ref-social.service.js';
+import { RegleService } from '../../../regles-prise-en-charge/regle.service.js';
 import { PrismaService } from '../../../../infrastructure/prisma/prisma.service.js';
 import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import type {

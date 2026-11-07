@@ -5,7 +5,7 @@ import { FactureIndividuelleService } from '../../../src/modules/facturation/fac
 import { FacturePermissionsService } from '../../../src/modules/facturation/shared/facture-permissions.service.js';
 import { FactureWorkflowService } from '../../../src/modules/facturation/factures/workflow/facture-workflow.service.js';
 import { MouvementFactureService } from '../../../src/modules/facturation/shared/mouvement-facture.service.js';
-import { RegleService } from '../../../src/regles-prise-en-charge/regle.service.js';
+import { RegleService } from '../../../src/modules/regles-prise-en-charge/regle.service.js';
 import { SuiviService } from '../../../src/modules/facturation/suivi/suivi.service.js';
 import {
   AgentType,

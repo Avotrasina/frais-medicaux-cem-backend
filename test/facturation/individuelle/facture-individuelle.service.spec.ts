@@ -6,7 +6,7 @@ import {
 } from '../../../src/generated/prisma/enums.js';
 import { Prisma } from '../../../src/generated/prisma/client.js';
 import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
-import { RegleService } from '../../../src/regles-prise-en-charge/regle.service.js';
+import { RegleService } from '../../../src/modules/regles-prise-en-charge/regle.service.js';
 import { FactureCalculService } from '../../../src/modules/facturation/shared/facture-calcul.service.js';
 import { FacturePermissionsService } from '../../../src/modules/facturation/shared/facture-permissions.service.js';
 import { MouvementFactureService } from '../../../src/modules/facturation/shared/mouvement-facture.service.js';

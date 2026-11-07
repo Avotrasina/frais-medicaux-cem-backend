@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Prisma } from '../../src/generated/prisma/client.js';
 import { AgentConcerne, TypeRegle } from '../../src/generated/prisma/enums.js';
 import { PrismaService } from '../../src/infrastructure/prisma/prisma.service.js';
-import { agentConcerneDepuisEstActif, RegleService } from '../../src/regles-prise-en-charge/regle.service.js';
+import { agentConcerneDepuisEstActif, RegleService } from '../../src/modules/regles-prise-en-charge/regle.service.js';
 
 vi.mock('../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
