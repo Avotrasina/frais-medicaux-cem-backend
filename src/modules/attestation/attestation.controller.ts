@@ -19,6 +19,8 @@ import { UpdateAttestationUseCase } from './use-cases/attestation.update.js';
 import { CreateAttestationDto } from './dtos/create-attestation.dto.js';
 import { UpdatePartialAttestationDto } from './dtos/update-attestation.dto.js';
 import { PreviewAttestation } from './use-cases/attestation.preview.js';
+import { ApiOkResponse, ApiProduces } from '@nestjs/swagger';
+import { AttestationResponseDto } from './dtos/attestation-response.dto.js';
 
 @Controller('attestations')
 export class AttestationController {
@@ -64,22 +66,29 @@ export class AttestationController {
     await this.attestationDeleteUseCase.execute(id);
   }
 
-
-    @Get('/')
+  @Get('/')
   @HttpCode(HttpStatus.OK)
-  async findAll() {
+  @ApiOkResponse({ type: AttestationResponseDto, isArray: true })
+  async findAll(): Promise<AttestationResponseDto[]> {
     return await this.attestationReadUseCase.findAll();
   }
 
-
   @Get('beneficiaries/:idp')
   @HttpCode(HttpStatus.OK)
-  async findByBeneficiary(@Param('idp') idp: string) {
+  @ApiOkResponse({ type: AttestationResponseDto, isArray: true })
+  async findByBeneficiary(
+    @Param('idp') idp: string,
+  ): Promise<AttestationResponseDto[]> {
     return await this.attestationReadUseCase.findByBeneficiaryIdp(idp);
   }
 
   @Get(':id/preview')
   @HttpCode(HttpStatus.OK)
+  @ApiProduces('image/png')
+  @ApiOkResponse({
+    description: 'Aperçu de l’attestation au format PNG.',
+    schema: { type: 'string', format: 'binary' },
+  })
   async preview(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<StreamableFile> {

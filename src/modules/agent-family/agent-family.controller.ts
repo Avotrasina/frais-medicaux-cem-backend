@@ -28,15 +28,22 @@ import { SaveEnfantUseCase } from './use-cases/enfant.save.js';
 import { UpdateConjointUseCase } from './use-cases/conjoint.update.js';
 import { UpdateEnfantUseCase } from './use-cases/enfant.update.js';
 import { ReadFamilleUseCase } from './use-cases/famille.read.js';
-import type { ReadAgentFamily } from './types/agent-family.types.js';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { StreamableFile } from '@nestjs/common';
 import { ApiProduces } from '@nestjs/swagger';
 import { GetFamilleCardUseCase } from './use-cases/agent-family.get-card.js';
 import { AgentFamilyDeletionUseCase } from './use-cases/agent-family.delete.js';
 import type { AgentFamilyMemberType } from './types/agent-family-deletion.types.js';
-import type { ReadConjoint } from './types/conjoint.types.js';
-import type { ReadEnfant } from './types/enfant.types.js';
+import {
+  AgentFamilyResponseDto,
+  ConjointResponseDto,
+  EnfantResponseDto,
+} from './dtos/agent-family-response.dto.js';
 
 @Controller('agent-families')
 export class AgentFamilyController {
@@ -85,17 +92,20 @@ export class AgentFamilyController {
   }
 
   @Get('spouses/deletion-requests')
-  async findSpouseDeletionRequests(): Promise<ReadConjoint[]> {
+  @ApiOkResponse({ type: ConjointResponseDto, isArray: true })
+  async findSpouseDeletionRequests(): Promise<ConjointResponseDto[]> {
     return this.deletionUseCase.readConjointRequests();
   }
 
   @Get('children/deletion-requests')
-  async findChildDeletionRequests(): Promise<ReadEnfant[]> {
+  @ApiOkResponse({ type: EnfantResponseDto, isArray: true })
+  async findChildDeletionRequests(): Promise<EnfantResponseDto[]> {
     return this.deletionUseCase.readEnfantRequests();
   }
 
   @Post('spouses')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Conjoint créé.' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentFamilyCreateMultipartDto })
   @UseInterceptors(ImageUploadInterceptor('image'))
@@ -154,6 +164,7 @@ export class AgentFamilyController {
 
   @Post('children')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Enfant créé.' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentFamilyCreateMultipartDto })
   @UseInterceptors(ImageUploadInterceptor('image'))
@@ -212,15 +223,20 @@ export class AgentFamilyController {
 
   @Get('agents/:matricule')
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: AgentFamilyResponseDto, isArray: true })
   async findByAgentMatricule(
     @Param('matricule', ParseIntPipe) matricule: number,
-  ): Promise<ReadAgentFamily[]> {
+  ): Promise<AgentFamilyResponseDto[]> {
     return this.readFamilleUseCase.findByMatricule(matricule);
   }
 
   @Get('family-members/:id/card')
   @HttpCode(HttpStatus.OK)
   @ApiProduces('image/png', 'image/jpeg', 'image/webp')
+  @ApiOkResponse({
+    description: 'Carte sociale diffusée en tant que fichier image.',
+    schema: { type: 'string', format: 'binary' },
+  })
   async getFamilyMemberCard(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<StreamableFile> {

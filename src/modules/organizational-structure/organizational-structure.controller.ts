@@ -28,10 +28,13 @@ import {
   UpdateServiceCodeDirectionDto,
   UpdateServiceNomDto,
 } from './dtos/service.dto.js';
-import type { ReadAgence } from './types/agence.types.js';
-import type { ReadDirectionWithServices } from './types/direction.types.js';
-import type { ReadService } from './types/service.types.js';
 import { DeleteOrganizationalStructureUseCase } from './use-cases/structure.delete.js';
+import { ApiOkResponse } from '@nestjs/swagger';
+import {
+  AgenceResponseDto,
+  DirectionAvecServicesResponseDto,
+  ServiceResponseDto,
+} from './dtos/structure-response.dto.js';
 
 @Controller('organizational-structures')
 export class StructureOrganisationnelleController {
@@ -123,12 +126,14 @@ export class StructureOrganisationnelleController {
   }
 
   @Get('agencies')
-  async findAllAgencies(): Promise<ReadAgence[]> {
+  @ApiOkResponse({ type: AgenceResponseDto, isArray: true })
+  async findAllAgencies(): Promise<AgenceResponseDto[]> {
     return this.readAllAgencesUseCase.findAll();
   }
 
   @Get('agencies/deletion-requests')
-  async findAgencyDeletionRequests(): Promise<ReadAgence[]> {
+  @ApiOkResponse({ type: AgenceResponseDto, isArray: true })
+  async findAgencyDeletionRequests(): Promise<AgenceResponseDto[]> {
     return this.readAllAgencesUseCase.findDeletionRequests();
   }
 
@@ -151,12 +156,16 @@ export class StructureOrganisationnelleController {
   }
 
   @Get('directions')
-  async findAllDirections(): Promise<ReadDirectionWithServices[]> {
+  @ApiOkResponse({ type: DirectionAvecServicesResponseDto, isArray: true })
+  async findAllDirections(): Promise<DirectionAvecServicesResponseDto[]> {
     return this.readAllDirectionsUseCase.findAll();
   }
 
   @Get('directions/deletion-requests')
-  async findDirectionDeletionRequests(): Promise<ReadDirectionWithServices[]> {
+  @ApiOkResponse({ type: DirectionAvecServicesResponseDto, isArray: true })
+  async findDirectionDeletionRequests(): Promise<
+    DirectionAvecServicesResponseDto[]
+  > {
     return this.readAllDirectionsUseCase.findDeletionRequests();
   }
 
@@ -173,9 +182,10 @@ export class StructureOrganisationnelleController {
   }
 
   @Get('directions/:code-direction/services')
+  @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
   async findServicesByDirection(
     @Param('code-direction') codeDirection: string,
-  ): Promise<ReadService[]> {
+  ): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findByDirection({ codeDirection });
   }
 
@@ -186,12 +196,14 @@ export class StructureOrganisationnelleController {
   }
 
   @Get('services')
-  async findAllServices(): Promise<ReadService[]> {
+  @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
+  async findAllServices(): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findAll();
   }
 
   @Get('services/deletion-requests')
-  async findServiceDeletionRequests(): Promise<ReadService[]> {
+  @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
+  async findServiceDeletionRequests(): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findDeletionRequests();
   }
 

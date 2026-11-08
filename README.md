@@ -43,6 +43,15 @@ The backend is built with:
 - Shared module contracts (for example `Create...`, `Update...`, and `Read...`)
   live in the module's `types/` directory. Prisma query payloads and
   repository-only input shapes stay local to the repository that uses them.
+- Controllers document every data-bearing response with a response DTO and an
+  explicit Swagger response decorator. Response DTOs describe the existing
+  use-case/service output; they do not replace or move business types out of
+  `types/`, nor transform the response at runtime. Endpoints returning files
+  document their binary response in Swagger instead of using a JSON DTO.
+- Swagger UI is available at `/docs` and the OpenAPI document at `/docs-json`.
+  Frontend clients should generate their API response types from that document
+  rather than redeclaring backend response shapes (for example, with
+  `openapi-typescript <backend-url>/docs-json -o src/api/schema.d.ts`).
 - Deletion requests can be listed at `GET /<collection>/deletion-requests`.
   A request uses `DELETE /<collection>/:id`; validation and rejection use
   `POST /<collection>/:id/deletion-validation` and

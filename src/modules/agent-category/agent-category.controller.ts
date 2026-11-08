@@ -17,8 +17,9 @@ import {
   CreateAgentCategoryDto,
   UpdateAgentCategoryDto,
 } from './dtos/agent-category.dto.js';
-import type { ReadAgentCategory } from './types/agent-category.types.js';
 import { DeleteAgentCategoryUseCase } from './use-cases/agent-category.delete.js';
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { AgentCategoryResponseDto } from './dtos/agent-category-response.dto.js';
 
 @Controller('agent-categories')
 export class AgentCategoryController {
@@ -48,34 +49,39 @@ export class AgentCategoryController {
   }
 
   @Post()
+  @ApiCreatedResponse({ type: AgentCategoryResponseDto })
   async create(
     @Body() body: CreateAgentCategoryDto,
-  ): Promise<ReadAgentCategory> {
+  ): Promise<AgentCategoryResponseDto> {
     return this.saveAgentCategoryUseCase.execute(body);
   }
 
   @Get()
-  async findAll(): Promise<ReadAgentCategory[]> {
+  @ApiOkResponse({ type: AgentCategoryResponseDto, isArray: true })
+  async findAll(): Promise<AgentCategoryResponseDto[]> {
     return this.readAgentCategoryUseCase.findAll();
   }
 
   @Get('deletion-requests')
-  async findDeletionRequests(): Promise<ReadAgentCategory[]> {
+  @ApiOkResponse({ type: AgentCategoryResponseDto, isArray: true })
+  async findDeletionRequests(): Promise<AgentCategoryResponseDto[]> {
     return this.readAgentCategoryUseCase.findDeletionRequests();
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: AgentCategoryResponseDto })
   async findById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<ReadAgentCategory> {
+  ): Promise<AgentCategoryResponseDto> {
     return this.readAgentCategoryUseCase.findById(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: AgentCategoryResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateAgentCategoryDto,
-  ): Promise<ReadAgentCategory> {
+  ): Promise<AgentCategoryResponseDto> {
     return this.updateAgentCategoryUseCase.updatePartial(id, body);
   }
 }

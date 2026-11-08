@@ -11,7 +11,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CategorieActeQueryDto } from './dtos/categorie-acte-query.dto.js';
 import {
   CreateCategorieActeDto,
@@ -21,9 +27,20 @@ import { DeleteCategorieActeUseCase } from './use-cases/categorie-acte.delete.js
 import { ReadCategorieActeUseCase } from './use-cases/categorie-acte.read.js';
 import { CreateCategorieActeUseCase } from './use-cases/categorie-acte.create.js';
 import { UpdateCategorieActeUseCase } from './use-cases/categorie-acte.update.js';
-import type { ReadCategorieActe } from './types/categorie-acte.types.js';
+import {
+  CategorieActeAvecActesResponseDto,
+  CategorieActeAvecPlafondsEtActesResponseDto,
+  CategorieActeAvecPlafondsResponseDto,
+  CategorieActeResponseDto,
+} from './dtos/categorie-acte-response.dto.js';
 
 @Controller('categories-actes')
+@ApiExtraModels(
+  CategorieActeResponseDto,
+  CategorieActeAvecPlafondsResponseDto,
+  CategorieActeAvecActesResponseDto,
+  CategorieActeAvecPlafondsEtActesResponseDto,
+)
 export class CategorieActeController {
   constructor(
     private readonly createCategorieActeUseCase: CreateCategorieActeUseCase,
@@ -33,13 +50,29 @@ export class CategorieActeController {
   ) {}
 
   @Post()
+  @ApiCreatedResponse({ type: CategorieActeResponseDto })
   async create(
     @Body() body: CreateCategorieActeDto,
-  ): Promise<ReadCategorieActe> {
+  ): Promise<CategorieActeResponseDto> {
     return this.createCategorieActeUseCase.execute(body);
   }
 
   @Get()
+  @ApiOkResponse({
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [
+          { $ref: getSchemaPath(CategorieActeResponseDto) },
+          { $ref: getSchemaPath(CategorieActeAvecPlafondsResponseDto) },
+          { $ref: getSchemaPath(CategorieActeAvecActesResponseDto) },
+          {
+            $ref: getSchemaPath(CategorieActeAvecPlafondsEtActesResponseDto),
+          },
+        ],
+      },
+    },
+  })
   @ApiQuery({
     name: 'avecPlafonds',
     required: false,
@@ -70,22 +103,33 @@ export class CategorieActeController {
     description:
       'Inclut les actes de chaque catégorie et leurs plafonds résolus.',
   })
-  async findAll(@Query() query: CategorieActeQueryDto) {
+  async findAll(
+    @Query() query: CategorieActeQueryDto,
+  ): Promise<
+    (
+      | CategorieActeResponseDto
+      | CategorieActeAvecPlafondsResponseDto
+      | CategorieActeAvecActesResponseDto
+      | CategorieActeAvecPlafondsEtActesResponseDto
+    )[]
+  > {
     return this.readCategorieActeUseCase.findAll(query);
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: CategorieActeResponseDto })
   async findById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<ReadCategorieActe> {
+  ): Promise<CategorieActeResponseDto> {
     return this.readCategorieActeUseCase.findById(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: CategorieActeResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateCategorieActeDto,
-  ): Promise<ReadCategorieActe> {
+  ): Promise<CategorieActeResponseDto> {
     return this.updateCategorieActeUseCase.execute(id, body);
   }
 

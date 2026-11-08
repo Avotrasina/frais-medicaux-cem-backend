@@ -11,16 +11,26 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateActeDto, UpdateActeDto } from './dtos/acte.dto.js';
 import { ActeQueryDto } from './dtos/acte-query.dto.js';
 import { DeleteActeUseCase } from './use-cases/acte.delete.js';
 import { ReadActeUseCase } from './use-cases/acte.read.js';
 import { CreateActeUseCase } from './use-cases/acte.create.js';
 import { UpdateActeUseCase } from './use-cases/acte.update.js';
-import type { ReadActe } from './types/acte.types.js';
+import {
+  ActeAvecPlafondsResponseDto,
+  ActeResponseDto,
+} from './dtos/acte-response.dto.js';
 
 @Controller('actes')
+@ApiExtraModels(ActeResponseDto, ActeAvecPlafondsResponseDto)
 export class ActeController {
   constructor(
     private readonly createActeUseCase: CreateActeUseCase,
@@ -30,11 +40,23 @@ export class ActeController {
   ) {}
 
   @Post()
-  async create(@Body() body: CreateActeDto): Promise<ReadActe> {
+  @ApiCreatedResponse({ type: ActeResponseDto })
+  async create(@Body() body: CreateActeDto): Promise<ActeResponseDto> {
     return this.createActeUseCase.execute(body);
   }
 
   @Get()
+  @ApiOkResponse({
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [
+          { $ref: getSchemaPath(ActeResponseDto) },
+          { $ref: getSchemaPath(ActeAvecPlafondsResponseDto) },
+        ],
+      },
+    },
+  })
   @ApiQuery({
     name: 'avecPlafonds',
     required: false,
@@ -57,20 +79,26 @@ export class ActeController {
     example: false,
     description: 'Ajoute l’historique des versions de la cible.',
   })
-  async findAll(@Query() query: ActeQueryDto) {
+  async findAll(
+    @Query() query: ActeQueryDto,
+  ): Promise<(ActeResponseDto | ActeAvecPlafondsResponseDto)[]> {
     return this.readActeUseCase.findAll(query);
   }
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<ReadActe> {
+  @ApiOkResponse({ type: ActeResponseDto })
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ActeResponseDto> {
     return this.readActeUseCase.findById(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: ActeResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateActeDto,
-  ): Promise<ReadActe> {
+  ): Promise<ActeResponseDto> {
     return this.updateActeUseCase.execute(id, body);
   }
 
