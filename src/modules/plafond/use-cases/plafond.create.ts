@@ -3,6 +3,7 @@ import {
   PorteePlafond,
   UnitePlafond,
 } from '../../../generated/prisma/enums.js';
+import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import { PlafondRepository } from '../repositories/plafond.repository.js';
 import type { CreatePlafond, ReadPlafond } from '../types/plafond.types.js';
 import { validatePlafond } from './plafond.validation.js';
@@ -21,7 +22,7 @@ type CompleteCreatePlafond = {
 export class CreatePlafondUseCase {
   constructor(private readonly plafondRepository: PlafondRepository) {}
 
-  async execute(input: CreatePlafond): Promise<ReadPlafond> {
+  async execute(input: CreatePlafond, tx?: DbClient): Promise<ReadPlafond> {
     const plafond: CompleteCreatePlafond = {
       dateEffet: input.dateEffet,
       porteePlafond: input.porteePlafond ?? PorteePlafond.PAR_ACTE,
@@ -32,6 +33,6 @@ export class CreatePlafondUseCase {
       categorieActeID: input.categorieActeID ?? null,
     };
     validatePlafond(plafond);
-    return this.plafondRepository.create(plafond);
+    return this.plafondRepository.create(plafond, tx);
   }
 }
