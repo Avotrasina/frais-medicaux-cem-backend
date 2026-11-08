@@ -37,7 +37,8 @@ export class UtilisateurController {
   @Get()
   @ApiOperation({
     summary: 'Lister les utilisateurs',
-    description: 'Retourne les utilisateurs, avec un filtrage optionnel par rôle.',
+    description:
+      'Retourne les utilisateurs, avec un filtrage optionnel par rôle.',
   })
   lister(@Query('role') role?: string) {
     return this.utilisateurs.lister(this.validerRoles(role));
@@ -85,7 +86,8 @@ export class UtilisateurController {
   @Delete(':id')
   @ApiOperation({
     summary: 'Supprimer un utilisateur',
-    description: 'Supprime définitivement un utilisateur qui n’est plus utilisé.',
+    description:
+      'Supprime définitivement un utilisateur qui n’est plus utilisé.',
   })
   @HttpCode(HttpStatus.OK)
   async supprimer(@Param('id', ParseIntPipe) id: number) {
@@ -98,9 +100,13 @@ export class UtilisateurController {
     const valeurs = role.split(',').map((valeur) => valeur.trim());
     if (
       valeurs.length === 0 ||
-      valeurs.some((valeur) => !ROLES_VALIDES.includes(valeur as RoleUtilisateur))
+      valeurs.some(
+        (valeur) => !ROLES_VALIDES.includes(valeur as RoleUtilisateur),
+      )
     ) {
-      throw new BadRequestException('Le filtre role contient un rôle invalide.');
+      throw new BadRequestException(
+        'Le filtre role contient un rôle invalide.',
+      );
     }
     return valeurs as RoleUtilisateur[];
   }

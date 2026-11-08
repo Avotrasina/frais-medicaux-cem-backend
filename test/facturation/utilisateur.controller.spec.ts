@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { RoleUtilisateur } from '../../src/generated/prisma/enums.js';
-import { UtilisateurController } from '../../src/modules/facturation/utilisateur.controller.js';
+import { UtilisateurController } from '../../src/modules/utilisateur/utilisateur.controller.js';
 
-vi.mock('../../src/modules/facturation/utilisateur.service.js', () => ({
+vi.mock('../../src/modules/utilisateur/utilisateur.service.js', () => ({
   UtilisateurService: class UtilisateurService {},
 }));
 
