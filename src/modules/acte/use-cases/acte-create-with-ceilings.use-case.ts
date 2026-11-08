@@ -17,7 +17,10 @@ import { CreatePlafondUseCase } from '../../plafond/use-cases/plafond.create.js'
 import { PlafondResolutionService } from '../../plafond/plafond-resolution.service.js';
 import { CategorieActeRepository } from '../../categorie-acte/repositories/categorie-acte.repository.js';
 import { ActeRepository } from '../repositories/acte.repository.js';
-import type { CreateActeRequestDto } from '../dtos/acte-creation.dto.js';
+import type {
+  CreateActeRequestDto,
+  CreateCategorieWithCeilingsDto,
+} from '../dtos/acte-creation.dto.js';
 
 type CreatedActe = Awaited<ReturnType<ActeRepository['create']>>;
 type CreatedCategorie = Awaited<ReturnType<CategorieActeRepository['create']>>;
@@ -77,6 +80,22 @@ export class CreateActeWithCeilingsUseCase {
         plafonds: { parActe: plafond.parActe, parAn: plafond.parAn },
         modeleSuivi: plafond.modeleSuivi,
       };
+    });
+  }
+
+  executeActe(input: CreateActeRequestDto) {
+    if (input.type !== 'ACTE') {
+      throw new BadRequestException('Cette route accepte uniquement un acte.');
+    }
+    return this.execute(input);
+  }
+
+  executeCategorie(input: CreateCategorieWithCeilingsDto) {
+    return this.execute({
+      type: 'CATEGORIE',
+      nomCategorie: input.nomCategorie,
+      plafonds: input.plafonds,
+      dateEffet: input.dateEffet,
     });
   }
 

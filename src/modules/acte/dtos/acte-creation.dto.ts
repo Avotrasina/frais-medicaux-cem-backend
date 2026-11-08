@@ -221,3 +221,26 @@ export class CreateActeRequestDto {
 }
 
 export type PlafondsCreation = PlafondsCreationDto;
+
+export class CreateCategorieWithCeilingsDto {
+  @ApiProperty({ example: 'Soins dentaires' })
+  @IsString()
+  @IsNotEmpty()
+  nomCategorie!: string;
+
+  @ApiPropertyOptional({ type: PlafondsCreationDto })
+  @ValidateIf(
+    (body: CreateCategorieWithCeilingsDto) => body.plafonds !== undefined,
+  )
+  @IsObject({
+    message: 'Les plafonds doivent être fournis sous forme d’objet.',
+  })
+  @ValidateNested()
+  @Type(() => PlafondsCreationDto)
+  plafonds?: PlafondsCreationDto;
+
+  @ApiPropertyOptional({ type: String, format: 'date', example: '2026-01-01' })
+  @IsOptional()
+  @IsDateString({}, { message: 'La date d’effet est invalide.' })
+  dateEffet?: string;
+}

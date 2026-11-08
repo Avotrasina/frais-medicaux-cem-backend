@@ -10,8 +10,12 @@ import {
   Patch,
   Post,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { CreateActeWithCeilingsUseCase } from '../acte/use-cases/acte-create-with-ceilings.use-case.js';
+import { CreateCategorieWithCeilingsDto } from '../acte/dtos/acte-creation.dto.js';
 import { CategorieActeQueryDto } from './dtos/categorie-acte-query.dto.js';
 import {
   CreateCategorieActeDto,
@@ -23,19 +27,50 @@ import { CreateCategorieActeUseCase } from './use-cases/categorie-acte.create.js
 import { UpdateCategorieActeUseCase } from './use-cases/categorie-acte.update.js';
 import type { ReadCategorieActe } from './types/categorie-acte.types.js';
 
+const CREATE_CATEGORIE_PIPE = new ValidationPipe({
+  transform: true,
+  whitelist: true,
+  forbidNonWhitelisted: true,
+});
+
 @Controller('categories-actes')
 export class CategorieActeController {
   constructor(
     private readonly createCategorieActeUseCase: CreateCategorieActeUseCase,
+    private readonly createActeWithCeilingsUseCase: CreateActeWithCeilingsUseCase,
     private readonly readCategorieActeUseCase: ReadCategorieActeUseCase,
     private readonly updateCategorieActeUseCase: UpdateCategorieActeUseCase,
     private readonly deleteCategorieActeUseCase: DeleteCategorieActeUseCase,
   ) {}
 
   @Post()
-  async create(
-    @Body() body: CreateCategorieActeDto,
-  ): Promise<ReadCategorieActe> {
+  @UsePipes(CREATE_CATEGORIE_PIPE)
+  @ApiBody({
+    type: CreateCategorieWithCeilingsDto,
+    examples: {
+      categorieAvecPlafondAnnuel: {
+        summary: 'Catégorie avec plafond annuel partagé',
+        value: {
+          nomCategorie: 'Soins dentaires',
+          plafonds: { parAn: { unite: 'MONTANT', montant: 750000 } },
+        },
+      },
+      categorieSansPlafond: {
+        summary: 'Catégorie sans plafond',
+        value: { nomCategorie: 'Nouvelle catégorie' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Catégorie créée, avec plafonds résolus si demandés.',
+  })
+  @ApiResponse({ status: 400, description: 'Payload invalide.' })
+  @ApiResponse({ status: 409, description: 'Nom ou plafond incompatible.' })
+  async create(@Body() body: CreateCategorieWithCeilingsDto) {
+    if (body.plafonds !== undefined || body.dateEffet !== undefined) {
+      return this.createActeWithCeilingsUseCase.executeCategorie(body);
+    }
     return this.createCategorieActeUseCase.execute(body);
   }
 

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,7 +13,6 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
-  BadRequestException,
 } from '@nestjs/common';
 import { ApiBody, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { CreateActeDto, UpdateActeDto } from './dtos/acte.dto.js';
@@ -107,51 +107,6 @@ export class ActeController {
         },
         {
           type: 'object',
-          required: ['type', 'nomCategorie'],
-          properties: {
-            type: { type: 'string', enum: ['CATEGORIE'] },
-            nomCategorie: { type: 'string' },
-            plafonds: {
-              type: 'object',
-              properties: {
-                parActe: {
-                  type: 'object',
-                  required: ['montant'],
-                  properties: {
-                    montant: { type: 'number', minimum: 0.01 },
-                  },
-                },
-                parAn: {
-                  oneOf: [
-                    {
-                      type: 'object',
-                      required: ['unite', 'montant'],
-                      properties: {
-                        unite: { type: 'string', enum: ['MONTANT'] },
-                        montant: {
-                          type: 'number',
-                          minimum: 0.01,
-                          multipleOf: 0.01,
-                        },
-                      },
-                    },
-                    {
-                      type: 'object',
-                      required: ['unite', 'nbSeances'],
-                      properties: {
-                        unite: { type: 'string', enum: ['SEANCES'] },
-                        nbSeances: { type: 'integer', minimum: 1 },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-            dateEffet: { type: 'string', format: 'date' },
-          },
-        },
-        {
-          type: 'object',
           required: ['code', 'nomActe', 'listeLibelle', 'categorieActeId'],
           properties: {
             code: { type: 'string' },
@@ -192,17 +147,9 @@ export class ActeController {
           plafonds: { parAn: { unite: 'SEANCES', nbSeances: 12 } },
         },
       },
-      categoriePlafondAnnuel: {
-        summary: 'Catégorie avec plafond annuel partagé',
-        value: {
-          type: 'CATEGORIE',
-          nomCategorie: 'Soins dentaires',
-          plafonds: { parAn: { unite: 'MONTANT', montant: 750000 } },
-        },
-      },
     },
   })
-  @ApiResponse({ status: 201, description: 'Acte ou catégorie créé(e).' })
+  @ApiResponse({ status: 201, description: 'Acte créé.' })
   @ApiResponse({
     status: 400,
     description: 'Payload invalide ou incompatible.',
@@ -242,7 +189,12 @@ export class ActeController {
       };
       return this.createActeUseCase.execute(payload);
     }
-    return this.createActeWithCeilingsUseCase.execute(body);
+    if (body.type !== 'ACTE' || body.nomCategorie !== undefined) {
+      throw new BadRequestException(
+        'POST /actes accepte uniquement la création d’un acte ; utilisez POST /categories-actes pour une catégorie.',
+      );
+    }
+    return this.createActeWithCeilingsUseCase.executeActe(body);
   }
 
   @Get()
