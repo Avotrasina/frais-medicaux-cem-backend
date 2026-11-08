@@ -25,6 +25,7 @@ import { MouvementFactureService } from '../../shared/mouvement-facture.service.
 import { SuiviService } from '../../suivi/suivi.service.js';
 import { ActionFacture } from '../../shared/action-facture.js';
 import { FactureWorkflowService } from '../workflow/facture-workflow.service.js';
+import { FactureClotureService } from '../../shared/facture-cloture.service.js';
 import type { ActeurFacture } from '../globale/facture-globale.service.js';
 import type { DbClient } from '../../../../infrastructure/prisma/db-client.type.js';
 import type {
@@ -77,6 +78,13 @@ export interface ControleTotaux {
   };
 }
 
+export type RapprochementFacture =
+  | { statut: 'CONFORME'; controle: ControleTotaux }
+  | { statut: 'ECART'; controle: ControleTotaux }
+  | { statut: 'INCOMPLET'; controle?: ControleTotaux };
+
+export type StatutRapprochementFacture = RapprochementFacture['statut'];
+
 export interface TotauxLignesFacture {
   montantActe: string;
   montantCemIntegral: string;
@@ -96,6 +104,7 @@ export class FactureIndividuelleService {
     private readonly mouvements: MouvementFactureService,
     private readonly suivi: SuiviService,
     private readonly workflow: FactureWorkflowService,
+    private readonly cloture: FactureClotureService = new FactureClotureService(),
   ) {}
 
   async creer(
@@ -127,6 +136,7 @@ export class FactureIndividuelleService {
         throw new NotFoundException(
           `La ligne ${ligneId} est introuvable dans la facture ${idFacture}.`,
         );
+      this.cloture.verifierNonCloturee(ligne.factureGlobale.dateCloture);
       this.workflow.verifierEditionLigne(ligne.factureGlobale.statut);
       if (Object.keys(donnees).length === 0)
         throw new BadRequestException(
@@ -173,11 +183,11 @@ export class FactureIndividuelleService {
         donnees.montantCemIntegral ?? ligne.montantCemIntegral,
       );
       await this.enregistrerModificationFacture(
-          tx,
-          idFacture,
-          acteur,
-          ligne.factureGlobale.statut,
-          `Modification de la ligne ${ligne.numLigne}.`,
+        tx,
+        idFacture,
+        acteur,
+        ligne.factureGlobale.statut,
+        `Modification de la ligne ${ligne.numLigne}.`,
       );
       const updated = await tx.factureIndividuelle.update({
         where: { id: ligneId },
@@ -214,6 +224,7 @@ export class FactureIndividuelleService {
         throw new NotFoundException(
           `La ligne ${ligneId} est introuvable dans la facture ${idFacture}.`,
         );
+      this.cloture.verifierNonCloturee(ligne.factureGlobale.dateCloture);
       this.workflow.verifierEditionLigne(ligne.factureGlobale.statut);
       await this.enregistrerModificationFacture(
         tx,
@@ -323,11 +334,7 @@ export class FactureIndividuelleService {
     idFacture: number,
     acteur: ActeurFacture,
     donnees: AffecterRetenueDto,
-  ): Promise<{
-    ligneIds: number[];
-    refPaie: string;
-    moisAffectation?: string;
-  }> {
+  ): Promise<{ ligneIds: number[]; refPaie: string }> {
     this.permissions.verifier(ActionFacture.SUIVI_MODIFIER, acteur.role);
     if (donnees.ligneIds.length === 0)
       throw new BadRequestException(
@@ -337,17 +344,14 @@ export class FactureIndividuelleService {
       throw new BadRequestException(
         'La liste des lignes ne peut pas contenir de doublons.',
       );
-    const mois =
-      donnees.moisAffectation === undefined
-        ? undefined
-        : convertirMois(donnees.moisAffectation);
     await this.prisma.$transaction(async (tx) => {
       const facture = await tx.factureGlobale.findUnique({
         where: { id: idFacture },
-        select: { statut: true },
+        select: { statut: true, dateCloture: true },
       });
       if (facture === null)
         throw new NotFoundException(`La facture ${idFacture} est introuvable.`);
+      this.cloture.verifierNonCloturee(facture.dateCloture);
       this.workflow.verifierModificationRetenue(facture.statut);
       const lignes = await tx.factureIndividuelle.count({
         where: { id: { in: donnees.ligneIds }, factureGlobaleId: idFacture },
@@ -356,28 +360,67 @@ export class FactureIndividuelleService {
         throw new NotFoundException(
           'Une ou plusieurs lignes ne sont pas rattachées à cette facture.',
         );
-      await this.enregistrerModificationFacture(
-        tx,
-        idFacture,
-        acteur,
-        facture.statut,
-        'Modification de la retenue sur salaire.',
-      );
       await tx.factureIndividuelle.updateMany({
         where: { id: { in: donnees.ligneIds }, factureGlobaleId: idFacture },
         data: {
           refPaie: donnees.refPaie,
-          ...(mois === undefined ? {} : { moisAffectation: mois }),
         },
       });
     });
     return {
       ligneIds: donnees.ligneIds,
       refPaie: donnees.refPaie,
-      ...(mois === undefined
-        ? {}
-        : { moisAffectation: mois.toISOString().slice(0, 10) }),
     };
+  }
+
+  async rapprochement(
+    idFacture: number,
+    tx?: DbClient,
+  ): Promise<RapprochementFacture> {
+    const client = tx ?? this.prisma;
+    const facture = await client.factureGlobale.findUnique({
+      where: { id: idFacture },
+      select: { montantTotal: true },
+    });
+    if (facture === null)
+      throw new NotFoundException(`La facture ${idFacture} est introuvable.`);
+    if (facture.montantTotal === null) return { statut: 'INCOMPLET' };
+    const controle = await this.controleTotaux(idFacture, client);
+    if (controle.nombreLignes === 0) return { statut: 'INCOMPLET', controle };
+    return controle.concordant
+      ? { statut: 'CONFORME', controle }
+      : { statut: 'ECART', controle };
+  }
+
+  async totalAgent(
+    idFacture: number,
+    tx?: DbClient,
+  ): Promise<{ nombreLignes: number; totalAgent: string }> {
+    const client = tx ?? this.prisma;
+    const lignes = await client.factureIndividuelle.findMany({
+      where: { factureGlobaleId: idFacture },
+      select: {
+        montantActe: true,
+        montantDepassementActe: true,
+        montantDepassementPlafond: true,
+        tauxCem: true,
+        montantCemIntegral: true,
+      },
+    });
+    const total = lignes.reduce(
+      (somme, ligne) =>
+        somme.plus(
+          this.calcul.calculerPartsLigne({
+            montantActe: ligne.montantActe,
+            montantDepassementActe: ligne.montantDepassementActe,
+            montantDepassementPlafond: ligne.montantDepassementPlafond,
+            tauxCem: ligne.tauxCem,
+            montantCemIntegral: ligne.montantCemIntegral,
+          }).totalChargeAgent,
+        ),
+      new Prisma.Decimal(0),
+    );
+    return { nombreLignes: lignes.length, totalAgent: total.toFixed(2) };
   }
 
   async controleTotaux(
@@ -490,9 +533,6 @@ export class FactureIndividuelleService {
       donnees.montantCemIntegral,
     );
     const createdAt = new Date();
-    const moisAffectation = new Date(
-      Date.UTC(createdAt.getUTCFullYear(), createdAt.getUTCMonth(), 1),
-    );
     const ligne = await tx.factureIndividuelle.create({
       data: {
         factureGlobaleId: idFacture,
@@ -508,17 +548,17 @@ export class FactureIndividuelleService {
         tauxCem: calcule.tauxCem,
         montantCemIntegral: calcule.montantCemIntegral,
         createdAt,
-        moisAffectation,
+        moisAffectation: null,
         priseEnChargeId: donnees.numPec ?? null,
       },
     });
-      await this.enregistrerModificationFacture(
-        tx,
-        idFacture,
-        acteur,
-          contexte.statut,
-        `Création de la ligne ${numLigne}.`,
-      );
+    await this.enregistrerModificationFacture(
+      tx,
+      idFacture,
+      acteur,
+      contexte.statut,
+      `Création de la ligne ${numLigne}.`,
+    );
     return this.formaterLigne(tx, ligne.id, calcule, contexte);
   }
 
@@ -554,6 +594,7 @@ export class FactureIndividuelleService {
       select: {
         id: true,
         statut: true,
+        dateCloture: true,
         moisPrestation: true,
         dateReception: true,
       },
@@ -561,6 +602,7 @@ export class FactureIndividuelleService {
     if (facture === null)
       throw new NotFoundException(`La facture ${idFacture} est introuvable.`);
     this.workflow.verifierEditionLigne(facture.statut);
+    this.cloture.verifierNonCloturee(facture.dateCloture);
     const dateActe = convertirDate(dateIso);
     const beneficiaire = await tx.beneficiaire.findUnique({
       where: { idp },
@@ -642,7 +684,7 @@ export class FactureIndividuelleService {
     remarque: string,
   ): Promise<void> {
     const miseAJour = await tx.factureGlobale.updateMany({
-      where: { id: idFacture, statut: statutActuel },
+      where: { id: idFacture, statut: statutActuel, dateCloture: null },
       data: {
         statut: StatutFacture.ENREGISTREE,
         dateValidation: null,
@@ -650,10 +692,16 @@ export class FactureIndividuelleService {
       },
     });
     if (miseAJour.count === 0) {
+      const facture = await tx.factureGlobale.findUnique({
+        where: { id: idFacture },
+        select: { dateCloture: true },
+      });
+      this.cloture.verifierNonCloturee(facture?.dateCloture);
       throw new ConflictException(
         `La facture n'est plus au statut ${StatutFacture.A_CORRIGER}; elle a été modifiée par une autre action.`,
       );
     }
+    if (statutActuel === StatutFacture.ENREGISTREE) return;
     await this.mouvements.ecrire(tx, {
       factureGlobaleId: idFacture,
       type: TypeMouvement.MODIFICATION,
@@ -849,9 +897,6 @@ function convertirDate(date: string): Date {
   if (Number.isNaN(result.getTime()))
     throw new BadRequestException('La date de l’acte est invalide.');
   return result;
-}
-function convertirMois(mois: string): Date {
-  return convertirDate(`${mois}-01`);
 }
 function estConflitNumLigne(error: unknown): boolean {
   if (

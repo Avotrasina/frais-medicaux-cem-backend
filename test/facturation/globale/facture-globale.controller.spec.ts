@@ -1,5 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
+
+vi.hoisted(() => {
+  process.env.NODE_ENV = 'development';
+});
+
 import { StatutFacture } from '../../../src/generated/prisma/enums.js';
 import { FactureGlobaleController } from '../../../src/modules/facturation/factures/globale/facture-globale.controller.js';
 
@@ -20,6 +25,10 @@ describe('FactureGlobaleController', () => {
 
     await controller.lister(StatutFacture.ENREGISTREE);
 
-    expect(service.lister).toHaveBeenCalledWith(StatutFacture.ENREGISTREE);
+    expect(service.lister).toHaveBeenCalledWith(
+      StatutFacture.ENREGISTREE,
+      undefined,
+      undefined,
+    );
   });
 });

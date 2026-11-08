@@ -13,6 +13,7 @@ import type {
 import { StatutFacture } from '../../../generated/prisma/enums.js';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
 import { FileStorageService } from '../../../infrastructure/storage/file-storage.service.js';
+import { FactureClotureService } from '../shared/facture-cloture.service.js';
 
 const TAILLE_MAX_OCTETS = 10 * 1024 * 1024;
 const NOMBRE_MAX_PIECES = 20;
@@ -41,6 +42,7 @@ export class PieceJointeFactureService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly stockage: FileStorageService,
+    private readonly cloture: FactureClotureService = new FactureClotureService(),
   ) {}
 
   async ajouter(
@@ -55,7 +57,10 @@ export class PieceJointeFactureService {
     }
 
     const typeFichier = this.detecterType(fichier);
-    const nomFichier = this.nettoyerNom(fichier.originalname, MIME_EXTENSION[typeFichier]);
+    const nomFichier = this.nettoyerNom(
+      fichier.originalname,
+      MIME_EXTENSION[typeFichier],
+    );
     const path =
       typeFichier === 'application/pdf'
         ? await this.stockage.saveFacturePdf(fichier.buffer)
@@ -160,11 +165,12 @@ export class PieceJointeFactureService {
       `;
       const facture = await tx.factureGlobale.findUnique({
         where: { id: factureId },
-        select: { id: true, statut: true },
+        select: { id: true, statut: true, dateCloture: true },
       });
       if (facture === null) {
         throw new NotFoundException(`La facture ${factureId} est introuvable.`);
       }
+      this.cloture.verifierNonCloturee(facture.dateCloture);
       const statutsAutorisantSuppression: StatutFacture[] = [
         StatutFacture.ENREGISTREE,
         StatutFacture.A_CORRIGER,
@@ -215,9 +221,11 @@ export class PieceJointeFactureService {
         ? 'application/pdf'
         : signature.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]))
           ? 'image/jpeg'
-          : signature.subarray(0, 8).equals(
-                Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-              )
+          : signature
+                .subarray(0, 8)
+                .equals(
+                  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+                )
             ? 'image/png'
             : undefined;
 

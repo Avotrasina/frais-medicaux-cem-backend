@@ -16,6 +16,7 @@ import { dateAujourdhuiAntananarivo } from '../../../common/date.util.js';
 import type { ActeurFacture } from '../factures/globale/facture-globale.service.js';
 import { ActionFacture } from '../shared/action-facture.js';
 import { FacturePermissionsService } from '../shared/facture-permissions.service.js';
+import { FactureClotureService } from '../shared/facture-cloture.service.js';
 import {
   SuiviCalculService,
   type LigneSuiviCalculee,
@@ -179,6 +180,7 @@ export class SuiviService {
     private readonly calcul: SuiviCalculService,
     private readonly permissions: FacturePermissionsService,
     private readonly plafondResolution: PlafondResolutionService,
+    private readonly cloture: FactureClotureService = new FactureClotureService(),
   ) {}
 
   async listerCibles(dateTexte?: string): Promise<CibleSuivi[]> {
@@ -266,10 +268,15 @@ export class SuiviService {
   private dateReferenceCibles(dateTexte?: string): Date {
     const valeur = dateTexte ?? dateAujourdhuiAntananarivo();
     if (!/^\d{4}-\d{2}-\d{2}$/.test(valeur)) {
-      throw new BadRequestException('La date doit respecter le format AAAA-MM-JJ.');
+      throw new BadRequestException(
+        'La date doit respecter le format AAAA-MM-JJ.',
+      );
     }
     const date = new Date(`${valeur}T00:00:00.000Z`);
-    if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== valeur) {
+    if (
+      Number.isNaN(date.getTime()) ||
+      date.toISOString().slice(0, 10) !== valeur
+    ) {
       throw new BadRequestException('La date fournie est invalide.');
     }
     return date;
@@ -339,6 +346,7 @@ export class SuiviService {
       throw new NotFoundException(
         `La ligne de suivi ${ligneId} est introuvable.`,
       );
+    this.cloture.verifierNonCloturee(ligne.factureGlobale.dateCloture);
     this.verifierEcritureFacture(ligne.factureGlobale.statut);
     await this.verifierVerrou(
       ligne.factureGlobaleId,
@@ -405,6 +413,7 @@ export class SuiviService {
       throw new NotFoundException(
         `La ligne de suivi ${ligneId} est introuvable.`,
       );
+    this.cloture.verifierNonCloturee(ligne.factureGlobale.dateCloture);
     this.verifierEcritureFacture(ligne.factureGlobale.statut);
     await this.verifierVerrou(
       ligne.factureGlobaleId,
@@ -434,12 +443,14 @@ export class SuiviService {
       select: {
         id: true,
         statut: true,
+        dateCloture: true,
         refSociale: true,
         prestataire: { select: { nom: true } },
       },
     });
     if (facture === null)
       throw new NotFoundException(`La facture ${idFacture} est introuvable.`);
+    this.cloture.verifierNonCloturee(facture.dateCloture);
     this.verifierEcritureFacture(facture.statut);
     const beneficiaire = await this.prisma.beneficiaire.findUnique({
       where: { idp },

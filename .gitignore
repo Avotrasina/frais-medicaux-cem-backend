@@ -4,7 +4,7 @@
 /dist-seed-facturation
 /node_modules
 /build
-
+/test
 # TypeScript build cache
 *.tsbuildinfo
 

@@ -2,6 +2,7 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import type { Plafond } from '../../generated/prisma/client.js';
 import { PorteePlafond, UnitePlafond } from '../../generated/prisma/enums.js';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
+import type { DbClient } from '../../infrastructure/prisma/db-client.type.js';
 import { determinerModeleSuivi } from '../facturation/suivi/suivi-modele.js';
 
 export type CiblePlafond =
@@ -36,6 +37,7 @@ export class PlafondResolutionService {
     cibles: readonly CiblePlafond[],
     date: Date,
     inclureHistorique: boolean,
+    tx?: DbClient,
   ): Promise<Map<string, PlafondsResolus>> {
     const resultats = new Map<string, PlafondsResolus>();
     if (cibles.length === 0) return resultats;
@@ -66,7 +68,8 @@ export class PlafondResolutionService {
     const dateDuJour = new Date(
       Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
     );
-    const plafondsEnVigueur = await this.prisma.plafond.findMany({
+    const client = tx ?? this.prisma;
+    const plafondsEnVigueur = await client.plafond.findMany({
       where: {
         AND: [
           { OR: filtresCibles },
@@ -89,7 +92,7 @@ export class PlafondResolutionService {
 
     let historique: Plafond[] = [];
     if (inclureHistorique) {
-      historique = await this.prisma.plafond.findMany({
+      historique = await client.plafond.findMany({
         where: { OR: filtresCibles },
         orderBy: [{ dateEffet: 'desc' }, { id: 'desc' }],
       });

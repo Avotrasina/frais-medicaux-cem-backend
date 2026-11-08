@@ -133,23 +133,59 @@ const TRANSITIONS: Record<ActionFacture, DefinitionAction> = {
   [ActionFacture.MODIFIER_INFORMATIONS]: {
     champsRequis: [],
     depuis: {
-      [StatutFacture.ENREGISTREE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.EN_VALIDATION]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.RETOURNEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.VALIDEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.SORTIE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.A_CORRIGER]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.EN_VALIDATION]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.RETOURNEE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.VALIDEE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.SORTIE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.A_CORRIGER]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.MODIFIER_MONTANTS]: {
     champsRequis: [],
     depuis: {
-      [StatutFacture.ENREGISTREE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.EN_VALIDATION]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.RETOURNEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.VALIDEE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.SORTIE]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
-      [StatutFacture.A_CORRIGER]: { statutSuivant: StatutFacture.ENREGISTREE, roles: [RoleUtilisateur.OPERATEUR] },
+      [StatutFacture.ENREGISTREE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.EN_VALIDATION]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.RETOURNEE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.VALIDEE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.SORTIE]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
+      [StatutFacture.A_CORRIGER]: {
+        statutSuivant: StatutFacture.ENREGISTREE,
+        roles: [RoleUtilisateur.OPERATEUR],
+      },
     },
   },
   [ActionFacture.SUIVI_CREER]: { champsRequis: [], depuis: {} },
@@ -162,18 +198,31 @@ const TRANSITIONS: Record<ActionFacture, DefinitionAction> = {
 export class FactureWorkflowService {
   constructor(
     @Inject(FacturePermissionsService)
-    private readonly permissions: FacturePermissionsService =
-      new FacturePermissionsService(),
+    private readonly permissions: FacturePermissionsService = new FacturePermissionsService(),
   ) {}
 
   verifierEditionLigne(statut: StatutFacture): void {
-    if (statut !== StatutFacture.SUPPRESSION_DEMANDEE && statut !== StatutFacture.SUPPRIMEE) return;
-    throw new ConflictException('La facture est verrouillée par sa suppression.');
+    if (
+      statut === StatutFacture.ENREGISTREE ||
+      statut === StatutFacture.A_CORRIGER
+    )
+      return;
+    throw new ConflictException(
+      'La facture ne permet pas la modification des lignes.',
+    );
   }
 
   verifierModificationRetenue(statut: StatutFacture): void {
-    if (statut !== StatutFacture.SUPPRESSION_DEMANDEE && statut !== StatutFacture.SUPPRIMEE) return;
-    throw new ConflictException('La facture est verrouillée par sa suppression.');
+    if (
+      statut === StatutFacture.ENREGISTREE ||
+      statut === StatutFacture.A_CORRIGER ||
+      statut === StatutFacture.VALIDEE ||
+      statut === StatutFacture.SORTIE
+    )
+      return;
+    throw new ConflictException(
+      'La facture ne permet pas la modification de la retenue.',
+    );
   }
 
   determinerTransition(

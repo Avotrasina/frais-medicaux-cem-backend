@@ -124,6 +124,8 @@ export class FactureIndividuelleController {
     summary: 'Lire les dépassements T5_x correspondant à une ligne',
     description:
       'Propose les montants de dépassement calculés depuis le suivi associé.',
+    description:
+      'Propose les montants de dépassement calculés depuis le suivi associé.',
   })
   @ApiQuery({ name: 'idp', required: true })
   @ApiQuery({ name: 'acteId', required: true, type: Number })
@@ -143,6 +145,8 @@ export class FactureIndividuelleController {
   @ApiOkResponse({ type: LignesFactureResponseDto })
   @ApiOperation({
     summary: 'Lister les lignes et leurs totaux calculés',
+    description:
+      'Retourne les prestations enregistrées et leurs cumuls pour la facture.',
     description:
       'Retourne les prestations enregistrées et leurs cumuls pour la facture.',
   })
@@ -176,6 +180,8 @@ export class FactureIndividuelleController {
   @ApiOkResponse({ type: ControleTotauxResponseDto })
   @ApiOperation({
     summary: 'Comparer les sommes des lignes aux montants de la facture',
+    description:
+      'Retourne les écarts entre les lignes détaillées et les montants globaux saisis.',
     description:
       'Retourne les écarts entre les lignes détaillées et les montants globaux saisis.',
   })

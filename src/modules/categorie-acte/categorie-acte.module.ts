@@ -7,12 +7,16 @@ import { CreateCategorieActeUseCase } from './use-cases/categorie-acte.create.js
 import { DeleteCategorieActeUseCase } from './use-cases/categorie-acte.delete.js';
 import { ReadCategorieActeUseCase } from './use-cases/categorie-acte.read.js';
 import { UpdateCategorieActeUseCase } from './use-cases/categorie-acte.update.js';
+import { CreateActeWithCeilingsUseCase } from '../acte/use-cases/acte-create-with-ceilings.use-case.js';
+import { ActeRepository } from '../acte/repositories/acte.repository.js';
 
 @Module({
   imports: [PrismaModule, PlafondModule],
   controllers: [CategorieActeController],
   providers: [
     CategorieActeRepository,
+    ActeRepository,
+    CreateActeWithCeilingsUseCase,
     CreateCategorieActeUseCase,
     ReadCategorieActeUseCase,
     UpdateCategorieActeUseCase,

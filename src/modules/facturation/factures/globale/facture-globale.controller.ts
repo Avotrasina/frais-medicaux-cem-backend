@@ -11,10 +11,14 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import { FactureGlobaleService } from './facture-globale.service.js';
 import { serialiserMontants } from '../../shared/serialiser-montants.js';
+import {
+  MontantsSerialises,
+  serialiserMontants,
+} from '../../shared/serialiser-montants.js';
 import {
   StatutFacture,
   TypeMouvement,
@@ -33,6 +37,7 @@ import {
   MouvementFactureResponseDto,
   TransitionFactureResponseDto,
 } from '../../dtos/facture-response.dto.js';
+import type { StatutRapprochementFacture } from '../individuelle/facture-individuelle.service.js';
 
 @Controller('factures')
 @ApiExtraModels(
@@ -51,12 +56,26 @@ export class FactureGlobaleController {
     summary: 'Lister les factures',
     description:
       'Retourne les factures, avec un filtrage optionnel par statut.',
+    description:
+      'Retourne les factures, filtrables par statut, clôture et rapprochement.',
+  })
+  @ApiQuery({ name: 'cloturee', required: false, enum: ['true', 'false'] })
+  @ApiQuery({
+    name: 'rapprochement',
+    required: false,
+    enum: ['CONFORME', 'ECART', 'INCOMPLET'],
   })
   async lister(
     @Query('statut') statut?: string,
-  ): Promise<FactureGlobaleListeeResponseDto[]> {
+    @Query('cloturee') cloturee?: string,
+    @Query('rapprochement') rapprochement?: string,
+  ) : Promise<FactureGlobaleListeeResponseDto[]> {
     return serialiserMontants(
-      await this.factureGlobaleService.lister(this.validerStatut(statut)),
+      await this.factureGlobaleService.lister(
+        this.validerStatut(statut),
+        this.validerCloturee(cloturee),
+        this.validerRapprochement(rapprochement),
+      ),
     );
   }
 
@@ -144,6 +163,31 @@ export class FactureGlobaleController {
     }
     throw new BadRequestException(
       `Le statut est invalide. Valeurs acceptées : ${Object.values(StatutFacture).join(', ')}.`,
+    );
+  }
+
+  private validerCloturee(cloturee?: string): boolean | undefined {
+    if (cloturee === undefined) return undefined;
+    if (cloturee === 'true') return true;
+    if (cloturee === 'false') return false;
+    throw new BadRequestException(
+      'Le filtre cloturee doit être true ou false.',
+    );
+  }
+
+  private validerRapprochement(
+    rapprochement?: string,
+  ): StatutRapprochementFacture | undefined {
+    if (rapprochement === undefined) return undefined;
+    if (
+      rapprochement === 'CONFORME' ||
+      rapprochement === 'ECART' ||
+      rapprochement === 'INCOMPLET'
+    ) {
+      return rapprochement;
+    }
+    throw new BadRequestException(
+      'Le filtre rapprochement doit être CONFORME, ECART ou INCOMPLET.',
     );
   }
 }

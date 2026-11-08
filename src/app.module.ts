@@ -15,6 +15,7 @@ import { PlafondModule } from './modules/plafond/plafond.module.js';
 import { ProviderCategoryModule } from './modules/provider-category/provider-category.module.js';
 import { ProviderModule } from './modules/provider/provider.module.js';
 import { FacturationModule } from './modules/facturation/facturation.module.js';
+import { UtilisateurModule } from './modules/utilisateur/utilisateur.module.js';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { FacturationModule } from './modules/facturation/facturation.module.js';
     ProviderCategoryModule,
     ProviderModule,
     FacturationModule,
+    UtilisateurModule,
   ],
 })
 export class AppModule {}
