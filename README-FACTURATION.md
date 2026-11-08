@@ -1,5 +1,34 @@
 # Seed de démonstration — Facturation
 
+## Organisation et règles métier
+
+Le domaine suit une organisation NestJS par fonctionnalité :
+`FacturationModule` compose les modules Factures, Suivi et Pièces jointes;
+`FacturationCoreModule` fournit les services partagés et importe leurs
+dépendances. Les contrôleurs et services restent dans les dossiers de leur
+fonctionnalité (`factures/`, `suivi/`, `pieces-jointes/`). La gestion des
+comptes applicatifs et la route `/utilisateurs` appartiennent au module
+transversal `UtilisateurModule` sous `src/modules/utilisateur/`.
+
+La clôture mensuelle ne crée pas de table. `POST /paies/:mois/cloture` reçoit
+un mois `AAAA-MM`, une date métier et les IDs de factures; toutes les factures
+sont vérifiées et clôturées dans une transaction. Une clôture affecte
+`moisPaie` à la facture, `moisAffectation` à chacune de ses lignes, et consigne
+un mouvement `CLOTURE`. Elle est définitive via l'API.
+
+`PATCH /factures/:id/retenue` sert uniquement à saisir manuellement `refPaie`
+sur les lignes sélectionnées. Le mois d'affectation n'est jamais fourni via
+cette route : les lignes restent sans mois jusqu'à la clôture. Les routes
+`GET /paies`, `/paies/:mois/lignes`, `/paies/:mois/consommation`,
+`/paies/:mois/etat` et `/paies/:mois/agents/:im` lisent exclusivement les
+lignes affectées au mois demandé; les montants sont des chaînes à deux
+décimales.
+
+La création des plafonds peut être intégrée à `POST /actes` ou
+`POST /categories-actes`. Le `POST /plafonds` historique reste disponible.
+L'absence de `plafonds` conserve une création sans suivi; un plafond annuel
+porté par une catégorie est partagé par ses actes.
+
 Ce seed prépare une base de développement pour les essais du frontend :
 
 - trois utilisateurs : `OPERATEUR`, `ADJOINT` et `CHEF` ;

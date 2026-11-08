@@ -64,6 +64,7 @@ Routes were renamed without compatibility aliases. The main prefixes are:
 | Provider categories       | `/provider-categories`       |
 | Locations                 | `/locations`                 |
 | Organizational structures | `/organizational-structures` |
+| Users                     | `/utilisateurs`              |
 
 The old prefixes and action paths are no longer served. API clients must
 migrate to these prefixes and the standardized paths listed above.
@@ -91,6 +92,23 @@ Actes, catégories d'actes et plafonds sont gérés respectivement par
 Un plafond doit être rattaché à un seul acte ou à une seule catégorie. Son
 unité `MONTANT` exige `montant` et exclut `nbSeances`; son unité `SEANCES`
 exige `nbSeances` et exclut `montant`.
+La création d'un acte peut aussi inclure ses plafonds dans `POST /actes`;
+`POST /categories-actes` accepte de la même façon les plafonds partagés de la
+catégorie. Les routes CRUD historiques, notamment `/plafonds`, restent
+disponibles.
+
+### Organisation du module Facturation
+
+`src/modules/facturation/facturation.module.ts` compose les modules
+fonctionnels `FacturesModule`, `SuiviModule` et `PiecesJointesModule`; chacun
+déclare les contrôleurs de sa fonctionnalité.
+`FacturationCoreModule` regroupe les services métier
+partagés et leurs dépendances Nest (`PrismaModule`, `PlafondModule`,
+`ReglesPriseEnChargeModule` et `StorageModule`). Les noms de fichiers suivent
+le kebab-case et les classes de modules le suffixe `Module`.
+La gestion transversale des comptes et la route `/utilisateurs` appartiennent
+au `UtilisateurModule`, indépendant de Facturation et importé par
+`AppModule`.
 
 ### Workflow Facturation
 
@@ -136,14 +154,30 @@ lit les dépassements T5_x sans les recopier automatiquement.
 `numPec` est l’identifiant entier d’une `Attestation`; une attestation
 introuvable ou déjà affectée à une autre ligne produit un avertissement.
 
-`PATCH /factures/:id/retenue` affecte `refPaie` à plusieurs lignes et peut
-modifier leur `moisAffectation` lorsqu’il est fourni. À la création d’une
-ligne, `moisAffectation` est automatiquement fixé au premier jour du mois de
-création.
+`PATCH /factures/:id/retenue` ne saisit que la référence libre `refPaie` sur
+les lignes sélectionnées. `moisAffectation` reste vide à la création et est
+renseigné uniquement lors de la clôture mensuelle. Une facture clôturée refuse
+les modifications; l'ajout d'une pièce jointe reste permis.
 `GET /factures/:id/controle-totaux` compare les sommes des lignes aux montants
 de la facture. L’envoi en validation et la validation exigent des totaux
 concordants. Tout écart ou toute facture sans ligne bloque l’envoi en validation
 et la validation.
+
+### Clôture mensuelle et états de paie
+
+`POST /paies/:mois/cloture` clôture atomiquement une liste non vide de factures
+conformes pour un mois au format `AAAA-MM`. La date métier est fournie dans
+`dateCloture` (`AAAA-MM-JJ`); la clôture affecte le mois aux factures et à leurs
+lignes T6 et ajoute un mouvement `CLOTURE`. Une facture déjà clôturée ne peut
+pas être réouverte par l'API.
+
+Les routes `GET /paies`, `GET /paies/:mois/lignes`,
+`GET /paies/:mois/consommation`, `GET /paies/:mois/etat` et
+`GET /paies/:mois/agents/:im` sont en lecture seule. Elles utilisent les lignes
+T6 affectées au premier jour du mois demandé, donc excluent les factures non
+clôturées. Les montants sont renvoyés sous forme de chaînes décimales à deux
+chiffres; les lignes sont paginées par défaut à 50, avec une limite maximale
+de 200.
 
 ### Pièces jointes des factures
 
