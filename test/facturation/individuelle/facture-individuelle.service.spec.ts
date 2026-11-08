@@ -111,7 +111,11 @@ describe('FactureIndividuelleService - suppression T6', () => {
     });
 
     expect(tx.factureGlobale.updateMany).toHaveBeenCalledWith({
-      where: { id: 21, statut: StatutFacture.A_CORRIGER },
+      where: {
+        id: 21,
+        statut: StatutFacture.A_CORRIGER,
+        dateCloture: null,
+      },
       data: {
         statut: StatutFacture.ENREGISTREE,
         dateValidation: null,

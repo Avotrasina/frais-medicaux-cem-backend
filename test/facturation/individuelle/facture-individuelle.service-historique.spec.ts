@@ -373,7 +373,11 @@ describe('FactureIndividuelleService - numérotation et mouvements', () => {
       }),
     );
     expect(tx.factureGlobale.updateMany).toHaveBeenCalledWith({
-      where: { id: 7, statut: StatutFacture.A_CORRIGER },
+      where: {
+        id: 7,
+        statut: StatutFacture.A_CORRIGER,
+        dateCloture: null,
+      },
       data: {
         statut: StatutFacture.ENREGISTREE,
         dateValidation: null,

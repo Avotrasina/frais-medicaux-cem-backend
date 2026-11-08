@@ -31,6 +31,8 @@ import type {
 } from '../../dtos/facture-workflow.dto.js';
 import { FactureCalculService } from '../../shared/facture-calcul.service.js';
 import { FactureIndividuelleService } from '../individuelle/facture-individuelle.service.js';
+import { FactureClotureService } from '../../shared/facture-cloture.service.js';
+import type { StatutRapprochementFacture } from '../individuelle/facture-individuelle.service.js';
 import { MouvementFactureService } from '../../shared/mouvement-facture.service.js';
 import type { NouveauMouvementFacture } from '../../shared/mouvement-facture.service.js';
 import {
@@ -116,6 +118,7 @@ export type FactureListee = Prisma.FactureGlobaleGetPayload<{
     };
   };
 }>;
+export type FactureListeeAvecCloture = FactureListee & { cloturee: boolean };
 
 export interface ActeurFacture {
   id: number;
@@ -143,11 +146,25 @@ export class FactureGlobaleService {
     private readonly mouvementFactureService: MouvementFactureService,
     private readonly factureCalculService: FactureCalculService,
     private readonly factureIndividuelleService: FactureIndividuelleService,
+    private readonly cloture: FactureClotureService = new FactureClotureService(),
   ) {}
 
-  async lister(statut?: StatutFacture): Promise<FactureListee[]> {
-    return this.prisma.factureGlobale.findMany({
-      where: statut === undefined ? { statut: { not: StatutFacture.SUPPRIMEE } } : { statut },
+  async lister(
+    statut?: StatutFacture,
+    cloturee?: boolean,
+    rapprochement?: StatutRapprochementFacture,
+  ): Promise<FactureListeeAvecCloture[]> {
+    const factures = await this.prisma.factureGlobale.findMany({
+      where: {
+        ...(statut === undefined
+          ? { statut: { not: StatutFacture.SUPPRIMEE } }
+          : { statut }),
+        ...(cloturee === undefined
+          ? {}
+          : cloturee
+            ? { dateCloture: { not: null } }
+            : { dateCloture: null }),
+      },
       include: {
         prestataire: { select: { id: true, nom: true } },
         piecesJointes: {
@@ -163,11 +180,30 @@ export class FactureGlobaleService {
       },
       orderBy: { id: 'desc' },
     });
+    const avecCloture = factures.map((facture) => ({
+      ...facture,
+      cloturee: facture.dateCloture !== null,
+    }));
+    if (rapprochement === undefined) return avecCloture;
+
+    const rapprochements = await Promise.all(
+      avecCloture.map(async (facture) => ({
+        facture,
+        statut: (
+          await this.factureIndividuelleService.rapprochement(facture.id)
+        ).statut,
+      })),
+    );
+    return rapprochements
+      .filter((element) => element.statut === rapprochement)
+      .map((element) => element.facture);
   }
 
   async obtenir(
     id: number,
-  ): Promise<FactureWorkflowLue & { nombrePiecesJointes: number }> {
+  ): Promise<
+    FactureWorkflowLue & { nombrePiecesJointes: number; cloturee: boolean }
+  > {
     const facture = await this.prisma.factureGlobale.findUnique({
       where: { id },
       include: {
@@ -175,15 +211,24 @@ export class FactureGlobaleService {
         _count: { select: { piecesJointes: true } },
       },
     });
-    if (facture === null) throw new NotFoundException(`La facture ${id} est introuvable.`);
+    if (facture === null)
+      throw new NotFoundException(`La facture ${id} est introuvable.`);
     const { _count, ...donneesFacture } = facture;
-    return { ...donneesFacture, nombrePiecesJointes: _count.piecesJointes };
+    return {
+      ...donneesFacture,
+      nombrePiecesJointes: _count.piecesJointes,
+      cloturee: donneesFacture.dateCloture !== null,
+    };
   }
 
   async historique(
     id: number,
     type?: TypeMouvement,
-  ): Promise<Prisma.MouvementFactureGetPayload<{ include: { effectuePar: true; adresseA: true } }>[]> {
+  ): Promise<
+    Prisma.MouvementFactureGetPayload<{
+      include: { effectuePar: true; adresseA: true };
+    }>[]
+  > {
     const facture = await this.prisma.factureGlobale.findUnique({
       where: { id },
       select: { id: true },
@@ -200,6 +245,7 @@ export class FactureGlobaleService {
 
   async transitions(id: number) {
     const facture = await this.obtenir(id);
+    if (facture.cloturee) return [];
     return this.factureWorkflowService.listerTransitions(
       facture.statut,
       facture.statutAvantSuppression ?? undefined,
@@ -207,19 +253,21 @@ export class FactureGlobaleService {
   }
 
   async validerDateAction(id: number, dateSaisie?: string): Promise<Date> {
-    const date = dateSaisie === undefined
-      ? dateMetierDuJour()
-      : new Date(`${dateSaisie}T00:00:00.000Z`);
+    const date =
+      dateSaisie === undefined
+        ? dateMetierDuJour()
+        : new Date(`${dateSaisie}T00:00:00.000Z`);
     if (Number.isNaN(date.getTime())) {
       throw new BadRequestException('La date du mouvement est invalide.');
     }
     const facture = await this.prisma.factureGlobale.findUnique({
       where: { id },
-      select: { id: true },
+      select: { id: true, dateCloture: true },
     });
     if (facture === null) {
       throw new NotFoundException(`La facture ${id} est introuvable.`);
     }
+    this.cloture.verifierNonCloturee(facture.dateCloture);
     const enregistrement = await this.prisma.mouvementFacture.findFirst({
       where: {
         factureGlobaleId: id,
@@ -351,16 +399,20 @@ export class FactureGlobaleService {
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const factureAvantControle = await this.obtenirDansTransaction(tx, id);
+      this.cloture.verifierNonCloturee(factureAvantControle.dateCloture);
       this.factureWorkflowService.determinerTransition(
         factureAvantControle.statut,
         ActionFacture.ENVOI_VALIDATION,
         acteur.role,
       );
       await this.factureIndividuelleService.verifierAvantValidation(tx, id);
-      const destinataire = donnees.destinataireId === undefined ? null : await tx.utilisateur.findUnique({
-        where: { id: donnees.destinataireId },
-        select: { id: true, role: true },
-      });
+      const destinataire =
+        donnees.destinataireId === undefined
+          ? null
+          : await tx.utilisateur.findUnique({
+              where: { id: donnees.destinataireId },
+              select: { id: true, role: true },
+            });
       if (donnees.destinataireId !== undefined && destinataire === null) {
         throw new NotFoundException(
           `Le destinataire ${donnees.destinataireId} est introuvable.`,
@@ -384,7 +436,9 @@ export class FactureGlobaleService {
         {
           type: TypeMouvement.ENVOI_VALIDATION,
           adresseAId: destinataire?.id,
-          ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
+          ...(donnees.remarque === undefined
+            ? {}
+            : { remarque: donnees.remarque }),
         },
         {},
         undefined,
@@ -414,7 +468,9 @@ export class FactureGlobaleService {
         ActionFacture.VALIDATION,
         {
           type: TypeMouvement.VALIDATION,
-          ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
+          ...(donnees.remarque === undefined
+            ? {}
+            : { remarque: donnees.remarque }),
         },
         { dateValidation: new Date(), valideParId: acteur.id },
         undefined,
@@ -431,6 +487,7 @@ export class FactureGlobaleService {
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
+      this.cloture.verifierNonCloturee(facture.dateCloture);
       return this.effectuerTransitionDansTransaction(
         tx,
         id,
@@ -454,10 +511,17 @@ export class FactureGlobaleService {
     donnees: SortieFactureDto,
     options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
-    return this.effectuerTransition(id, acteur, ActionFacture.SORTIE, {
-      type: TypeMouvement.SORTIE,
-      service: donnees.service,
-    }, {}, options);
+    return this.effectuerTransition(
+      id,
+      acteur,
+      ActionFacture.SORTIE,
+      {
+        type: TypeMouvement.SORTIE,
+        service: donnees.service,
+      },
+      {},
+      options,
+    );
   }
 
   async demanderSuppression(
@@ -468,14 +532,35 @@ export class FactureGlobaleService {
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
-      if (facture.statut === StatutFacture.SUPPRESSION_DEMANDEE || facture.statut === StatutFacture.SUPPRIMEE) {
-        throw new ConflictException('La demande de suppression est interdite pour le statut actuel de la facture.');
+      this.cloture.verifierNonCloturee(facture.dateCloture);
+      if (
+        facture.statut === StatutFacture.SUPPRESSION_DEMANDEE ||
+        facture.statut === StatutFacture.SUPPRIMEE
+      ) {
+        throw new ConflictException(
+          'La demande de suppression est interdite pour le statut actuel de la facture.',
+        );
       }
-      const lignes = await tx.factureIndividuelle.count({ where: { factureGlobaleId: id } });
-      if (lignes > 0) throw new ConflictException('La suppression est refusée car la facture possède déjà des lignes individuelles.');
-      return this.effectuerTransitionDansTransaction(tx, id, acteur, ActionFacture.DEMANDE_SUPPRESSION, {
-        type: TypeMouvement.DEMANDE_SUPPRESSION, remarque: donnees.motif,
-      }, { statutAvantSuppression: facture.statut }, undefined, options);
+      const lignes = await tx.factureIndividuelle.count({
+        where: { factureGlobaleId: id },
+      });
+      if (lignes > 0)
+        throw new ConflictException(
+          'La suppression est refusée car la facture possède déjà des lignes individuelles.',
+        );
+      return this.effectuerTransitionDansTransaction(
+        tx,
+        id,
+        acteur,
+        ActionFacture.DEMANDE_SUPPRESSION,
+        {
+          type: TypeMouvement.DEMANDE_SUPPRESSION,
+          remarque: donnees.motif,
+        },
+        { statutAvantSuppression: facture.statut },
+        undefined,
+        options,
+      );
     });
   }
 
@@ -485,10 +570,19 @@ export class FactureGlobaleService {
     donnees: RemarqueOptionnelleDto,
     options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
-    return this.effectuerTransition(id, acteur, ActionFacture.VALIDATION_SUPPRESSION, {
-      type: TypeMouvement.SUPPRESSION,
-      ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
-    }, { statutAvantSuppression: null }, options);
+    return this.effectuerTransition(
+      id,
+      acteur,
+      ActionFacture.VALIDATION_SUPPRESSION,
+      {
+        type: TypeMouvement.SUPPRESSION,
+        ...(donnees.remarque === undefined
+          ? {}
+          : { remarque: donnees.remarque }),
+      },
+      { statutAvantSuppression: null },
+      options,
+    );
   }
 
   async refuserSuppression(
@@ -499,11 +593,26 @@ export class FactureGlobaleService {
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
-      if (facture.statutAvantSuppression === null) throw new ConflictException('Le statut avant suppression est introuvable.');
-      return this.effectuerTransitionDansTransaction(tx, id, acteur, ActionFacture.REFUS_SUPPRESSION, {
-        type: TypeMouvement.REFUS_SUPPRESSION,
-        ...(donnees.remarque === undefined ? {} : { remarque: donnees.remarque }),
-      }, { statutAvantSuppression: null }, facture.statutAvantSuppression, options);
+      this.cloture.verifierNonCloturee(facture.dateCloture);
+      if (facture.statutAvantSuppression === null)
+        throw new ConflictException(
+          'Le statut avant suppression est introuvable.',
+        );
+      return this.effectuerTransitionDansTransaction(
+        tx,
+        id,
+        acteur,
+        ActionFacture.REFUS_SUPPRESSION,
+        {
+          type: TypeMouvement.REFUS_SUPPRESSION,
+          ...(donnees.remarque === undefined
+            ? {}
+            : { remarque: donnees.remarque }),
+        },
+        { statutAvantSuppression: null },
+        facture.statutAvantSuppression,
+        options,
+      );
     });
   }
 
@@ -514,6 +623,7 @@ export class FactureGlobaleService {
   ): Promise<FactureWorkflowLue> {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
+      this.cloture.verifierNonCloturee(facture.dateCloture);
       const statutSuivant = this.factureWorkflowService.determinerTransition(
         facture.statut,
         ActionFacture.MODIFIER_INFORMATIONS,
@@ -624,6 +734,7 @@ export class FactureGlobaleService {
   > {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
+      this.cloture.verifierNonCloturee(facture.dateCloture);
       const statutSuivant = this.factureWorkflowService.determinerTransition(
         facture.statut,
         ActionFacture.MODIFIER_MONTANTS,
@@ -746,6 +857,7 @@ export class FactureGlobaleService {
     options: OptionsActionFacture = {},
   ): Promise<FactureWorkflowLue> {
     const facture = await this.obtenirDansTransaction(tx, id);
+    this.cloture.verifierNonCloturee(facture.dateCloture);
     const statutCalcule = this.factureWorkflowService.determinerTransition(
       facture.statut,
       action,
@@ -786,6 +898,7 @@ export class FactureGlobaleService {
         'La modification demandée ne change aucune valeur de la facture.',
       );
     }
+    this.cloture.verifierNonCloturee(facture.dateCloture);
 
     data.updatedAt = this.prochaineDateMiseAJour(facture.updatedAt);
     const miseAJour = await tx.factureGlobale.updateMany({
@@ -804,12 +917,13 @@ export class FactureGlobaleService {
     this.verifierEcritureConditionnelle(miseAJour.count, facture.statut);
 
     const remarque = [motif?.trim(), ...changements.map(formaterChangement)]
-      .filter((element): element is string => element !== undefined).join('\n');
+      .filter((element): element is string => element !== undefined)
+      .join('\n');
     await this.mouvementFactureService.ecrire(tx, {
-        factureGlobaleId: facture.id,
-        type: TypeMouvement.MODIFICATION,
-        effectueParId: acteur.id,
-        remarque,
+      factureGlobaleId: facture.id,
+      type: TypeMouvement.MODIFICATION,
+      effectueParId: acteur.id,
+      remarque,
     });
 
     return this.obtenirApresMiseAJour(tx, facture.id);

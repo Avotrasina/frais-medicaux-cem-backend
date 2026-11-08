@@ -25,6 +25,7 @@ enum TypeMouvement {
   REOUVERTURE                  @map("reouverture")
   DEMANDE_SUPPRESSION          @map("demande_suppression")
   REFUS_SUPPRESSION            @map("refus_suppression")
+  CLOTURE                      @map("cloture")
 
   @@map("type_mouvement")
   @@schema("facturation")

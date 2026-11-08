@@ -174,9 +174,4 @@ export class AffecterRetenueDto {
   @IsNotEmpty()
   refPaie!: string;
 
-  @ApiPropertyOptional({ type: String, format: 'month', example: '2026-01' })
-  @IsOptional()
-  @IsString()
-  @Matches(/^\d{4}-(0[1-9]|1[0-2])$/)
-  moisAffectation?: string;
 }

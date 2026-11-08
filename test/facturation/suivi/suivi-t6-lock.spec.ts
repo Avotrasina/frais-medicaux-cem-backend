@@ -109,7 +109,10 @@ describe('Verrou T5_x piloté par les lignes T6', () => {
       },
     );
     const tx = {
-      factureGlobale: { findUnique: vi.fn().mockResolvedValue(facture) },
+      factureGlobale: {
+        findUnique: vi.fn().mockResolvedValue(facture),
+        updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+      },
       beneficiaire: { findUnique: vi.fn().mockResolvedValue(beneficiaire) },
       acte: { findUnique: vi.fn().mockResolvedValue(acte) },
       factureIndividuelle: {
