@@ -13,9 +13,20 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBody, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiExtraModels,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CreateActeWithCeilingsUseCase } from '../acte/use-cases/acte-create-with-ceilings.use-case.js';
-import { CreateCategorieWithCeilingsDto } from '../acte/dtos/acte-creation.dto.js';
+import {
+  CreateCategorieWithCeilingsDto,
+  PlafondParActeDto,
+  PlafondParAnMontantDto,
+  PlafondParAnSeancesDto,
+  PlafondsCreationDto,
+} from '../acte/dtos/acte-creation.dto.js';
 import { CategorieActeQueryDto } from './dtos/categorie-acte-query.dto.js';
 import {
   CreateCategorieActeDto,
@@ -34,6 +45,13 @@ const CREATE_CATEGORIE_PIPE = new ValidationPipe({
 });
 
 @Controller('categories-actes')
+@ApiExtraModels(
+  CreateCategorieWithCeilingsDto,
+  PlafondsCreationDto,
+  PlafondParActeDto,
+  PlafondParAnMontantDto,
+  PlafondParAnSeancesDto,
+)
 export class CategorieActeController {
   constructor(
     private readonly createCategorieActeUseCase: CreateCategorieActeUseCase,
