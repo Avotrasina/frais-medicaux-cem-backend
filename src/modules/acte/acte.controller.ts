@@ -14,7 +14,16 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBody, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiOkResponse,
+  getSchemaPath,
+  ApiQuery,
+  ApiBody,
+  ApiNoContentResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CreateActeDto, UpdateActeDto } from './dtos/acte.dto.js';
 import { CreateActeRequestDto } from './dtos/acte-creation.dto.js';
 import { ActeQueryDto } from './dtos/acte-query.dto.js';
@@ -23,7 +32,10 @@ import { ReadActeUseCase } from './use-cases/acte.read.js';
 import { CreateActeUseCase } from './use-cases/acte.create.js';
 import { CreateActeWithCeilingsUseCase } from './use-cases/acte-create-with-ceilings.use-case.js';
 import { UpdateActeUseCase } from './use-cases/acte.update.js';
-import type { ReadActe } from './types/acte.types.js';
+import {
+  ActeAvecPlafondsResponseDto,
+  ActeResponseDto,
+} from './dtos/acte-response.dto.js';
 
 const CREATE_ACTE_PIPE = new ValidationPipe({
   transform: true,
@@ -31,7 +43,10 @@ const CREATE_ACTE_PIPE = new ValidationPipe({
   forbidNonWhitelisted: true,
 });
 
+type CreateActeResult = ActeResponseDto | ActeAvecPlafondsResponseDto;
+
 @Controller('actes')
+@ApiExtraModels(ActeResponseDto, ActeAvecPlafondsResponseDto)
 export class ActeController {
   constructor(
     private readonly createActeUseCase: CreateActeUseCase,
@@ -149,7 +164,15 @@ export class ActeController {
       },
     },
   })
-  @ApiResponse({ status: 201, description: 'Acte créé.' })
+  @ApiCreatedResponse({
+    description: 'Acte créé.',
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(ActeResponseDto) },
+        { $ref: getSchemaPath(ActeAvecPlafondsResponseDto) },
+      ],
+    },
+  })
   @ApiResponse({
     status: 400,
     description: 'Payload invalide ou incompatible.',
@@ -159,7 +182,7 @@ export class ActeController {
     status: 409,
     description: 'Code, nom ou plafond incompatible.',
   })
-  async create(@Body() body: CreateActeRequestDto) {
+  async create(@Body() body: CreateActeRequestDto): Promise<CreateActeResult> {
     if (body.type === undefined) {
       if (
         body.dateEffet !== undefined ||
@@ -198,6 +221,17 @@ export class ActeController {
   }
 
   @Get()
+  @ApiOkResponse({
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [
+          { $ref: getSchemaPath(ActeResponseDto) },
+          { $ref: getSchemaPath(ActeAvecPlafondsResponseDto) },
+        ],
+      },
+    },
+  })
   @ApiQuery({
     name: 'avecPlafonds',
     required: false,
@@ -220,25 +254,32 @@ export class ActeController {
     example: false,
     description: 'Ajoute l’historique des versions de la cible.',
   })
-  async findAll(@Query() query: ActeQueryDto) {
+  async findAll(
+    @Query() query: ActeQueryDto,
+  ): Promise<(ActeResponseDto | ActeAvecPlafondsResponseDto)[]> {
     return this.readActeUseCase.findAll(query);
   }
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<ReadActe> {
+  @ApiOkResponse({ type: ActeResponseDto })
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ActeResponseDto> {
     return this.readActeUseCase.findById(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: ActeResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateActeDto,
-  ): Promise<ReadActe> {
+  ): Promise<ActeResponseDto> {
     return this.updateActeUseCase.execute(id, body);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Acte supprimé.' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteActeUseCase.execute(id);
   }

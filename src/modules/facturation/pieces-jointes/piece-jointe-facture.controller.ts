@@ -16,6 +16,10 @@ import {
 import {
   ApiBody,
   ApiConsumes,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiProduces,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -26,6 +30,7 @@ import type { Response } from 'express';
 import { obtenirUtilisateurId } from '../shared/utilisateur-facture.js';
 import type { RequeteAvecUtilisateur } from '../shared/utilisateur-facture.js';
 import { PieceJointeFactureService } from './piece-jointe-facture.service.js';
+import { PieceJointeFactureResponseDto } from '../dtos/piece-jointe-response.dto.js';
 
 const TAILLE_MAX_OCTETS = 10 * 1024 * 1024;
 
@@ -36,6 +41,7 @@ export class PieceJointeFactureController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: PieceJointeFactureResponseDto })
   @UseInterceptors(
     FileInterceptor('fichier', {
       storage: memoryStorage(),
@@ -62,36 +68,20 @@ export class PieceJointeFactureController {
       'Le contenu PDF/JPEG/PNG est vérifié par signature. Maximum 20 pièces jointes par facture.',
   })
   @ApiResponse({
-    status: 201,
-    description: 'Pièce jointe créée.',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'integer' },
-        nomFichier: { type: 'string', nullable: true },
-        typeFichier: { type: 'string', example: 'application/pdf' },
-        tailleOctets: { type: 'integer' },
-        createdAt: { type: 'string', format: 'date-time' },
-        ajoutePar: {
-          type: 'object',
-          nullable: true,
-          properties: {
-            id: { type: 'integer' },
-            nom: { type: 'string' },
-          },
-        },
-      },
-    },
+    status: 400,
+    description: 'Fichier manquant ou multipart invalide.',
   })
-  @ApiResponse({ status: 400, description: 'Fichier manquant ou multipart invalide.' })
-  @ApiResponse({ status: 409, description: 'Facture supprimée ou quota atteint.' })
+  @ApiResponse({
+    status: 409,
+    description: 'Facture supprimée ou quota atteint.',
+  })
   @ApiResponse({ status: 413, description: 'Fichier supérieur à 10 Mo.' })
   @ApiResponse({ status: 422, description: 'Signature ou type MIME invalide.' })
   async ajouter(
     @Param('id', ParseIntPipe) factureId: number,
     @UploadedFile() fichier: Express.Multer.File | undefined,
     @Req() requete: RequeteAvecUtilisateur,
-  ) {
+  ): Promise<PieceJointeFactureResponseDto> {
     if (fichier === undefined) {
       throw new BadRequestException('Le champ fichier est obligatoire.');
     }
@@ -103,15 +93,23 @@ export class PieceJointeFactureController {
   }
 
   @Get()
+  @ApiOkResponse({ type: PieceJointeFactureResponseDto, isArray: true })
   @ApiOperation({
     summary: 'Lister les pièces jointes d’une facture',
     description: 'Retourne les métadonnées des fichiers associés à la facture.',
   })
-  async lister(@Param('id', ParseIntPipe) factureId: number) {
+  async lister(
+    @Param('id', ParseIntPipe) factureId: number,
+  ): Promise<PieceJointeFactureResponseDto[]> {
     return this.piecesJointes.lister(factureId);
   }
 
   @Get(':pieceId')
+  @ApiProduces('application/pdf', 'image/jpeg', 'image/png')
+  @ApiOkResponse({
+    description: 'Fichier PDF, JPEG ou PNG diffusé en ligne.',
+    schema: { type: 'string', format: 'binary' },
+  })
   @ApiOperation({
     summary: 'Ouvrir une pièce jointe de la facture',
     description: 'Diffuse le fichier PDF, JPEG ou PNG demandé.',
@@ -139,9 +137,10 @@ export class PieceJointeFactureController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Supprimer une pièce jointe modifiable',
-    description: 'Supprime un fichier lorsque le statut de la facture l’autorise.',
+    description:
+      'Supprime un fichier lorsque le statut de la facture l’autorise.',
   })
-  @ApiResponse({ status: 204, description: 'Pièce jointe supprimée.' })
+  @ApiNoContentResponse({ description: 'Pièce jointe supprimée.' })
   @ApiResponse({
     status: 409,
     description:
@@ -156,9 +155,11 @@ export class PieceJointeFactureController {
   }
 
   private nettoyerNomPourEntete(nom: string): string {
-    return nom
-      .replace(/[\\/]/g, '_')
-      .replace(/\p{Cc}/gu, '')
-      .trim() || 'fichier';
+    return (
+      nom
+        .replace(/[\\/]/g, '_')
+        .replace(/\p{Cc}/gu, '')
+        .trim() || 'fichier'
+    );
   }
 }

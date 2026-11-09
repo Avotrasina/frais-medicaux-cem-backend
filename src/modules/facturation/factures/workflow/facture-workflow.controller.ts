@@ -14,7 +14,7 @@ import {
   ValidationPipe,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { TypeMouvement } from '../../../../generated/prisma/enums.js';
 import type { MouvementFacture } from '../../../../generated/prisma/client.js';
 import type {
@@ -29,6 +29,10 @@ import {
 } from '../../dtos/facture-workflow.dto.js';
 import { FactureRoleGuard } from '../../shared/facture-role.guard.js';
 import { serialiserMontants } from '../../shared/serialiser-montants.js';
+import {
+  FactureGlobaleModificationResponseDto,
+  FactureWorkflowResponseDto,
+} from '../../dtos/facture-response.dto.js';
 
 interface RequeteAvecUtilisateur {
   user?: ActeurFacture;
@@ -66,13 +70,19 @@ export const VALIDATION_ACTION = new ValidationPipe({
 });
 
 @Controller('factures')
+@ApiExtraModels(
+  FactureWorkflowResponseDto,
+  FactureGlobaleModificationResponseDto,
+)
 export class FactureWorkflowController {
   constructor(private readonly factureGlobaleService: FactureGlobaleService) {}
 
   @Patch(':id/statut')
+  @ApiOkResponse({ type: FactureWorkflowResponseDto })
   @ApiOperation({
     summary: 'Exécuter une action sur une facture',
-    description: 'Applique une action métier autorisée et retourne la facture ainsi que le mouvement créé.',
+    description:
+      'Applique une action métier autorisée et retourne la facture ainsi que le mouvement créé.',
   })
   @HttpCode(HttpStatus.OK)
   @UseGuards(FactureRoleGuard)
@@ -81,7 +91,7 @@ export class FactureWorkflowController {
     @Param('id', PIPE_IDENTIFIANT) id: number,
     @Body() donnees: ActionFactureDto,
     @Req() requete: RequeteAvecUtilisateur,
-  ) {
+  ): Promise<FactureWorkflowResponseDto> {
     if (
       donnees.date !== undefined &&
       !TYPES_ACTION_AVEC_DATE.some((type) => type === donnees.type)
@@ -199,6 +209,7 @@ export class FactureWorkflowController {
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: FactureGlobaleModificationResponseDto })
   @ApiOperation({
     summary: 'Modifier une facture',
     description:
@@ -210,7 +221,7 @@ export class FactureWorkflowController {
     @Param('id', PIPE_IDENTIFIANT) id: number,
     @Body() donnees: ModifierFactureGlobaleDto,
     @Req() requete: RequeteAvecUtilisateur,
-  ) {
+  ): Promise<FactureGlobaleModificationResponseDto> {
     const facture = await this.factureGlobaleService.modifierInformations(
       id,
       this.obtenirActeur(requete),

@@ -14,8 +14,13 @@ import { SaveLieuUseCase } from './use-cases/location.save.js';
 import { UpdateLieuUseCase } from './use-cases/location.update.js';
 import { ReadLieuUseCase } from './use-cases/location.read.js';
 import { CreateLieuDto, UpdateLieuDto } from './dtos/location.dto.js';
-import type { ReadLieu } from './types/location.types.js';
 import { ProviderTreeDeletionUseCase } from '../provider/use-cases/provider-tree.delete.js';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { LocationResponseDto } from './dtos/location-response.dto.js';
 
 @Controller('locations')
 export class LieuController {
@@ -28,42 +33,49 @@ export class LieuController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.request('lieu', id);
   }
 
   @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.validate('lieu', id);
   }
 
   @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.reject('lieu', id);
   }
 
   @Post()
-  async create(@Body() body: CreateLieuDto): Promise<ReadLieu> {
+  @ApiCreatedResponse({ type: LocationResponseDto })
+  async create(@Body() body: CreateLieuDto): Promise<LocationResponseDto> {
     return this.saveLieuUseCase.execute(body);
   }
 
   @Get()
-  async findAll(): Promise<ReadLieu[]> {
+  @ApiOkResponse({ type: LocationResponseDto, isArray: true })
+  async findAll(): Promise<LocationResponseDto[]> {
     return this.readLieuUseCase.findAll();
   }
 
   @Get('deletion-requests')
-  async findDeletionRequests(): Promise<ReadLieu[]> {
+  @ApiOkResponse({ type: LocationResponseDto, isArray: true })
+  async findDeletionRequests(): Promise<LocationResponseDto[]> {
     return this.readLieuUseCase.findDeletionRequests();
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: LocationResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateLieuDto,
-  ): Promise<ReadLieu> {
+  ): Promise<LocationResponseDto> {
     return this.updateLieuUseCase.updatePartial(id, body);
   }
 }

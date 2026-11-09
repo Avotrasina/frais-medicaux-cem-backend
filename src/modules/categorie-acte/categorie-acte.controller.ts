@@ -14,9 +14,13 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
-  ApiBody,
+  ApiCreatedResponse,
   ApiExtraModels,
+  ApiNoContentResponse,
+  ApiOkResponse,
   ApiQuery,
+  getSchemaPath,
+  ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
 import { CreateActeWithCeilingsUseCase } from '../acte/use-cases/acte-create-with-ceilings.use-case.js';
@@ -29,14 +33,18 @@ import {
 } from '../acte/dtos/acte-creation.dto.js';
 import { CategorieActeQueryDto } from './dtos/categorie-acte-query.dto.js';
 import {
-  CreateCategorieActeDto,
   UpdateCategorieActeDto,
 } from './dtos/categorie-acte.dto.js';
 import { DeleteCategorieActeUseCase } from './use-cases/categorie-acte.delete.js';
 import { ReadCategorieActeUseCase } from './use-cases/categorie-acte.read.js';
 import { CreateCategorieActeUseCase } from './use-cases/categorie-acte.create.js';
 import { UpdateCategorieActeUseCase } from './use-cases/categorie-acte.update.js';
-import type { ReadCategorieActe } from './types/categorie-acte.types.js';
+import {
+  CategorieActeAvecActesResponseDto,
+  CategorieActeAvecPlafondsEtActesResponseDto,
+  CategorieActeAvecPlafondsResponseDto,
+  CategorieActeResponseDto,
+} from './dtos/categorie-acte-response.dto.js';
 
 const CREATE_CATEGORIE_PIPE = new ValidationPipe({
   transform: true,
@@ -45,7 +53,12 @@ const CREATE_CATEGORIE_PIPE = new ValidationPipe({
 });
 
 @Controller('categories-actes')
+
 @ApiExtraModels(
+  CategorieActeResponseDto,
+  CategorieActeAvecPlafondsResponseDto,
+  CategorieActeAvecActesResponseDto,
+  CategorieActeAvecPlafondsEtActesResponseDto,
   CreateCategorieWithCeilingsDto,
   PlafondsCreationDto,
   PlafondParActeDto,
@@ -62,6 +75,7 @@ export class CategorieActeController {
   ) {}
 
   @Post()
+
   @UsePipes(CREATE_CATEGORIE_PIPE)
   @ApiBody({
     type: CreateCategorieWithCeilingsDto,
@@ -85,7 +99,17 @@ export class CategorieActeController {
   })
   @ApiResponse({ status: 400, description: 'Payload invalide.' })
   @ApiResponse({ status: 409, description: 'Nom ou plafond incompatible.' })
-  async create(@Body() body: CreateCategorieWithCeilingsDto) {
+  @ApiCreatedResponse({
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(CategorieActeResponseDto) },
+        { $ref: getSchemaPath(CategorieActeAvecPlafondsResponseDto) },
+      ],
+    },
+  })
+  async create(
+    @Body() body: CreateCategorieWithCeilingsDto,
+  ): Promise<CategorieActeResponseDto | CategorieActeAvecPlafondsResponseDto> {
     if (body.plafonds !== undefined || body.dateEffet !== undefined) {
       return this.createActeWithCeilingsUseCase.executeCategorie(body);
     }
@@ -93,6 +117,21 @@ export class CategorieActeController {
   }
 
   @Get()
+  @ApiOkResponse({
+    schema: {
+      type: 'array',
+      items: {
+        oneOf: [
+          { $ref: getSchemaPath(CategorieActeResponseDto) },
+          { $ref: getSchemaPath(CategorieActeAvecPlafondsResponseDto) },
+          { $ref: getSchemaPath(CategorieActeAvecActesResponseDto) },
+          {
+            $ref: getSchemaPath(CategorieActeAvecPlafondsEtActesResponseDto),
+          },
+        ],
+      },
+    },
+  })
   @ApiQuery({
     name: 'avecPlafonds',
     required: false,
@@ -123,27 +162,39 @@ export class CategorieActeController {
     description:
       'Inclut les actes de chaque catégorie et leurs plafonds résolus.',
   })
-  async findAll(@Query() query: CategorieActeQueryDto) {
+  async findAll(
+    @Query() query: CategorieActeQueryDto,
+  ): Promise<
+    (
+      | CategorieActeResponseDto
+      | CategorieActeAvecPlafondsResponseDto
+      | CategorieActeAvecActesResponseDto
+      | CategorieActeAvecPlafondsEtActesResponseDto
+    )[]
+  > {
     return this.readCategorieActeUseCase.findAll(query);
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: CategorieActeResponseDto })
   async findById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<ReadCategorieActe> {
+  ): Promise<CategorieActeResponseDto> {
     return this.readCategorieActeUseCase.findById(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: CategorieActeResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateCategorieActeDto,
-  ): Promise<ReadCategorieActe> {
+  ): Promise<CategorieActeResponseDto> {
     return this.updateCategorieActeUseCase.execute(id, body);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Catégorie d’acte supprimée.' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteCategorieActeUseCase.execute(id);
   }

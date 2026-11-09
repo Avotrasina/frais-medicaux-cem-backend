@@ -28,10 +28,17 @@ import {
   UpdateServiceCodeDirectionDto,
   UpdateServiceNomDto,
 } from './dtos/service.dto.js';
-import type { ReadAgence } from './types/agence.types.js';
-import type { ReadDirectionWithServices } from './types/direction.types.js';
-import type { ReadService } from './types/service.types.js';
 import { DeleteOrganizationalStructureUseCase } from './use-cases/structure.delete.js';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import {
+  AgenceResponseDto,
+  DirectionAvecServicesResponseDto,
+  ServiceResponseDto,
+} from './dtos/structure-response.dto.js';
 
 @Controller('organizational-structures')
 export class StructureOrganisationnelleController {
@@ -50,12 +57,14 @@ export class StructureOrganisationnelleController {
 
   @Delete('agencies/:code-agence')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestAgencyDeletion(@Param('code-agence') id: string): Promise<void> {
     await this.deleteStructureUseCase.request('agence', id);
   }
 
   @Post('agencies/:code-agence/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateAgencyDeletion(
     @Param('code-agence') id: string,
   ): Promise<void> {
@@ -64,12 +73,14 @@ export class StructureOrganisationnelleController {
 
   @Post('agencies/:code-agence/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectAgencyDeletion(@Param('code-agence') id: string): Promise<void> {
     await this.deleteStructureUseCase.reject('agence', id);
   }
 
   @Delete('directions/:code-direction')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDirectionDeletion(
     @Param('code-direction') id: string,
   ): Promise<void> {
@@ -78,6 +89,7 @@ export class StructureOrganisationnelleController {
 
   @Post('directions/:code-direction/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDirectionDeletion(
     @Param('code-direction') id: string,
   ): Promise<void> {
@@ -86,6 +98,7 @@ export class StructureOrganisationnelleController {
 
   @Post('directions/:code-direction/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDirectionDeletion(
     @Param('code-direction') id: string,
   ): Promise<void> {
@@ -94,6 +107,7 @@ export class StructureOrganisationnelleController {
 
   @Delete('services/:code-service')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestServiceDeletion(
     @Param('code-service') id: string,
   ): Promise<void> {
@@ -102,6 +116,7 @@ export class StructureOrganisationnelleController {
 
   @Post('services/:code-service/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateServiceDeletion(
     @Param('code-service') id: string,
   ): Promise<void> {
@@ -110,6 +125,7 @@ export class StructureOrganisationnelleController {
 
   @Post('services/:code-service/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectServiceDeletion(
     @Param('code-service') id: string,
   ): Promise<void> {
@@ -118,22 +134,26 @@ export class StructureOrganisationnelleController {
 
   @Post('agencies')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Agence créée.' })
   async createAgency(@Body() dto: CreateAgenceDto): Promise<void> {
     await this.createAgenceUseCase.execute(dto);
   }
 
   @Get('agencies')
-  async findAllAgencies(): Promise<ReadAgence[]> {
+  @ApiOkResponse({ type: AgenceResponseDto, isArray: true })
+  async findAllAgencies(): Promise<AgenceResponseDto[]> {
     return this.readAllAgencesUseCase.findAll();
   }
 
   @Get('agencies/deletion-requests')
-  async findAgencyDeletionRequests(): Promise<ReadAgence[]> {
+  @ApiOkResponse({ type: AgenceResponseDto, isArray: true })
+  async findAgencyDeletionRequests(): Promise<AgenceResponseDto[]> {
     return this.readAllAgencesUseCase.findDeletionRequests();
   }
 
   @Patch('agencies/:code-agence')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Agence mise à jour.' })
   async updateAgence(
     @Param('code-agence') codeAgence: string,
     @Body() dto: UpdateAgenceDto,
@@ -146,22 +166,28 @@ export class StructureOrganisationnelleController {
 
   @Post('directions')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Direction créée.' })
   async createDirection(@Body() dto: CreateDirectionDto): Promise<void> {
     await this.createDirectionUseCase.execute(dto);
   }
 
   @Get('directions')
-  async findAllDirections(): Promise<ReadDirectionWithServices[]> {
+  @ApiOkResponse({ type: DirectionAvecServicesResponseDto, isArray: true })
+  async findAllDirections(): Promise<DirectionAvecServicesResponseDto[]> {
     return this.readAllDirectionsUseCase.findAll();
   }
 
   @Get('directions/deletion-requests')
-  async findDirectionDeletionRequests(): Promise<ReadDirectionWithServices[]> {
+  @ApiOkResponse({ type: DirectionAvecServicesResponseDto, isArray: true })
+  async findDirectionDeletionRequests(): Promise<
+    DirectionAvecServicesResponseDto[]
+  > {
     return this.readAllDirectionsUseCase.findDeletionRequests();
   }
 
   @Patch('directions/:code-direction')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Direction mise à jour.' })
   async updateDirection(
     @Param('code-direction') codeDirection: string,
     @Body() dto: UpdateDirectionDto,
@@ -173,30 +199,35 @@ export class StructureOrganisationnelleController {
   }
 
   @Get('directions/:code-direction/services')
+  @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
   async findServicesByDirection(
     @Param('code-direction') codeDirection: string,
-  ): Promise<ReadService[]> {
+  ): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findByDirection({ codeDirection });
   }
 
   @Post('services')
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Service créé.' })
   async createService(@Body() dto: CreateServiceDto): Promise<void> {
     await this.createServiceUseCase.execute(dto);
   }
 
   @Get('services')
-  async findAllServices(): Promise<ReadService[]> {
+  @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
+  async findAllServices(): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findAll();
   }
 
   @Get('services/deletion-requests')
-  async findServiceDeletionRequests(): Promise<ReadService[]> {
+  @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
+  async findServiceDeletionRequests(): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findDeletionRequests();
   }
 
   @Patch('services/:code-service/name')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Nom du service mis à jour.' })
   async updateServiceNom(
     @Param('code-service') codeService: string,
     @Body() dto: UpdateServiceNomDto,
@@ -209,6 +240,7 @@ export class StructureOrganisationnelleController {
 
   @Patch('services/:code-service/direction')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Direction du service mise à jour.' })
   async updateServiceCodeDirection(
     @Param('code-service') codeService: string,
     @Body() dto: UpdateServiceCodeDirectionDto,
