@@ -89,8 +89,8 @@ export class FactureGlobaleResponseDto implements MontantsSerialises<FactureWork
   @ApiProperty({ type: String, format: 'date-time' })
   dateFacture!: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
-  moisPrestation!: Date;
+  @ApiProperty({ type: String, format: 'date-time', nullable: true })
+  moisPrestation!: Date | null;
 
   @ApiProperty({ type: String, nullable: true })
   refAgence!: string | null;
