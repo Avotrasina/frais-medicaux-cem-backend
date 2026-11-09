@@ -32,6 +32,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { StreamableFile } from '@nestjs/common';
@@ -66,6 +67,7 @@ export class AgentFamilyController {
 
   @Delete(':type/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDeletion(
     @Param('type') type: string,
     @Param('id', ParseIntPipe) id: number,
@@ -75,6 +77,7 @@ export class AgentFamilyController {
 
   @Post(':type/:id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDeletion(
     @Param('type') type: string,
     @Param('id', ParseIntPipe) id: number,
@@ -84,6 +87,7 @@ export class AgentFamilyController {
 
   @Post(':type/:id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDeletion(
     @Param('type') type: string,
     @Param('id', ParseIntPipe) id: number,
@@ -133,6 +137,7 @@ export class AgentFamilyController {
 
   @Patch('spouses/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Conjoint mis à jour.' })
   async updateSpouse(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdatePartialFamilleAgentDto,
@@ -145,6 +150,7 @@ export class AgentFamilyController {
 
   @Patch('spouses/:id/card')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Carte sociale mise à jour.' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentFamilySocialCardMultipartDto })
   @UseInterceptors(ImageUploadInterceptor('image'))
@@ -192,6 +198,7 @@ export class AgentFamilyController {
 
   @Patch('children/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Enfant mis à jour.' })
   async updateChild(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdatePartialFamilleAgentDto,
@@ -204,6 +211,7 @@ export class AgentFamilyController {
 
   @Patch('children/:id/card')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Carte sociale mise à jour.' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentFamilySocialCardMultipartDto })
   @UseInterceptors(ImageUploadInterceptor('image'))

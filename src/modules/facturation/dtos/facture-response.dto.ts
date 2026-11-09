@@ -119,6 +119,12 @@ export class FactureGlobaleResponseDto implements MontantsSerialises<FactureWork
   @ApiProperty({ type: String, format: 'date-time', nullable: true })
   dateValidation!: Date | null;
 
+  @ApiProperty({ type: String, format: 'date-time', nullable: true })
+  moisPaie!: Date | null;
+
+  @ApiProperty({ type: String, format: 'date-time', nullable: true })
+  dateCloture!: Date | null;
+
   @ApiProperty()
   prestataireId!: number;
 

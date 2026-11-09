@@ -16,12 +16,12 @@ import {
 import {
   ApiCreatedResponse,
   ApiExtraModels,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiQuery,
   getSchemaPath,
   ApiBody,
-  ApiQueryMetadata,
-  ApiResponse
+  ApiResponse,
 } from '@nestjs/swagger';
 import { CreateActeWithCeilingsUseCase } from '../acte/use-cases/acte-create-with-ceilings.use-case.js';
 import {
@@ -33,7 +33,6 @@ import {
 } from '../acte/dtos/acte-creation.dto.js';
 import { CategorieActeQueryDto } from './dtos/categorie-acte-query.dto.js';
 import {
-  CreateCategorieActeDto,
   UpdateCategorieActeDto,
 } from './dtos/categorie-acte.dto.js';
 import { DeleteCategorieActeUseCase } from './use-cases/categorie-acte.delete.js';
@@ -46,7 +45,6 @@ import {
   CategorieActeAvecPlafondsResponseDto,
   CategorieActeResponseDto,
 } from './dtos/categorie-acte-response.dto.js';
-import type { ReadCategorieActe } from './types/categorie-acte.types.js';
 
 const CREATE_CATEGORIE_PIPE = new ValidationPipe({
   transform: true,
@@ -101,8 +99,17 @@ export class CategorieActeController {
   })
   @ApiResponse({ status: 400, description: 'Payload invalide.' })
   @ApiResponse({ status: 409, description: 'Nom ou plafond incompatible.' })
-  @ApiCreatedResponse({ type: CategorieActeResponseDto })
-  async create(@Body() body: CreateCategorieWithCeilingsDto) {
+  @ApiCreatedResponse({
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(CategorieActeResponseDto) },
+        { $ref: getSchemaPath(CategorieActeAvecPlafondsResponseDto) },
+      ],
+    },
+  })
+  async create(
+    @Body() body: CreateCategorieWithCeilingsDto,
+  ): Promise<CategorieActeResponseDto | CategorieActeAvecPlafondsResponseDto> {
     if (body.plafonds !== undefined || body.dateEffet !== undefined) {
       return this.createActeWithCeilingsUseCase.executeCategorie(body);
     }
@@ -187,6 +194,7 @@ export class CategorieActeController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Catégorie d’acte supprimée.' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteCategorieActeUseCase.execute(id);
   }

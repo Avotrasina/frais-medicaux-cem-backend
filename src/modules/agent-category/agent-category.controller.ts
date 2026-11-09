@@ -18,7 +18,11 @@ import {
   UpdateAgentCategoryDto,
 } from './dtos/agent-category.dto.js';
 import { DeleteAgentCategoryUseCase } from './use-cases/agent-category.delete.js';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { AgentCategoryResponseDto } from './dtos/agent-category-response.dto.js';
 
 @Controller('agent-categories')
@@ -32,18 +36,21 @@ export class AgentCategoryController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteAgentCategoryUseCase.request(id);
   }
 
   @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteAgentCategoryUseCase.validate(id);
   }
 
   @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteAgentCategoryUseCase.reject(id);
   }

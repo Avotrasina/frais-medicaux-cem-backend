@@ -17,6 +17,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiProduces,
   ApiOperation,
@@ -139,7 +140,7 @@ export class PieceJointeFactureController {
     description:
       'Supprime un fichier lorsque le statut de la facture l’autorise.',
   })
-  @ApiResponse({ status: 204, description: 'Pièce jointe supprimée.' })
+  @ApiNoContentResponse({ description: 'Pièce jointe supprimée.' })
   @ApiResponse({
     status: 409,
     description:

@@ -38,6 +38,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiQuery,
 } from '@nestjs/swagger';
@@ -84,6 +85,7 @@ export class AgentController {
 
   @Patch(':matricule')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Agent mis à jour.' })
   async update(
     @Param('matricule', ParseIntPipe) matricule: number,
     @Body() dto: AgentUpdateDto,
@@ -98,6 +100,7 @@ export class AgentController {
 
   @Patch(':matricule/card')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Carte professionnelle mise à jour.' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: AgentCardMultipartDto })
   @UseInterceptors(ImageUploadInterceptor('image'))
@@ -124,18 +127,21 @@ export class AgentController {
 
   @Delete(':matricule')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDeletion(@Param('matricule', ParseIntPipe) matricule: number) {
     await this.deleteAgentUseCase.request(matricule);
   }
 
   @Post(':matricule/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDeletion(@Param('matricule', ParseIntPipe) matricule: number) {
     await this.deleteAgentUseCase.validate(matricule);
   }
 
   @Post(':matricule/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDeletion(@Param('matricule', ParseIntPipe) matricule: number) {
     await this.deleteAgentUseCase.reject(matricule);
   }

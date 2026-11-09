@@ -15,7 +15,11 @@ import { UpdateLieuUseCase } from './use-cases/location.update.js';
 import { ReadLieuUseCase } from './use-cases/location.read.js';
 import { CreateLieuDto, UpdateLieuDto } from './dtos/location.dto.js';
 import { ProviderTreeDeletionUseCase } from '../provider/use-cases/provider-tree.delete.js';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { LocationResponseDto } from './dtos/location-response.dto.js';
 
 @Controller('locations')
@@ -29,18 +33,21 @@ export class LieuController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.request('lieu', id);
   }
 
   @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.validate('lieu', id);
   }
 
   @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.reject('lieu', id);
   }

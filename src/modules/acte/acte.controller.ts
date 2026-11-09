@@ -21,6 +21,7 @@ import {
   getSchemaPath,
   ApiQuery,
   ApiBody,
+  ApiNoContentResponse,
   ApiResponse,
 } from '@nestjs/swagger';
 import { CreateActeDto, UpdateActeDto } from './dtos/acte.dto.js';
@@ -42,10 +43,7 @@ const CREATE_ACTE_PIPE = new ValidationPipe({
   forbidNonWhitelisted: true,
 });
 
-/** Type de retour réel de POST /actes : acte simple ou résultat du use case avec plafonds. */
-type CreateActeResult =
-  | ActeResponseDto
-  | Awaited<ReturnType<CreateActeWithCeilingsUseCase['executeActe']>>;
+type CreateActeResult = ActeResponseDto | ActeAvecPlafondsResponseDto;
 
 @Controller('actes')
 @ApiExtraModels(ActeResponseDto, ActeAvecPlafondsResponseDto)
@@ -166,7 +164,15 @@ export class ActeController {
       },
     },
   })
-  @ApiCreatedResponse({ type: ActeResponseDto, description: 'Acte créé.' })
+  @ApiCreatedResponse({
+    description: 'Acte créé.',
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(ActeResponseDto) },
+        { $ref: getSchemaPath(ActeAvecPlafondsResponseDto) },
+      ],
+    },
+  })
   @ApiResponse({
     status: 400,
     description: 'Payload invalide ou incompatible.',
@@ -273,6 +279,7 @@ export class ActeController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Acte supprimé.' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deleteActeUseCase.execute(id);
   }

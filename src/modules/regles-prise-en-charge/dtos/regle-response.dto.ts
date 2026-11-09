@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '../../../generated/prisma/client.js';
 import { AgentConcerne, TypeRegle } from '../../../generated/prisma/enums.js';
-import type { Regle } from '../../../generated/prisma/client.js';
 
-export class RegleResponseDto implements Regle {
+export class RegleResponseDto {
   @ApiProperty()
   id!: number;
 
@@ -14,7 +12,7 @@ export class RegleResponseDto implements Regle {
   agentConcerne!: AgentConcerne;
 
   @ApiProperty({ type: String, example: '80.50' })
-  tauxCem!: Prisma.Decimal;
+  tauxCem!: string;
 
   @ApiProperty({ type: String, format: 'date-time' })
   dateEffet!: Date;

@@ -13,7 +13,12 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { CreatePlafondDto, UpdatePlafondDto } from './dtos/plafond.dto.js';
 import { PlafondQueryDto } from './dtos/plafond-query.dto.js';
 import { DeletePlafondUseCase } from './use-cases/plafond.delete.js';
@@ -90,6 +95,7 @@ export class PlafondController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Plafond supprimé.' })
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletePlafondUseCase.execute(id);
   }

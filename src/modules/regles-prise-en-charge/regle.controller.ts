@@ -16,8 +16,10 @@ import { RegleService } from './regle.service.js';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import {
   RegleResponseEnveloppeDto,
+  RegleResponseDto,
   ReglesResponseEnveloppeDto,
 } from './dtos/regle-response.dto.js';
+import type { Regle } from '../../generated/prisma/client.js';
 
 @Controller('regles-prise-en-charge')
 export class RegleController {
@@ -30,7 +32,7 @@ export class RegleController {
   ): Promise<RegleResponseEnveloppeDto> {
     return {
       message: 'La règle de prise en charge a été créée avec succès.',
-      donnees: await this.regleService.creer(donnees),
+      donnees: this.versDto(await this.regleService.creer(donnees)),
     };
   }
 
@@ -39,7 +41,9 @@ export class RegleController {
   async lister(): Promise<ReglesResponseEnveloppeDto> {
     return {
       message: 'Les règles de prise en charge ont été récupérées avec succès.',
-      donnees: await this.regleService.lister(),
+      donnees: (await this.regleService.lister()).map((regle) =>
+        this.versDto(regle),
+      ),
     };
   }
 
@@ -59,7 +63,7 @@ export class RegleController {
   ): Promise<RegleResponseEnveloppeDto> {
     return {
       message: 'La règle de prise en charge a été récupérée avec succès.',
-      donnees: await this.regleService.obtenirParId(id),
+      donnees: this.versDto(await this.regleService.obtenirParId(id)),
     };
   }
 
@@ -80,7 +84,7 @@ export class RegleController {
   ): Promise<RegleResponseEnveloppeDto> {
     return {
       message: 'La règle de prise en charge a été modifiée avec succès.',
-      donnees: await this.regleService.modifier(id, donnees),
+      donnees: this.versDto(await this.regleService.modifier(id, donnees)),
     };
   }
 
@@ -104,5 +108,9 @@ export class RegleController {
       message: 'La règle de prise en charge a été supprimée avec succès.',
       donnees: null,
     };
+  }
+
+  private versDto(regle: Regle): RegleResponseDto {
+    return { ...regle, tauxCem: regle.tauxCem.toString() };
   }
 }

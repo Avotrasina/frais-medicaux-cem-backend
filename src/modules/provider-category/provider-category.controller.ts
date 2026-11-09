@@ -18,7 +18,11 @@ import {
   UpdateProviderCategoryDto,
 } from './dtos/provider-category.dto.js';
 import { ProviderTreeDeletionUseCase } from '../provider/use-cases/provider-tree.delete.js';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { ProviderCategoryResponseDto } from './dtos/provider-category-response.dto.js';
 
 @Controller('provider-categories')
@@ -32,18 +36,21 @@ export class ProviderCategoryController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
   async requestDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.request('categoriePrestataire', id);
   }
 
   @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
   async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.validate('categoriePrestataire', id);
   }
 
   @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
   async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.reject('categoriePrestataire', id);
   }

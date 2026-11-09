@@ -16,10 +16,6 @@ import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js'
 import { FactureGlobaleService } from './facture-globale.service.js';
 import { serialiserMontants } from '../../shared/serialiser-montants.js';
 import {
-  MontantsSerialises,
-  serialiserMontants,
-} from '../../shared/serialiser-montants.js';
-import {
   StatutFacture,
   TypeMouvement,
 } from '../../../../generated/prisma/enums.js';
@@ -54,8 +50,6 @@ export class FactureGlobaleController {
   @ApiOkResponse({ type: FactureGlobaleListeeResponseDto, isArray: true })
   @ApiOperation({
     summary: 'Lister les factures',
-    description:
-      'Retourne les factures, avec un filtrage optionnel par statut.',
     description:
       'Retourne les factures, filtrables par statut, clôture et rapprochement.',
   })

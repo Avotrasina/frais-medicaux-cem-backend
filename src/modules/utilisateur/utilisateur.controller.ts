@@ -22,15 +22,15 @@ import {
 } from '@nestjs/swagger';
 import { RoleUtilisateur } from '../../generated/prisma/enums.js';
 import {
+  MessageResponseDto,
+  UtilisateurReponseAvecMessageDto,
+  UtilisateurResponseDto,
+} from '../facturation/dtos/utilisateur-response.dto.js';
+import {
   CreerUtilisateurDto,
   ModifierUtilisateurDto,
 } from './dtos/utilisateur.dto.js';
 import { UtilisateurService } from './utilisateur.service.js';
-import {
-  MessageResponseDto,
-  UtilisateurReponseAvecMessageDto,
-  UtilisateurResponseDto,
-} from './dtos/utilisateur-response.dto.js';
 
 const ROLES_VALIDES = Object.values(RoleUtilisateur);
 const VALIDATION_PAYLOAD = new ValidationPipe({
