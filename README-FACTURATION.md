@@ -63,7 +63,8 @@ sont générés par le serveur.
 }
 ```
 
-`refAgence` est facultatif. Réponse `201`: objet facture créé (structure de
+`moisPrestation` et `refAgence` sont facultatifs et peuvent être ajoutés
+ultérieurement avec `PATCH /factures/:id`. Réponse `201`: objet facture créé (structure de
 `GET /factures/:id`) et `avertissements: string[]` éventuels concernant un
 numéro déjà utilisé chez ce prestataire. `404` si le prestataire est inconnu;
 `422` si aucune règle de prise en charge ne s'applique.

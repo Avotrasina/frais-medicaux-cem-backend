@@ -5,7 +5,7 @@ model FactureGlobale {
   dateReception    DateTime      @map("date_reception") @db.Date
   numFacture       String        @map("num_facture")
   dateFacture      DateTime      @map("date_facture") @db.Date
-  moisPrestation   DateTime      @map("mois_prestation") @db.Date
+  moisPrestation   DateTime?     @map("mois_prestation") @db.Date
   refAgence        String?       @map("ref_agence")
   remarque         String?
   montantTotal     Decimal?      @map("montant_total") @db.Decimal(15, 2)
