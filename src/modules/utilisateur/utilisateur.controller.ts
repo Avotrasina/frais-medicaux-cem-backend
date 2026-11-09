@@ -14,8 +14,18 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RoleUtilisateur } from '../../generated/prisma/enums.js';
+import {
+  MessageResponseDto,
+  UtilisateurReponseAvecMessageDto,
+  UtilisateurResponseDto,
+} from '../facturation/dtos/utilisateur-response.dto.js';
 import {
   CreerUtilisateurDto,
   ModifierUtilisateurDto,
@@ -35,32 +45,39 @@ export class UtilisateurController {
   constructor(private readonly utilisateurs: UtilisateurService) {}
 
   @Get()
+  @ApiOkResponse({ type: UtilisateurResponseDto, isArray: true })
   @ApiOperation({
     summary: 'Lister les utilisateurs',
     description:
       'Retourne les utilisateurs, avec un filtrage optionnel par rôle.',
   })
-  lister(@Query('role') role?: string) {
+  lister(@Query('role') role?: string): Promise<UtilisateurResponseDto[]> {
     return this.utilisateurs.lister(this.validerRoles(role));
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: UtilisateurResponseDto })
   @ApiOperation({
     summary: 'Consulter un utilisateur',
     description: 'Retourne le détail de l’utilisateur demandé.',
   })
-  obtenir(@Param('id', ParseIntPipe) id: number) {
+  obtenir(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UtilisateurResponseDto> {
     return this.utilisateurs.obtenir(id);
   }
 
   @Post()
+  @ApiCreatedResponse({ type: UtilisateurReponseAvecMessageDto })
   @ApiOperation({
     summary: 'Créer un utilisateur',
     description: 'Crée un utilisateur avec ses informations et son rôle.',
   })
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(VALIDATION_PAYLOAD)
-  async creer(@Body() donnees: CreerUtilisateurDto) {
+  async creer(
+    @Body() donnees: CreerUtilisateurDto,
+  ): Promise<UtilisateurReponseAvecMessageDto> {
     return {
       message: "L'utilisateur a été créé avec succès.",
       utilisateur: await this.utilisateurs.creer(donnees),
@@ -68,6 +85,7 @@ export class UtilisateurController {
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: UtilisateurReponseAvecMessageDto })
   @ApiOperation({
     summary: 'Modifier un utilisateur',
     description: 'Met à jour les informations fournies pour un utilisateur.',
@@ -76,7 +94,7 @@ export class UtilisateurController {
   async modifier(
     @Param('id', ParseIntPipe) id: number,
     @Body() donnees: ModifierUtilisateurDto,
-  ) {
+  ): Promise<UtilisateurReponseAvecMessageDto> {
     return {
       message: "L'utilisateur a été modifié avec succès.",
       utilisateur: await this.utilisateurs.modifier(id, donnees),
@@ -90,7 +108,10 @@ export class UtilisateurController {
       'Supprime définitivement un utilisateur qui n’est plus utilisé.',
   })
   @HttpCode(HttpStatus.OK)
-  async supprimer(@Param('id', ParseIntPipe) id: number) {
+  @ApiOkResponse({ type: MessageResponseDto })
+  async supprimer(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<MessageResponseDto> {
     await this.utilisateurs.supprimer(id);
     return { message: "L'utilisateur a été supprimé avec succès." };
   }

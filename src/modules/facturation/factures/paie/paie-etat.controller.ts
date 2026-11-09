@@ -10,9 +10,17 @@ import {
   ApiParam,
   ApiQuery,
   ApiResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { PaieEtatService } from './paie-etat.service.js';
+import {
+  ConsommationPaieResponseDto,
+  EtatIndividuelPaieResponseDto,
+  EtatPaieResponseDto,
+  LignesPaiePagineesResponseDto,
+  PaieMoisResponseDto,
+} from '../../dtos/paie-response.dto.js';
 
 @ApiTags('Paies')
 @Controller('paies')
@@ -21,11 +29,12 @@ export class PaieEtatController {
 
   @Get()
   @ApiOperation({ summary: 'Lister les mois de paie clôturés' })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
+    type: PaieMoisResponseDto,
+    isArray: true,
     description: 'Mois clôturés, nombre de factures et lignes, total agent.',
   })
-  listerPaies() {
+  listerPaies(): Promise<PaieMoisResponseDto[]> {
     return this.paieEtat.listerPaies();
   }
 
@@ -38,7 +47,10 @@ export class PaieEtatController {
   @ApiQuery({ name: 'prestataireId', required: false, example: 12 })
   @ApiQuery({ name: 'factureId', required: false, example: 42 })
   @ApiQuery({ name: 'direction', required: false, example: 'DRH' })
-  @ApiResponse({ status: 200, description: 'Lignes paginées et total.' })
+  @ApiOkResponse({
+    type: LignesPaiePagineesResponseDto,
+    description: 'Lignes paginées et total.',
+  })
   @ApiResponse({ status: 400, description: 'Mois ou pagination invalide.' })
   listerLignes(
     @Param('mois') mois: string,
@@ -48,7 +60,7 @@ export class PaieEtatController {
     @Query('prestataireId') prestataireIdTexte?: string,
     @Query('factureId') factureIdTexte?: string,
     @Query('direction') direction?: string,
-  ) {
+  ): Promise<LignesPaiePagineesResponseDto> {
     this.validerMois(mois);
     const page = this.entierPositif(pageTexte, 1, 'page');
     const limite = this.entierPositif(limiteTexte, 50, 'limite');
@@ -76,9 +88,14 @@ export class PaieEtatController {
     summary: 'Consulter la consommation par agent et prestataire',
   })
   @ApiParam({ name: 'mois', example: '2026-03', description: 'Format AAAA-MM' })
-  @ApiResponse({ status: 200, description: 'Consommation et total général.' })
+  @ApiOkResponse({
+    type: ConsommationPaieResponseDto,
+    description: 'Consommation et total général.',
+  })
   @ApiResponse({ status: 400, description: 'Mois invalide.' })
-  consommation(@Param('mois') mois: string) {
+  consommation(
+    @Param('mois') mois: string,
+  ): Promise<ConsommationPaieResponseDto> {
     this.validerMois(mois);
     return this.paieEtat.consommation(mois);
   }
@@ -86,9 +103,12 @@ export class PaieEtatController {
   @Get(':mois/etat')
   @ApiOperation({ summary: 'Consulter l’état mensuel de paie par agent' })
   @ApiParam({ name: 'mois', example: '2026-03', description: 'Format AAAA-MM' })
-  @ApiResponse({ status: 200, description: 'État par agent et total général.' })
+  @ApiOkResponse({
+    type: EtatPaieResponseDto,
+    description: 'État par agent et total général.',
+  })
   @ApiResponse({ status: 400, description: 'Mois invalide.' })
-  etat(@Param('mois') mois: string) {
+  etat(@Param('mois') mois: string): Promise<EtatPaieResponseDto> {
     this.validerMois(mois);
     return this.paieEtat.etat(mois);
   }
@@ -97,13 +117,16 @@ export class PaieEtatController {
   @ApiOperation({ summary: 'Consulter l’état individuel d’un agent' })
   @ApiParam({ name: 'mois', example: '2026-03', description: 'Format AAAA-MM' })
   @ApiParam({ name: 'im', example: 101, description: 'Matricule de l’agent' })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
+    type: EtatIndividuelPaieResponseDto,
     description: 'État individuel par établissement.',
   })
   @ApiResponse({ status: 400, description: 'Mois ou matricule invalide.' })
   @ApiResponse({ status: 404, description: 'Agent introuvable.' })
-  etatIndividuel(@Param('mois') mois: string, @Param('im') imTexte: string) {
+  etatIndividuel(
+    @Param('mois') mois: string,
+    @Param('im') imTexte: string,
+  ): Promise<EtatIndividuelPaieResponseDto> {
     this.validerMois(mois);
     const im = this.entierPositifOptionnel(imTexte, 'im');
     if (im === undefined) {

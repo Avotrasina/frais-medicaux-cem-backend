@@ -12,9 +12,9 @@ import {
   UnitePlafond,
 } from '../../../generated/prisma/enums.js';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
-import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import { CreatePlafondUseCase } from '../../plafond/use-cases/plafond.create.js';
 import { PlafondResolutionService } from '../../plafond/plafond-resolution.service.js';
+import type { PlafondsResolus } from '../../plafond/plafond-resolution.service.js';
 import { CategorieActeRepository } from '../../categorie-acte/repositories/categorie-acte.repository.js';
 import { ActeRepository } from '../repositories/acte.repository.js';
 import type {
@@ -24,6 +24,12 @@ import type {
 
 type CreatedActe = Awaited<ReturnType<ActeRepository['create']>>;
 type CreatedCategorie = Awaited<ReturnType<CategorieActeRepository['create']>>;
+type ResultatAvecPlafonds = {
+  plafonds: Pick<PlafondsResolus, 'parActe' | 'parAn'>;
+  modeleSuivi: PlafondsResolus['modeleSuivi'];
+};
+type ActeAvecPlafondsCree = CreatedActe & ResultatAvecPlafonds;
+type CategorieAvecPlafondsCree = CreatedCategorie & ResultatAvecPlafonds;
 
 @Injectable()
 export class CreateActeWithCeilingsUseCase {
@@ -35,7 +41,18 @@ export class CreateActeWithCeilingsUseCase {
     private readonly resolution: PlafondResolutionService,
   ) {}
 
-  async execute(input: CreateActeRequestDto) {
+  execute(
+    input: CreateActeRequestDto & { type: 'ACTE' },
+  ): Promise<ActeAvecPlafondsCree>;
+  execute(
+    input: CreateActeRequestDto & { type: 'CATEGORIE' },
+  ): Promise<CategorieAvecPlafondsCree>;
+  execute(
+    input: CreateActeRequestDto,
+  ): Promise<ActeAvecPlafondsCree | CategorieAvecPlafondsCree>;
+  async execute(
+    input: CreateActeRequestDto,
+  ): Promise<ActeAvecPlafondsCree | CategorieAvecPlafondsCree> {
     if (input.type !== 'CATEGORIE' && input.regime === RegimeActe.EXCLU) {
       if (this.contientPlafond(input.plafonds)) {
         throw new BadRequestException(
@@ -83,14 +100,27 @@ export class CreateActeWithCeilingsUseCase {
     });
   }
 
-  executeActe(input: CreateActeRequestDto) {
+  executeActe(
+    input: CreateActeRequestDto,
+  ): Promise<ActeAvecPlafondsCree> {
     if (input.type !== 'ACTE') {
       throw new BadRequestException('Cette route accepte uniquement un acte.');
     }
-    return this.execute(input);
+    return this.execute({
+      type: 'ACTE',
+      code: input.code,
+      nomActe: input.nomActe,
+      listeLibelle: input.listeLibelle,
+      regime: input.regime,
+      categorieActeId: input.categorieActeId,
+      plafonds: input.plafonds,
+      dateEffet: input.dateEffet,
+    });
   }
 
-  executeCategorie(input: CreateCategorieWithCeilingsDto) {
+  executeCategorie(
+    input: CreateCategorieWithCeilingsDto,
+  ): Promise<CategorieAvecPlafondsCree> {
     return this.execute({
       type: 'CATEGORIE',
       nomCategorie: input.nomCategorie,

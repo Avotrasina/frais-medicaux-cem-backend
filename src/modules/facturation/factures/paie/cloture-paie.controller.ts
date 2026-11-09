@@ -8,8 +8,20 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CloturerPaieDto } from '../../dtos/cloture-paie.dto.js';
+import {
+  CloturePaieResponseDto,
+  RefusClotureResponseDto,
+} from '../../dtos/paie-response.dto.js';
 import { obtenirUtilisateurId } from '../../shared/utilisateur-facture.js';
 import type { RequeteAvecUtilisateur } from '../../shared/utilisateur-facture.js';
 import { CloturePaieService } from './cloture-paie.service.js';
@@ -22,6 +34,7 @@ const VALIDATION_PAYLOAD = new ValidationPipe({
 
 @ApiTags('Paies')
 @Controller('paies')
+@ApiExtraModels(RefusClotureResponseDto)
 export class CloturePaieController {
   constructor(private readonly cloturePaie: CloturePaieService) {}
 
@@ -37,7 +50,10 @@ export class CloturePaieController {
     example: '2026-03',
     description: 'Mois au format AAAA-MM',
   })
-  @ApiResponse({ status: 200, description: 'Factures clôturées.' })
+  @ApiCreatedResponse({
+    type: CloturePaieResponseDto,
+    description: 'Factures clôturées.',
+  })
   @ApiResponse({
     status: 400,
     description: 'Mois ou corps de requête invalide.',
@@ -45,12 +61,29 @@ export class CloturePaieController {
   @ApiResponse({
     status: 409,
     description: 'Une ou plusieurs factures ne peuvent pas être clôturées.',
+    schema: {
+      anyOf: [
+        {
+          type: 'array',
+          items: { $ref: getSchemaPath(RefusClotureResponseDto) },
+        },
+        {
+          type: 'object',
+          required: ['statusCode', 'message', 'error'],
+          properties: {
+            statusCode: { type: 'number', example: 409 },
+            message: { type: 'string' },
+            error: { type: 'string', example: 'Conflict' },
+          },
+        },
+      ],
+    },
   })
   cloturer(
     @Param('mois') mois: string,
     @Body() donnees: CloturerPaieDto,
     @Req() requete: RequeteAvecUtilisateur,
-  ) {
+  ): Promise<CloturePaieResponseDto> {
     if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(mois) || mois.startsWith('0000-')) {
       throw new BadRequestException('Le mois doit être au format AAAA-MM.');
     }

@@ -14,24 +14,40 @@ import {
 import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import { FactureGlobaleService } from './facture-globale.service.js';
-import type { FactureGlobaleCreee } from './facture-globale.service.js';
-import {
-  MontantsSerialises,
-  serialiserMontants,
-} from '../../shared/serialiser-montants.js';
+import { serialiserMontants } from '../../shared/serialiser-montants.js';
 import {
   StatutFacture,
   TypeMouvement,
 } from '../../../../generated/prisma/enums.js';
 import { obtenirUtilisateurId } from '../../shared/utilisateur-facture.js';
 import type { RequeteAvecUtilisateur } from '../../shared/utilisateur-facture.js';
+import {
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import {
+  FactureGlobaleCreeeResponseDto,
+  FactureGlobaleDetailResponseDto,
+  FactureGlobaleListeeResponseDto,
+  MouvementFactureResponseDto,
+  TransitionFactureResponseDto,
+} from '../../dtos/facture-response.dto.js';
 import type { StatutRapprochementFacture } from '../individuelle/facture-individuelle.service.js';
 
 @Controller('factures')
+@ApiExtraModels(
+  FactureGlobaleListeeResponseDto,
+  FactureGlobaleDetailResponseDto,
+  FactureGlobaleCreeeResponseDto,
+  MouvementFactureResponseDto,
+  TransitionFactureResponseDto,
+)
 export class FactureGlobaleController {
   constructor(private readonly factureGlobaleService: FactureGlobaleService) {}
 
   @Get()
+  @ApiOkResponse({ type: FactureGlobaleListeeResponseDto, isArray: true })
   @ApiOperation({
     summary: 'Lister les factures',
     description:
@@ -47,7 +63,7 @@ export class FactureGlobaleController {
     @Query('statut') statut?: string,
     @Query('cloturee') cloturee?: string,
     @Query('rapprochement') rapprochement?: string,
-  ) {
+  ) : Promise<FactureGlobaleListeeResponseDto[]> {
     return serialiserMontants(
       await this.factureGlobaleService.lister(
         this.validerStatut(statut),
@@ -58,6 +74,7 @@ export class FactureGlobaleController {
   }
 
   @Get(':id/mouvements')
+  @ApiOkResponse({ type: MouvementFactureResponseDto, isArray: true })
   @ApiOperation({
     summary: 'Lister les mouvements d’une facture',
     description:
@@ -66,7 +83,7 @@ export class FactureGlobaleController {
   async mouvements(
     @Param('id', ParseIntPipe) id: number,
     @Query('type') type?: TypeMouvement,
-  ) {
+  ): Promise<MouvementFactureResponseDto[]> {
     return this.factureGlobaleService.historique(
       id,
       this.validerTypeMouvement(type),
@@ -74,25 +91,32 @@ export class FactureGlobaleController {
   }
 
   @Get(':id/transitions')
+  @ApiOkResponse({ type: TransitionFactureResponseDto, isArray: true })
   @ApiOperation({
     summary: 'Lister les actions disponibles',
     description:
       'Retourne les actions autorisées selon le statut courant de la facture et le rôle de l’utilisateur.',
   })
-  async transitions(@Param('id', ParseIntPipe) id: number) {
+  async transitions(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<TransitionFactureResponseDto[]> {
     return this.factureGlobaleService.transitions(id);
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: FactureGlobaleDetailResponseDto })
   @ApiOperation({
     summary: 'Consulter une facture',
     description: 'Retourne le détail d’une facture globale.',
   })
-  async obtenir(@Param('id', ParseIntPipe) id: number) {
+  async obtenir(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FactureGlobaleDetailResponseDto> {
     return serialiserMontants(await this.factureGlobaleService.obtenir(id));
   }
 
   @Post()
+  @ApiCreatedResponse({ type: FactureGlobaleCreeeResponseDto })
   @ApiOperation({
     summary: 'Créer une facture',
     description:
@@ -122,7 +146,7 @@ export class FactureGlobaleController {
   async creer(
     @Body() donnees: CreerFactureGlobaleDto,
     @Req() requete: RequeteAvecUtilisateur,
-  ): Promise<MontantsSerialises<FactureGlobaleCreee>> {
+  ): Promise<FactureGlobaleCreeeResponseDto> {
     const utilisateurId = obtenirUtilisateurId(requete);
 
     const facture = await this.factureGlobaleService.creer(
