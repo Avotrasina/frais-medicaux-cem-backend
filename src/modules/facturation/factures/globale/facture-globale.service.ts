@@ -334,7 +334,10 @@ export class FactureGlobaleService {
           numFacture: donnees.numFacture,
           dateFacture: convertirDateIso(donnees.dateFacture),
           dateReception: convertirDateIso(donnees.dateReception),
-          moisPrestation: premierJourDuMois(donnees.moisPrestation),
+          moisPrestation:
+            donnees.moisPrestation === undefined
+              ? null
+              : premierJourDuMois(donnees.moisPrestation),
           ...(donnees.refAgence === undefined
             ? {}
             : { refAgence: donnees.refAgence }),

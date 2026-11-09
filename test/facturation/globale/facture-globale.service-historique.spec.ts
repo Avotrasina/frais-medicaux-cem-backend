@@ -169,6 +169,21 @@ describe('FactureGlobaleService', () => {
     expect(resultat.prestataire).toEqual(prestataire);
   });
 
+  it('crée une facture sans mois de prestation lorsqu’il est omis', async () => {
+    const { moisPrestation: _moisPrestation, refAgence: _refAgence, ...sansChampsOptionnels } =
+      donnees;
+
+    await service.creer(sansChampsOptionnels, 3);
+
+    expect(creerFacture).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          moisPrestation: null,
+        }),
+      }),
+    );
+  });
+
   it('retourne un avertissement si une facture similaire non annulée existe', async () => {
     trouverDoublons.mockResolvedValue([{ refSociale: 'F26/019' }]);
 

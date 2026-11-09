@@ -11,7 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js';
 import { FactureGlobaleService } from './facture-globale.service.js';
 import type { FactureGlobaleCreee } from './facture-globale.service.js';
@@ -97,6 +97,20 @@ export class FactureGlobaleController {
     summary: 'Créer une facture',
     description:
       'Enregistre une facture globale et génère sa référence sociale.',
+  })
+  @ApiBody({
+    type: CreerFactureGlobaleDto,
+    examples: {
+      facture: {
+        summary: 'Création sans mois de prestation ni référence agence',
+        value: {
+          prestataireId: 1,
+          numFacture: 'FAC-2026-001',
+          dateFacture: '2026-03-10',
+          dateReception: '2026-03-12',
+        },
+      },
+    },
   })
   @UsePipes(
     new ValidationPipe({

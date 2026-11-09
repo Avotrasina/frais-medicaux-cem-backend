@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDateString,
   IsInt,
@@ -31,10 +32,17 @@ export class CreerFactureGlobaleDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: MESSAGE_DATE_ISO })
   dateReception!: string;
 
+  @ApiPropertyOptional({
+    type: String,
+    format: 'date',
+    example: '2026-03-01',
+  })
+  @IsOptional()
   @IsDateString({ strict: true }, { message: MESSAGE_DATE_ISO })
   @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: MESSAGE_DATE_ISO })
-  moisPrestation!: string;
+  moisPrestation?: string;
 
+  @ApiPropertyOptional({ type: String, example: 'AG-01' })
   @IsOptional()
   @IsString({ message: "La référence d'agence doit être une chaîne." })
   refAgence?: string;

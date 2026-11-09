@@ -643,6 +643,7 @@ export class FactureIndividuelleService {
     if (acte.regime !== RegimeActe.NORMAL)
       avertissements.push(`L’acte ${acte.code} est au régime ${acte.regime}.`);
     if (
+      facture.moisPrestation !== null &&
       new Date(
         Date.UTC(
           facture.moisPrestation.getUTCFullYear(),
@@ -650,9 +651,9 @@ export class FactureIndividuelleService {
           1,
         ),
       ).getTime() !==
-      new Date(
-        Date.UTC(dateActe.getUTCFullYear(), dateActe.getUTCMonth(), 1),
-      ).getTime()
+        new Date(
+          Date.UTC(dateActe.getUTCFullYear(), dateActe.getUTCMonth(), 1),
+        ).getTime()
     )
       avertissements.push(
         'La date de l’acte est hors du mois de prestation de la facture.',
@@ -744,8 +745,9 @@ export class FactureIndividuelleService {
     if (acte.regime !== RegimeActe.NORMAL)
       avertissements.push(`L’acte ${acte.code} est au régime ${acte.regime}.`);
     if (
-      facture.moisPrestation.getUTCFullYear() !== dateActe.getUTCFullYear() ||
-      facture.moisPrestation.getUTCMonth() !== dateActe.getUTCMonth()
+      facture.moisPrestation !== null &&
+      (facture.moisPrestation.getUTCFullYear() !== dateActe.getUTCFullYear() ||
+        facture.moisPrestation.getUTCMonth() !== dateActe.getUTCMonth())
     )
       avertissements.push(
         'La date de l’acte est hors du mois de prestation de la facture.',
