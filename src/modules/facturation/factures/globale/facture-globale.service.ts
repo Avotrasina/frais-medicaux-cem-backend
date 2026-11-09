@@ -22,7 +22,6 @@ import { CreerFactureGlobaleDto } from '../../dtos/creer-facture-globale.dto.js'
 import type {
   EnvoiValidationDto,
   ModifierFactureGlobaleDto,
-  ModifierMontantsFactureDto,
   RemarqueObligatoireDto,
   MotifObligatoireDto,
   RemarqueOptionnelleDto,
@@ -623,7 +622,10 @@ export class FactureGlobaleService {
     id: number,
     acteur: ActeurFacture,
     donnees: ModifierFactureGlobaleDto,
-  ): Promise<FactureWorkflowLue> {
+  ): Promise<
+    FactureWorkflowLue &
+      Partial<ReturnType<FactureCalculService['calculerParts']>>
+  > {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
       this.cloture.verifierNonCloturee(facture.dateCloture);
@@ -711,95 +713,52 @@ export class FactureGlobaleService {
         data.remarque = donnees.remarque;
       }
 
-      return this.enregistrerModificationDansTransaction(
-        tx,
-        facture,
-        acteur,
-        statutSuivant,
-        data,
-        changements,
-        donnees.motif,
-      );
-    });
-  }
-
-  async modifierMontants(
-    id: number,
-    acteur: ActeurFacture,
-    donnees: ModifierMontantsFactureDto,
-  ): Promise<
-    FactureWorkflowLue & {
-      reste: Prisma.Decimal;
-      partCem: Prisma.Decimal;
-      partAgent: Prisma.Decimal;
-      totalChargeAgent: Prisma.Decimal;
-    }
-  > {
-    return this.prisma.$transaction(async (tx) => {
-      const facture = await this.obtenirDansTransaction(tx, id);
-      this.cloture.verifierNonCloturee(facture.dateCloture);
-      const statutSuivant = this.factureWorkflowService.determinerTransition(
-        facture.statut,
-        ActionFacture.MODIFIER_MONTANTS,
-        acteur.role,
-      );
-      if (
-        donnees.montantTotal === undefined &&
-        donnees.total100Cem === undefined &&
-        donnees.totalDepassement === undefined
-      ) {
-        throw new BadRequestException(
-          'Au moins un montant doit être fourni pour modifier la facture.',
-        );
-      }
-
-      const montantTotal =
-        donnees.montantTotal === undefined
-          ? facture.montantTotal
-          : new Prisma.Decimal(String(donnees.montantTotal));
-      const total100Cem =
-        donnees.total100Cem === undefined
-          ? facture.total100Cem
-          : new Prisma.Decimal(String(donnees.total100Cem));
-      const totalDepassement =
-        donnees.totalDepassement === undefined
-          ? facture.totalDepassement
-          : new Prisma.Decimal(String(donnees.totalDepassement));
-      if (montantTotal === null) {
-        throw new BadRequestException(
-          'Le montant total doit être saisi avant les autres montants.',
-        );
-      }
-      this.validerMontants(montantTotal, total100Cem, totalDepassement);
-
-      const data: Prisma.FactureGlobaleUncheckedUpdateManyInput = {};
-      const changements: ChampModifie[] = [];
-      if (donnees.montantTotal !== undefined) {
-        this.ajouterChangement(
-          changements,
-          'montantTotal',
-          facture.montantTotal,
-          montantTotal,
-        );
-        data.montantTotal = montantTotal;
-      }
-      if (donnees.total100Cem !== undefined) {
-        this.ajouterChangement(
-          changements,
-          'total100Cem',
-          facture.total100Cem,
-          total100Cem,
-        );
-        data.total100Cem = total100Cem;
-      }
-      if (donnees.totalDepassement !== undefined) {
-        this.ajouterChangement(
-          changements,
-          'totalDepassement',
-          facture.totalDepassement,
-          totalDepassement,
-        );
-        data.totalDepassement = totalDepassement;
+      const montantsModifies =
+        donnees.montantTotal !== undefined ||
+        donnees.total100Cem !== undefined ||
+        donnees.totalDepassement !== undefined;
+      let montantTotal = facture.montantTotal;
+      let total100Cem = facture.total100Cem;
+      let totalDepassement = facture.totalDepassement;
+      if (montantsModifies) {
+        if (donnees.montantTotal !== undefined) {
+          montantTotal = new Prisma.Decimal(String(donnees.montantTotal));
+          this.ajouterChangement(
+            changements,
+            'montantTotal',
+            facture.montantTotal,
+            montantTotal,
+          );
+          data.montantTotal = montantTotal;
+        }
+        if (donnees.total100Cem !== undefined) {
+          total100Cem = new Prisma.Decimal(String(donnees.total100Cem));
+          this.ajouterChangement(
+            changements,
+            'total100Cem',
+            facture.total100Cem,
+            total100Cem,
+          );
+          data.total100Cem = total100Cem;
+        }
+        if (donnees.totalDepassement !== undefined) {
+          totalDepassement = new Prisma.Decimal(
+            String(donnees.totalDepassement),
+          );
+          this.ajouterChangement(
+            changements,
+            'totalDepassement',
+            facture.totalDepassement,
+            totalDepassement,
+          );
+          data.totalDepassement = totalDepassement;
+        }
+        if (montantTotal === null) {
+          throw new BadRequestException(
+            'Le montant total doit être saisi avant les autres montants.',
+          );
+        }
+        this.validerMontants(montantTotal, total100Cem, totalDepassement);
       }
 
       const factureModifiee = await this.enregistrerModificationDansTransaction(
@@ -811,8 +770,14 @@ export class FactureGlobaleService {
         changements,
         donnees.motif,
       );
+      if (!montantsModifies) return factureModifiee;
+      if (factureModifiee.montantTotal === null) {
+        throw new BadRequestException(
+          'Le montant total doit être saisi avant les autres montants.',
+        );
+      }
       const parts = this.factureCalculService.calculerParts(
-        montantTotal,
+        factureModifiee.montantTotal,
         factureModifiee.total100Cem,
         factureModifiee.totalDepassement,
         factureModifiee.tauxCem,

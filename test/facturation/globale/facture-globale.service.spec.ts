@@ -7,6 +7,7 @@ import {
   StatutFacture,
   TypeMouvement,
 } from '../../../src/generated/prisma/enums.js';
+import { Prisma } from '../../../src/generated/prisma/client.js';
 import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
 import { RefSocialService } from '../../../src/modules/facturation/shared/ref-social.service.js';
 import { RegleService } from '../../../src/modules/regles-prise-en-charge/regle.service.js';
@@ -37,6 +38,10 @@ function creerService(statut: StatutFacture = StatutFacture.A_CORRIGER) {
     moisPrestation: new Date('2026-10-01T00:00:00.000Z'),
     refAgence: null,
     remarque: null,
+    montantTotal: new Prisma.Decimal('1000000.00'),
+    total100Cem: new Prisma.Decimal('700000.00'),
+    totalDepassement: new Prisma.Decimal('0.00'),
+    tauxCem: new Prisma.Decimal('80.00'),
   };
   const tx = {
     factureGlobale: {
@@ -72,17 +77,25 @@ function creerService(statut: StatutFacture = StatutFacture.A_CORRIGER) {
     ),
   };
   const mouvements = { ecrire: vi.fn().mockResolvedValue(undefined) };
+  const calculs = {
+    calculerParts: vi.fn(() => ({
+      reste: new Prisma.Decimal('0.00'),
+      partCem: new Prisma.Decimal('560000.00'),
+      partAgent: new Prisma.Decimal('140000.00'),
+      totalChargeAgent: new Prisma.Decimal('240000.00'),
+    })),
+  };
   const service = new FactureGlobaleService(
     prisma as unknown as PrismaService,
     {} as RefSocialService,
     {} as RegleService,
     new FactureWorkflowService(),
     mouvements as unknown as MouvementFactureService,
-    {} as FactureCalculService,
+    calculs as unknown as FactureCalculService,
     {} as FactureIndividuelleService,
   );
 
-  return { service, facture, tx, mouvements };
+  return { service, facture, tx, mouvements, calculs };
 }
 
 const acteur: ActeurFacture = {
@@ -146,6 +159,39 @@ describe('FactureGlobaleService - modifications en correction', () => {
     expect(facture.dateValidation).toBeNull();
     expect(facture.valideParId).toBeNull();
     expect(mouvements.ecrire).toHaveBeenCalledTimes(1);
+  });
+
+  it('modifie ensemble les informations et les montants via une seule action', async () => {
+    const { service, facture, tx, mouvements, calculs } = creerService();
+
+    const resultat = await service.modifierInformations(21, acteur, {
+      numFacture: 'F-2026-CORRIGEE',
+      total100Cem: 200_000,
+      totalDepassement: 100_000,
+      motif: 'Correction des totaux',
+    });
+
+    expect(facture.numFacture).toBe('F-2026-CORRIGEE');
+    expect(facture.total100Cem?.toString()).toBe('200000');
+    expect(facture.totalDepassement?.toString()).toBe('100000');
+    expect(tx.factureGlobale.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          numFacture: 'F-2026-CORRIGEE',
+          total100Cem: new Prisma.Decimal('200000'),
+          totalDepassement: new Prisma.Decimal('100000'),
+        }),
+      }),
+    );
+    expect(resultat.partCem?.toString()).toBe('560000');
+    expect(calculs.calculerParts).toHaveBeenCalledTimes(1);
+    expect(mouvements.ecrire).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: TypeMouvement.MODIFICATION,
+        remarque: expect.stringContaining('Correction des totaux'),
+      }),
+    );
   });
 
   it('refuse un destinataire ENVOI_VALIDATION sans rôle valideur', async () => {

@@ -162,14 +162,7 @@ export class ModifierFactureGlobaleDto {
   @IsString({ message: 'La remarque doit être une chaîne de caractères.' })
   remarque?: string | null;
 
-  @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
-  @IsString({ message: 'Le motif doit être une chaîne de caractères.' })
-  @IsNotEmpty({ message: 'Le motif ne peut pas être vide.' })
-  @Matches(/\S/, { message: 'Le motif ne peut pas être vide.' })
-  motif?: string;
-}
-
-export class ModifierMontantsFactureDto {
+  @ApiPropertyOptional({ description: 'Montant total de la facture.' })
   @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
   @IsNumber(
     { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
@@ -178,6 +171,7 @@ export class ModifierMontantsFactureDto {
   @IsPositive({ message: 'Le montant total doit être strictement positif.' })
   montantTotal?: number;
 
+  @ApiPropertyOptional({ description: 'Montant pris en charge à 100 % CEM.' })
   @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
   @IsNumber(
     { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
@@ -185,6 +179,7 @@ export class ModifierMontantsFactureDto {
   )
   total100Cem?: number;
 
+  @ApiPropertyOptional({ description: 'Montant du dépassement.' })
   @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
   @IsNumber(
     { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },

@@ -262,18 +262,32 @@ describe.skipIf(!TESTS_HTTP_ACTIFS)(
         });
     });
 
-    it('modifie les montants et retourne les parts calculées sérialisées', async () => {
+    it('modifie les informations et les montants puis retourne les parts calculées', async () => {
       identifiantActeur = operateurId;
       const id = await creerFacture();
       await request(application.getHttpServer())
-        .patch(`/factures/${id}/montants`)
-        .send({ total100Cem: 200_000, totalDepassement: 100_000 })
+        .patch(`/factures/${id}`)
+        .send({
+          numFacture: 'E2E-MONTANTS',
+          total100Cem: 200_000,
+          totalDepassement: 100_000,
+        })
         .expect(200)
         .expect(({ body }) => {
+          expect(body.numFacture).toBe('E2E-MONTANTS');
           expect(body.partCem).toBe('560000.00');
           expect(body.partAgent).toBe('140000.00');
           expect(body.totalChargeAgent).toBe('240000.00');
         });
+    });
+
+    it('ne publie plus la route dédiée de modification des montants', async () => {
+      identifiantActeur = operateurId;
+      const id = await creerFacture();
+      await request(application.getHttpServer())
+        .patch(`/factures/${id}/montants`)
+        .send({ total100Cem: 200_000 })
+        .expect(404);
     });
 
     it('répond 401 sans utilisateur', async () => {
@@ -375,7 +389,7 @@ describe.skipIf(!TESTS_HTTP_ACTIFS)(
       identifiantActeur = operateurId;
       const id = await creerFacture();
       await request(application.getHttpServer())
-        .patch(`/factures/${id}/montants`)
+        .patch(`/factures/${id}`)
         .send({ total100Cem: 800_000, totalDepassement: 300_000 })
         .expect(400);
     });

@@ -71,7 +71,8 @@ numéro déjà utilisé chez ce prestataire. `404` si le prestataire est inconnu
 
 ### `PATCH /factures/:id`
 
-Modifie une ou plusieurs informations générales; fournir au moins un champ.
+Modifie une ou plusieurs informations générales et/ou des montants; fournir au
+moins un champ à modifier. Les montants acceptent au plus deux décimales.
 
 ```json
 {
@@ -81,6 +82,9 @@ Modifie une ou plusieurs informations générales; fournir au moins un champ.
   "dateReception": "2026-03-12",
   "moisPrestation": "2026-03-01",
   "refAgence": "AG-01",
+  "montantTotal": 125000,
+  "total100Cem": 25000,
+  "totalDepassement": 10000,
   "remarque": "Facture corrigée",
   "motif": "Erreur de référence"
 }
@@ -89,22 +93,6 @@ Modifie une ou plusieurs informations générales; fournir au moins un champ.
 Tous les champs sont facultatifs. Réponse `200`: facture mise à jour, les
 montants décimaux sérialisés et un message de succès. `409` si le statut ou la
 clôture interdit la modification.
-
-### `PATCH /factures/:id/montants`
-
-Met à jour les montants globaux; au moins un montant doit être présent.
-
-```json
-{
-  "montantTotal": 125000,
-  "total100Cem": 25000,
-  "totalDepassement": 10000,
-  "motif": "Correction des totaux"
-}
-```
-
-`motif` est facultatif. Les montants acceptent au plus deux décimales.
-Réponse `200`: facture actualisée et message. `409` si clôturée/non modifiable.
 
 ### Mouvements et transitions
 

@@ -36,13 +36,14 @@ describe('FactureWorkflowService', () => {
     ).toBe(StatutFacture.EN_VALIDATION);
   });
 
-  it.each([
-    ActionFacture.MODIFIER_INFORMATIONS,
-    ActionFacture.MODIFIER_MONTANTS,
-  ])('permet de modifier une facture en %s', (action) => {
+  it('permet de modifier une facture', () => {
     for (const statut of [StatutFacture.VALIDEE, StatutFacture.SORTIE]) {
       expect(
-        workflow.determinerTransition(statut, action, RoleUtilisateur.OPERATEUR),
+        workflow.determinerTransition(
+          statut,
+          ActionFacture.MODIFIER_INFORMATIONS,
+          RoleUtilisateur.OPERATEUR,
+        ),
       ).toBe(StatutFacture.ENREGISTREE);
     }
   });

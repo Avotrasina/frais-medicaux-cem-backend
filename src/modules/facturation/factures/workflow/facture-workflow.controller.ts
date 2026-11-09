@@ -25,7 +25,6 @@ import { FactureGlobaleService } from '../globale/facture-globale.service.js';
 import {
   ActionFactureDto,
   ModifierFactureGlobaleDto,
-  ModifierMontantsFactureDto,
   TYPES_ACTION_AVEC_DATE,
 } from '../../dtos/facture-workflow.dto.js';
 import { FactureRoleGuard } from '../../shared/facture-role.guard.js';
@@ -201,8 +200,9 @@ export class FactureWorkflowController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Modifier les informations d’une facture',
-    description: 'Modifie les informations générales et replace la facture au statut ENREGISTREE.',
+    summary: 'Modifier une facture',
+    description:
+      'Modifie les informations générales et les montants, puis replace la facture au statut ENREGISTREE.',
   })
   @UseGuards(FactureRoleGuard)
   @UsePipes(VALIDATION_PAYLOAD)
@@ -218,30 +218,7 @@ export class FactureWorkflowController {
     );
     return serialiserMontants({
       ...facture,
-      message: 'Les informations de la facture ont été modifiées.',
-    });
-  }
-
-  @Patch(':id/montants')
-  @ApiOperation({
-    summary: 'Modifier les montants d’une facture',
-    description: 'Met à jour les montants globaux et replace la facture au statut ENREGISTREE.',
-  })
-  @UseGuards(FactureRoleGuard)
-  @UsePipes(VALIDATION_PAYLOAD)
-  async modifierMontants(
-    @Param('id', PIPE_IDENTIFIANT) id: number,
-    @Body() donnees: ModifierMontantsFactureDto,
-    @Req() requete: RequeteAvecUtilisateur,
-  ) {
-    const facture = await this.factureGlobaleService.modifierMontants(
-      id,
-      this.obtenirActeur(requete),
-      donnees,
-    );
-    return serialiserMontants({
-      ...facture,
-      message: 'Les montants de la facture ont été modifiés.',
+      message: 'La facture a été modifiée.',
     });
   }
 

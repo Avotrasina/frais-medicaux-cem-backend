@@ -226,7 +226,7 @@ describe.skipIf(!TESTS_POSTGRES_ACTIFS)(
 
     it('modifie une facture validée, invalide sa validation et écrit le motif et les changements', async () => {
       const facture = await creerFacture(StatutFacture.VALIDEE);
-      const resultat = await service.modifierMontants(facture.id, operateur, {
+      const resultat = await service.modifierInformations(facture.id, operateur, {
         montantTotal: 1_100_000,
         motif: 'Correction du montant facturé',
       });
@@ -262,7 +262,7 @@ describe.skipIf(!TESTS_POSTGRES_ACTIFS)(
         }),
       ).rejects.toThrow(ConflictException);
       await expect(
-        service.modifierMontants(retournee.id, operateur, { montantTotal: 2 }),
+        service.modifierInformations(retournee.id, operateur, { montantTotal: 2 }),
       ).rejects.toThrow(ConflictException);
     });
 
