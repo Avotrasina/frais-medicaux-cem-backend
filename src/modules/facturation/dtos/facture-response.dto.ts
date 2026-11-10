@@ -110,6 +110,15 @@ export class FactureGlobaleResponseDto implements MontantsSerialises<FactureWork
   @ApiProperty()
   tauxCem!: string;
 
+  @ApiProperty({ type: String, nullable: true })
+  montant80Cem!: string | null;
+
+  @ApiProperty({ type: String, nullable: true })
+  montant20Agent!: string | null;
+
+  @ApiProperty({ type: String, nullable: true })
+  totalChargeAgent!: string | null;
+
   @ApiProperty({ enum: StatutFacture })
   statut!: StatutFacture;
 

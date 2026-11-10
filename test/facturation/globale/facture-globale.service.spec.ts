@@ -42,6 +42,9 @@ function creerService(statut: StatutFacture = StatutFacture.A_CORRIGER) {
     total100Cem: new Prisma.Decimal('700000.00'),
     totalDepassement: new Prisma.Decimal('0.00'),
     tauxCem: new Prisma.Decimal('80.00'),
+    montant80Cem: new Prisma.Decimal('240000.00'),
+    montant20Agent: new Prisma.Decimal('60000.00'),
+    totalChargeAgent: new Prisma.Decimal('60000.00'),
   };
   const tx = {
     factureGlobale: {
@@ -78,12 +81,20 @@ function creerService(statut: StatutFacture = StatutFacture.A_CORRIGER) {
   };
   const mouvements = { ecrire: vi.fn().mockResolvedValue(undefined) };
   const calculs = {
-    calculerParts: vi.fn(() => ({
-      reste: new Prisma.Decimal('0.00'),
-      partCem: new Prisma.Decimal('560000.00'),
-      partAgent: new Prisma.Decimal('140000.00'),
-      totalChargeAgent: new Prisma.Decimal('240000.00'),
-    })),
+    calculerParts: vi.fn(
+      (
+        montantTotal: Prisma.Decimal,
+        total100Cem: Prisma.Decimal,
+        totalDepassement: Prisma.Decimal,
+        tauxCem: Prisma.Decimal,
+      ) =>
+        new FactureCalculService().calculerParts(
+          montantTotal,
+          total100Cem,
+          totalDepassement,
+          tauxCem,
+        ),
+    ),
   };
   const service = new FactureGlobaleService(
     prisma as unknown as PrismaService,
@@ -168,6 +179,9 @@ describe('FactureGlobaleService - modifications en correction', () => {
       numFacture: 'F-2026-CORRIGEE',
       total100Cem: 200_000,
       totalDepassement: 100_000,
+      montant80Cem: 560_000,
+      montant20Agent: 140_000,
+      totalChargeAgent: 240_000,
       motif: 'Correction des totaux',
     });
 
@@ -180,10 +194,16 @@ describe('FactureGlobaleService - modifications en correction', () => {
           numFacture: 'F-2026-CORRIGEE',
           total100Cem: new Prisma.Decimal('200000'),
           totalDepassement: new Prisma.Decimal('100000'),
+          montant80Cem: new Prisma.Decimal('560000'),
+          montant20Agent: new Prisma.Decimal('140000'),
+          totalChargeAgent: new Prisma.Decimal('240000'),
         }),
       }),
     );
     expect(resultat.partCem?.toString()).toBe('560000');
+    expect(resultat.montant80Cem?.toString()).toBe('560000');
+    expect(resultat.montant20Agent?.toString()).toBe('140000');
+    expect(resultat.totalChargeAgent?.toString()).toBe('240000');
     expect(calculs.calculerParts).toHaveBeenCalledTimes(1);
     expect(mouvements.ecrire).toHaveBeenCalledWith(
       expect.anything(),
@@ -192,6 +212,36 @@ describe('FactureGlobaleService - modifications en correction', () => {
         remarque: expect.stringContaining('Correction des totaux'),
       }),
     );
+  });
+
+  it('refuse les parts reçues si elles diffèrent du calcul serveur', async () => {
+    const { service, tx, mouvements } = creerService();
+
+    await expect(
+      service.modifierInformations(21, acteur, {
+        total100Cem: 200_000,
+        totalDepassement: 100_000,
+        montant80Cem: 559_999,
+        montant20Agent: 140_000,
+        totalChargeAgent: 240_000,
+        motif: 'Parts incorrectes',
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(tx.factureGlobale.updateMany).not.toHaveBeenCalled();
+    expect(mouvements.ecrire).not.toHaveBeenCalled();
+  });
+
+  it('exige les trois montants calculés dès que l’un est envoyé', async () => {
+    const { service, tx } = creerService();
+
+    await expect(
+      service.modifierInformations(21, acteur, {
+        montant80Cem: 560_000,
+      }),
+    ).rejects.toThrow('Les trois montants calculés doivent être fournis ensemble.');
+
+    expect(tx.factureGlobale.updateMany).not.toHaveBeenCalled();
   });
 
   it('refuse un destinataire ENVOI_VALIDATION sans rôle valideur', async () => {

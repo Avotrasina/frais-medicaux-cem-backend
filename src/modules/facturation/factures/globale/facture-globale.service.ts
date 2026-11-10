@@ -624,7 +624,12 @@ export class FactureGlobaleService {
     donnees: ModifierFactureGlobaleDto,
   ): Promise<
     FactureWorkflowLue &
-      Partial<ReturnType<FactureCalculService['calculerParts']>>
+      Partial<
+        Pick<
+          ReturnType<FactureCalculService['calculerParts']>,
+          'reste' | 'partCem' | 'partAgent'
+        >
+      >
   > {
     return this.prisma.$transaction(async (tx) => {
       const facture = await this.obtenirDansTransaction(tx, id);
@@ -717,10 +722,21 @@ export class FactureGlobaleService {
         donnees.montantTotal !== undefined ||
         donnees.total100Cem !== undefined ||
         donnees.totalDepassement !== undefined;
+      const champsParts = [
+        donnees.montant80Cem,
+        donnees.montant20Agent,
+        donnees.totalChargeAgent,
+      ];
+      const partsFournies = champsParts.some((valeur) => valeur !== undefined);
+      if (partsFournies && champsParts.some((valeur) => valeur === undefined)) {
+        throw new BadRequestException(
+          'Les trois montants calculés doivent être fournis ensemble.',
+        );
+      }
       let montantTotal = facture.montantTotal;
       let total100Cem = facture.total100Cem;
       let totalDepassement = facture.totalDepassement;
-      if (montantsModifies) {
+      if (montantsModifies || partsFournies) {
         if (donnees.montantTotal !== undefined) {
           montantTotal = new Prisma.Decimal(String(donnees.montantTotal));
           this.ajouterChangement(
@@ -753,12 +769,49 @@ export class FactureGlobaleService {
           );
           data.totalDepassement = totalDepassement;
         }
-        if (montantTotal === null) {
+      }
+
+      let parts:
+        | ReturnType<FactureCalculService['calculerParts']>
+        | undefined;
+      if (montantTotal === null) {
+        if (partsFournies || montantsModifies) {
           throw new BadRequestException(
             'Le montant total doit être saisi avant les autres montants.',
           );
         }
+      } else {
         this.validerMontants(montantTotal, total100Cem, totalDepassement);
+        parts = this.factureCalculService.calculerParts(
+          montantTotal,
+          total100Cem,
+          totalDepassement,
+          facture.tauxCem,
+        );
+        const montantsCalcules = {
+          montant80Cem: parts.partCem,
+          montant20Agent: parts.partAgent,
+          totalChargeAgent: parts.totalChargeAgent,
+        };
+        for (const champ of [
+          'montant80Cem',
+          'montant20Agent',
+          'totalChargeAgent',
+        ] as const) {
+          const valeur = montantsCalcules[champ];
+          const valeurRecue = donnees[champ];
+          if (
+            valeurRecue !== undefined &&
+            !valeur.equals(String(valeurRecue))
+          ) {
+            throw new BadRequestException(
+              `Le montant ${champ} ne correspond pas au montant calculé par le serveur.`,
+            );
+          }
+          const ancienneValeur = facture[champ];
+          this.ajouterChangement(changements, champ, ancienneValeur, valeur);
+          data[champ] = valeur;
+        }
       }
 
       const factureModifiee = await this.enregistrerModificationDansTransaction(
@@ -770,19 +823,15 @@ export class FactureGlobaleService {
         changements,
         donnees.motif,
       );
-      if (!montantsModifies) return factureModifiee;
-      if (factureModifiee.montantTotal === null) {
-        throw new BadRequestException(
-          'Le montant total doit être saisi avant les autres montants.',
-        );
-      }
-      const parts = this.factureCalculService.calculerParts(
-        factureModifiee.montantTotal,
-        factureModifiee.total100Cem,
-        factureModifiee.totalDepassement,
-        factureModifiee.tauxCem,
-      );
-      return { ...factureModifiee, ...parts };
+      return parts === undefined
+        ? factureModifiee
+        : {
+            ...factureModifiee,
+            ...parts,
+            montant80Cem: parts.partCem,
+            montant20Agent: parts.partAgent,
+            totalChargeAgent: parts.totalChargeAgent,
+          };
     });
   }
 

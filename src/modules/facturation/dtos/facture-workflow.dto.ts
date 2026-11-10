@@ -4,6 +4,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsIn,
+  Min,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -186,6 +187,39 @@ export class ModifierFactureGlobaleDto {
     { message: MESSAGE_TAUX_MONTANT },
   )
   totalDepassement?: number;
+
+  @ApiPropertyOptional({
+    description: 'Part CEM calculée et vérifiée par le serveur.',
+  })
+  @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
+  @IsNumber(
+    { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
+    { message: MESSAGE_TAUX_MONTANT },
+  )
+  @Min(0, { message: 'La part CEM doit être positive ou nulle.' })
+  montant80Cem?: number;
+
+  @ApiPropertyOptional({
+    description: 'Part agent calculée et vérifiée par le serveur.',
+  })
+  @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
+  @IsNumber(
+    { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
+    { message: MESSAGE_TAUX_MONTANT },
+  )
+  @Min(0, { message: 'La part agent doit être positive ou nulle.' })
+  montant20Agent?: number;
+
+  @ApiPropertyOptional({
+    description: 'Charge totale agent calculée et vérifiée par le serveur.',
+  })
+  @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
+  @IsNumber(
+    { maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false },
+    { message: MESSAGE_TAUX_MONTANT },
+  )
+  @Min(0, { message: 'La charge agent doit être positive ou nulle.' })
+  totalChargeAgent?: number;
 
   @ValidateIf((_objet: object, valeur: unknown) => valeur !== undefined)
   @IsString({ message: 'Le motif doit être une chaîne de caractères.' })

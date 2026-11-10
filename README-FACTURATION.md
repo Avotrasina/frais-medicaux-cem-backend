@@ -34,11 +34,12 @@ Query facultative :
 Réponse `200`: tableau d'objets facture. Les champs sont ceux de la facture
 globale (`id`, `refSociale`, `annee`, `dateReception`, `numFacture`,
 `dateFacture`, `moisPrestation`, `refAgence`, `remarque`, `montantTotal`,
-`total100Cem`, `totalDepassement`, `tauxCem`, `statut`, `dateValidation`,
-`moisPaie`, `dateCloture`, `prestataireId`, `enregistreParId`, `valideParId`,
-`createdAt`, `updatedAt`), plus `prestataire`, `piecesJointes` et `cloturee`.
-Les valeurs de type Date sont sérialisées en ISO; les décimaux sont des
-chaînes à deux chiffres.
+`total100Cem`, `totalDepassement`, `tauxCem`, `montant80Cem`,
+`montant20Agent`, `totalChargeAgent`, `statut`, `dateValidation`, `moisPaie`,
+`dateCloture`, `prestataireId`, `enregistreParId`, `valideParId`, `createdAt`,
+`updatedAt`), plus `prestataire`, `piecesJointes` et `cloturee`. Les montants
+calculés sont `null` tant que `montantTotal` n'est pas renseigné. Les valeurs de
+type Date sont sérialisées en ISO; les décimaux sont des chaînes à deux chiffres.
 
 ### `GET /factures/:id`
 
@@ -85,14 +86,21 @@ moins un champ à modifier. Les montants acceptent au plus deux décimales.
   "montantTotal": 125000,
   "total100Cem": 25000,
   "totalDepassement": 10000,
+  "montant80Cem": 72000,
+  "montant20Agent": 18000,
+  "totalChargeAgent": 28000,
   "remarque": "Facture corrigée",
   "motif": "Erreur de référence"
 }
 ```
 
-Tous les champs sont facultatifs. Réponse `200`: facture mise à jour, les
-montants décimaux sérialisés et un message de succès. `409` si le statut ou la
-clôture interdit la modification.
+Les trois montants calculés sont facultatifs individuellement seulement si
+aucun n'est envoyé; dès qu'un est fourni, les trois doivent être présents et
+correspondre au calcul serveur, sinon la route répond `400`. Le serveur
+recalcule et enregistre toujours ces montants quand le montant total est saisi.
+Tous les autres champs sont facultatifs. Réponse `200`: facture mise à jour,
+les montants décimaux sérialisés et un message de succès. `409` si le statut ou
+la clôture interdit la modification.
 
 ### Mouvements et transitions
 
