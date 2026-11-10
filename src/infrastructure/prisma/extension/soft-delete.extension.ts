@@ -93,6 +93,10 @@ export function createSoftDeleteExtension(
 
   // A wildcard delete action that forwards unmanaged models through $parent
   // re-enters this extension; install the hard-delete guard only where needed.
+  //
+  // These model-level guards only apply when the extended client is used
+  // directly. PrismaService flattens it with `Object.assign`, which drops them,
+  // so the effective guard lives in `$allOperations` below.
   const forbidHardDelete = async function (this: any) {
     const ctx = Prisma.getExtensionContext(this) as any;
     throwHardDeleteForbidden(ctx.$name);
@@ -243,6 +247,14 @@ export function createSoftDeleteExtension(
           // Internal query (assertNotRejected): skip filters and run it as-is.
           if (internalQueryContext.getStore()) return query(args);
           if (!models.has(model)) return query(args);
+
+          // Hard deletes are forbidden for managed models. This is the guard
+          // that actually runs at runtime: model-level overrides do not survive
+          // the `Object.assign` flattening done in PrismaService.
+          if (operation === 'delete' || operation === 'deleteMany') {
+            return throwHardDeleteForbidden(model);
+          }
+
           const a = args as Record<string, any>;
 
           const group = OPERATION_GROUP[operation];
