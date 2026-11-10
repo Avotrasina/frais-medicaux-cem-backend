@@ -17,6 +17,36 @@ JSON appliquent une validation stricte : les propriétés inconnues sont refusé
 - Les routes de paie ne lisent que les lignes dont `moisAffectation` correspond
   au premier jour du mois et dont la facture est clôturée.
 
+## Repérage rapide des routes par entité
+
+Cette table indique l’entité principale concernée par chaque groupe de routes.
+Certaines routes sont transversales et apparaissent donc sous plusieurs entités.
+
+| Entité(s) concernée(s) | Routes |
+|---|---|
+| Facture globale | `GET /factures`, `POST /factures`, `GET /factures/:id`, `PATCH /factures/:id`, `PATCH /factures/:id/statut`, `GET /factures/:id/mouvements`, `GET /factures/:id/transitions` |
+| Lignes de facture individuelle (T6) | `POST /factures/:id/lignes`, `GET /factures/:id/lignes`, `PUT /factures/:id/lignes/:ligneId`, `DELETE /factures/:id/lignes/:ligneId`, `GET /factures/:id/lignes/proposition`, `PATCH /factures/:id/retenue`, `GET /factures/:id/controle-totaux` |
+| Actes et catégories d’acte | `GET /suivis/cibles` retourne les actes et catégories nécessitant un suivi à la date demandée. `GET /suivis` consulte le suivi pour un acte et un bénéficiaire. Gestion des actes : `/actes`; gestion des catégories : `/categories-actes`. |
+| Suivi des plafonds (T5_x) | `POST /factures/:id/suivis`, `GET /suivis/cibles`, `GET /suivis`, `PATCH /suivis/lignes/:ligneId`, `DELETE /suivis/lignes/:ligneId` |
+| Pièces jointes de facture | `POST`, `GET` sur `/factures/:id/pieces-jointes`, `GET /factures/:id/pieces-jointes/:pieceId`, `DELETE /factures/:id/pieces-jointes/:pieceId` |
+| Paie (factures et lignes clôturées) | `POST /paies/:mois/cloture`, `GET /paies`, `GET /paies/:mois/lignes`, `GET /paies/:mois/consommation`, `GET /paies/:mois/etat`, `GET /paies/:mois/agents/:im` |
+| Utilisateur | `GET /utilisateurs`, `GET /utilisateurs/:id`, `POST /utilisateurs`, `PATCH /utilisateurs/:id`, `DELETE /utilisateurs/:id` |
+
+> **Cibles de suivi :** la route actuellement exposée est `GET /suivis/cibles`,
+> et non `GET /factures/cibles`. Elle concerne à la fois l’entité **Acte** et
+> l’entité **Catégorie d’acte**; le champ `type` de chaque résultat indique
+> laquelle (`ACTE` ou `CATEGORIE`).
+
+### Routes de gestion des actes et catégories d’acte
+
+Ces routes ne créent pas un suivi : elles gèrent les référentiels utilisés par
+les lignes de facture et les suivis de plafonds.
+
+| Entité | Routes |
+|---|---|
+| Acte | `GET /actes`, `GET /actes/:id`, `POST /actes`, `PATCH /actes/:id`, `DELETE /actes/:id` |
+| Catégorie d’acte | `GET /categories-actes`, `GET /categories-actes/:id`, `POST /categories-actes`, `PATCH /categories-actes/:id`, `DELETE /categories-actes/:id` |
+
 ## Factures globales
 
 ### `GET /factures`
@@ -155,7 +185,8 @@ qui n'est pas une action.
 
 ## Lignes de facture individuelle (T6)
 
-Les routes ci-dessous sont sous `/factures/:id`.
+**Entité principale : ligne de facture individuelle**, rattachée à une facture
+globale. Les routes ci-dessous sont sous `/factures/:id`.
 
 ### `POST /factures/:id/lignes`
 
@@ -280,6 +311,10 @@ Réponse `200` :
 
 ## Clôture et états de paie
 
+**Entités concernées : paie, facture globale et lignes de facture individuelle.**
+La clôture affecte un mois de paie aux factures et lignes; les routes de
+consultation lisent ensuite ces données clôturées.
+
 ### `POST /paies/:mois/cloture`
 
 `mois` doit être `AAAA-MM`. Toutes les factures doivent exister, ne pas être
@@ -384,6 +419,10 @@ Un agent existant sans ligne a des `groupes: []` et des totaux à `"0.00"`;
 agent inconnu : `404`.
 
 ## Suivi des plafonds (T5_x)
+
+**Entités concernées : acte, catégorie d’acte, bénéficiaire et lignes de suivi.**
+La route de cibles est commune aux actes et aux catégories; `type` dans la
+réponse indique l’entité visée.
 
 ### `POST /factures/:id/suivis`
 
