@@ -68,6 +68,7 @@ export class ActeController {
             'code',
             'nomActe',
             'listeLibelle',
+            'regime',
             'categorieActeId',
           ],
           properties: {
@@ -122,7 +123,13 @@ export class ActeController {
         },
         {
           type: 'object',
-          required: ['code', 'nomActe', 'listeLibelle', 'categorieActeId'],
+          required: [
+            'code',
+            'nomActe',
+            'listeLibelle',
+            'regime',
+            'categorieActeId',
+          ],
           properties: {
             code: { type: 'string' },
             nomActe: { type: 'string' },
@@ -144,6 +151,7 @@ export class ActeController {
           code: 'CON-01',
           nomActe: 'Consultation généraliste',
           listeLibelle: 'Consultation généraliste',
+          regime: 'NORMAL',
           categorieActeId: 1,
           plafonds: {
             parActe: { montant: 100000 },
@@ -158,6 +166,7 @@ export class ActeController {
           code: 'KIN-01',
           nomActe: 'Séance de kinésithérapie',
           listeLibelle: 'Séance de kinésithérapie',
+          regime: 'NORMAL',
           categorieActeId: 1,
           plafonds: { parAn: { unite: 'SEANCES', nbSeances: 12 } },
         },
@@ -200,7 +209,7 @@ export class ActeController {
         body.categorieActeId === undefined
       ) {
         throw new BadRequestException(
-          'Les champs historiques de création d’acte sont requis.',
+          'Les champs historiques, y compris regime, sont requis pour créer un acte.',
         );
       }
       const payload: CreateActeDto = {

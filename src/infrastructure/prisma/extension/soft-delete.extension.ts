@@ -91,6 +91,22 @@ export function createSoftDeleteExtension(
 
   const raw = (model: string): any => (base as any)[delegateName(model)];
 
+  // A wildcard delete action that forwards unmanaged models through $parent
+  // re-enters this extension; install the hard-delete guard only where needed.
+  const forbidHardDelete = async function (this: any) {
+    const ctx = Prisma.getExtensionContext(this) as any;
+    throwHardDeleteForbidden(ctx.$name);
+  };
+  const hardDeleteModelExtensions: Record<string, any> = Object.fromEntries(
+    [...models].map((model) => [
+      model,
+      {
+        delete: forbidHardDelete,
+        deleteMany: forbidHardDelete,
+      },
+    ]),
+  );
+
   /**
    * Checks that the entity is not in the REJETE status.
    *
@@ -131,30 +147,6 @@ export function createSoftDeleteExtension(
 
     model: {
       $allModels: {
-        /** Routes un-managed models to Prisma's parent and blocks managed hard deletes. */
-        async delete(this: any, args: any) {
-          const ctx = Prisma.getExtensionContext(this) as any;
-          const model: string = ctx.$name;
-
-          if (!models.has(model)) {
-            return ctx.$parent[delegateName(model)].delete(args);
-          }
-
-          return throwHardDeleteForbidden(model);
-        },
-
-        /** Applies the same hard-delete rule to bulk deletion. */
-        async deleteMany(this: any, args?: any) {
-          const ctx = Prisma.getExtensionContext(this) as any;
-          const model: string = ctx.$name;
-
-          if (!models.has(model)) {
-            return ctx.$parent[delegateName(model)].deleteMany(args);
-          }
-
-          return throwHardDeleteForbidden(model);
-        },
-
         /** Marks only currently active records as pending deletion. */
         async requestDeletion(this: any, where: Record<string, any>) {
           const ctx = Prisma.getExtensionContext(this) as any;
@@ -237,6 +229,7 @@ export function createSoftDeleteExtension(
           });
         },
       },
+      ...hardDeleteModelExtensions,
     },
 
     // ---------- filters and guards for other operations ----------

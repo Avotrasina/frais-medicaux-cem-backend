@@ -180,11 +180,9 @@ export class CreateActeRequestDto {
   listeLibelle?: string;
 
   @ApiPropertyOptional({ enum: RegimeActe })
-  @IsOptional()
   @ValidateIf(
     (body: CreateActeRequestDto) =>
-      body.type === 'ACTE' ||
-      (body.type === undefined && body.regime !== undefined),
+      body.type === 'ACTE' || body.type === undefined,
   )
   @IsEnum(RegimeActe)
   regime?: RegimeActe;
