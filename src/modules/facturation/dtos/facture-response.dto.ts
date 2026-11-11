@@ -70,6 +70,46 @@ export class PieceJointeListeFactureResponseDto {
   createdAt!: Date;
 }
 
+export class UtilisateurMouvementResponseDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  nom!: string;
+
+  @ApiProperty({ enum: RoleUtilisateur })
+  role!: RoleUtilisateur;
+}
+
+export class MouvementFactureListeResponseDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty({ enum: TypeMouvement })
+  type!: TypeMouvement;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  date!: Date;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  createdAt!: Date;
+
+  @ApiProperty({ type: String, nullable: true })
+  remarque!: string | null;
+
+  @ApiProperty({ enum: ServiceSortie, nullable: true })
+  service!: ServiceSortie | null;
+
+  @ApiProperty({ type: () => UtilisateurMouvementResponseDto })
+  effectuePar!: UtilisateurMouvementResponseDto;
+
+  @ApiProperty({
+    type: () => UtilisateurMouvementResponseDto,
+    nullable: true,
+  })
+  adresseA!: UtilisateurMouvementResponseDto | null;
+}
+
 export class FactureGlobaleResponseDto implements MontantsSerialises<FactureWorkflowLue> {
   @ApiProperty()
   id!: number;
@@ -157,6 +197,9 @@ export class FactureGlobaleListeeResponseDto
   extends FactureGlobaleResponseDto
   implements MontantsSerialises<FactureListee>
 {
+  @ApiProperty({ type: [MouvementFactureListeResponseDto] })
+  mouvements!: MouvementFactureListeResponseDto[];
+
   @ApiProperty({ type: [PieceJointeListeFactureResponseDto] })
   piecesJointes!: PieceJointeListeFactureResponseDto[];
 }
@@ -164,22 +207,14 @@ export class FactureGlobaleListeeResponseDto
 export class FactureGlobaleDetailResponseDto extends FactureGlobaleResponseDto {
   @ApiProperty()
   nombrePiecesJointes!: number;
+
+  @ApiProperty({ type: [MouvementFactureListeResponseDto] })
+  mouvements!: MouvementFactureListeResponseDto[];
 }
 
 export class FactureGlobaleCreeeResponseDto extends FactureGlobaleResponseDto {
   @ApiProperty({ type: [String] })
   avertissements!: string[];
-}
-
-export class UtilisateurMouvementResponseDto {
-  @ApiProperty()
-  id!: number;
-
-  @ApiProperty()
-  nom!: string;
-
-  @ApiProperty({ enum: RoleUtilisateur })
-  role!: RoleUtilisateur;
 }
 
 export class MouvementFactureResponseDto {

@@ -22,15 +22,15 @@ JSON appliquent une validation stricte : les propriétés inconnues sont refusé
 Cette table indique l’entité principale concernée par chaque groupe de routes.
 Certaines routes sont transversales et apparaissent donc sous plusieurs entités.
 
-| Entité(s) concernée(s) | Routes |
-|---|---|
-| Facture globale | `GET /factures`, `POST /factures`, `GET /factures/:id`, `PATCH /factures/:id`, `PATCH /factures/:id/statut`, `GET /factures/:id/mouvements`, `GET /factures/:id/transitions` |
+| Entité(s) concernée(s)              | Routes                                                                                                                                                                                                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Facture globale                     | `GET /factures`, `POST /factures`, `GET /factures/:id`, `PATCH /factures/:id`, `PATCH /factures/:id/statut`, `GET /factures/:id/mouvements`, `GET /factures/:id/transitions`                                                                     |
 | Lignes de facture individuelle (T6) | `POST /factures/:id/lignes`, `GET /factures/:id/lignes`, `PUT /factures/:id/lignes/:ligneId`, `DELETE /factures/:id/lignes/:ligneId`, `GET /factures/:id/lignes/proposition`, `PATCH /factures/:id/retenue`, `GET /factures/:id/controle-totaux` |
-| Actes et catégories d’acte | `GET /suivis/cibles` retourne les actes et catégories nécessitant un suivi à la date demandée. `GET /suivis` consulte le suivi pour un acte et un bénéficiaire. Gestion des actes : `/actes`; gestion des catégories : `/categories-actes`. |
-| Suivi des plafonds (T5_x) | `POST /factures/:id/suivis`, `GET /suivis/cibles`, `GET /suivis`, `PATCH /suivis/lignes/:ligneId`, `DELETE /suivis/lignes/:ligneId` |
-| Pièces jointes de facture | `POST`, `GET` sur `/factures/:id/pieces-jointes`, `GET /factures/:id/pieces-jointes/:pieceId`, `DELETE /factures/:id/pieces-jointes/:pieceId` |
-| Paie (factures et lignes clôturées) | `POST /paies/:mois/cloture`, `GET /paies`, `GET /paies/:mois/lignes`, `GET /paies/:mois/consommation`, `GET /paies/:mois/etat`, `GET /paies/:mois/agents/:im` |
-| Utilisateur | `GET /utilisateurs`, `GET /utilisateurs/:id`, `POST /utilisateurs`, `PATCH /utilisateurs/:id`, `DELETE /utilisateurs/:id` |
+| Actes et catégories d’acte          | `GET /suivis/cibles` retourne les actes et catégories nécessitant un suivi à la date demandée. `GET /suivis` consulte le suivi pour un acte et un bénéficiaire. Gestion des actes : `/actes`; gestion des catégories : `/categories-actes`.      |
+| Suivi des plafonds (T5_x)           | `POST /factures/:id/suivis`, `GET /suivis/cibles`, `GET /suivis`, `PATCH /suivis/lignes/:ligneId`, `DELETE /suivis/lignes/:ligneId`                                                                                                              |
+| Pièces jointes de facture           | `POST`, `GET` sur `/factures/:id/pieces-jointes`, `GET /factures/:id/pieces-jointes/:pieceId`, `DELETE /factures/:id/pieces-jointes/:pieceId`                                                                                                    |
+| Paie (factures et lignes clôturées) | `POST /paies/:mois/cloture`, `GET /paies`, `GET /paies/:mois/lignes`, `GET /paies/:mois/consommation`, `GET /paies/:mois/etat`, `GET /paies/:mois/agents/:im`                                                                                    |
+| Utilisateur                         | `GET /utilisateurs`, `GET /utilisateurs/:id`, `POST /utilisateurs`, `PATCH /utilisateurs/:id`, `DELETE /utilisateurs/:id`                                                                                                                        |
 
 > **Cibles de suivi :** la route actuellement exposée est `GET /suivis/cibles`,
 > et non `GET /factures/cibles`. Elle concerne à la fois l’entité **Acte** et
@@ -42,9 +42,9 @@ Certaines routes sont transversales et apparaissent donc sous plusieurs entités
 Ces routes ne créent pas un suivi : elles gèrent les référentiels utilisés par
 les lignes de facture et les suivis de plafonds.
 
-| Entité | Routes |
-|---|---|
-| Acte | `GET /actes`, `GET /actes/:id`, `POST /actes`, `PATCH /actes/:id`, `DELETE /actes/:id` |
+| Entité           | Routes                                                                                                                                        |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acte             | `GET /actes`, `GET /actes/:id`, `POST /actes`, `PATCH /actes/:id`, `DELETE /actes/:id`                                                        |
 | Catégorie d’acte | `GET /categories-actes`, `GET /categories-actes/:id`, `POST /categories-actes`, `PATCH /categories-actes/:id`, `DELETE /categories-actes/:id` |
 
 ## Factures globales
@@ -55,11 +55,11 @@ Liste les factures, par défaut sans celles au statut `SUPPRIMEE`.
 
 Query facultative :
 
-| Paramètre | Valeurs | Description |
-|---|---|---|
-| `statut` | valeur de `StatutFacture` | Filtre par statut; `SUPPRIMEE` permet de voir les supprimées |
-| `cloturee` | `true`, `false` | Filtre selon la clôture |
-| `rapprochement` | `CONFORME`, `ECART`, `INCOMPLET` | Filtre selon le contrôle calculé |
+| Paramètre       | Valeurs                          | Description                                                  |
+| --------------- | -------------------------------- | ------------------------------------------------------------ |
+| `statut`        | valeur de `StatutFacture`        | Filtre par statut; `SUPPRIMEE` permet de voir les supprimées |
+| `cloturee`      | `true`, `false`                  | Filtre selon la clôture                                      |
+| `rapprochement` | `CONFORME`, `ECART`, `INCOMPLET` | Filtre selon le contrôle calculé                             |
 
 Réponse `200`: tableau d'objets facture. Les champs sont ceux de la facture
 globale (`id`, `refSociale`, `annee`, `dateReception`, `numFacture`,
@@ -67,16 +67,22 @@ globale (`id`, `refSociale`, `annee`, `dateReception`, `numFacture`,
 `total100Cem`, `totalDepassement`, `tauxCem`, `montant80Cem`,
 `montant20Agent`, `totalChargeAgent`, `statut`, `dateValidation`, `moisPaie`,
 `dateCloture`, `prestataireId`, `enregistreParId`, `valideParId`, `createdAt`,
-`updatedAt`), plus `prestataire`, `piecesJointes` et `cloturee`. Les montants
-calculés sont `null` tant que `montantTotal` n'est pas renseigné. Les valeurs de
-type Date sont sérialisées en ISO; les décimaux sont des chaînes à deux chiffres.
+`updatedAt`), plus `prestataire`, `piecesJointes`, `cloturee` et `mouvements`.
+`mouvements` contient l'historique complet, trié par identifiant décroissant
+(du plus récent au plus ancien); chaque élément contient son type, sa date
+métier, son horodatage technique, sa remarque, son service, son auteur et son
+destinataire éventuel. Les montants calculés sont `null` tant que `montantTotal`
+n'est pas renseigné. Les valeurs de type Date sont sérialisées en ISO; les
+décimaux sont des chaînes à deux chiffres.
 
 ### `GET /factures/:id`
 
-Réponse `200`: objet facture avec les mêmes champs que la liste, plus
-`nombrePiecesJointes` (au lieu du tableau `piecesJointes`). `moisPaie` et
-`dateCloture` sont des dates ISO ou `null`; `cloturee` est un booléen. `404`
-si absente.
+Réponse `200`: objet facture avec les champs de la liste, plus
+`nombrePiecesJointes` (au lieu du tableau `piecesJointes`). Il contient aussi
+`mouvements`, l'historique complet trié par identifiant décroissant. L'endpoint
+`GET /factures/:id/mouvements` reste disponible avec son filtre par type.
+`moisPaie` et `dateCloture` sont des dates ISO ou `null`; `cloturee` est un
+booléen. `404` si absente.
 
 ### `POST /factures`
 
@@ -155,16 +161,16 @@ clôturée retourne `[]`; `404` si absente.
 Corps commun : `type` est obligatoire. Les autres propriétés dépendent de
 l'action; propriétés non pertinentes refusées.
 
-| `type` | Champs requis | Champs facultatifs |
-|---|---|---|
-| `ENVOI_VALIDATION` | `destinataireId` (utilisateur ADJOINT ou CHEF) | `remarque`, `date` |
-| `RETOUR_POUR_CORRECTION` | `remarque` | `date` |
-| `RETOUR_PRESTATAIRE` | `remarque` | `date` |
-| `VALIDATION` | aucun | `remarque` |
-| `SORTIE` | `service`: `AUTHENTIFICATION` ou `CONTROLE` | `date` |
-| `DEMANDE_SUPPRESSION` | `remarque` (motif) | — |
-| `REFUS_SUPPRESSION` | aucun | `remarque` |
-| `SUPPRESSION` | aucun | `remarque` |
+| `type`                   | Champs requis                                  | Champs facultatifs |
+| ------------------------ | ---------------------------------------------- | ------------------ |
+| `ENVOI_VALIDATION`       | `destinataireId` (utilisateur ADJOINT ou CHEF) | `remarque`, `date` |
+| `RETOUR_POUR_CORRECTION` | `remarque`                                     | `date`             |
+| `RETOUR_PRESTATAIRE`     | `remarque`                                     | `date`             |
+| `VALIDATION`             | aucun                                          | `remarque`         |
+| `SORTIE`                 | `service`: `AUTHENTIFICATION` ou `CONTROLE`    | `date`             |
+| `DEMANDE_SUPPRESSION`    | `remarque` (motif)                             | —                  |
+| `REFUS_SUPPRESSION`      | aucun                                          | `remarque`         |
+| `SUPPRESSION`            | aucun                                          | `remarque`         |
 
 Exemple :
 

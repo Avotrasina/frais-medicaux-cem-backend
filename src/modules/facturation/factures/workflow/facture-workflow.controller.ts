@@ -14,7 +14,12 @@ import {
   ValidationPipe,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { TypeMouvement } from '../../../../generated/prisma/enums.js';
 import type { MouvementFacture } from '../../../../generated/prisma/client.js';
 import type {
@@ -82,7 +87,79 @@ export class FactureWorkflowController {
   @ApiOperation({
     summary: 'Exécuter une action sur une facture',
     description:
-      'Applique une action métier autorisée et retourne la facture ainsi que le mouvement créé.',
+      'Applique une action métier autorisée et retourne la facture ainsi que le mouvement créé. Choisir un exemple selon le type de mouvement.',
+  })
+  @ApiBody({
+    type: ActionFactureDto,
+    examples: {
+      envoiValidation: {
+        summary: 'Envoyer en validation',
+        description:
+          'destinataireId est obligatoire; date et remarque sont facultatives.',
+        value: {
+          type: TypeMouvement.ENVOI_VALIDATION,
+          destinataireId: 12,
+          date: '2026-11-11',
+          remarque: 'Dossier prêt pour validation.',
+        },
+      },
+      retourPourCorrection: {
+        summary: 'Retourner pour correction',
+        description: 'remarque est obligatoire; date est facultative.',
+        value: {
+          type: TypeMouvement.RETOUR_POUR_CORRECTION,
+          remarque: 'Merci de corriger les montants.',
+          date: '2026-11-11',
+        },
+      },
+      retourPrestataire: {
+        summary: 'Retourner au prestataire',
+        description: 'remarque est obligatoire; date est facultative.',
+        value: {
+          type: TypeMouvement.RETOUR_PRESTATAIRE,
+          remarque: 'Merci de joindre une facture lisible.',
+          date: '2026-11-11',
+        },
+      },
+      validation: {
+        summary: 'Valider',
+        description: 'Tous les champs sont facultatifs.',
+        value: {
+          type: TypeMouvement.VALIDATION,
+          remarque: 'Dossier vérifié.',
+        },
+      },
+      sortie: {
+        summary: 'Enregistrer la sortie',
+        description: 'service est obligatoire; date est facultative.',
+        value: {
+          type: TypeMouvement.SORTIE,
+          service: 'CONTROLE',
+          date: '2026-11-11',
+        },
+      },
+      demandeSuppression: {
+        summary: 'Demander la suppression',
+        description: 'remarque est obligatoire.',
+        value: {
+          type: TypeMouvement.DEMANDE_SUPPRESSION,
+          remarque: 'Facture créée en double.',
+        },
+      },
+      refusSuppression: {
+        summary: 'Refuser la suppression',
+        description: 'remarque est facultative.',
+        value: {
+          type: TypeMouvement.REFUS_SUPPRESSION,
+          remarque: 'La facture est valide.',
+        },
+      },
+      suppression: {
+        summary: 'Confirmer la suppression',
+        description: 'Aucun champ complémentaire n’est obligatoire.',
+        value: { type: TypeMouvement.SUPPRESSION },
+      },
+    },
   })
   @HttpCode(HttpStatus.OK)
   @UseGuards(FactureRoleGuard)

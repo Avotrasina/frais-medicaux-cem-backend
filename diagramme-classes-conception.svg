@@ -1,0 +1,351 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1780" viewBox="0 0 2400 1780" role="img" aria-labelledby="titre description">
+  <title id="titre">Diagramme de classes de conception — Gestion des frais médicaux CEM</title>
+  <desc id="description">Diagramme UML actualisé des domaines Personnel, Prise en charge et Facturation, avec attributs, opérations applicatives, associations et multiplicités.</desc>
+  <defs>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 15px; fill: #526078; }
+      .package { fill: #f7f9fc; stroke: #9aa8bd; stroke-width: 2; rx: 12; }
+      .package-title { font-size: 19px; font-weight: 700; fill: #334e75; }
+      .card { fill: #ffffff; stroke: #334e75; stroke-width: 1.5; rx: 5; }
+      .head { fill: #e8eef8; }
+      .head-billing { fill: #e7f4ef; }
+      .class-title { font-size: 16px; font-weight: 700; }
+      .line { stroke: #526078; stroke-width: 1; }
+      .field { font-size: 12.5px; }
+      .method { font-size: 12px; fill: #245c49; }
+      .edge { fill: none; stroke: #536780; stroke-width: 1.7; }
+      .edge-dashed { fill: none; stroke: #70849b; stroke-width: 1.6; stroke-dasharray: 7 6; }
+      .multiplicity { font-size: 11.5px; font-weight: 700; fill: #37445a; }
+      .relation-label { font-size: 11px; fill: #526078; }
+      .note { fill: #fff9e8; stroke: #c69b3c; stroke-width: 1.3; rx: 5; }
+      .note-text { font-size: 12px; fill: #665225; }
+      .legend { font-size: 12px; fill: #526078; }
+      .legend-bold { font-weight: 700; fill: #334e75; }
+    </style>
+    <marker id="diamond" markerWidth="12" markerHeight="12" refX="2" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M 2 6 L 6 2 L 10 6 L 6 10 Z" fill="#536780" stroke="#536780" />
+    </marker>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#536780" stroke-width="1.5" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="2400" height="1780" fill="#ffffff" />
+  <text class="title" x="48" y="48">Diagramme de classes de conception — Gestion des frais médicaux CEM</text>
+  <text class="subtitle" x="48" y="76">Modèle actualisé à partir du schéma Prisma et des services/use-cases NestJS — novembre 2026</text>
+
+  <rect class="package" x="40" y="105" width="950" height="735" />
+  <text class="package-title" x="62" y="137">Personnel &amp; identité</text>
+  <rect class="package" x="1010" y="105" width="1350" height="735" />
+  <text class="package-title" x="1032" y="137">Prise en charge &amp; référentiels médicaux</text>
+  <rect class="package" x="40" y="865" width="2320" height="830" />
+  <text class="package-title" x="62" y="898">Facturation, suivi des consommations &amp; paie</text>
+
+  <!-- Associations: personnel -->
+  <path class="edge" marker-start="url(#diamond)" d="M 305 244 H 360" />
+  <text class="multiplicity" x="310" y="233">1</text><text class="multiplicity" x="342" y="233">0..1</text>
+  <path class="edge" marker-start="url(#diamond)" d="M 185 348 V 445" />
+  <text class="multiplicity" x="194" y="370">1</text><text class="multiplicity" x="194" y="433">0..1</text>
+  <path class="edge" d="M 360 295 H 330 V 510 H 305" />
+  <text class="multiplicity" x="338" y="311">1</text><text class="multiplicity" x="310" y="500">0..*</text>
+  <path class="edge" d="M 305 490 H 360" />
+  <text class="multiplicity" x="309" y="480">1</text><text class="multiplicity" x="342" y="480">0..1</text>
+  <path class="edge" d="M 185 585 V 605 H 610 V 555" />
+  <text class="multiplicity" x="193" y="600">1</text><text class="multiplicity" x="615" y="572">0..1</text>
+  <path class="edge" d="M 650 248 H 700" />
+  <text class="multiplicity" x="654" y="237">0..*</text><text class="multiplicity" x="677" y="237">0..1</text>
+  <path class="edge" d="M 650 320 H 675 V 450 H 700" />
+  <text class="multiplicity" x="654" y="335">0..*</text><text class="multiplicity" x="680" y="440">0..1</text>
+  <path class="edge" d="M 650 300 H 685 V 705 H 620" />
+  <text class="multiplicity" x="655" y="316">0..*</text><text class="multiplicity" x="625" y="695">0..1</text>
+  <path class="edge" d="M 825 330 V 390" />
+  <text class="multiplicity" x="833" y="350">1</text><text class="multiplicity" x="833" y="382">0..1</text>
+  <path class="edge" d="M 825 530 V 590 H 187 V 650" />
+  <text class="relation-label" x="353" y="582">type DIRECTION</text>
+  <path class="edge" d="M 950 465 H 970 V 770 H 462 V 760" />
+  <text class="relation-label" x="481" y="781">type AGENCE</text>
+  <path class="edge" d="M 310 705 H 620" />
+  <text class="multiplicity" x="315" y="694">1</text><text class="multiplicity" x="596" y="694">0..*</text>
+
+  <!-- Associations: prise en charge / référentiels -->
+  <path class="edge" marker-start="url(#diamond)" d="M 65 330 H 50 V 825 H 1378 V 520 H 1390" />
+  <text class="multiplicity" x="54" y="343">1</text><text class="multiplicity" x="1393" y="511">0..1</text>
+  <text class="relation-label" x="1015" y="817">Personne 1 — 0..1 Beneficiaire</text>
+  <path class="edge" d="M 1330 280 H 1390" />
+  <text class="multiplicity" x="1333" y="269">1</text><text class="multiplicity" x="1365" y="269">0..*</text>
+  <path class="edge" d="M 1180 450 V 395 H 1155 V 365" />
+  <text class="multiplicity" x="1187" y="438">0..*</text><text class="multiplicity" x="1160" y="378">1</text>
+  <path class="edge" d="M 1280 450 V 410 H 1240 V 365" />
+  <text class="multiplicity" x="1288" y="438">0..*</text><text class="multiplicity" x="1245" y="378">1</text>
+  <path class="edge" d="M 1555 385 V 450" />
+  <text class="multiplicity" x="1563" y="408">0..*</text><text class="multiplicity" x="1563" y="442">1</text>
+  <path class="edge" d="M 1915 525 V 590" />
+  <text class="multiplicity" x="1923" y="548">1</text><text class="multiplicity" x="1923" y="582">0..*</text>
+  <path class="edge" d="M 2040 465 H 2070 V 735 H 2090" />
+  <text class="multiplicity" x="2045" y="454">0..*</text><text class="multiplicity" x="2073" y="726">0..1</text>
+  <path class="edge" d="M 2040 670 H 2090" />
+  <text class="multiplicity" x="2043" y="659">0..1</text><text class="multiplicity" x="2073" y="659">0..1</text>
+
+  <!-- Cross-domain associations into billing -->
+  <path class="edge" d="M 1185 365 V 830 H 278 V 1010" />
+  <text class="relation-label" x="290" y="851">Prestataire 1 — 0..* FactureGlobale</text>
+  <path class="edge" d="M 1440 525 H 1370 V 845 H 755 V 1010" />
+  <text class="relation-label" x="1020" y="835">Beneficiaire 1 — 0..* FactureIndividuelle</text>
+  <path class="edge" d="M 1915 745 V 850 H 755 V 1010" />
+  <path class="edge" d="M 1935 745 V 850 H 1175 V 1010" />
+  <text class="relation-label" x="1650" y="835">Acte 1 — 0..* lignes de facture et de suivi</text>
+  <path class="edge-dashed" marker-end="url(#arrow)" d="M 1718 365 V 855 H 925 V 1080 H 950" />
+  <text class="relation-label" x="960" y="878">priseEnChargeId : référence Attestation sans FK</text>
+  <path class="edge" d="M 1555 595 V 850 H 1175 V 1010" />
+  <text class="relation-label" x="1390" y="818">Beneficiaire 1 — 0..* LigneSuivi</text>
+
+  <!-- Associations: facturation -->
+  <path class="edge" d="M 495 1125 H 560" />
+  <text class="multiplicity" x="500" y="1114">1</text><text class="multiplicity" x="535" y="1114">0..*</text>
+  <path class="edge" d="M 480 1010 H 500 V 990 H 995 V 1050 H 1010" />
+  <text class="multiplicity" x="482" y="1000">1</text><text class="multiplicity" x="982" y="1040">0..*</text>
+  <path class="edge" d="M 480 1285 V 1300 H 1395 V 1190 H 1410" />
+  <text class="multiplicity" x="483" y="1297">1</text><text class="multiplicity" x="1380" y="1180">0..*</text>
+  <path class="edge" d="M 490 1285 V 1310 H 1795 V 1160 H 1810" />
+  <text class="multiplicity" x="493" y="1307">1</text><text class="multiplicity" x="1780" y="1150">0..*</text>
+  <path class="edge" d="M 950 1110 H 1010" />
+  <text class="multiplicity" x="953" y="1099">1</text><text class="multiplicity" x="985" y="1099">0..*</text>
+  <path class="edge" d="M 755 1245 V 1320" />
+  <text class="multiplicity" x="763" y="1267">0..1</text><text class="multiplicity" x="763" y="1312">1</text>
+  <path class="edge" d="M 1175 1210 V 1320" />
+  <text class="relation-label" x="1184" y="1277">saisiPar</text>
+  <path class="edge" d="M 1340 1380 H 1370 V 1190 H 1410" />
+  <text class="relation-label" x="1345" y="1368">effectuePar / adresseA</text>
+  <path class="edge" d="M 1010 1350 H 990 V 1515 H 45 V 1285 H 280" />
+  <text class="relation-label" x="420" y="1508">enregistréePar / validéePar</text>
+  <path class="edge" d="M 1340 1420 H 1760 V 1170 H 1810" />
+  <text class="relation-label" x="1515" y="1410">ajoutéePar</text>
+
+  <!-- Personnel classes -->
+  <g>
+    <rect class="card" x="65" y="190" width="240" height="158" />
+    <path class="head" d="M70 190 H300 Q305 190 305 195 V222 H65 V195 Q65 190 70 190Z" />
+    <text class="class-title" x="78" y="212">Personne</text>
+    <path class="line" d="M65 280 H305" />
+    <text class="field" x="77" y="241">- id : Int</text><text class="field" x="77" y="258">- nom, prenom : String</text><text class="field" x="77" y="275">- dateNaissance, sexe</text>
+    <text class="method" x="77" y="301">+ findById()</text><text class="method" x="77" y="318">+ create() / update()</text><text class="method" x="77" y="335">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="360" y="190" width="290" height="210" />
+    <path class="head" d="M365 190 H645 Q650 190 650 195 V222 H360 V195 Q360 190 365 190Z" />
+    <text class="class-title" x="373" y="212">Agent</text>
+    <path class="line" d="M360 300 H650" />
+    <text class="field" x="372" y="241">- matricule : Int {unique}</text><text class="field" x="372" y="258">- dateEntree, agentType</text><text class="field" x="372" y="275">- statutPEC, fonction</text><text class="field" x="372" y="292">- carteProfessionnellePath</text>
+    <text class="method" x="372" y="321">+ findAll() / findById()</text><text class="method" x="372" y="338">+ create() / update()</text><text class="method" x="372" y="355">+ getProfessionalCard()</text><text class="method" x="372" y="372">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="700" y="190" width="250" height="140" />
+    <path class="head" d="M705 190 H945 Q950 190 950 195 V222 H700 V195 Q700 190 705 190Z" />
+    <text class="class-title" x="713" y="212">CategorieAgent</text>
+    <path class="line" d="M700 260 H950" />
+    <text class="field" x="712" y="241">- id : Int</text><text class="field" x="712" y="256">- codeCategory : String</text>
+    <text class="method" x="712" y="282">+ findAll() / save()</text><text class="method" x="712" y="299">+ update() / delete()</text><text class="method" x="712" y="316">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="65" y="445" width="240" height="140" />
+    <path class="head" d="M70 445 H300 Q305 445 305 450 V477 H65 V450 Q65 445 70 445Z" />
+    <text class="class-title" x="78" y="467">FamilleAgent</text>
+    <path class="line" d="M65 510 H305" />
+    <text class="field" x="77" y="496">- id : Int, agentMatricule : Int</text>
+    <text class="field" x="77" y="507">- carteSocialePath : String</text>
+    <text class="method" x="77" y="531">+ lireFamille()</text><text class="method" x="77" y="548">+ getSocialCard()</text><text class="method" x="77" y="565">+ deleteFamilyMember()</text>
+  </g>
+  <g>
+    <rect class="card" x="360" y="445" width="160" height="110" />
+    <path class="head" d="M365 445 H515 Q520 445 520 450 V477 H360 V450 Q360 445 365 445Z" />
+    <text class="class-title" x="373" y="467">Conjoint</text><path class="line" d="M360 500 H520" />
+    <text class="field" x="372" y="493">- numConjoint</text><text class="method" x="372" y="520">+ save() / update()</text><text class="method" x="372" y="538">+ delete()</text>
+  </g>
+  <g>
+    <rect class="card" x="530" y="445" width="160" height="110" />
+    <path class="head" d="M535 445 H685 Q690 445 690 450 V477 H530 V450 Q530 445 535 445Z" />
+    <text class="class-title" x="543" y="467">Enfant</text><path class="line" d="M530 500 H690" />
+    <text class="field" x="542" y="493">- numEnfant</text><text class="method" x="542" y="520">+ save() / update()</text><text class="method" x="542" y="538">+ delete()</text>
+  </g>
+  <g>
+    <rect class="card" x="700" y="390" width="250" height="140" />
+    <path class="head" d="M705 390 H945 Q950 390 950 395 V422 H700 V395 Q700 390 705 390Z" />
+    <text class="class-title" x="713" y="412">StructureOrganisationnelle</text>
+    <path class="line" d="M700 460 H950" />
+    <text class="field" x="712" y="441">- id : String</text><text class="field" x="712" y="456">- type : AGENCE | DIRECTION</text>
+    <text class="method" x="712" y="482">+ findAll() / findById()</text><text class="method" x="712" y="499">+ create() / update() / delete()</text><text class="method" x="712" y="516">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="65" y="650" width="245" height="110" />
+    <path class="head" d="M70 650 H305 Q310 650 310 655 V682 H65 V655 Q65 650 70 650Z" />
+    <text class="class-title" x="78" y="672">Direction</text><path class="line" d="M65 705 H310" />
+    <text class="field" x="77" y="698">- codeDirection, nom</text><text class="method" x="77" y="725">+ CRUD / requestDeletion()</text><text class="field" x="77" y="746">+ services : Service[*]</text>
+  </g>
+  <g>
+    <rect class="card" x="340" y="650" width="245" height="110" />
+    <path class="head" d="M345 650 H580 Q585 650 585 655 V682 H340 V655 Q340 650 345 650Z" />
+    <text class="class-title" x="353" y="672">Agence</text><path class="line" d="M340 705 H585" />
+    <text class="field" x="352" y="698">- codeAgence, nomAgence</text><text class="method" x="352" y="725">+ CRUD / requestDeletion()</text><text class="field" x="352" y="746">+ structure : Structure</text>
+  </g>
+  <g>
+    <rect class="card" x="620" y="650" width="330" height="110" />
+    <path class="head" d="M625 650 H945 Q950 650 950 655 V682 H620 V655 Q620 650 625 650Z" />
+    <text class="class-title" x="633" y="672">ServiceOrganisationnel</text><path class="line" d="M620 705 H950" />
+    <text class="field" x="632" y="698">- codeService, nom, codeDirection</text><text class="method" x="632" y="725">+ CRUD / requestDeletion()</text><text class="field" x="632" y="746">+ agents : Agent[*]</text>
+  </g>
+
+  <!-- PEC / medical classes -->
+  <g>
+    <rect class="card" x="1040" y="190" width="290" height="175" />
+    <path class="head" d="M1045 190 H1325 Q1330 190 1330 195 V222 H1040 V195 Q1040 190 1045 190Z" />
+    <text class="class-title" x="1053" y="212">Prestataire</text><path class="line" d="M1040 288 H1330" />
+    <text class="field" x="1052" y="241">- id, nom, adresse, statut</text><text class="field" x="1052" y="258">- nif, stat {unique}</text><text class="field" x="1052" y="275">- convention, dates, prestations</text>
+    <text class="method" x="1052" y="309">+ findAll() / findById()</text><text class="method" x="1052" y="326">+ create() / update() / delete()</text><text class="method" x="1052" y="343">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="1040" y="450" width="140" height="110" />
+    <path class="head" d="M1045 450 H1175 Q1180 450 1180 455 V482 H1040 V455 Q1040 450 1045 450Z" />
+    <text class="class-title" x="1053" y="472">Lieu</text><path class="line" d="M1040 505 H1180" />
+    <text class="field" x="1052" y="498">- id, nom</text><text class="method" x="1052" y="525">+ CRUD</text><text class="method" x="1052" y="543">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="1200" y="450" width="160" height="110" />
+    <path class="head" d="M1205 450 H1355 Q1360 450 1360 455 V482 H1200 V455 Q1200 450 1205 450Z" />
+    <text class="class-title" x="1213" y="472">CategoriePrestataire</text><path class="line" d="M1200 505 H1360" />
+    <text class="field" x="1212" y="498">- id, nom</text><text class="method" x="1212" y="525">+ CRUD</text><text class="method" x="1212" y="543">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="1390" y="190" width="330" height="195" />
+    <path class="head" d="M1395 190 H1715 Q1720 190 1720 195 V222 H1390 V195 Q1390 190 1395 190Z" />
+    <text class="class-title" x="1403" y="212">Attestation</text><path class="line" d="M1390 290 H1720" />
+    <text class="field" x="1402" y="241">- id, naturePrestation, datePEC</text><text class="field" x="1402" y="258">- statut : EN_ATTENTE | VALIDEE | REFUSEE</text><text class="field" x="1402" y="275">- dateValidation, attestationPath</text>
+    <text class="method" x="1402" y="311">+ create() / update()</text><text class="method" x="1402" y="328">+ findAll() / findByBeneficiaryIdp()</text><text class="method" x="1402" y="345">+ approve() / reject() / preview()</text><text class="method" x="1402" y="362">+ delete()</text>
+  </g>
+  <g>
+    <rect class="card" x="1390" y="450" width="330" height="145" />
+    <path class="head" d="M1395 450 H1715 Q1720 450 1720 455 V482 H1390 V455 Q1390 450 1395 450Z" />
+    <text class="class-title" x="1403" y="472">Beneficiaire</text><path class="line" d="M1390 525 H1720" />
+    <text class="field" x="1402" y="501">- idp : String {unique}, observationIDP</text><text class="field" x="1402" y="518">- personne : Personne</text>
+    <text class="method" x="1402" y="547">+ findByIdp() / findByMatricule()</text><text class="method" x="1402" y="566">+ updateObservation()</text><text class="method" x="1402" y="585">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="1790" y="190" width="250" height="145" />
+    <path class="head" d="M1795 190 H2035 Q2040 190 2040 195 V222 H1790 V195 Q1790 190 1795 190Z" />
+    <text class="class-title" x="1803" y="212">ReglePEC</text><path class="line" d="M1790 255 H2040" />
+    <text class="field" x="1802" y="241">- type, agentConcerne, tauxCem</text><text class="field" x="1802" y="252">- dateEffet, dateFin</text>
+    <text class="method" x="1802" y="279">+ obtenirEnVigueur()</text><text class="method" x="1802" y="296">+ creer() / modifier() / supprimer()</text><text class="method" x="1802" y="313">+ lister() / obtenirParId()</text>
+  </g>
+  <g>
+    <rect class="card" x="1790" y="400" width="250" height="125" />
+    <path class="head" d="M1795 400 H2035 Q2040 400 2040 405 V432 H1790 V405 Q1790 400 1795 400Z" />
+    <text class="class-title" x="1803" y="422">CategorieActe</text><path class="line" d="M1790 462 H2040" />
+    <text class="field" x="1802" y="451">- id, nomCategorie {unique}</text>
+    <text class="method" x="1802" y="484">+ findAll() / findById()</text><text class="method" x="1802" y="501">+ create() / update() / delete()</text><text class="method" x="1802" y="518">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="1790" y="590" width="250" height="155" />
+    <path class="head" d="M1795 590 H2035 Q2040 590 2040 595 V622 H1790 V595 Q1790 590 1795 590Z" />
+    <text class="class-title" x="1803" y="612">Acte</text><path class="line" d="M1790 660 H2040" />
+    <text class="field" x="1802" y="641">- id, code, nomActe, regime</text><text class="field" x="1802" y="656">- listeLibelle : Text</text>
+    <text class="method" x="1802" y="682">+ findAll() / findById()</text><text class="method" x="1802" y="699">+ create() / update() / delete()</text><text class="method" x="1802" y="716">+ createWithCeilings()</text><text class="method" x="1802" y="733">+ requestDeletion()</text>
+  </g>
+  <g>
+    <rect class="card" x="2090" y="590" width="250" height="145" />
+    <path class="head" d="M2095 590 H2335 Q2340 590 2340 595 V622 H2090 V595 Q2090 590 2095 590Z" />
+    <text class="class-title" x="2103" y="612">Plafond</text><path class="line" d="M2090 655 H2340" />
+    <text class="field" x="2102" y="641">- portee, unite, dateEffet, dateFin</text><text class="field" x="2102" y="652">- montant? | nbSeances?</text>
+    <text class="method" x="2102" y="677">+ findAll() / findById()</text><text class="method" x="2102" y="694">+ create() / update() / delete()</text><text class="method" x="2102" y="711">+ resoudre() [plafond actif]</text>
+  </g>
+  <g>
+    <rect class="note" x="1790" y="765" width="550" height="55" />
+    <text class="note-text" x="1804" y="787">Un plafond cible un Acte OU une CategorieActe (exclusif).</text>
+    <text class="note-text" x="1804" y="805">Unité MONTANT : montant ; unité SEANCES : nbSeances.</text>
+  </g>
+
+  <!-- Billing classes -->
+  <g>
+    <rect class="card" x="65" y="1010" width="430" height="275" />
+    <path class="head-billing" d="M70 1010 H490 Q495 1010 495 1015 V1042 H65 V1015 Q65 1010 70 1010Z" />
+    <text class="class-title" x="78" y="1032">FactureGlobale</text><path class="line" d="M65 1122 H495" />
+    <text class="field" x="77" y="1061">- id, refSociale {unique}, annee</text><text class="field" x="77" y="1078">- datesReception / facture / prestation</text><text class="field" x="77" y="1095">- montants, tauxCem, statut</text><text class="field" x="77" y="1112">- prestataireId, enregistreParId, valideParId</text>
+    <text class="method" x="77" y="1143">+ lister() / obtenir() / creer()</text><text class="method" x="77" y="1160">+ modifierInformations() / historique()</text><text class="method" x="77" y="1177">+ transitions() / envoyerValidation()</text><text class="method" x="77" y="1194">+ valider() / retournerCorrection()</text><text class="method" x="77" y="1211">+ retourPrestataire() / sortir()</text><text class="method" x="77" y="1228">+ demanderSuppression() / validerSuppression()</text><text class="method" x="77" y="1245">+ refuserSuppression()</text><text class="field" x="77" y="1268">- cloturer() via CloturePaieService</text>
+  </g>
+  <g>
+    <rect class="card" x="560" y="1010" width="390" height="235" />
+    <path class="head-billing" d="M565 1010 H945 Q950 1010 950 1015 V1042 H560 V1015 Q560 1010 565 1010Z" />
+    <text class="class-title" x="573" y="1032">FactureIndividuelle (T6)</text><path class="line" d="M560 1122 H950" />
+    <text class="field" x="572" y="1061">- numLigne, libelle, dateActe</text><text class="field" x="572" y="1078">- montantActe, depassements, tauxCem</text><text class="field" x="572" y="1095">- refPaie, moisAffectation</text><text class="field" x="572" y="1112">- factureGlobaleId, acteId, beneficiaireId, priseEnChargeId?</text>
+    <text class="method" x="572" y="1143">+ creer() / modifier() / supprimer()</text><text class="method" x="572" y="1160">+ lister() / proposer()</text><text class="method" x="572" y="1177">+ affecterRetenue()</text><text class="method" x="572" y="1194">+ rapprochement() / controleTotaux()</text><text class="method" x="572" y="1211">+ totalAgent() / verifierAvantValidation()</text><text class="field" x="572" y="1234">- decision : DecisionPriseEnCharge?</text>
+  </g>
+  <g>
+    <rect class="card" x="1010" y="1010" width="330" height="200" />
+    <path class="head-billing" d="M1015 1010 H1335 Q1340 1010 1340 1015 V1042 H1010 V1015 Q1010 1010 1015 1010Z" />
+    <text class="class-title" x="1023" y="1032">LigneSuivi (T5_x)</text><path class="line" d="M1010 1092 H1340" />
+    <text class="field" x="1022" y="1061">- dateActe, libelle, montantActe</text><text class="field" x="1022" y="1078">- factureGlobaleId, beneficiaireId, acteId</text>
+    <text class="method" x="1022" y="1113">+ listerCibles() / creer()</text><text class="method" x="1022" y="1130">+ lire() / modifier() / supprimer()</text><text class="method" x="1022" y="1147">+ recalculerModele()</text><text class="field" x="1022" y="1180">- saisiParId : Utilisateur</text>
+  </g>
+  <g>
+    <rect class="card" x="1410" y="1010" width="330" height="190" />
+    <path class="head-billing" d="M1415 1010 H1735 Q1740 1010 1740 1015 V1042 H1410 V1015 Q1410 1010 1415 1010Z" />
+    <text class="class-title" x="1423" y="1032">MouvementFacture</text><path class="line" d="M1410 1082 H1740" />
+    <text class="field" x="1422" y="1061">- type, dateMetier, createdAt, remarque</text><text class="field" x="1422" y="1078">- effectueParId, adresseAId?, factureGlobaleId</text>
+    <text class="method" x="1422" y="1103">+ ecrire() / listerParFacture()</text><text class="method" x="1422" y="1120">+ filtrerParType()</text><text class="field" x="1422" y="1150">- journal du workflow facture</text><text class="field" x="1422" y="1170">- inclut le mouvement CLOTURE</text>
+  </g>
+  <g>
+    <rect class="card" x="1810" y="1010" width="330" height="165" />
+    <path class="head-billing" d="M1815 1010 H2135 Q2140 1010 2140 1015 V1042 H1810 V1015 Q1810 1010 1815 1010Z" />
+    <text class="class-title" x="1823" y="1032">PieceJointeFacture</text><path class="line" d="M1810 1077 H2140" />
+    <text class="field" x="1822" y="1061">- path, nomFichier, typeFichier, tailleOctets</text>
+    <text class="method" x="1822" y="1098">+ ajouter() / lister()</text><text class="method" x="1822" y="1115">+ lire() / supprimer()</text><text class="field" x="1822" y="1144">- ajouteParId? : Utilisateur</text>
+  </g>
+  <g>
+    <rect class="card" x="560" y="1320" width="390" height="165" />
+    <path class="head-billing" d="M565 1320 H945 Q950 1320 950 1325 V1352 H560 V1325 Q560 1320 565 1320Z" />
+    <text class="class-title" x="573" y="1342">DecisionPriseEnCharge</text><path class="line" d="M560 1390 H950" />
+    <text class="field" x="572" y="1376">- montantRetenu, tauxCem?, motif, commentaire</text>
+    <text class="field" x="572" y="1409">- decidePar, dateDecision</text><text class="method" x="572" y="1437">+ enregistrerDecision() / consulter()</text><text class="field" x="572" y="1465">- 1–1 avec une FactureIndividuelle</text>
+  </g>
+  <g>
+    <rect class="card" x="1010" y="1320" width="330" height="180" />
+    <path class="head-billing" d="M1015 1320 H1335 Q1340 1320 1340 1325 V1352 H1010 V1325 Q1010 1320 1015 1320Z" />
+    <text class="class-title" x="1023" y="1342">Utilisateur</text><path class="line" d="M1010 1390 H1340" />
+    <text class="field" x="1022" y="1376">- id, nom, role : OPERATEUR | ADJOINT | CHEF</text>
+    <text class="method" x="1022" y="1412">+ findAll(role?) / findById()</text><text class="method" x="1022" y="1429">+ create() / update() / delete()</text><text class="field" x="1022" y="1458">- enregistre / valide / saisit / joint</text><text class="field" x="1022" y="1477">- effectue / reçoit un mouvement</text>
+  </g>
+  <g>
+    <rect class="card" x="1410" y="1320" width="330" height="165" />
+    <path class="head-billing" d="M1415 1320 H1735 Q1740 1320 1740 1325 V1352 H1410 V1325 Q1410 1320 1415 1320Z" />
+    <text class="class-title" x="1423" y="1342">CloturePaieService</text><path class="line" d="M1410 1390 H1740" />
+    <text class="field" x="1422" y="1376">- moisPaie, dateCloture, factureIds</text>
+    <text class="method" x="1422" y="1412">+ cloturer()</text><text class="method" x="1422" y="1429">+ controlerRapprochement()</text><text class="method" x="1422" y="1446">+ affecterMoisAuxLignes()</text><text class="method" x="1422" y="1463">+ totalAgent()</text>
+  </g>
+  <g>
+    <rect class="card" x="1810" y="1320" width="330" height="145" />
+    <path class="head-billing" d="M1815 1320 H2135 Q2140 1320 2140 1325 V1352 H1810 V1325 Q1810 1320 1815 1320Z" />
+    <text class="class-title" x="1823" y="1342">CompteurRefSociale</text><path class="line" d="M1810 1380 H2140" />
+    <text class="field" x="1822" y="1368">- annee : Int {PK}</text><text class="field" x="1822" y="1397">- dernierNumero : Int</text>
+    <text class="method" x="1822" y="1425">+ nextReference(annee)</text><text class="field" x="1822" y="1448">- génère refSociale unique</text>
+  </g>
+
+  <!-- Notes and legend -->
+  <g>
+    <rect class="note" x="65" y="1530" width="1000" height="120" />
+    <text class="note-text" x="82" y="1555">Workflow FactureGlobale : ENREGISTREE → EN_VALIDATION → VALIDEE → SORTIE.</text>
+    <text class="note-text" x="82" y="1578">Autres transitions : RETOURNEE, A_CORRIGER, SUPPRESSION_DEMANDEE, SUPPRIMEE.</text>
+    <text class="note-text" x="82" y="1601">La clôture verrouille la facture et affecte le mois de paie aux lignes T6.</text>
+    <text class="note-text" x="82" y="1624">Les lignes T5_x restent des consommations de suivi, distinctes des lignes T6.</text>
+  </g>
+  <g>
+    <text class="legend-bold" x="1110" y="1545">Légende UML</text>
+    <path class="edge" d="M1110 1570 H1210" marker-start="url(#diamond)" />
+    <text class="legend" x="1222" y="1574">composition / possession d'identité</text>
+    <path class="edge" d="M1110 1600 H1210" />
+    <text class="legend" x="1222" y="1604">association ; multiplicités indiquées aux extrémités</text>
+    <path class="edge-dashed" d="M1110 1630 H1210" marker-end="url(#arrow)" />
+    <text class="legend" x="1222" y="1634">dépendance / référence sans contrainte FK</text>
+    <text class="legend" x="1110" y="1666">Champs issus de Prisma ; opérations synthétisées à partir des services et use-cases applicatifs.</text>
+  </g>
+  <text class="subtitle" x="48" y="1738">Note : priseEnChargeId de FactureIndividuelle conserve l'identifiant d'une Attestation sans relation FK afin que l'absence reste non bloquante.</text>
+</svg>

@@ -63,7 +63,7 @@ export class FactureGlobaleController {
     @Query('statut') statut?: string,
     @Query('cloturee') cloturee?: string,
     @Query('rapprochement') rapprochement?: string,
-  ) : Promise<FactureGlobaleListeeResponseDto[]> {
+  ): Promise<FactureGlobaleListeeResponseDto[]> {
     return serialiserMontants(
       await this.factureGlobaleService.lister(
         this.validerStatut(statut),
@@ -112,7 +112,9 @@ export class FactureGlobaleController {
   async obtenir(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<FactureGlobaleDetailResponseDto> {
-    return serialiserMontants(await this.factureGlobaleService.obtenir(id));
+    return serialiserMontants(
+      await this.factureGlobaleService.obtenirAvecMouvements(id),
+    );
   }
 
   @Post()

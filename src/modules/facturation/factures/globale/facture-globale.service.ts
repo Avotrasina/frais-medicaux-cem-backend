@@ -103,7 +103,20 @@ export type FactureWorkflowLue = Prisma.FactureGlobaleGetPayload<{
   include: { prestataire: { select: { id: true; nom: true } } };
 }>;
 
-export type FactureListee = Prisma.FactureGlobaleGetPayload<{
+type MouvementListe = Prisma.MouvementFactureGetPayload<{
+  select: {
+    id: true;
+    type: true;
+    date: true;
+    createdAt: true;
+    remarque: true;
+    service: true;
+    effectuePar: { select: { id: true; nom: true; role: true } };
+    adresseA: { select: { id: true; nom: true; role: true } };
+  };
+}>;
+
+type FactureListeeAvecMouvements = Prisma.FactureGlobaleGetPayload<{
   include: {
     prestataire: { select: { id: true; nom: true } };
     piecesJointes: {
@@ -115,9 +128,28 @@ export type FactureListee = Prisma.FactureGlobaleGetPayload<{
         createdAt: true;
       };
     };
+    mouvements: {
+      orderBy: { id: 'desc' };
+      select: {
+        id: true;
+        type: true;
+        date: true;
+        createdAt: true;
+        remarque: true;
+        service: true;
+        effectuePar: { select: { id: true; nom: true; role: true } };
+        adresseA: { select: { id: true; nom: true; role: true } };
+      };
+    };
   };
 }>;
+export type FactureListee = FactureListeeAvecMouvements;
 export type FactureListeeAvecCloture = FactureListee & { cloturee: boolean };
+export type FactureDetailleeAvecMouvements = FactureWorkflowLue & {
+  nombrePiecesJointes: number;
+  cloturee: boolean;
+  mouvements: MouvementListe[];
+};
 
 export interface ActeurFacture {
   id: number;
@@ -176,6 +208,19 @@ export class FactureGlobaleService {
           },
           orderBy: { id: 'asc' },
         },
+        mouvements: {
+          orderBy: { id: 'desc' },
+          select: {
+            id: true,
+            type: true,
+            date: true,
+            createdAt: true,
+            remarque: true,
+            service: true,
+            effectuePar: { select: { id: true, nom: true, role: true } },
+            adresseA: { select: { id: true, nom: true, role: true } },
+          },
+        },
       },
       orderBy: { id: 'desc' },
     });
@@ -218,6 +263,27 @@ export class FactureGlobaleService {
       nombrePiecesJointes: _count.piecesJointes,
       cloturee: donneesFacture.dateCloture !== null,
     };
+  }
+
+  async obtenirAvecMouvements(
+    id: number,
+  ): Promise<FactureDetailleeAvecMouvements> {
+    const facture = await this.obtenir(id);
+    const mouvements = await this.prisma.mouvementFacture.findMany({
+      where: { factureGlobaleId: id },
+      orderBy: { id: 'desc' },
+      select: {
+        id: true,
+        type: true,
+        date: true,
+        createdAt: true,
+        remarque: true,
+        service: true,
+        effectuePar: { select: { id: true, nom: true, role: true } },
+        adresseA: { select: { id: true, nom: true, role: true } },
+      },
+    });
+    return { ...facture, mouvements };
   }
 
   async historique(
@@ -771,9 +837,7 @@ export class FactureGlobaleService {
         }
       }
 
-      let parts:
-        | ReturnType<FactureCalculService['calculerParts']>
-        | undefined;
+      let parts: ReturnType<FactureCalculService['calculerParts']> | undefined;
       if (montantTotal === null) {
         if (partsFournies || montantsModifies) {
           throw new BadRequestException(

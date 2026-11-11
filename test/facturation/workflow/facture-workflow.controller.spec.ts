@@ -1,18 +1,23 @@
-import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  BadRequestException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import {
   RoleUtilisateur,
   ServiceSortie,
   TypeMouvement,
 } from '../../../src/generated/prisma/enums.js';
 import type { MouvementFacture } from '../../../src/generated/prisma/client.js';
-import {
-  ActionFactureDto,
-} from '../../../src/modules/facturation/dtos/facture-workflow.dto.js';
+import { ActionFactureDto } from '../../../src/modules/facturation/dtos/facture-workflow.dto.js';
 import type {
   ActeurFacture,
   OptionsActionFacture,
 } from '../../../src/modules/facturation/factures/globale/facture-globale.service.js';
 import { FactureGlobaleService } from '../../../src/modules/facturation/factures/globale/facture-globale.service.js';
+import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
+import { FactureRoleGuard } from '../../../src/modules/facturation/shared/facture-role.guard.js';
 import {
   FactureWorkflowController,
   VALIDATION_ACTION,
@@ -51,7 +56,9 @@ function creerAction() {
 
 function creerController() {
   const service = {
-    validerDateAction: vi.fn().mockResolvedValue(new Date('2026-11-06T00:00:00.000Z')),
+    validerDateAction: vi
+      .fn()
+      .mockResolvedValue(new Date('2026-11-06T00:00:00.000Z')),
     envoyerValidation: creerAction(),
     retournerCorrection: creerAction(),
     retourPrestataire: creerAction(),
@@ -70,6 +77,46 @@ function creerController() {
 }
 
 describe('FactureWorkflowController PATCH statut', () => {
+  it('publie un exemple Swagger pour chaque type d’action', async () => {
+    const moduleRef = await Test.createTestingModule({
+      controllers: [FactureWorkflowController],
+      providers: [
+        { provide: FactureGlobaleService, useValue: {} },
+        { provide: PrismaService, useValue: {} },
+        {
+          provide: FactureRoleGuard,
+          useValue: { canActivate: vi.fn().mockReturnValue(true) },
+        },
+      ],
+    }).compile();
+    const application = moduleRef.createNestApplication();
+    const document = SwaggerModule.createDocument(
+      application,
+      new DocumentBuilder().setTitle('Contract test').setVersion('1').build(),
+    );
+    const exemples =
+      document.paths['/factures/{id}/statut']?.patch?.requestBody?.content?.[
+        'application/json'
+      ]?.examples;
+
+    expect(Object.keys(exemples ?? {})).toEqual([
+      'envoiValidation',
+      'retourPourCorrection',
+      'retourPrestataire',
+      'validation',
+      'sortie',
+      'demandeSuppression',
+      'refusSuppression',
+      'suppression',
+    ]);
+    expect(exemples?.retourPrestataire?.value).toEqual({
+      type: TypeMouvement.RETOUR_PRESTATAIRE,
+      remarque: 'Merci de joindre une facture lisible.',
+      date: '2026-11-11',
+    });
+    await application.close();
+  });
+
   it.each([
     [
       TypeMouvement.ENVOI_VALIDATION,
@@ -108,11 +155,9 @@ describe('FactureWorkflowController PATCH statut', () => {
         { type: 'body', metatype: ActionFactureDto },
       );
 
-      const resultat = await controller.modifierStatut(
-        21,
-        donnees,
-        { user: acteur },
-      );
+      const resultat = await controller.modifierStatut(21, donnees, {
+        user: acteur,
+      });
 
       expect(service[methode]).toHaveBeenCalledOnce();
       expect(resultat).toMatchObject({ id: 21, mouvement: { id: 101 } });
@@ -151,7 +196,11 @@ describe('FactureWorkflowController PATCH statut', () => {
 
     await controller.modifierStatut(
       21,
-      { type: TypeMouvement.SORTIE, service: ServiceSortie.CONTROLE, date: '2026-11-06' },
+      {
+        type: TypeMouvement.SORTIE,
+        service: ServiceSortie.CONTROLE,
+        date: '2026-11-06',
+      },
       { user: acteur },
     );
     expect(service.validerDateAction).toHaveBeenCalledWith(21, '2026-11-06');

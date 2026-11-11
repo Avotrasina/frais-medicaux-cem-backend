@@ -75,8 +75,7 @@ function creerService(statut: StatutFacture = StatutFacture.A_CORRIGER) {
   };
   const prisma = {
     $transaction: vi.fn(
-      async <T>(operation: (client: typeof tx) => Promise<T>) =>
-        operation(tx),
+      async <T>(operation: (client: typeof tx) => Promise<T>) => operation(tx),
     ),
   };
   const mouvements = { ecrire: vi.fn().mockResolvedValue(undefined) };
@@ -150,10 +149,12 @@ describe('FactureGlobaleService - modifications en correction', () => {
       service.modifierInformations(21, acteur, { numFacture: 'F-2026-3' }),
     ]);
 
-    expect(resultats.filter((resultat) => resultat.status === 'fulfilled'))
-      .toHaveLength(1);
-    expect(resultats.filter((resultat) => resultat.status === 'rejected'))
-      .toHaveLength(1);
+    expect(
+      resultats.filter((resultat) => resultat.status === 'fulfilled'),
+    ).toHaveLength(1);
+    expect(
+      resultats.filter((resultat) => resultat.status === 'rejected'),
+    ).toHaveLength(1);
     expect(mouvements.ecrire).toHaveBeenCalledTimes(1);
   });
 
@@ -239,7 +240,9 @@ describe('FactureGlobaleService - modifications en correction', () => {
       service.modifierInformations(21, acteur, {
         montant80Cem: 560_000,
       }),
-    ).rejects.toThrow('Les trois montants calculés doivent être fournis ensemble.');
+    ).rejects.toThrow(
+      'Les trois montants calculés doivent être fournis ensemble.',
+    );
 
     expect(tx.factureGlobale.updateMany).not.toHaveBeenCalled();
   });
@@ -344,5 +347,108 @@ describe('FactureGlobaleService - modifications en correction', () => {
       include: { effectuePar: true, adresseA: true },
       orderBy: { id: 'asc' },
     });
+  });
+
+  it('inclut tous les mouvements triés du plus récent au plus ancien', async () => {
+    const mouvements = [
+      {
+        id: 8,
+        type: TypeMouvement.VALIDATION,
+        date: new Date('2026-11-05T00:00:00.000Z'),
+        createdAt: new Date('2026-11-05T08:00:00.000Z'),
+        remarque: 'Validée',
+        service: null,
+        effectuePar: { id: 7, nom: 'Agent', role: RoleUtilisateur.CHEF },
+        adresseA: null,
+      },
+      {
+        id: 7,
+        type: TypeMouvement.ENVOI_VALIDATION,
+        date: new Date('2026-11-04T00:00:00.000Z'),
+        createdAt: new Date('2026-11-04T08:00:00.000Z'),
+        remarque: null,
+        service: null,
+        effectuePar: {
+          id: 5,
+          nom: 'Operateur',
+          role: RoleUtilisateur.OPERATEUR,
+        },
+        adresseA: { id: 7, nom: 'Agent', role: RoleUtilisateur.CHEF },
+      },
+    ];
+    const findMany = vi
+      .fn()
+      .mockResolvedValue([{ id: 21, dateCloture: null, mouvements }]);
+    const prisma = { factureGlobale: { findMany } };
+    const service = new FactureGlobaleService(
+      prisma as unknown as PrismaService,
+      {} as RefSocialService,
+      {} as RegleService,
+      new FactureWorkflowService(),
+      {} as MouvementFactureService,
+      {} as FactureCalculService,
+      {} as FactureIndividuelleService,
+    );
+
+    const factures = await service.lister();
+
+    expect(factures[0]?.mouvements).toEqual(mouvements);
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: expect.objectContaining({
+          mouvements: expect.objectContaining({
+            orderBy: { id: 'desc' },
+          }),
+        }),
+      }),
+    );
+    expect(findMany.mock.calls[0]?.[0].include?.mouvements).not.toHaveProperty(
+      'take',
+    );
+  });
+
+  it('inclut les mouvements triés dans le détail sans modifier le chargement interne', async () => {
+    const mouvements = [
+      {
+        id: 8,
+        type: TypeMouvement.VALIDATION,
+        date: new Date('2026-11-05T00:00:00.000Z'),
+        createdAt: new Date('2026-11-05T08:00:00.000Z'),
+        remarque: null,
+        service: null,
+        effectuePar: { id: 7, nom: 'Agent', role: RoleUtilisateur.CHEF },
+        adresseA: null,
+      },
+    ];
+    const findUnique = vi.fn().mockResolvedValue({
+      id: 21,
+      dateCloture: null,
+      _count: { piecesJointes: 0 },
+      prestataire: { id: 3, nom: 'Clinique' },
+    });
+    const findMany = vi.fn().mockResolvedValue(mouvements);
+    const prisma = {
+      factureGlobale: { findUnique },
+      mouvementFacture: { findMany },
+    };
+    const service = new FactureGlobaleService(
+      prisma as unknown as PrismaService,
+      {} as RefSocialService,
+      {} as RegleService,
+      new FactureWorkflowService(),
+      {} as MouvementFactureService,
+      {} as FactureCalculService,
+      {} as FactureIndividuelleService,
+    );
+
+    const facture = await service.obtenirAvecMouvements(21);
+
+    expect(facture.mouvements).toEqual(mouvements);
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { factureGlobaleId: 21 },
+        orderBy: { id: 'desc' },
+      }),
+    );
   });
 });
