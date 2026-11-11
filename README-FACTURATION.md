@@ -444,7 +444,9 @@ Ajoute une ligne de suivi à une facture :
 }
 ```
 
-`libelle` est facultatif. Réponse `201`: feuille de suivi décrite ci-dessous.
+`libelle` est facultatif. Réponse `201`: `{modele, annee, lignes, totaux}`.
+Les métadonnées de feuille (`entete`, `colonnes`, `cible`, `plafonds`) ne sont
+incluses ni dans cette réponse ni dans celle de `GET /suivis`.
 
 ### `GET /suivis/cibles?date=2026-03-10`
 
@@ -456,9 +458,10 @@ et `parActe`.
 ### `GET /suivis?idp=IDP-AGENT-001&acteId=1&annee=2026&factureId=41&historique=false`
 
 Requis : `idp`, `acteId`; `annee` par défaut l'année courante; `factureId` et
-`historique` facultatifs. Réponse `200`: `{entete, modele, colonnes, cible,
-annee, plafonds, lignes, totaux}`. Les montants sont des chaînes à deux
-décimales; les champs non applicables peuvent être `null`.
+`historique` facultatifs. Réponse `200`: `{modele, annee, lignes, totaux}`.
+`entete`, `colonnes`, `cible` et `plafonds` ne sont pas incluses. Les montants
+sont des chaînes à deux décimales; les champs non applicables peuvent être
+`null`.
 
 ### `PATCH /suivis/lignes/:ligneId`
 
@@ -568,6 +571,20 @@ npx prisma generate
 
 Puis définir `ALLOW_DEMO_SEED=true` dans `.env` et lancer
 `npm run seed:facturation-demo`. Le seed refuse `NODE_ENV=production`.
+
+## Jeu de test
+
+Le seed `seed:jeu-test` prépare un jeu cohérent de factures, bénéficiaires,
+plafonds et lignes de suivi T5/T6 avec des statuts de démonstration. Il est
+idempotent et nettoie uniquement ses données préfixées `DEMO-JEU-TEST-` lorsqu'il
+est lancé avec `--clean`. Définir `ALLOW_DEMO_SEED=true` dans `.env`; le seed
+refuse `NODE_ENV=production`. Les règles métier doivent déjà être configurées.
+
+```bash
+ALLOW_DEMO_SEED=true npm run seed:jeu-test
+ALLOW_DEMO_SEED=true npm run seed:jeu-test -- --clean
+curl -s "http://localhost:3000/factures?statut=VALIDEE" | jq .
+```
 
 En développement, `FACTURATION_UTILISATEUR_TEST_ID` sélectionne le compte
 utilisé lorsque l'authentification ne fournit pas d'utilisateur; les IDs
