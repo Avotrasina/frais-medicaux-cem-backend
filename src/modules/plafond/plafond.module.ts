@@ -21,6 +21,11 @@ import { PlafondResolutionService } from './plafond-resolution.service.js';
     PlafondSuiviGardeService,
     PlafondResolutionService,
   ],
-  exports: [PlafondRepository, PlafondResolutionService, CreatePlafondUseCase],
+  exports: [
+    PlafondRepository,
+    PlafondResolutionService,
+    CreatePlafondUseCase,
+    UpdatePlafondUseCase,
+  ],
 })
 export class PlafondModule {}

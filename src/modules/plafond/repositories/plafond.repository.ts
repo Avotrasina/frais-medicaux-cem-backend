@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
 import type { Plafond } from '../../../generated/prisma/client.js';
+import type { PorteePlafond } from '../../../generated/prisma/enums.js';
 import { StatutFacture } from '../../../generated/prisma/enums.js';
 import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
@@ -83,6 +84,24 @@ export class PlafondRepository {
       where: { id },
     });
     return this.toReadPlafond(plafond);
+  }
+
+  async findOpenByCible(
+    cible: { type: 'ACTE' | 'CATEGORIE'; id: number },
+    porteePlafond?: PorteePlafond,
+    tx?: DbClient,
+  ): Promise<ReadPlafond[]> {
+    const plafonds = await this.client(tx).plafond.findMany({
+      where: {
+        ...(cible.type === 'ACTE'
+          ? { acteID: cible.id }
+          : { categorieActeID: cible.id }),
+        dateFin: null,
+        ...(porteePlafond === undefined ? {} : { porteePlafond }),
+      },
+      orderBy: [{ dateEffet: 'desc' }, { id: 'desc' }],
+    });
+    return plafonds.map((plafond) => this.toReadPlafond(plafond));
   }
 
   async create(
@@ -222,6 +241,7 @@ export class PlafondRepository {
       plafond.categorieActeID === undefined
         ? courant.categorieActeID
         : plafond.categorieActeID,
+      tx,
     );
     const updated = await client.plafond.update({
       where: { id },

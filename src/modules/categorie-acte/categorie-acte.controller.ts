@@ -32,9 +32,7 @@ import {
   PlafondsCreationDto,
 } from '../acte/dtos/acte-creation.dto.js';
 import { CategorieActeQueryDto } from './dtos/categorie-acte-query.dto.js';
-import {
-  UpdateCategorieActeDto,
-} from './dtos/categorie-acte.dto.js';
+import { UpdateCategorieActeDto } from './dtos/categorie-acte.dto.js';
 import { DeleteCategorieActeUseCase } from './use-cases/categorie-acte.delete.js';
 import { ReadCategorieActeUseCase } from './use-cases/categorie-acte.read.js';
 import { CreateCategorieActeUseCase } from './use-cases/categorie-acte.create.js';
@@ -51,9 +49,13 @@ const CREATE_CATEGORIE_PIPE = new ValidationPipe({
   whitelist: true,
   forbidNonWhitelisted: true,
 });
+const UPDATE_CATEGORIE_PIPE = new ValidationPipe({
+  transform: true,
+  whitelist: true,
+  forbidNonWhitelisted: true,
+});
 
 @Controller('categories-actes')
-
 @ApiExtraModels(
   CategorieActeResponseDto,
   CategorieActeAvecPlafondsResponseDto,
@@ -75,7 +77,6 @@ export class CategorieActeController {
   ) {}
 
   @Post()
-
   @UsePipes(CREATE_CATEGORIE_PIPE)
   @ApiBody({
     type: CreateCategorieWithCeilingsDto,
@@ -185,6 +186,21 @@ export class CategorieActeController {
 
   @Patch(':id')
   @ApiOkResponse({ type: CategorieActeResponseDto })
+  @ApiBody({
+    type: UpdateCategorieActeDto,
+    examples: {
+      plafondAnnuel: {
+        summary: 'Modifier le plafond annuel partagé de cette catégorie',
+        value: {
+          porteePlafond: 'PAR_AN',
+          unite: 'MONTANT',
+          montant: 750000,
+          categorieActeID: 4,
+        },
+      },
+    },
+  })
+  @UsePipes(UPDATE_CATEGORIE_PIPE)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateCategorieActeDto,

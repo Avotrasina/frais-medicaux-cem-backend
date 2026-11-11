@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { UpdatePlafondDto } from '../../plafond/dtos/plafond.dto.js';
 
 export class CreateCategorieActeDto {
   @IsString()
@@ -6,7 +7,7 @@ export class CreateCategorieActeDto {
   nomCategorie!: string;
 }
 
-export class UpdateCategorieActeDto {
+export class UpdateCategorieActeDto extends UpdatePlafondDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()

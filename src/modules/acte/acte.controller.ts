@@ -42,6 +42,11 @@ const CREATE_ACTE_PIPE = new ValidationPipe({
   whitelist: true,
   forbidNonWhitelisted: true,
 });
+const UPDATE_ACTE_PIPE = new ValidationPipe({
+  transform: true,
+  whitelist: true,
+  forbidNonWhitelisted: true,
+});
 
 type CreateActeResult = ActeResponseDto | ActeAvecPlafondsResponseDto;
 
@@ -279,6 +284,36 @@ export class ActeController {
 
   @Patch(':id')
   @ApiOkResponse({ type: ActeResponseDto })
+  @ApiBody({
+    type: UpdateActeDto,
+    examples: {
+      plafondParActe: {
+        summary: 'Modifier le plafond par acte de cet acte',
+        value: {
+          regime: 'NORMAL',
+          porteePlafond: 'PAR_ACTE',
+          unite: 'MONTANT',
+          montant: 125000,
+          acteID: 12,
+        },
+      },
+      plafondAnnuel: {
+        summary: 'Modifier le plafond annuel de cet acte',
+        value: {
+          regime: 'NORMAL',
+          porteePlafond: 'PAR_AN',
+          unite: 'MONTANT',
+          montant: 500000,
+          acteID: 12,
+        },
+      },
+      changementRegime: {
+        summary: 'Modifier uniquement le régime de l’acte',
+        value: { regime: 'SUR_DECISION_DG' },
+      },
+    },
+  })
+  @UsePipes(UPDATE_ACTE_PIPE)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateActeDto,
