@@ -12,6 +12,7 @@ import {
   Post,
   Query,
   Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -28,8 +29,11 @@ import {
   ModifierLigneSuiviDto,
 } from '../dtos/suivi.dto.js';
 import { SuiviService } from './suivi.service.js';
+import type { FeuilleSuivi } from './suivi.service.js';
+import { FactureRoleGuard } from '../shared/facture-role.guard.js';
 import {
   CibleSuiviResponseDto,
+  FeuilleSuiviCompacteResponseDto,
   FeuilleSuiviModifieeResponseDto,
   FeuilleSuiviResponseDto,
 } from '../dtos/suivi-response.dto.js';
@@ -46,6 +50,7 @@ const PIPE = new ValidationPipe({
 @Controller()
 @ApiExtraModels(
   CibleSuiviResponseDto,
+  FeuilleSuiviCompacteResponseDto,
   FeuilleSuiviResponseDto,
   FeuilleSuiviModifieeResponseDto,
 )
@@ -53,7 +58,8 @@ export class SuiviController {
   constructor(private readonly suivi: SuiviService) {}
 
   @Post('factures/:id/suivis')
-  @ApiCreatedResponse({ type: FeuilleSuiviResponseDto })
+  @UseGuards(FactureRoleGuard)
+  @ApiCreatedResponse({ type: FeuilleSuiviCompacteResponseDto })
   @ApiOperation({
     summary: 'Ajouter une ligne de suivi',
     description:
@@ -64,8 +70,9 @@ export class SuiviController {
     @Param('id', ParseIntPipe) id: number,
     @Body() donnees: CreerLigneSuiviDto,
     @Req() requete: RequeteAvecUtilisateur,
-  ): Promise<FeuilleSuiviResponseDto> {
-    return this.suivi.creer(id, this.acteur(requete), donnees);
+  ): Promise<FeuilleSuiviCompacteResponseDto> {
+    const feuille = await this.suivi.creer(id, this.acteur(requete), donnees);
+    return this.reponseCompacte(feuille);
   }
 
   @Get('suivis/cibles')
@@ -90,7 +97,7 @@ export class SuiviController {
   }
 
   @Get('suivis')
-  @ApiOkResponse({ type: FeuilleSuiviResponseDto })
+  @ApiOkResponse({ type: FeuilleSuiviCompacteResponseDto })
   @ApiOperation({
     summary: 'Consulter une feuille de suivi',
     description:
@@ -103,16 +110,40 @@ export class SuiviController {
     example: false,
     description: 'Expose les dates et versions historiques des plafonds.',
   })
+  @ApiQuery({
+    name: 'acteId',
+    required: false,
+    type: Number,
+    description: 'Cible acte; à fournir à la place de categorieActeId.',
+  })
+  @ApiQuery({
+    name: 'categorieActeId',
+    required: false,
+    type: Number,
+    description: 'Cible catégorie; à fournir à la place de acteId.',
+  })
   async lire(
     @Query('idp') idp: string,
-    @Query('acteId') acteIdTexte: string,
+    @Query('acteId') acteIdTexte?: string,
+    @Query('categorieActeId') categorieActeIdTexte?: string,
     @Query('annee') anneeTexte?: string,
     @Query('factureId') factureIdTexte?: string,
     @Query('historique') historiqueTexte?: string,
-  ): Promise<FeuilleSuiviResponseDto> {
+  ): Promise<FeuilleSuiviCompacteResponseDto> {
     if (idp === undefined || idp.trim() === '')
       throw new BadRequestException('L’IDP est obligatoire.');
-    const acteId = this.entier(acteIdTexte, 'L’acte');
+    if ((acteIdTexte === undefined) === (categorieActeIdTexte === undefined))
+      throw new BadRequestException(
+        'Fournissez exactement un paramètre parmi acteId et categorieActeId.',
+      );
+    const acteId =
+      acteIdTexte === undefined
+        ? undefined
+        : this.entier(acteIdTexte, 'L’acte');
+    const categorieActeId =
+      categorieActeIdTexte === undefined
+        ? undefined
+        : this.entier(categorieActeIdTexte, 'La catégorie');
     const annee =
       anneeTexte === undefined
         ? new Date().getUTCFullYear()
@@ -133,10 +164,21 @@ export class SuiviController {
       throw new BadRequestException(
         'Le paramètre historique doit être true ou false.',
       );
-    return this.suivi.lire(idp, acteId, annee, factureId, historique);
+    const feuille =
+      acteId === undefined
+        ? await this.suivi.lireCategorie(
+            idp,
+            categorieActeId!,
+            annee,
+            factureId,
+            historique,
+          )
+        : await this.suivi.lire(idp, acteId, annee, factureId, historique);
+    return this.reponseCompacte(feuille);
   }
 
   @Patch('suivis/lignes/:ligneId')
+  @UseGuards(FactureRoleGuard)
   @ApiOkResponse({
     schema: {
       oneOf: [
@@ -160,6 +202,7 @@ export class SuiviController {
   }
 
   @Delete('suivis/lignes/:ligneId')
+  @UseGuards(FactureRoleGuard)
   @ApiOperation({
     summary: 'Supprimer une ligne de suivi',
     description: 'Retire un acte suivi et recalcule les cumuls associés.',
@@ -179,6 +222,17 @@ export class SuiviController {
         'Aucun utilisateur authentifié n’est disponible.',
       );
     return requete.user;
+  }
+
+  private reponseCompacte(
+    feuille: FeuilleSuivi,
+  ): FeuilleSuiviCompacteResponseDto {
+    return {
+      modele: feuille.modele,
+      annee: feuille.annee,
+      lignes: feuille.lignes,
+      totaux: feuille.totaux,
+    };
   }
 
   private entier(valeur: string | undefined, nom: string): number {

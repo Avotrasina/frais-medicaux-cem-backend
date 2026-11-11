@@ -62,6 +62,9 @@ interface ContexteLigne {
   plafondParActe?: PlafondLu;
 }
 
+type CibleSuiviSelectionnee =
+  { type: 'ACTE'; id: number } | { type: 'CATEGORIE'; id: number };
+
 interface ColonneSuivi {
   cle: string;
   libelle: string;
@@ -311,7 +314,7 @@ export class SuiviService {
     });
     return this.obtenirFeuille(
       donnees.idp,
-      donnees.acteId,
+      { type: 'ACTE', id: donnees.acteId },
       dateActe.getUTCFullYear(),
     );
   }
@@ -325,7 +328,31 @@ export class SuiviService {
   ): Promise<FeuilleSuivi> {
     if (!Number.isInteger(annee) || annee < 1900 || annee > 2200)
       throw new BadRequestException('L’année est invalide.');
-    return this.obtenirFeuille(idp, acteId, annee, factureId, historique);
+    return this.obtenirFeuille(
+      idp,
+      { type: 'ACTE', id: acteId },
+      annee,
+      factureId,
+      historique,
+    );
+  }
+
+  async lireCategorie(
+    idp: string,
+    categorieActeId: number,
+    annee: number,
+    factureId?: number,
+    historique = false,
+  ): Promise<FeuilleSuivi> {
+    if (!Number.isInteger(annee) || annee < 1900 || annee > 2200)
+      throw new BadRequestException('L’année est invalide.');
+    return this.obtenirFeuille(
+      idp,
+      { type: 'CATEGORIE', id: categorieActeId },
+      annee,
+      factureId,
+      historique,
+    );
   }
 
   async modifier(
@@ -366,7 +393,7 @@ export class SuiviService {
       throw new NotFoundException(`L’acte ${acteId} est introuvable.`);
     const ancien = await this.obtenirFeuille(
       ligne.beneficiaire.idp,
-      ligne.acteId,
+      { type: 'ACTE', id: ligne.acteId },
       ligne.dateActe.getUTCFullYear(),
     );
     await this.resoudreNouvelleLigne(
@@ -391,7 +418,7 @@ export class SuiviService {
     });
     const nouvelle = await this.obtenirFeuille(
       ligne.beneficiaire.idp,
-      acteId,
+      { type: 'ACTE', id: acteId },
       dateActe.getUTCFullYear(),
     );
     return ancien.annee === nouvelle.annee &&
@@ -425,7 +452,7 @@ export class SuiviService {
     await this.prisma.ligneSuivi.delete({ where: { id: ligneId } });
     return this.obtenirFeuille(
       ligne.beneficiaire.idp,
-      ligne.acteId,
+      { type: 'ACTE', id: ligne.acteId },
       ligne.dateActe.getUTCFullYear(),
     );
   }
@@ -493,7 +520,7 @@ export class SuiviService {
 
   private async obtenirFeuille(
     idp: string,
-    acteId: number,
+    cibleDemandee: CibleSuiviSelectionnee,
     annee: number,
     factureId?: number,
     inclureHistorique = false,
@@ -533,12 +560,68 @@ export class SuiviService {
     });
     if (beneficiaire === null)
       throw new NotFoundException(`Le bénéficiaire ${idp} est introuvable.`);
-    const acteDemande = await this.prisma.acte.findUnique({
-      where: { id: acteId },
-      include: { categorieActe: true },
-    });
-    if (acteDemande === null)
-      throw new NotFoundException(`L’acte ${acteId} est introuvable.`);
+    const dateReference = this.dateReferencePlafonds(annee);
+    let acteDemande: {
+      id: number;
+      nomActe: string;
+      categorieActeId: number;
+      categorieActe: { nomCategorie: string };
+    } | null = null;
+    let nomCible: string;
+    let categorieActeId: number;
+    let plafondsReference: {
+      annuel: PlafondLu | null;
+      parActe?: PlafondLu;
+      cible: string;
+    };
+
+    if (cibleDemandee.type === 'ACTE') {
+      acteDemande = await this.prisma.acte.findUnique({
+        where: { id: cibleDemandee.id },
+        include: { categorieActe: true },
+      });
+      if (acteDemande === null)
+        throw new NotFoundException(
+          `L’acte ${cibleDemandee.id} est introuvable.`,
+        );
+      categorieActeId = acteDemande.categorieActeId;
+      plafondsReference = await this.resoudrePlafonds(
+        acteDemande.id,
+        acteDemande.categorieActeId,
+        dateReference,
+      );
+      nomCible = plafondsReference.cible.startsWith('categorie:')
+        ? acteDemande.categorieActe.nomCategorie
+        : acteDemande.nomActe;
+    } else {
+      const categorie = await this.prisma.categorieActe.findUnique({
+        where: { id: cibleDemandee.id },
+        select: { id: true, nomCategorie: true },
+      });
+      if (categorie === null)
+        throw new NotFoundException(
+          `La catégorie ${cibleDemandee.id} est introuvable.`,
+        );
+      categorieActeId = categorie.id;
+      const annuel = await this.plafond(
+        null,
+        categorie.id,
+        PorteePlafond.PAR_AN,
+        dateReference,
+      );
+      const parActe = await this.plafond(
+        null,
+        categorie.id,
+        PorteePlafond.PAR_ACTE,
+        dateReference,
+      );
+      plafondsReference = {
+        annuel,
+        ...(parActe === null ? {} : { parActe }),
+        cible: `categorie:${categorie.id}`,
+      };
+      nomCible = categorie.nomCategorie;
+    }
     const bornes = {
       gte: new Date(Date.UTC(annee, 0, 1)),
       lt: new Date(Date.UTC(annee + 1, 0, 1)),
@@ -587,19 +670,13 @@ export class SuiviService {
         plafondParActe: plafonds.parActe,
       });
     }
-    const dateReference = this.dateReferencePlafonds(annee);
-    const plafondsReference = await this.resoudrePlafonds(
-      acteDemande.id,
-      acteDemande.categorieActeId,
-      dateReference,
-    );
     if (plafondsReference.annuel === null) {
       throw new UnprocessableEntityException(
         'Aucun suivi n’est disponible pour cette cible : aucun plafond annuel n’est en vigueur pour l’année demandée.',
       );
     }
-    const cibleActe = plafondsReference.cible;
-    const feuille = contextes.filter((ligne) => ligne.cible === cibleActe);
+    const cible = plafondsReference.cible;
+    const feuille = contextes.filter((ligne) => ligne.cible === cible);
     const calculees = this.calcul.calculer(feuille);
     const verrous = await Promise.all(
       feuille.map((ligne) =>
@@ -613,9 +690,9 @@ export class SuiviService {
     );
     const versionsAnnuelles = await this.prisma.plafond.findMany({
       where: {
-        ...(cibleActe.startsWith('acte:')
-          ? { acteID: acteDemande.id, categorieActeID: null }
-          : { acteID: null, categorieActeID: acteDemande.categorieActeId }),
+        ...(cible.startsWith('acte:')
+          ? { acteID: cibleDemandee.id, categorieActeID: null }
+          : { acteID: null, categorieActeID: categorieActeId }),
         porteePlafond: PorteePlafond.PAR_AN,
         dateEffet: { lte: dateReference },
         OR: [
@@ -660,13 +737,13 @@ export class SuiviService {
     };
     let historique: VersionPlafond[] | undefined;
     if (inclureHistorique) {
-      const cibleHistorique: CiblePlafond = cibleActe.startsWith('acte:')
+      const cibleHistorique: CiblePlafond = cible.startsWith('acte:')
         ? {
             type: 'ACTE',
-            id: acteDemande.id,
-            categorieActeId: acteDemande.categorieActeId,
+            id: cibleDemandee.id,
+            categorieActeId,
           }
-        : { type: 'CATEGORIE', id: acteDemande.categorieActeId };
+        : { type: 'CATEGORIE', id: categorieActeId };
       const resolutionHistorique = (
         await this.plafondResolution.resoudre(
           [cibleHistorique],
@@ -676,20 +753,19 @@ export class SuiviService {
       ).get(this.plafondResolution.cleCible(cibleHistorique));
       if (resolutionHistorique?.historique === undefined) {
         throw new Error(
-          `L’historique des plafonds de ${cibleActe} n’a pas été résolu.`,
+          `L’historique des plafonds de ${cible} n’a pas été résolu.`,
         );
       }
       historique = resolutionHistorique.historique;
     }
     return this.formaterFeuille(
       entete,
-      acteDemande,
-      acteDemande.categorieActe.nomCategorie,
+      nomCible,
       feuille,
       calculees,
       verrous,
       annee,
-      cibleActe,
+      cible,
       plafondsReference,
       versionsAnnuelles.length > 1,
       historique,
@@ -756,8 +832,7 @@ export class SuiviService {
 
   private formaterFeuille(
     entete: FeuilleSuivi['entete'],
-    acte: { id: number; nomActe: string; categorieActeId: number },
-    nomCategorie: string,
+    nomCible: string,
     lignes: readonly ContexteLigne[],
     calculees: readonly LigneSuiviCalculee[],
     verrous: readonly boolean[],
@@ -870,7 +945,7 @@ export class SuiviService {
       cible: {
         type: categorie ? 'categorie' : 'acte',
         id: Number(cible.split(':')[1]),
-        nom: categorie ? nomCategorie : acte.nomActe,
+        nom: nomCible,
       },
       annee,
       plafonds: {

@@ -194,6 +194,25 @@ export class FeuilleSuiviResponseDto implements FeuilleSuivi {
   totaux!: TotauxFeuilleSuiviResponseDto;
 }
 
+export class FeuilleSuiviCompacteResponseDto implements Pick<
+  FeuilleSuivi,
+  'modele' | 'annee' | 'lignes' | 'totaux'
+> {
+  @ApiProperty({
+    enum: ['PLAFOND_ANNUEL', 'SEANCES', 'PLAFOND_ACTE_ET_ANNUEL'],
+  })
+  modele!: ModeleSuivi;
+
+  @ApiProperty()
+  annee!: number;
+
+  @ApiProperty({ type: [LigneFeuilleSuiviResponseDto] })
+  lignes!: LigneFeuilleSuiviResponseDto[];
+
+  @ApiProperty({ type: TotauxFeuilleSuiviResponseDto })
+  totaux!: TotauxFeuilleSuiviResponseDto;
+}
+
 class PlafondsCibleSuiviResponseDto {
   @ApiProperty({ type: PlafondResoluResponseDto, nullable: true })
   parAn!: PlafondResoluResponseDto | null;
