@@ -47,6 +47,27 @@ les lignes de facture et les suivis de plafonds.
 | Acte             | `GET /actes`, `GET /actes/:id`, `POST /actes`, `PATCH /actes/:id`, `DELETE /actes/:id`                                                        |
 | Catégorie d’acte | `GET /categories-actes`, `GET /categories-actes/:id`, `POST /categories-actes`, `PATCH /categories-actes/:id`, `DELETE /categories-actes/:id` |
 
+Les modifications de plafonds passent par la route de leur cible. Envoyez à
+`PATCH /actes/:id` un payload de plafond avec `acteID` égal à `:id`, ou à
+`PATCH /categories-actes/:id` avec `categorieActeID` égal à `:id` :
+
+```json
+{
+  "porteePlafond": "PAR_ACTE",
+  "unite": "MONTANT",
+  "montant": 125000,
+  "acteID": 12
+}
+```
+
+Les identifiants de cible peuvent être omis; la route détermine alors la cible.
+`porteePlafond` peut être omise si une seule portée est ouverte pour la cible;
+elle est requise si plusieurs plafonds sont ouverts. Une cible incohérente est
+refusée (`400`), l’absence de plafond ouvert donne `404`, et un plafond déjà
+utilisé par des lignes de suivi reste non modifiable (`409`). Si des champs
+d’acte/catégorie et de plafond sont envoyés ensemble, leur mise à jour est
+transactionnelle.
+
 ## Factures globales
 
 ### `GET /factures`
