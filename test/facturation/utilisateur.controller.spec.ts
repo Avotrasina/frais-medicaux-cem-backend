@@ -1,5 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
+
+vi.hoisted(() => {
+  process.env.NODE_ENV = 'development';
+});
+
 import { RoleUtilisateur } from '../../src/generated/prisma/enums.js';
 import { UtilisateurController } from '../../src/modules/utilisateur/utilisateur.controller.js';
 

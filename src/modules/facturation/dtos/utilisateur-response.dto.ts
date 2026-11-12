@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { RoleUtilisateur } from '../../../generated/prisma/enums.js';
 
 export class UtilisateurResponseDto {
@@ -10,6 +10,20 @@ export class UtilisateurResponseDto {
 
   @ApiProperty({ enum: RoleUtilisateur })
   role!: RoleUtilisateur;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  username?: string | null;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  email?: string | null;
+
+  @ApiPropertyOptional({
+    type: String,
+    nullable: true,
+    description:
+      'Chemin de l’image de profil; utiliser GET /utilisateurs/{id}/profil.',
+  })
+  profil?: string | null;
 }
 
 export class UtilisateurReponseAvecMessageDto {
