@@ -1,0 +1,7 @@
+model CompteurRefSociale {
+  annee         Int @id
+  dernierNumero Int @default(0) @map("dernier_numero")
+
+  @@map("compteur_ref_sociale")
+  @@schema("facturation")
+}

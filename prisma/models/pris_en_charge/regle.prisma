@@ -1,0 +1,28 @@
+enum TypeRegle {
+  CHARGE_TOTALE_CEM
+  REPARTITION_AGENT_CEM
+
+  @@schema("pec")
+}
+
+enum AgentConcerne {
+  ACTIF
+  NON_ACTIF
+
+  @@schema("pec")
+}
+
+model Regle {
+  id            Int           @id @default(autoincrement())
+  type          TypeRegle
+  agentConcerne AgentConcerne
+  tauxCem       Decimal       @db.Decimal(5, 2)
+  dateEffet     DateTime      @db.Date
+  dateFin       DateTime?     @db.Date
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([agentConcerne, dateEffet])
+  @@map("regle")
+  @@schema("pec")
+}

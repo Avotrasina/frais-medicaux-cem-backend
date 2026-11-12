@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
-import { join, resolve, sep } from 'node:path';
+import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { UnsupportedImageTypeException } from '../../common/errors/unsupported-image-type.exception.js';
 import {
   IMAGE_EXTENSION_BY_MIME,
@@ -72,6 +72,53 @@ export class FileStorageService {
     await this.remove(relativePath);
   }
 
+  async saveFacturePdf(buffer: Buffer): Promise<string> {
+    return this.savePdf({ buffer }, 'factures');
+  }
+
+  async saveFactureImage(file: StorableImage): Promise<string> {
+    return this.saveImage(file, 'factures');
+  }
+
+  async openStoredFile(relativePath: string): Promise<Readable | null> {
+    const full = this.resolveStoredPath(relativePath);
+    if (full === null) return null;
+
+    try {
+      const info = await stat(full);
+      if (!info.isFile()) return null;
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        error.code === 'ENOENT'
+      ) {
+        return null;
+      }
+      throw error;
+    }
+    return createReadStream(full);
+  }
+
+  async deleteStoredFile(relativePath: string): Promise<void> {
+    const full = this.resolveStoredPath(relativePath);
+    if (full === null) {
+      throw new BadRequestException('Le chemin du fichier est invalide.');
+    }
+    await unlink(full).catch((error: unknown) => {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        error.code === 'ENOENT'
+      ) {
+        return;
+      }
+      throw error;
+    });
+  }
+
   /** Reads only files inside the configured root and verifies their PDF signature. */
   async readPdf(relativePath: string): Promise<Buffer | null> {
     const root = resolve(STORAGE_SETTINGS.root);
@@ -95,14 +142,34 @@ export class FileStorageService {
     relativePath: string,
     buffer: Buffer,
   ): Promise<void> {
+    const full = this.resolveStoredPath(relativePath);
+    if (full === null) {
+      throw new BadRequestException('Le chemin du fichier est invalide.');
+    }
     await mkdir(join(STORAGE_SETTINGS.root, directory), { recursive: true });
-    await writeFile(join(STORAGE_SETTINGS.root, relativePath), buffer);
+    await writeFile(full, buffer);
   }
 
   /** Removes a stored file; missing paths are treated as already-cleaned files. */
   private async remove(relativePath: string): Promise<void> {
-    await unlink(join(STORAGE_SETTINGS.root, relativePath)).catch(
+    const full = this.resolveStoredPath(relativePath);
+    if (full === null) {
+      throw new BadRequestException('Le chemin du fichier est invalide.');
+    }
+    await unlink(full).catch(
       () => undefined,
     );
+  }
+
+  private resolveStoredPath(relativePath: string): string | null {
+    const root = resolve(STORAGE_SETTINGS.root);
+    const full = resolve(root, relativePath);
+    const cheminRelatif = relative(root, full);
+    return cheminRelatif !== '' &&
+      cheminRelatif !== '..' &&
+      !cheminRelatif.startsWith(`..${sep}`) &&
+      !isAbsolute(cheminRelatif)
+      ? full
+      : null;
   }
 }

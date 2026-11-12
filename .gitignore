@@ -3,9 +3,11 @@ test
 
 # compiled output
 /dist
+/dist-demo
+/dist-seed-facturation
 /node_modules
 /build
-
+/test
 # TypeScript build cache
 *.tsbuildinfo
 
@@ -69,3 +71,4 @@ data/
 
 # Utils 
 correction/
+/private-data/actes-et-plafonds.sql

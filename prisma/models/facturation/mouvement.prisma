@@ -1,0 +1,20 @@
+model MouvementFacture {
+  id               Int            @id @default(autoincrement())
+  factureGlobaleId Int            @map("facture_globale_id")
+  type             TypeMouvement
+  date             DateTime       @default(now())
+  createdAt        DateTime       @default(now()) @map("created_at")
+  remarque         String?
+  service          ServiceSortie?
+
+  effectueParId Int  @map("effectue_par_id")
+  adresseAId    Int? @map("adresse_a_id")
+
+  factureGlobale FactureGlobale @relation(fields: [factureGlobaleId], references: [id])
+  effectuePar    Utilisateur    @relation("MouvementEffectuePar", fields: [effectueParId], references: [id])
+  adresseA       Utilisateur?   @relation("MouvementAdresseA", fields: [adresseAId], references: [id])
+
+  @@index([factureGlobaleId, date])
+  @@map("mouvement_facture")
+  @@schema("facturation")
+}

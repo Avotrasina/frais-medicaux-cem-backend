@@ -20,7 +20,10 @@ import { memoryStorage } from 'multer';
 import {
   ApiBody,
   ApiConsumes,
+  ApiCreatedResponse,
   ApiExtraModels,
+  ApiNoContentResponse,
+  ApiOkResponse,
   ApiProduces,
   getSchemaPath,
 } from '@nestjs/swagger';
@@ -33,9 +36,9 @@ import { SaveProviderUseCase } from './use-cases/provider.save.js';
 import { UpdateProviderUseCase } from './use-cases/provider.update.js';
 import { ReadProviderUseCase } from './use-cases/provider.read.js';
 import { CreateProviderDto, UpdateProviderDto } from './dtos/provider.dto.js';
-import type { ReadProvider } from './types/provider.types.js';
 import { UpdateProviderConventionUseCase } from './use-cases/provider-convention.update.js';
 import { ProviderTreeDeletionUseCase } from './use-cases/provider-tree.delete.js';
+import { ProviderResponseDto } from './dtos/provider-response.dto.js';
 
 @Controller('providers')
 @ApiExtraModels(CreateProviderDto)
@@ -51,30 +54,28 @@ export class ProviderController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async requestDeletion(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<void> {
+  @ApiNoContentResponse({ description: 'Demande de suppression enregistrée.' })
+  async requestDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.request('prestataire', id);
   }
 
   @Post(':id/deletion-validation')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async validateDeletion(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<void> {
+  @ApiNoContentResponse({ description: 'Suppression validée.' })
+  async validateDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.validate('prestataire', id);
   }
 
   @Post(':id/deletion-rejection')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async rejectDeletion(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<void> {
+  @ApiNoContentResponse({ description: 'Demande de suppression rejetée.' })
+  async rejectDeletion(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.deletionUseCase.reject('prestataire', id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: ProviderResponseDto })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -106,7 +107,7 @@ export class ProviderController {
   async create(
     @Body() body: CreateProviderDto,
     @UploadedFile() file?: Express.Multer.File,
-  ): Promise<ReadProvider> {
+  ): Promise<ProviderResponseDto> {
     if (!file) {
       throw new BadRequestException('The agreement PDF is required');
     }
@@ -121,26 +122,33 @@ export class ProviderController {
   }
 
   @Get()
-  async findAll(): Promise<ReadProvider[]> {
+  @ApiOkResponse({ type: ProviderResponseDto, isArray: true })
+  async findAll(): Promise<ProviderResponseDto[]> {
     return this.readProviderUseCase.findAll();
   }
 
   @Get('deletion-requests')
-  async findDeletionRequests(): Promise<ReadProvider[]> {
+  @ApiOkResponse({ type: ProviderResponseDto, isArray: true })
+  async findDeletionRequests(): Promise<ProviderResponseDto[]> {
     return this.readProviderUseCase.findDeletionRequests();
   }
 
   @Get('search')
+  @ApiOkResponse({ type: ProviderResponseDto, isArray: true })
   async search(
     @Query('lieuID', new ParseIntPipe({ optional: true })) lieuID?: number,
     @Query('categorieID', new ParseIntPipe({ optional: true }))
     categorieID?: number,
-  ): Promise<ReadProvider[]> {
+  ): Promise<ProviderResponseDto[]> {
     return this.readProviderUseCase.findByFilter({ lieuID, categorieID });
   }
 
   @Get(':id/convention')
   @ApiProduces('application/pdf')
+  @ApiOkResponse({
+    description: 'Convention PDF diffusée en ligne.',
+    schema: { type: 'string', format: 'binary' },
+  })
   async getConvention(
     @Param('id', ParseIntPipe) idProvider: number,
   ): Promise<StreamableFile> {
@@ -153,15 +161,17 @@ export class ProviderController {
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: ProviderResponseDto })
   async update(
     @Param('id', ParseIntPipe) idProvider: number,
     @Body() body: UpdateProviderDto,
-  ): Promise<ReadProvider> {
+  ): Promise<ProviderResponseDto> {
     return this.updateProviderUseCase.updatePartial(idProvider, body);
   }
 
   @Patch(':id/convention')
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: ProviderResponseDto })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -188,7 +198,7 @@ export class ProviderController {
   async updateConvention(
     @Param('id', ParseIntPipe) idProvider: number,
     @UploadedFile() file?: Express.Multer.File,
-  ): Promise<ReadProvider> {
+  ): Promise<ProviderResponseDto> {
     if (!file) {
       throw new BadRequestException('The agreement PDF is required');
     }
