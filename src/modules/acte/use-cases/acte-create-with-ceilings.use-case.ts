@@ -215,7 +215,7 @@ export class CreateActeWithCeilingsUseCase {
     const categorieActeID =
       cible.type === 'CATEGORIE'
         ? cible.data.id
-        : (input.categorieActeId ?? null);
+        : null;
 
     if (input.plafonds?.parActe !== undefined) {
       await this.creerPlafond.execute(
