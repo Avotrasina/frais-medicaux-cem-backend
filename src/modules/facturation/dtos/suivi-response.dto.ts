@@ -100,6 +100,9 @@ class LigneFeuilleSuiviResponseDto {
   @ApiProperty()
   libelle!: string;
 
+  @ApiProperty({ type: String, nullable: true })
+  observation!: string | null;
+
   @ApiProperty({ type: ActeLigneSuiviResponseDto })
   acte!: ActeLigneSuiviResponseDto;
 

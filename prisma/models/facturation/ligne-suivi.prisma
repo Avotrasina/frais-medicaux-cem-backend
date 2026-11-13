@@ -5,6 +5,7 @@ model LigneSuivi {
   acteId           Int      @map("acte_id")
   dateActe         DateTime @map("date_acte") @db.Date
   libelle          String
+  observation      String?
   montantActe      Decimal  @map("montant_acte") @db.Decimal(15, 2)
   saisiParId       Int      @map("saisi_par_id")
   createdAt        DateTime @default(now()) @map("created_at")

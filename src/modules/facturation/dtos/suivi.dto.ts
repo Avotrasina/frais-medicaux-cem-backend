@@ -8,6 +8,7 @@ import {
   IsString,
   Matches,
 } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -32,6 +33,11 @@ export class CreerLigneSuiviDto {
   @IsString({ message: 'Le libellé doit être une chaîne de caractères.' })
   @IsNotEmpty({ message: 'Le libellé ne peut pas être vide.' })
   libelle?: string;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  @IsOptional()
+  @IsString({ message: 'L’observation doit être une chaîne de caractères.' })
+  observation?: string | null;
 }
 
 export class ModifierLigneSuiviDto {
@@ -54,4 +60,9 @@ export class ModifierLigneSuiviDto {
   @IsString({ message: 'Le libellé doit être une chaîne de caractères.' })
   @IsNotEmpty({ message: 'Le libellé ne peut pas être vide.' })
   libelle?: string;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  @IsOptional()
+  @IsString({ message: 'L’observation doit être une chaîne de caractères.' })
+  observation?: string | null;
 }

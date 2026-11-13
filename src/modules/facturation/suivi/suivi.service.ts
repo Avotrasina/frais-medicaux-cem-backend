@@ -52,6 +52,7 @@ interface ContexteLigne {
   acteId: number;
   dateActe: Date;
   libelle: string;
+  observation: string | null;
   montantActe: Prisma.Decimal;
   refSociale: string;
   prestataire: string;
@@ -104,6 +105,7 @@ export interface FeuilleSuivi {
     refSociale: string;
     dateActe: string;
     libelle: string;
+    observation: string | null;
     acte: { code: string; nom: string };
     montantActe: string;
     depassementActe: string | null;
@@ -308,6 +310,7 @@ export class SuiviService {
         acteId: contexte.acteId,
         dateActe,
         libelle: donnees.libelle ?? contexte.acteNom,
+        observation: donnees.observation ?? null,
         montantActe: new Prisma.Decimal(String(donnees.montantActe)),
         saisiParId: acteur.id,
       },
@@ -410,6 +413,7 @@ export class SuiviService {
         acteId,
         dateActe,
         libelle: donnees.libelle,
+        observation: donnees.observation,
         montantActe:
           donnees.montantActe === undefined
             ? undefined
@@ -507,6 +511,7 @@ export class SuiviService {
       acteId: acte.id,
       dateActe,
       libelle: libelle ?? acte.nomActe,
+      observation: null,
       montantActe: new Prisma.Decimal(String(montant)),
       refSociale: facture.refSociale,
       prestataire: facture.prestataire.nom,
@@ -660,6 +665,7 @@ export class SuiviService {
         acteId: ligne.acteId,
         dateActe: ligne.dateActe,
         libelle: ligne.libelle,
+        observation: ligne.observation,
         montantActe: ligne.montantActe,
         refSociale: ligne.factureGlobale.refSociale,
         prestataire: ligne.factureGlobale.prestataire.nom,
@@ -873,6 +879,7 @@ export class SuiviService {
         refSociale: ligne.refSociale,
         dateActe: calculee.dateActe.toISOString().slice(0, 10),
         libelle: ligne.libelle,
+        observation: ligne.observation,
         acte: { code: ligne.acteCode, nom: ligne.acteNom },
         montantActe: calculee.montantActe.toFixed(2),
         depassementActe,
