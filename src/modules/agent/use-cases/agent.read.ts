@@ -45,7 +45,6 @@ export class ReadAgentUseCase {
     };
   }
 
-  /** Determines the front-office from retirement status or the linked structure. */
   private resolveBackOffice(
     agentType: AgentType,
     structure: Awaited<
@@ -62,6 +61,13 @@ export class ReadAgentUseCase {
 
   findAll(): Promise<AgentUseCaseTypes[]> {
     return this.fetch(() => this.agentRepository.findAllAgents());
+  }
+
+  async findByMatricule(matricule: number): Promise<AgentUseCaseTypes> {
+    const agent = await this.agentRepository.findByMatriculeWithPersonne(
+      matricule,
+    );
+    return this.toUseCaseType(agent);
   }
 
   findDeletionRequests(): Promise<ReadPersonneAgent[]> {
