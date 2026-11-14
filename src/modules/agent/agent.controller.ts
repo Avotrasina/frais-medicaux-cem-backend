@@ -207,6 +207,15 @@ export class AgentController {
     return await this.readAgentUseCase.findByFirstName(query.value);
   }
 
+  @Get(':matricule')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: AgentResponseDto })
+  async findByMatricule(
+    @Param('matricule', ParseIntPipe) matricule: number,
+  ): Promise<AgentResponseDto> {
+    return await this.readAgentUseCase.findByMatricule(matricule);
+  }
+
   @Get(':matricule/card')
   @HttpCode(HttpStatus.OK)
   @ApiProduces('image/png', 'image/jpeg', 'image/webp')
