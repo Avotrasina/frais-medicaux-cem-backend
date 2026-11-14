@@ -1,9 +1,16 @@
-import type { Sexe } from "./personne.types.js";
-import type { StatutPEC, BackOfficeFrontOffice } from "./enum.types.js";
+import type { Sexe } from '../../personne/personne.types.js';
+import type { BackOfficeFrontOffice } from './agent.enum.types.js';
+import type { StatutPEC } from './agent.types.js';
+import type { Readable } from 'node:stream';
 
-// Pour les use cases d'enregistrement et de mise à jour d'un agent
+export type AgentCardFile = {
+  stream: Readable;
+  mimeType: string;
+  fileName: string;
+};
+
 export type AgentUseCaseTypes = {
-  matricule: string;
+  matricule: number;
   nom: string;
   prenom: string;
   statutPEC: StatutPEC;
@@ -14,9 +21,36 @@ export type AgentUseCaseTypes = {
   carteProfessionnellePath: string;
   dateEntree: Date;
 
-  fonctionID?: number | null;
+  fonction?: string | null;
   categorieID?: string | null;
-  codeDirection?: string | null;
-  codeAgence?: string | null;
+  structureID?: string | null;
   codeService?: string | null;
+};
+
+export type AgentUpdatePartial = {
+  matricule: number;
+  nom?: string | null;
+  prenom?: string | null;
+  statutPEC?: StatutPEC | null;
+  dateNaissance?: Date | null;
+  sexe?: Sexe | null;
+  backOfficeFrontOffice?: BackOfficeFrontOffice | null;
+  observationMatricule?: string | null;
+  dateEntree?: Date | null;
+
+  fonction?: string | null;
+  categorieID?: string | null;
+  structureID?: string | null;
+  codeService?: string | null;
+};
+
+export type AgentUpdateProfCard = {
+  matricule: number;
+  carteProfessionnellePath: string;
+};
+export type FilterOptions = {
+  backOfficeFrontOffice?: BackOfficeFrontOffice | null;
+  codeDirection?: string | null;
+  codeService?: string | null;
+  codeAgence?: string | null;
 };

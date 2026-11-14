@@ -1,0 +1,21 @@
+model LigneSuivi {
+  id               Int      @id @default(autoincrement())
+  factureGlobaleId Int      @map("facture_globale_id")
+  beneficiaireId   Int      @map("beneficiaire_id")
+  acteId           Int      @map("acte_id")
+  dateActe         DateTime @map("date_acte") @db.Date
+  libelle          String
+  montantActe      Decimal  @map("montant_acte") @db.Decimal(15, 2)
+  saisiParId       Int      @map("saisi_par_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  factureGlobale FactureGlobale @relation(fields: [factureGlobaleId], references: [id])
+  beneficiaire   Beneficiaire   @relation(fields: [beneficiaireId], references: [id])
+  acte           Acte           @relation(fields: [acteId], references: [id])
+  saisiPar       Utilisateur    @relation(fields: [saisiParId], references: [id])
+
+  @@index([beneficiaireId, acteId, dateActe])
+  @@index([factureGlobaleId])
+  @@schema("facturation")
+}

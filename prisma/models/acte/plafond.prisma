@@ -1,0 +1,35 @@
+enum PorteePlafond {
+  PAR_ACTE @map("par_acte")
+  PAR_AN   @map("par_an")
+
+  @@map("portee_plafond")
+  @@schema("acte")
+}
+
+enum UnitePlafond {
+  MONTANT @map("montant")
+  SEANCES @map("seances")
+
+  @@map("unite_plafond")
+  @@schema("acte")
+}
+
+model Plafond {
+  id              Int           @id @default(autoincrement())
+  porteePlafond   PorteePlafond @default(PAR_ACTE) @map("portee_plafond")
+  unite           UnitePlafond  @default(MONTANT)
+  dateEffet       DateTime      @map("date_effet") @db.Date
+  dateFin         DateTime?     @map("date_fin") @db.Date
+  montant         Decimal?      @db.Decimal(15, 2)
+  nbSeances       Int?          @map("nb_seances")
+  acteID          Int?          @map("acte_id")
+  categorieActeID Int?          @map("categorie_acte_id")
+
+  acte          Acte?          @relation(fields: [acteID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categorieActe CategorieActe? @relation(fields: [categorieActeID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([acteID, porteePlafond, dateEffet])
+  @@index([categorieActeID, porteePlafond, dateEffet])
+  @@map("plafonds")
+  @@schema("acte")
+}

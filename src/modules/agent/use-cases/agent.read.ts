@@ -1,82 +1,117 @@
-import { Injectable } from "@nestjs/common";
-import { AgentRepository } from "../repositories/agent.repository.js";
-import { AgentType } from "../types/agent.types.js";
-import type { AgentUseCaseTypes } from "../types/use-case.agent.types.js";
-import { BackOfficeFrontOffice } from "../dto/enum.js";
+import { Injectable } from '@nestjs/common';
+import { AgentRepository } from '../repositories/agent.repository.js';
+import { AgentType, type ReadPersonneAgent } from '../types/agent.types.js';
+import type {
+  AgentUseCaseTypes,
+  FilterOptions,
+} from '../types/use-case.agent.types.js';
+import { BackOfficeFrontOffice } from '../types/agent.enum.types.js';
+import { StructureOrganisationnelleRepository } from '../../organizational-structure/repositories/structure-orga.repository.js';
 
-type FilterOptions = {
-  backOfficeFrontOffice?: BackOfficeFrontOffice | null;
-  codeDirection?: string;
-  codeService?: string;
-  codeAgence?: string;
-};
-
-// Type d'un élément retourné par le repository (évite de dupliquer le type)
 type PersonneAgent = Awaited<
-  ReturnType<AgentRepository["findAllAgents"]>
+  ReturnType<AgentRepository['findAllAgents']>
 >[number];
 
 @Injectable()
 export class ReadAgentUseCase {
-  constructor(private readonly agentRepository: AgentRepository) {}
+  constructor(
+    private readonly agentRepository: AgentRepository,
+    private readonly structureRepository: StructureOrganisationnelleRepository,
+  ) {}
 
   private async fetch(
     query: () => Promise<PersonneAgent[]>,
   ): Promise<AgentUseCaseTypes[]> {
     const agents = await query();
-    return agents.map((a) => this.toUseCaseType(a));
+    return Promise.all(agents.map((a) => this.toUseCaseType(a)));
   }
 
-  private toUseCaseType({
+  private async toUseCaseType({
     agent,
     id: _p,
     ...personne
-  }: PersonneAgent): AgentUseCaseTypes {
-    const { structureID: _s, id: _a, agentType, ...resteAgent } = agent;
+  }: PersonneAgent): Promise<AgentUseCaseTypes> {
+    const { structureID, id: _a, agentType, ...resteAgent } = agent;
+    const structure =
+      structureID && agentType !== AgentType.AGENT_RETRAITE
+        ? await this.structureRepository.findById(structureID)
+        : null;
 
     return {
       ...personne,
       ...resteAgent,
-      backOfficeFrontOffice: this.resolveBackOffice(
-        agentType,
-        resteAgent.codeDirection,
-      ),
+      structureID,
+      backOfficeFrontOffice: this.resolveBackOffice(agentType, structure),
     };
   }
 
   private resolveBackOffice(
     agentType: AgentType,
-    codeDirection?: string | null,
+    structure: Awaited<
+      ReturnType<StructureOrganisationnelleRepository['findById']>
+    > | null,
   ): BackOfficeFrontOffice {
     if (agentType === AgentType.AGENT_RETRAITE) {
       return BackOfficeFrontOffice.RETRAITE;
     }
-    return codeDirection
-      ? BackOfficeFrontOffice.DIRECTION
-      : BackOfficeFrontOffice.AGENCE;
+    if (structure?.nomAgence) return BackOfficeFrontOffice.AGENCE;
+    if (structure?.nomDirection) return BackOfficeFrontOffice.DIRECTION;
+    return BackOfficeFrontOffice.AGENCE;
   }
-  readAll(): Promise<AgentUseCaseTypes[]> {
+
+  findAll(): Promise<AgentUseCaseTypes[]> {
     return this.fetch(() => this.agentRepository.findAllAgents());
   }
 
-  filter(params: FilterOptions): Promise<AgentUseCaseTypes[]> {
+  async findByMatricule(matricule: number): Promise<AgentUseCaseTypes> {
+    const agent = await this.agentRepository.findByMatriculeWithPersonne(
+      matricule,
+    );
+    return this.toUseCaseType(agent);
+  }
+
+  findDeletionRequests(): Promise<ReadPersonneAgent[]> {
+    return this.agentRepository.findDeletionRequests();
+  }
+
+  findByFilter(params: FilterOptions): Promise<AgentUseCaseTypes[]> {
     const { backOfficeFrontOffice, codeAgence, codeDirection, codeService } =
       params;
 
     if (backOfficeFrontOffice === BackOfficeFrontOffice.RETRAITE) {
       return this.fetch(() => this.agentRepository.findAllRetiredAgents());
     }
+    if (backOfficeFrontOffice === BackOfficeFrontOffice.AGENCE) {
+      return this.fetch(() => this.agentRepository.findAllAgencyAgents());
+    }
+    if (backOfficeFrontOffice === BackOfficeFrontOffice.DIRECTION) {
+      return this.fetch(() => this.agentRepository.findAllDirectionAgents());
+    }
     if (codeAgence != null) {
       return this.fetch(() =>
-        this.agentRepository.findAgentsByCodeAgence(codeAgence),
+        this.agentRepository.findAgentsByAgencyCode(codeAgence),
       );
     }
     if (codeDirection != null) {
       return this.fetch(() =>
-        this.agentRepository.findAgentsByDirection(codeDirection, codeService),
+        this.agentRepository.findAgentsWithPersonneByDirection(
+          codeDirection,
+          codeService,
+        ),
       );
     }
-    return this.readAll();
+    return this.findAll();
   }
 
+  findByLastName(lastName: string): Promise<AgentUseCaseTypes[]> {
+    return this.fetch(() =>
+      this.agentRepository.findByLastNameWithPersonne(lastName),
+    );
+  }
+
+  findByFirstName(firstName: string): Promise<AgentUseCaseTypes[]> {
+    return this.fetch(() =>
+      this.agentRepository.findByFirstNameWithPersonne(firstName),
+    );
+  }
 }

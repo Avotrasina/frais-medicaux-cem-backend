@@ -1,6 +1,6 @@
 export const CHECK_CONSTRAINT_MESSAGES: Record<string, string> = {
-chk_agent_affectation:
-"Un agent actif doit être affecté à un structure organisationnelle et avoir un fonction.Tandis qu'una gent retraite ne doit pas etre affecté à une structure organisationnelle ni avoir un fonction.",
-chk_prestataire_convention:
-"la date du fin de convention doit etre superieur à la date du debut de convention.",
+  chk_agent_affectation:
+    'An active agent must be assigned to an organizational structure and have a job function. A retired agent must not be assigned to an organizational structure or have a job function.',
+  chk_prestataire_convention:
+    'The end date of the agreement must be later than its start date.',
 };

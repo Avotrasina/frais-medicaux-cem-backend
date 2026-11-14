@@ -1,0 +1,28 @@
+enum RegimeActe {
+  NORMAL          @map("normal")
+  EXCLU           @map("exclu")
+  SUR_DECISION_DG @map("sur_decision_dg")
+
+  @@map("regime_acte")
+  @@schema("acte")
+}
+
+model Acte {
+  id           Int        @id @default(autoincrement())
+  code         String     @unique
+  nomActe      String     @map("nom_acte")
+  listeLibelle String     @map("liste_libelle") @db.Text
+  regime       RegimeActe @default(NORMAL)
+
+  // Relation Acte - CategorieActe
+  categorieActeId Int           @map("categorie_acte_id")
+  categorieActe   CategorieActe @relation(fields: [categorieActeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // Relation Acte - Plafond
+  plafonds              Plafond[]
+  facturesIndividuelles FactureIndividuelle[]
+  lignesSuivi           LigneSuivi[]
+
+  @@map("actes")
+  @@schema("acte")
+}

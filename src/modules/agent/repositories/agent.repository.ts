@@ -1,170 +1,356 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
-import type {
-  Personne,
-  Agent,
-  Prisma,
-} from "../../../generated/prisma/client.js";
-import type { DbClient } from "../../../infrastructure/prisma/db-client.type.js";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import type { Prisma } from '../../../generated/prisma/client.js';
+import type { DbClient } from '../../../infrastructure/prisma/db-client.type.js';
 import {
-  AgentType,StatutPEC,
   type CreateAgent,
   type ReadAgent,
-  type UpdateAgent,
-} from "../types/agent.types.js";
-import {type ReadPersonne,Sexe} from "../types/personne.types.js"
-import { HandlePrismaErrors } from "../../../common/decorators/handle-prisma-errors.decorator.js";
-import type {ReadPersonneAgent} from "../types/agent.types.js"
+  type ReadPersonneAgent,
+  type UpdatePartialAgent,
+} from '../types/agent.types.js';
+import { HandlePrismaErrors } from '../../../common/decorators/handle-prisma-errors.decorator.js';
+import { omitNullish } from '../../../common/utils/omit-nullish.js';
+import { executeSoftDeletion } from '../../../infrastructure/prisma/soft-deletion.repository.js';
+import type {
+  DeletionAction,
+  DeletionNode,
+} from '../../../common/types/soft-deletion.types.js';
+import { SuppressionStatut } from '../../../generated/prisma/enums.js';
+import {
+  mapAgentToRead,
+  mapAgentWithPersonneToRead,
+} from '../mappers/agent.mapper.js';
 
-type PersonneWithAgent = Prisma.PersonneGetPayload<{
-  include: { agent: true };
-}>;
+type AgentPersonDeletionData = {
+  id: number;
+  beneficiaire: {
+    id: number;
+    attestations: { id: number }[];
+  } | null;
+};
+
+type AgentFamilyDeletionData = {
+  id: number;
+  carteSocialePath: string;
+  conjoint: { id: number } | null;
+  enfant: { id: number } | null;
+  personne: AgentPersonDeletionData;
+};
+
+type AgentDeletionData = {
+  id: number;
+  matricule: number;
+  carteProfessionnellePath: string;
+  personne: AgentPersonDeletionData;
+  familleAgent: AgentFamilyDeletionData[];
+};
 
 @Injectable()
-@HandlePrismaErrors({exclude: ["toReadAgent"] })
+@HandlePrismaErrors()
 export class AgentRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private client(tx?: DbClient): DbClient {
     return tx ?? this.prisma;
   }
 
-  private toReadPersonne(personne: Personne): ReadPersonne {
-    return { ...personne, sexe: Sexe[personne.sexe] };
-  }
-  private toReadAgent(agent: Agent): ReadAgent {
-    return {
-      id: agent.id,
-      matricule: agent.matricule,
-      observationMatricule: agent.observationMatricule,
-      carteProfessionnellePath: agent.carteProfessionnellePath,
-      dateEntree: agent.dateEntree,
-      statutPEC:StatutPEC[agent.statutPEC],
-      agentType: AgentType[agent.agentType],
-      structureID: agent.structureID,
-      codeService: agent.serviceID,
-      fonctionID: agent.fonctionID,
-      categorieID: agent.categorieID,
-    };
-  }
-  private toReadPersonneAgent(
-    p: PersonneWithAgent & { agent: Agent },
-  ): ReadPersonneAgent {
-    const { agent, ...personne } = p;
-    return {
-      ...this.toReadPersonne(personne),
-      agent: this.toReadAgent(agent),
-    };
+  private async findManyWithPersonne(
+    where: Prisma.AgentWhereInput,
+    tx?: DbClient,
+  ): Promise<ReadPersonneAgent[]> {
+    const agents = await this.client(tx).agent.findMany({
+      where,
+      include: { personne: true },
+      orderBy: [{ personne: { nom: 'asc' } }, { personne: { prenom: 'asc' } }],
+    });
+    return agents.map(mapAgentWithPersonneToRead);
   }
 
   async findAll(tx?: DbClient): Promise<ReadAgent[]> {
     const agents = await this.client(tx).agent.findMany();
-    return agents.map((agent) => this.toReadAgent(agent));
+    return agents.map(mapAgentToRead);
   }
 
-  async findOne(id: number, tx?: DbClient): Promise<ReadAgent | null> {
-    const agent = await this.client(tx).agent.findUnique({ where: { id } });
-    return agent ? this.toReadAgent(agent) : null;
+  async findById(id: number, tx?: DbClient): Promise<ReadAgent> {
+    const agent = await this.client(tx).agent.findFirstOrThrow({
+      where: { id },
+    });
+    return mapAgentToRead(agent);
+  }
+
+  async findByLastNameWithPersonne(
+    lastName: string,
+    tx?: DbClient,
+  ): Promise<ReadPersonneAgent[]> {
+    const value = lastName.trim();
+    if (!value) return [];
+
+    return this.findManyWithPersonne(
+      { personne: { nom: { contains: value, mode: 'insensitive' } } },
+      tx,
+    );
+  }
+
+  async findByFirstNameWithPersonne(
+    firstName: string,
+    tx?: DbClient,
+  ): Promise<ReadPersonneAgent[]> {
+    const value = firstName.trim();
+    if (!value) return [];
+
+    return this.findManyWithPersonne(
+      { personne: { prenom: { contains: value, mode: 'insensitive' } } },
+      tx,
+    );
+  }
+
+  async findByIdWithPersonne(
+    id: number,
+    tx?: DbClient,
+  ): Promise<ReadPersonneAgent> {
+    const agent = await this.client(tx).agent.findFirstOrThrow({
+      where: { id },
+      include: { personne: true },
+    });
+    return mapAgentWithPersonneToRead(agent);
+  }
+
+  async findByMatricule(matricule: number, tx?: DbClient): Promise<ReadAgent> {
+    const agent = await this.client(tx).agent.findFirstOrThrow({
+      where: { matricule },
+    });
+    return mapAgentToRead(agent);
+  }
+
+  async findByMatriculeWithPersonne(
+    matricule: number,
+    tx?: DbClient,
+  ): Promise<ReadPersonneAgent> {
+    const agent = await this.client(tx).agent.findFirstOrThrow({
+      where: { matricule },
+      include: { personne: true },
+    });
+    return mapAgentWithPersonneToRead(agent);
+  }
+
+  /**
+   * Applies a deletion request to the agent and its dependencies, then returns
+   * the card paths to remove from storage.
+   */
+  async applyDeletionTree(
+    matricule: number,
+    action: DeletionAction,
+    tx?: DbClient,
+  ): Promise<string[]> {
+    const client = this.client(tx) as any;
+    const agent = (await client.agent.findFirstOrThrow({
+      where: { matricule },
+      select: {
+        id: true,
+        matricule: true,
+        carteProfessionnellePath: true,
+        personne: {
+          select: {
+            id: true,
+            beneficiaire: {
+              select: { id: true, attestations: { select: { id: true } } },
+            },
+          },
+        },
+        familleAgent: {
+          select: {
+            id: true,
+            carteSocialePath: true,
+            conjoint: { select: { id: true } },
+            enfant: { select: { id: true } },
+            personne: {
+              select: {
+                id: true,
+                beneficiaire: {
+                  select: { id: true, attestations: { select: { id: true } } },
+                },
+              },
+            },
+          },
+        },
+      },
+    })) as AgentDeletionData;
+
+    await executeSoftDeletion(client, this.deletionNodes(agent), action);
+    return [
+      agent.carteProfessionnellePath,
+      ...agent.familleAgent.map(({ carteSocialePath }) => carteSocialePath),
+    ];
+  }
+
+  /** Builds deletion targets for the agent and their family members. */
+  private deletionNodes(agent: AgentDeletionData): DeletionNode[] {
+    const nodes: DeletionNode[] = [
+      { model: 'agent', where: { matricule: agent.matricule } },
+      ...this.personDeletionNodes(agent.personne),
+    ];
+    for (const family of agent.familleAgent) {
+      nodes.push({ model: 'familleAgent', where: { id: family.id } });
+      if (family.conjoint)
+        nodes.push({ model: 'conjoint', where: { id: family.conjoint.id } });
+      if (family.enfant)
+        nodes.push({ model: 'enfant', where: { id: family.enfant.id } });
+      nodes.push(...this.personDeletionNodes(family.personne));
+    }
+    return nodes;
+  }
+
+  /** Adds the person, optional beneficiary, and attestations to the deletion tree. */
+  private personDeletionNodes(
+    person: AgentDeletionData['personne'],
+  ): DeletionNode[] {
+    const nodes: DeletionNode[] = [
+      { model: 'personne', where: { id: person.id } },
+    ];
+    if (!person.beneficiaire) return nodes;
+    nodes.push({
+      model: 'beneficiaire',
+      where: { id: person.beneficiaire.id },
+    });
+    nodes.push(
+      ...person.beneficiaire.attestations.map(({ id }) => ({
+        model: 'attestation',
+        where: { id },
+      })),
+    );
+    return nodes;
   }
 
   async findAllAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
-    const personnes = await this.client(tx).personne.findMany({
-      where: { agent: { isNot: null } }, 
-      include: { agent: true },
-      orderBy: { nom: "asc" },
-    });
-
-    return personnes
-      .filter(
-        (p): p is PersonneWithAgent & { agent: Agent } => p.agent !== null,
-      )
-      .map((p) => this.toReadPersonneAgent(p));
-  } 
-
-  async findAllRetiredAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
-    const personnes = await this.client(tx).personne.findMany({
-      where: { agent: { is: { agentType: "AGENT_RETRAITE" } } },
-      include: { agent: true },
-      orderBy: [{ nom: "asc" }, { prenom: "asc" }],
-    });
-
-    return personnes
-      .filter(
-        (p): p is PersonneWithAgent & { agent: Agent } => p.agent !== null,
-      )
-      .map((p) => this.toReadPersonneAgent(p));
+    return this.findManyWithPersonne({}, tx);
   }
 
-  async findAgentsByCodeAgence(
+  async findDeletionRequests(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne(
+      { suppressionStatut: SuppressionStatut.EN_ATTENTE },
+      tx,
+    );
+  }
+
+  async findAllRetiredAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne({ agentType: 'AGENT_RETRAITE' }, tx);
+  }
+
+  async findAllAgencyAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne(
+      {
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'AGENCE' },
+        },
+      },
+      tx,
+    );
+  }
+
+  async findAllDirectionAgents(tx?: DbClient): Promise<ReadPersonneAgent[]> {
+    return this.findManyWithPersonne(
+      {
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'DIRECTION' },
+        },
+      },
+      tx,
+    );
+  }
+
+  async findAgentsByAgencyCode(
     codeAgence: string,
     tx?: DbClient,
   ): Promise<ReadPersonneAgent[]> {
-    const personnes = await this.client(tx).personne.findMany({
-      where: { agent: { is: { structureID: codeAgence } } },
-      include: { agent: true },
-      orderBy: [{ nom: "asc" }, { prenom: "asc" }],
-    });
-
-    return personnes
-      .filter(
-        (p): p is PersonneWithAgent & { agent: Agent } => p.agent !== null,
-      )
-      .map((p) => this.toReadPersonneAgent(p));
+    return this.findManyWithPersonne(
+      {
+        structureID: codeAgence,
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'AGENCE' },
+        },
+      },
+      tx,
+    );
   }
 
-  async findAgentsByDirection(
+  async findAgentsWithPersonneByDirection(
     directionID: string,
     serviceID?: string | null,
     tx?: DbClient,
   ): Promise<ReadPersonneAgent[]> {
-    const personnes = await this.client(tx).personne.findMany({
-      where: {
-        agent: {
-          is: {
-            structureID: directionID,
-            structureOrganisationnelle: {
-              is: { structureOrganisationnelleType: "DIRECTION" },
-            },
-            ...(serviceID != null && { serviceID }),
-          },
+    return this.findManyWithPersonne(
+      {
+        structureID: directionID,
+        structureOrganisationnelle: {
+          is: { structureOrganisationnelleType: 'DIRECTION' },
         },
+        ...(serviceID != null && { serviceID }),
       },
-      include: { agent: true },
-      orderBy: [{ nom: "asc" }, { prenom: "asc" }],
-    });
-
-    return personnes
-      .filter(
-        (p): p is PersonneWithAgent & { agent: Agent } => p.agent !== null,
-      )
-      .map((p) => this.toReadPersonneAgent(p));
+      tx,
+    );
   }
 
-  async findByMatricule(
-    matricule: string,
-    tx?: DbClient,
-  ): Promise<ReadAgent | null> {
-    const agent = await this.client(tx).agent.findUnique({
-      where: { matricule },
+  async findAgentCard(agentMatricule: number, tx?: DbClient): Promise<string> {
+    const agent = await this.client(tx).agent.findFirstOrThrow({
+      where: {
+        matricule: agentMatricule,
+      },
     });
-    return agent ? this.toReadAgent(agent) : null;
+    return agent.carteProfessionnellePath;
   }
 
   async create(agent: CreateAgent, tx?: DbClient): Promise<ReadAgent> {
     const created = await this.client(tx).agent.create({ data: agent });
-    return this.toReadAgent(created);
+    return mapAgentToRead(created);
   }
 
-  async update(
+  async updatePartial(
     id: number,
-    agent: UpdateAgent,
+    agent: UpdatePartialAgent,
+    tx?: DbClient,
+  ): Promise<ReadAgent> {
+    const structureID = agent.structureID;
+
+    const data = omitNullish({
+      observationMatricule: agent.observationMatricule,
+      dateEntree: agent.dateEntree,
+      statutPEC: agent.statutPEC,
+      agentType: agent.agentType,
+      structureID,
+      serviceID: agent.codeService,
+      fonction: agent.fonction,
+      categorieID: agent.categorieID,
+    });
+
+    const updated = await this.client(tx).agent.update({
+      where: { id },
+      data,
+    });
+    return mapAgentToRead(updated);
+  }
+
+  async updateProfCard(
+    id: number,
+    newCardPath: string,
     tx?: DbClient,
   ): Promise<ReadAgent> {
     const updated = await this.client(tx).agent.update({
       where: { id },
-      data: agent,
+      data: { carteProfessionnellePath: newCardPath },
     });
-    return this.toReadAgent(updated);
+    return mapAgentToRead(updated);
+  }
+
+  async updateStructureByService(
+    serviceID: string,
+    structureID: string,
+    tx?: DbClient,
+  ): Promise<number> {
+    const result = await this.client(tx).agent.updateMany({
+      where: { serviceID },
+      data: { structureID },
+    });
+    return result.count;
   }
 
   async delete(id: number, tx?: DbClient): Promise<void> {

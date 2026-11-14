@@ -1,25 +1,26 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "../../../generated/prisma/client.js";
-import { AgentRepository } from "../repositories/agent.repository.js";
-import { PersonneRepository } from "../repositories/personne.repository.js";
-import {AgentType} from "../types/agent.types.js"
-import type { AgentUseCaseTypes } from "../types/use-case.agent.types.js";
-import type { CreateAgent} from "../types/agent.types.js";
-import type { CreatePersonne} from "../types/personne.types.js";
-
-
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import { AgentRepository } from '../repositories/agent.repository.js';
+import { PersonneRepository } from '../../personne/repositories/personne.repository.js';
+import { BeneficiaryRepository } from '../../beneficiary/repositories/beneficiary.repository.js';
+import { AgentType } from '../types/agent.types.js';
+import type { AgentUseCaseTypes } from '../types/use-case.agent.types.js';
+import type { CreateAgent } from '../types/agent.types.js';
+import type { CreatePersonne } from '../../personne/personne.types.js';
+import type { CreateBeneficiary } from '../../beneficiary/types/beneficiary.types.js';
 
 @Injectable()
 export class SaveAgentUseCase {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaService,
     private readonly personneRepository: PersonneRepository,
     private readonly agentRepository: AgentRepository,
+    private readonly beneficiaryRepository: BeneficiaryRepository,
   ) {}
 
   private splitInput(input: AgentUseCaseTypes): {
     personne: CreatePersonne;
-    agent: Omit<CreateAgent, "id">;
+    agent: Omit<CreateAgent, 'id'>;
   } {
     const personne: CreatePersonne = {
       nom: input.nom,
@@ -28,35 +29,45 @@ export class SaveAgentUseCase {
       sexe: input.sexe,
     };
 
-    const agent: Omit<CreateAgent, "id"> = {
+    const agent: Omit<CreateAgent, 'id'> = {
       matricule: input.matricule,
       observationMatricule: input.observationMatricule,
       carteProfessionnellePath: input.carteProfessionnellePath,
       dateEntree: input.dateEntree,
-      fonctionID: input.fonctionID,
+      fonction: input.fonction,
       categorieID: input.categorieID,
-      codeDirection: input.codeDirection,
-      codeAgence: input.codeAgence,
-      codeService: input.codeService,
+      serviceID: input.codeService,
       statutPEC: input.statutPEC,
-      agentType : input.backOfficeFrontOffice == "RETRAITE" ? AgentType.AGENT_RETRAITE : AgentType.AGENT_ACTIF,
-      structureID: input.codeAgence ? input.codeAgence : input.codeDirection,
+      agentType:
+        input.backOfficeFrontOffice == 'RETRAITE'
+          ? AgentType.AGENT_RETRAITE
+          : AgentType.AGENT_ACTIF,
+      structureID: input.structureID,
     };
 
     return { personne, agent };
   }
 
-  async execute(
-    input: AgentUseCaseTypes,
-  ): Promise<AgentUseCaseTypes> {
+  /** Creates the person, agent, and beneficiary in the same transaction. */
+  async execute(input: AgentUseCaseTypes): Promise<AgentUseCaseTypes> {
     const { personne, agent } = this.splitInput(input);
 
     await this.prisma.$transaction(async (tx) => {
-      const createdPersonne = await this.personneRepository.create(personne, tx);
+      const createdPersonne = await this.personneRepository.create(
+        personne,
+        tx,
+      );
+
       await this.agentRepository.create(
         { ...agent, id: createdPersonne.id },
         tx,
       );
+      const beneficiary: CreateBeneficiary = {
+        id: createdPersonne.id,
+        codeFamille: 'AGENT',
+        agentMatricule: input.matricule,
+      };
+      await this.beneficiaryRepository.create(beneficiary, tx);
     });
     return input;
   }

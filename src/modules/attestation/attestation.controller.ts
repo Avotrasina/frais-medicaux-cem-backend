@@ -1,0 +1,111 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  StreamableFile,
+} from '@nestjs/common';
+import { DeleteAttestationUseCase } from './use-cases/attestation.delete.js';
+import { ReadAttestationUseCase } from './use-cases/attestation.read.js';
+import { ReviewAttestationUseCase } from './use-cases/attestation.review.js';
+import { SaveAttestationUseCase } from './use-cases/attestation.save.js';
+import { UpdateAttestationUseCase } from './use-cases/attestation.update.js';
+import { CreateAttestationDto } from './dtos/create-attestation.dto.js';
+import { UpdatePartialAttestationDto } from './dtos/update-attestation.dto.js';
+import { PreviewAttestation } from './use-cases/attestation.preview.js';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiProduces,
+} from '@nestjs/swagger';
+import { AttestationResponseDto } from './dtos/attestation-response.dto.js';
+
+@Controller('attestations')
+export class AttestationController {
+  constructor(
+    private readonly attestationDeleteUseCase: DeleteAttestationUseCase,
+    private readonly attestationReadUseCase: ReadAttestationUseCase,
+    private readonly attestationReviewUseCase: ReviewAttestationUseCase,
+    private readonly attestationSaveUseCase: SaveAttestationUseCase,
+    private readonly attestationUpdateUseCase: UpdateAttestationUseCase,
+    private readonly attestationPreviewUseCase: PreviewAttestation,
+  ) {}
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Attestation créée.' })
+  async create(@Body() dto: CreateAttestationDto): Promise<void> {
+    await this.attestationSaveUseCase.execute(dto);
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Attestation mise à jour.' })
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdatePartialAttestationDto,
+  ) {
+    await this.attestationUpdateUseCase.execute(id, dto);
+  }
+
+  @Patch(':id/approval')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Attestation approuvée.' })
+  async approve(@Param('id', ParseIntPipe) id: number) {
+    await this.attestationReviewUseCase.approve(id);
+  }
+
+  @Patch(':id/rejection')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Attestation rejetée.' })
+  async reject(@Param('id', ParseIntPipe) id: number) {
+    await this.attestationReviewUseCase.reject(id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({ description: 'Attestation supprimée.' })
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    await this.attestationDeleteUseCase.execute(id);
+  }
+
+  @Get('/')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: AttestationResponseDto, isArray: true })
+  async findAll(): Promise<AttestationResponseDto[]> {
+    return await this.attestationReadUseCase.findAll();
+  }
+
+  @Get('beneficiaries/:idp')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: AttestationResponseDto, isArray: true })
+  async findByBeneficiary(
+    @Param('idp') idp: string,
+  ): Promise<AttestationResponseDto[]> {
+    return await this.attestationReadUseCase.findByBeneficiaryIdp(idp);
+  }
+
+  @Get(':id/preview')
+  @HttpCode(HttpStatus.OK)
+  @ApiProduces('image/png')
+  @ApiOkResponse({
+    description: 'Aperçu de l’attestation au format PNG.',
+    schema: { type: 'string', format: 'binary' },
+  })
+  async preview(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<StreamableFile> {
+    const image = await this.attestationPreviewUseCase.execute(id);
+    return new StreamableFile(image, {
+      type: 'image/png',
+      disposition: `inline; filename="attestation-${id}.png"`,
+    });
+  }
+}

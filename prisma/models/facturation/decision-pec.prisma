@@ -1,0 +1,17 @@
+model DecisionPriseEnCharge {
+  id                    Int           @id @default(autoincrement())
+  factureIndividuelleId Int           @unique @map("facture_individuelle_id")
+  montantRetenu         Decimal       @map("montant_retenu") @db.Decimal(15, 2)
+  tauxCem               Decimal?      @map("taux_cem") @db.Decimal(5, 2)
+  motif                 MotifDecision
+  commentaire           String?
+  decidePar             String        @map("decide_par")
+  dateDecision          DateTime      @map("date_decision") @db.Date
+
+  factureIndividuelle FactureIndividuelle @relation(fields: [factureIndividuelleId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("decision_prise_en_charge")
+  @@schema("facturation")
+}

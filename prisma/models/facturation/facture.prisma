@@ -1,0 +1,81 @@
+model FactureGlobale {
+  id               Int           @id @default(autoincrement())
+  refSociale       String        @unique @map("ref_sociale")
+  annee            Int
+  dateReception    DateTime      @map("date_reception") @db.Date
+  numFacture       String        @map("num_facture")
+  dateFacture      DateTime      @map("date_facture") @db.Date
+  moisPrestation   DateTime?     @map("mois_prestation") @db.Date
+  refAgence        String?       @map("ref_agence")
+  remarque         String?
+  montantTotal     Decimal?      @map("montant_total") @db.Decimal(15, 2)
+  total100Cem      Decimal       @default(0) @map("total_100_cem") @db.Decimal(15, 2)
+  totalDepassement Decimal       @default(0) @map("total_depassement") @db.Decimal(15, 2)
+  tauxCem          Decimal       @map("taux_cem") @db.Decimal(5, 2)
+  montant80Cem     Decimal?      @map("montant_80_cem") @db.Decimal(15, 2)
+  montant20Agent   Decimal?      @map("montant_20_agent") @db.Decimal(15, 2)
+  totalChargeAgent Decimal?      @map("total_charge_agent") @db.Decimal(15, 2)
+  statut           StatutFacture @default(ENREGISTREE)
+  statutAvantSuppression StatutFacture? @map("statut_avant_suppression")
+  dateValidation   DateTime?     @map("date_validation")
+  moisPaie         DateTime?     @map("mois_paie") @db.Date
+  dateCloture      DateTime?     @map("date_cloture") @db.Date
+
+  prestataireId Int         @map("prestataire_id")
+  prestataire   Prestataire @relation(fields: [prestataireId], references: [id])
+
+  enregistreParId Int          @map("enregistre_par_id")
+  enregistrePar   Utilisateur  @relation("FactureEnregistreePar", fields: [enregistreParId], references: [id])
+  valideParId     Int?         @map("valide_par_id")
+  validePar       Utilisateur? @relation("FactureValideePar", fields: [valideParId], references: [id])
+
+  lignes        FactureIndividuelle[]
+  mouvements    MouvementFacture[]
+  piecesJointes PieceJointeFacture[]
+  lignesSuivi   LigneSuivi[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([prestataireId, numFacture])
+  @@index([statut])
+  @@index([dateReception])
+  @@index([moisPrestation])
+  @@index([moisPaie])
+  @@map("facture_globale")
+  @@schema("facturation")
+}
+
+model FactureIndividuelle {
+  id                        Int      @id @default(autoincrement())
+  factureGlobaleId          Int      @map("facture_globale_id")
+  numLigne                  Int      @map("num_ligne")
+  libelle                   String
+  dateActe                  DateTime @map("date_acte") @db.Date
+  acteId                    Int      @map("acte_id")
+  beneficiaireId            Int      @map("beneficiaire_id")
+  priseEnChargeId           Int?     @map("prise_en_charge_id") // ID d’Attestation; conservé sans FK pour que son absence reste un avertissement non bloquant.
+  montantActe               Decimal  @map("montant_acte") @db.Decimal(15, 2)
+  montantCemIntegral        Decimal  @default(0) @map("montant_cem_integral") @db.Decimal(15, 2)
+  montantDepassementActe    Decimal  @default(0) @map("montant_depassement_acte") @db.Decimal(15, 2)
+  montantDepassementPlafond Decimal  @default(0) @map("montant_depassement_plafond") @db.Decimal(15, 2)
+  observationDepassement    String?  @map("observation_depassement")
+  tauxCem                   Decimal  @map("taux_cem") @db.Decimal(5, 2)
+  refPaie                   String?  @map("ref_paie")
+  moisAffectation           DateTime? @map("mois_affectation") @db.Date
+
+  factureGlobale FactureGlobale         @relation(fields: [factureGlobaleId], references: [id])
+  acte           Acte                   @relation(fields: [acteId], references: [id])
+  beneficiaire   Beneficiaire           @relation(fields: [beneficiaireId], references: [id])
+  decision       DecisionPriseEnCharge?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([factureGlobaleId, numLigne])
+  @@index([beneficiaireId, acteId, dateActe])
+  @@index([priseEnChargeId])
+  @@index([moisAffectation])
+  @@map("facture_individuelle")
+  @@schema("facturation")
+}

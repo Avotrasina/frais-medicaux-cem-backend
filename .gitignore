@@ -1,8 +1,13 @@
+private-data
+test
+
 # compiled output
 /dist
+/dist-demo
+/dist-seed-facturation
 /node_modules
 /build
-
+/test
 # TypeScript build cache
 *.tsbuildinfo
 
@@ -58,7 +63,12 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-/generated/prisma
+/src/generated/prisma
 
 
 vibecode/
+data/
+
+# Utils 
+correction/
+/private-data/actes-et-plafonds.sql

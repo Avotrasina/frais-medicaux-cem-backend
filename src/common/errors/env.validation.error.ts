@@ -3,7 +3,7 @@ export class EnvValidationError extends Error {
 
   constructor(message: string, errors: readonly Error[] = []) {
     super(message);
-    this.name = "EnvValidationError";
+    this.name = 'EnvValidationError';
     this.errors = errors;
     Error.captureStackTrace?.(this, this.constructor);
   }
@@ -14,7 +14,7 @@ export class EnvMissingKeyError extends EnvValidationError {
 
   constructor(key: string, message = `Missing environment variable: ${key}`) {
     super(message);
-    this.name = "EnvMissingKeyError";
+    this.name = 'EnvMissingKeyError';
     this.key = key;
   }
 }
@@ -24,7 +24,20 @@ export class EnvInvalidKeyError extends EnvValidationError {
 
   constructor(key: string, message = `Invalid environment variable: ${key}`) {
     super(message);
-    this.name = "EnvInvalidKeyError";
+    this.name = 'EnvInvalidKeyError';
     this.key = key;
+  }
+}
+
+export class InvalidDirNameError extends EnvValidationError {
+  public readonly value: string;
+
+  constructor(
+    value: string,
+    message = `"${value}" is invalid: only letters, digits, "_" and "-" are allowed (a single directory level)`,
+  ) {
+    super(message);
+    this.name = 'InvalidDirNameError';
+    this.value = value;
   }
 }

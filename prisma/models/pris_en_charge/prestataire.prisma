@@ -7,17 +7,23 @@ enum StatutPrestataire {
 }
 
 model Prestataire {
-  id                  Int               @id @default(autoincrement())
-  nom                 String
-  adresse             String
-  statut              StatutPrestataire @map("status_prestataire")
-  nif                 String            @unique
-  stat                String            @unique
-  dateDebutConvention DateTime          @map("dt_debut_convention")
-  dateFinConvention   DateTime          @map("dt_fin_convention")
-  listePrestation     String            @map("liste_prestation")
+  id                     Int                @id @default(autoincrement())
+  nom                    String
+  adresse                String
+  statut                 StatutPrestataire  @map("status_prestataire")
+  nif                    String             @unique
+  stat                   String             @unique
+  dateDebutConvention    DateTime           @map("dt_debut_convention")
+  dateFinConvention      DateTime           @map("dt_fin_convention")
+  listePrestation        String             @map("liste_prestation")
+  echeanceRenouvellement String?            @map("echeance_renouvellement")
+  echeanceResiliation    String?            @map("echenace_resiliation")
+  observation            String?
+  suppressionStatut      SuppressionStatut?
 
-  attestations Attestation[]
+  attestations     Attestation[]
+  facturesGlobales FactureGlobale[]
+  conventionPath   String           @map("convention_path")
 
   lieuID      Int @map("lieu_id")
   categorieID Int @map("categorie_id")
@@ -33,8 +39,9 @@ model Prestataire {
 }
 
 model Lieu {
-  id  Int    @id @default(autoincrement())
-  nom String @map("nom")
+  id                Int                @id @default(autoincrement())
+  nom               String             @map("nom")
+  suppressionStatut SuppressionStatut?
 
   prestataires Prestataire[]
 
@@ -46,8 +53,9 @@ model Lieu {
 }
 
 model CategoriePrestataire {
-  id  Int    @id @default(autoincrement())
-  nom String @map("nom")
+  id                Int                @id @default(autoincrement())
+  nom               String             @map("nom")
+  suppressionStatut SuppressionStatut?
 
   prestataires Prestataire[]
 

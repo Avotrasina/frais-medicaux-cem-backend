@@ -6,14 +6,19 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Sexe } from '../types/personne.types.js';
-import {StatutPEC, BackOfficeFrontOffice } from './enum.js';
+import { Type, Expose } from 'class-transformer';
+import { PartialType, OmitType } from '@nestjs/mapped-types';
+import { Sexe } from '../../personne/personne.types.js';
+import { BackOfficeFrontOffice } from '../types/agent.enum.types.js';
+import { StatutPEC } from '../types/agent.types.js';
+import { Transform } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class AgentDto {
-  @IsString()
+export class AgentInputDto {
   @IsNotEmpty()
-  matricule!: string;
+  @Type(() => Number)
+  @IsInt()
+  matricule!: number;
 
   @IsString()
   @IsNotEmpty()
@@ -45,9 +50,8 @@ export class AgentDto {
   dateEntree!: Date;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  fonctionID?: number | null;
+  @IsString()
+  fonction?: string | null;
 
   @IsOptional()
   @IsString()
@@ -55,13 +59,65 @@ export class AgentDto {
 
   @IsOptional()
   @IsString()
-  codeDirection?: string | null;
-
-  @IsOptional()
-  @IsString()
-  codeAgence?: string | null;
+  structureID?: string | null;
 
   @IsOptional()
   @IsString()
   codeService?: string | null;
+}
+
+export class AgentUpdateDto extends PartialType(
+  OmitType(AgentInputDto, ['matricule'] as const),
+) {
+  nom?: string;
+  prenom?: string;
+  statutPEC?: StatutPEC;
+  dateNaissance?: Date;
+  sexe?: Sexe;
+  backOfficeFrontOffice?: BackOfficeFrontOffice;
+  observationMatricule?: string | null;
+  dateEntree?: Date;
+  fonction?: string | null;
+  categorieID?: string | null;
+  structureID?: string | null;
+  codeService?: string | null;
+}
+
+export class AgentSearchNameDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsString()
+  @IsNotEmpty()
+  value!: string;
+}
+
+export class AgentSearchFilterDto {
+  @ApiPropertyOptional({ enum: BackOfficeFrontOffice })
+  @IsOptional()
+  @IsEnum(BackOfficeFrontOffice)
+  backOfficeFrontOffice?: BackOfficeFrontOffice;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  codeDirection?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  codeService?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  codeAgence?: string;
+}
+
+export class AgentCreateMultipartDto extends AgentInputDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image!: any;
+}
+
+export class AgentCardMultipartDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image!: any;
 }

@@ -1,0 +1,49 @@
+enum StatutFacture {
+  ENREGISTREE   @map("enregistree")
+  EN_VALIDATION @map("en_validation")
+  RETOURNEE     @map("retournee")
+  VALIDEE       @map("validee")
+  SORTIE        @map("sortie")
+  A_CORRIGER    @map("a_corriger")
+  SUPPRESSION_DEMANDEE @map("suppression_demandee")
+  SUPPRIMEE     @map("supprimee")
+
+  @@map("statut_facture")
+  @@schema("facturation")
+}
+
+enum TypeMouvement {
+  ENREGISTREMENT               @map("enregistrement")
+  ENVOI_VALIDATION             @map("envoi_validation")
+  RETOUR_POUR_CORRECTION       @map("retour_pour_correction")
+  RETOUR_PRESTATAIRE           @map("retour_prestataire")
+  RECEPTION_APRES_MODIFICATION @map("reception_apres_modification")
+  MODIFICATION                 @map("modification")
+  VALIDATION                   @map("validation")
+  SORTIE                       @map("sortie")
+  SUPPRESSION                  @map("suppression")
+  REOUVERTURE                  @map("reouverture")
+  DEMANDE_SUPPRESSION          @map("demande_suppression")
+  REFUS_SUPPRESSION            @map("refus_suppression")
+  CLOTURE                      @map("cloture")
+
+  @@map("type_mouvement")
+  @@schema("facturation")
+}
+
+enum ServiceSortie {
+  AUTHENTIFICATION @map("authentification")
+  CONTROLE         @map("controle")
+
+  @@map("service_sortie")
+  @@schema("facturation")
+}
+
+enum MotifDecision {
+  DECISION_DG           @map("decision_dg")
+  EXCLUSION_APRES_ETUDE @map("exclusion_apres_etude")
+  AUTRE                 @map("autre")
+
+  @@map("motif_decision")
+  @@schema("facturation")
+}
