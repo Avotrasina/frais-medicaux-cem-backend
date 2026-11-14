@@ -9,6 +9,9 @@ import {
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { RegimeActe } from '../../../generated/prisma/enums.js';
 import { UpdatePlafondDto } from '../../plafond/dtos/plafond.dto.js';
+import {
+  PlafondsModificationDto,
+} from '../../plafond/dtos/plafond.dto.js';
 
 export class CreateActeDto {
   @IsString()
@@ -61,4 +64,15 @@ export class UpdateActeDto extends UpdatePlafondDto {
   @IsInt()
   @IsPositive()
   categorieActeId?: number;
+
+  /**
+   * Constraint of the act, written with the act itself.
+   *
+   * The provided scopes replace the existing ones, the omitted scopes are
+   * cleared, `null` clears every scope. The act cannot carry its own
+   * constraint when its category carries one.
+   */
+  @ApiPropertyOptional({ type: PlafondsModificationDto, nullable: true })
+  @IsOptional()
+  plafonds?: PlafondsModificationDto | null;
 }
