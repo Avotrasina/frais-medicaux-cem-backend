@@ -32,6 +32,7 @@ import { DeleteOrganizationalStructureUseCase } from './use-cases/structure.dele
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
 import {
@@ -151,6 +152,15 @@ export class StructureOrganisationnelleController {
     return this.readAllAgencesUseCase.findDeletionRequests();
   }
 
+  @Get('agencies/:code-agence')
+  @ApiOkResponse({ type: AgenceResponseDto })
+  @ApiNotFoundResponse({ description: 'Agence introuvable.' })
+  async findAgency(
+    @Param('code') codeAgence: string,
+  ): Promise<AgenceResponseDto> {
+    return this.readAllAgencesUseCase.findById(codeAgence);
+  }
+
   @Patch('agencies/:code-agence')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse({ description: 'Agence mise à jour.' })
@@ -183,6 +193,15 @@ export class StructureOrganisationnelleController {
     DirectionAvecServicesResponseDto[]
   > {
     return this.readAllDirectionsUseCase.findDeletionRequests();
+  }
+
+  @Get('directions/:code-direction')
+  @ApiOkResponse({ type: DirectionAvecServicesResponseDto })
+  @ApiNotFoundResponse({ description: 'Direction introuvable.' })
+  async findDirection(
+    @Param('code') codeDirection: string,
+  ): Promise<DirectionAvecServicesResponseDto> {
+    return this.readAllDirectionsUseCase.findById(codeDirection);
   }
 
   @Patch('directions/:code-direction')
@@ -223,6 +242,15 @@ export class StructureOrganisationnelleController {
   @ApiOkResponse({ type: ServiceResponseDto, isArray: true })
   async findServiceDeletionRequests(): Promise<ServiceResponseDto[]> {
     return this.readServiceUseCase.findDeletionRequests();
+  }
+
+  @Get('services/:code-service')
+  @ApiOkResponse({ type: ServiceResponseDto })
+  @ApiNotFoundResponse({ description: 'Service introuvable.' })
+  async findService(
+    @Param('code') codeService: string,
+  ): Promise<ServiceResponseDto> {
+    return this.readServiceUseCase.findById(codeService);
   }
 
   @Patch('services/:code-service/name')

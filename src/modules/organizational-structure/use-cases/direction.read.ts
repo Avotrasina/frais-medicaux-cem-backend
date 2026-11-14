@@ -10,6 +10,10 @@ export class ReadAllDirectionsUseCase {
     return this.directionRepository.findAllWithServices();
   }
 
+  async findById(codeDirection: string): Promise<ReadDirectionWithServices> {
+    return this.directionRepository.findByIdWithServices(codeDirection);
+  }
+
   async findDeletionRequests(): Promise<ReadDirectionWithServices[]> {
     return this.directionRepository.findDeletionRequestsWithServices();
   }

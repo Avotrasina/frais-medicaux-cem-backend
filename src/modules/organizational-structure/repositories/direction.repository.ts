@@ -33,7 +33,6 @@ export class DirectionRepository {
     };
   }
 
-  /** Maps the Prisma direction and its services to the nested read type. */
   private toReadDirectionWithServices(
     direction: DirectionWithServices,
   ): ReadDirectionWithServices {
@@ -59,6 +58,17 @@ export class DirectionRepository {
       where: { codeDirection },
     });
     return this.toReadDirection(direction);
+  }
+
+  async findByIdWithServices(
+    codeDirection: string,
+    tx?: DbClient,
+  ): Promise<ReadDirectionWithServices> {
+    const direction = await this.client(tx).direction.findFirstOrThrow({
+      where: { codeDirection },
+      include: { services: { orderBy: { nom: 'asc' } } },
+    });
+    return this.toReadDirectionWithServices(direction);
   }
 
   async findAllWithServices(
