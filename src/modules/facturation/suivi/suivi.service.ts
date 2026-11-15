@@ -102,6 +102,7 @@ export interface FeuilleSuivi {
   };
   lignes: Array<{
     id: number;
+    acteId: number;
     refSociale: string;
     dateActe: string;
     libelle: string;
@@ -876,6 +877,7 @@ export class SuiviService {
           : null;
       return {
         id: calculee.id,
+        acteId: ligne.acteId,
         refSociale: ligne.refSociale,
         dateActe: calculee.dateActe.toISOString().slice(0, 10),
         libelle: ligne.libelle,
