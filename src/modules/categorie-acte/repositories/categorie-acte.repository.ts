@@ -62,6 +62,24 @@ export class CategorieActeRepository {
     return this.toReadCategorieActe(categorieActe);
   }
 
+  async findActesByCategorie(
+    categorieActeId: number,
+    tx?: DbClient,
+  ): Promise<ReadActe[]> {
+    const actes = await this.client(tx).acte.findMany({
+      where: { categorieActeId },
+      orderBy: { code: 'asc' },
+    });
+    return actes.map((acte) => ({
+      id: acte.id,
+      code: acte.code,
+      nomActe: acte.nomActe,
+      listeLibelle: acte.listeLibelle,
+      regime: acte.regime,
+      categorieActeId: acte.categorieActeId,
+    }));
+  }
+
   async create(
     categorieActe: CreateCategorieActe,
     tx?: DbClient,

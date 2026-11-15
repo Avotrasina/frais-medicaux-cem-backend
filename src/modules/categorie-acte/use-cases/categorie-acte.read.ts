@@ -80,6 +80,11 @@ export class ReadCategorieActeUseCase {
     return this.categorieActeRepository.findById(id);
   }
 
+  async findActes(id: number): Promise<ReadActe[]> {
+    await this.categorieActeRepository.findById(id);
+    return this.categorieActeRepository.findActesByCategorie(id);
+  }
+
   private obtenirResolution(
     resolutions: Map<string, PlafondsResolus>,
     cible: CiblePlafond,
