@@ -198,6 +198,21 @@ export class CategorieActeController {
           categorieActeID: 4,
         },
       },
+      contrainteComplete: {
+        summary:
+          'Poser la contrainte de la catégorie (efface les contraintes propres de ses actes)',
+        value: {
+          nomCategorie: 'Soins dentaires',
+          plafonds: {
+            parActe: { montant: 100000 },
+            parAn: { unite: 'MONTANT', montant: 500000 },
+          },
+        },
+      },
+      suppressionContrainte: {
+        summary: 'Retirer la contrainte de la catégorie',
+        value: { plafonds: null },
+      },
     },
   })
   @UsePipes(UPDATE_CATEGORIE_PIPE)

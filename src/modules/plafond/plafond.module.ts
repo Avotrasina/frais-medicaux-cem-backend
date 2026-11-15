@@ -8,6 +8,7 @@ import { ReadPlafondUseCase } from './use-cases/plafond.read.js';
 import { UpdatePlafondUseCase } from './use-cases/plafond.update.js';
 import { PlafondSuiviGardeService } from './plafond-suivi-garde.service.js';
 import { PlafondResolutionService } from './plafond-resolution.service.js';
+import { ConstraintRulesService } from './contrainte-rules.service.js';
 
 @Module({
   imports: [PrismaModule],
@@ -20,12 +21,14 @@ import { PlafondResolutionService } from './plafond-resolution.service.js';
     DeletePlafondUseCase,
     PlafondSuiviGardeService,
     PlafondResolutionService,
+    ConstraintRulesService,
   ],
   exports: [
     PlafondRepository,
     PlafondResolutionService,
     CreatePlafondUseCase,
     UpdatePlafondUseCase,
+    ConstraintRulesService,
   ],
 })
 export class PlafondModule {}

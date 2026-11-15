@@ -311,6 +311,21 @@ export class ActeController {
         summary: 'Modifier uniquement le régime de l’acte',
         value: { regime: 'SUR_DECISION_DG' },
       },
+      contrainteComplete: {
+        summary:
+          'Modifier l’acte et poser sa contrainte (refusé si la catégorie en porte une)',
+        value: {
+          nomActe: 'Consultation généraliste',
+          plafonds: {
+            parActe: { montant: 125000 },
+            parAn: { unite: 'SEANCES', nbSeances: 12 },
+          },
+        },
+      },
+      suppressionContrainte: {
+        summary: 'Retirer la contrainte propre de l’acte',
+        value: { plafonds: null },
+      },
     },
   })
   @UsePipes(UPDATE_ACTE_PIPE)

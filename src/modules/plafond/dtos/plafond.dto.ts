@@ -1,12 +1,16 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsEnum,
   IsInt,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   Min,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import {
   PorteePlafond,
@@ -104,4 +108,53 @@ export class UpdatePlafondDto {
   @IsInt()
   @IsPositive()
   categorieActeID?: number | null;
+}
+
+/** Ceiling carried by an act for a single act. */
+export class PlafondModificationParActeDto {
+  @ApiPropertyOptional({ type: Number, minimum: 0.01, example: 100000 })
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
+  montant!: number;
+}
+
+/** Ceiling carried by an act or a category over a year. */
+export class PlafondModificationParAnDto {
+  @ApiPropertyOptional({ enum: UnitePlafond, example: UnitePlafond.MONTANT })
+  @IsEnum(UnitePlafond)
+  unite!: UnitePlafond;
+
+  @ValidateIf((plafond: PlafondModificationParAnDto) => plafond.unite === UnitePlafond.MONTANT)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
+  montant?: number;
+
+  @ValidateIf((plafond: PlafondModificationParAnDto) => plafond.unite === UnitePlafond.SEANCES)
+  @IsInt()
+  @IsPositive()
+  nbSeances?: number;
+}
+
+/**
+ * Constraint of a target carried by a single write.
+ *
+ * The provided scopes replace the existing ones, the omitted scopes are
+ * cleared. A `null` payload clears every scope.
+ */
+export class PlafondsModificationDto {
+  @ApiPropertyOptional({ type: PlafondModificationParActeDto, nullable: true })
+  @IsOptional()
+  @ValidateIf((dto: PlafondsModificationDto) => dto.parActe !== undefined)
+  @IsObject({ message: 'Le plafond par acte doit être un objet.' })
+  @ValidateNested()
+  @Type(() => PlafondModificationParActeDto)
+  parActe?: PlafondModificationParActeDto | null;
+
+  @ApiPropertyOptional({ type: PlafondModificationParAnDto, nullable: true })
+  @IsOptional()
+  @ValidateIf((dto: PlafondsModificationDto) => dto.parAn !== undefined)
+  @IsObject({ message: 'Le plafond annuel doit être un objet.' })
+  @ValidateNested()
+  @Type(() => PlafondModificationParAnDto)
+  parAn?: PlafondModificationParAnDto | null;
 }

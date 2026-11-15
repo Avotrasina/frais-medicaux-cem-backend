@@ -4,9 +4,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { dateAujourdhuiAntananarivo } from '../../../common/date.util.js';
 import { PorteePlafond, RegimeActe } from '../../../generated/prisma/enums.js';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import { ConstraintRulesService } from '../../plafond/contrainte-rules.service.js';
+import type { PlafondsModificationDto } from '../../plafond/dtos/plafond.dto.js';
 import { UpdatePlafondUseCase } from '../../plafond/use-cases/plafond.update.js';
 import type { UpdatePlafond } from '../../plafond/types/plafond.types.js';
 import { ActeRepository } from '../repositories/acte.repository.js';
@@ -18,11 +19,12 @@ export class UpdateActeUseCase {
     private readonly acteRepository: ActeRepository,
     private readonly prisma: PrismaService,
     private readonly updatePlafond: UpdatePlafondUseCase,
+    private readonly contraintes: ConstraintRulesService,
   ) {}
 
   async execute(
     id: number,
-    input: UpdateActe & UpdatePlafond,
+    input: UpdateActe & UpdatePlafond & { plafonds?: PlafondsModificationDto | null },
   ): Promise<ReadActe> {
     const {
       dateEffet,
@@ -33,6 +35,7 @@ export class UpdateActeUseCase {
       nbSeances,
       acteID: _acteID,
       categorieActeID: _categorieActeID,
+      plafonds,
       ...donneesActe
     } = input;
     const plafondInput: UpdatePlafond = {
@@ -49,11 +52,17 @@ export class UpdateActeUseCase {
       (valeur) => valeur !== undefined,
     );
 
-    if (Object.keys(donneesActe).length === 0 && !modifierPlafond) {
+    if (plafonds !== undefined && modifierPlafond) {
+      throw new BadRequestException(
+        'Utilisez soit le champ plafonds, soit les champs de plafond hérités, mais pas les deux.',
+      );
+    }
+
+    if (Object.keys(donneesActe).length === 0 && !modifierPlafond && plafonds === undefined) {
       return this.acteRepository.findById(id);
     }
 
-    if (!modifierPlafond) {
+    if (plafonds === undefined && !modifierPlafond) {
       return this.acteRepository.update(id, donneesActe);
     }
 
@@ -65,15 +74,26 @@ export class UpdateActeUseCase {
       if (acte === null) {
         throw new NotFoundException(`L’acte ${id} est introuvable.`);
       }
-      if ((donneesActe.regime ?? acte.regime) === RegimeActe.EXCLU) {
-        throw new BadRequestException(
-          'Un acte de régime EXCLU ne peut pas recevoir de plafond.',
+      if (plafonds !== undefined && plafonds !== null) {
+        if ((donneesActe.regime ?? acte.regime) === RegimeActe.EXCLU) {
+          throw new BadRequestException(
+            'Un acte de régime EXCLU ne peut pas recevoir de plafond.',
+          );
+        }
+        // Rule 1: the act inherits the constraint of its category.
+        await this.contraintes.assertActeWithoutOwnConstraint(
+          acte.categorieActeId,
+          tx,
         );
       }
       const updatedActe =
         Object.keys(donneesActe).length === 0
           ? await this.acteRepository.findById(id, tx)
           : await this.acteRepository.update(id, donneesActe, tx);
+      if (plafonds !== undefined) {
+        await this.contraintes.applyConstraint({ type: 'ACTE', id }, plafonds, tx);
+        return updatedActe;
+      }
       const plafond = await this.updatePlafond.executePourCible(
         { type: 'ACTE', id },
         plafondInput,

@@ -14,6 +14,7 @@ import {
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
 import { CreatePlafondUseCase } from '../../plafond/use-cases/plafond.create.js';
 import { PlafondResolutionService } from '../../plafond/plafond-resolution.service.js';
+import { ConstraintRulesService } from '../../plafond/contrainte-rules.service.js';
 import type { PlafondsResolus } from '../../plafond/plafond-resolution.service.js';
 import { CategorieActeRepository } from '../../categorie-acte/repositories/categorie-acte.repository.js';
 import { ActeRepository } from '../repositories/acte.repository.js';
@@ -39,6 +40,7 @@ export class CreateActeWithCeilingsUseCase {
     private readonly categories: CategorieActeRepository,
     private readonly creerPlafond: CreatePlafondUseCase,
     private readonly resolution: PlafondResolutionService,
+    private readonly contraintes: ConstraintRulesService,
   ) {}
 
   execute(
@@ -170,6 +172,10 @@ export class CreateActeWithCeilingsUseCase {
           'La catégorie possède déjà un plafond annuel en vigueur ; le plafond annuel doit rester partagé au niveau de la catégorie.',
         );
       }
+    }
+    if (this.contientPlafond(input.plafonds)) {
+      // Rule 1: the act inherits the constraint of its category.
+      await this.contraintes.assertActeWithoutOwnConstraint(categorie.id, tx);
     }
     return {
       type: 'ACTE',

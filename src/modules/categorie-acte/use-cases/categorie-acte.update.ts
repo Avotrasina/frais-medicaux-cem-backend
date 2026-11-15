@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service.js';
+import { ConstraintRulesService } from '../../plafond/contrainte-rules.service.js';
+import type { PlafondsModificationDto } from '../../plafond/dtos/plafond.dto.js';
 import { UpdatePlafondUseCase } from '../../plafond/use-cases/plafond.update.js';
 import type { UpdatePlafond } from '../../plafond/types/plafond.types.js';
 import { CategorieActeRepository } from '../repositories/categorie-acte.repository.js';
@@ -14,11 +16,12 @@ export class UpdateCategorieActeUseCase {
     private readonly categorieActeRepository: CategorieActeRepository,
     private readonly prisma: PrismaService,
     private readonly updatePlafond: UpdatePlafondUseCase,
+    private readonly contraintes: ConstraintRulesService,
   ) {}
 
   async execute(
     id: number,
-    input: UpdateCategorieActe & UpdatePlafond,
+    input: UpdateCategorieActe & UpdatePlafond & { plafonds?: PlafondsModificationDto | null },
   ): Promise<ReadCategorieActe> {
     const {
       dateEffet,
@@ -29,6 +32,7 @@ export class UpdateCategorieActeUseCase {
       nbSeances,
       acteID: _acteID,
       categorieActeID: _categorieActeID,
+      plafonds,
       ...donneesCategorie
     } = input;
     const plafondInput: UpdatePlafond = {
@@ -50,10 +54,10 @@ export class UpdateCategorieActeUseCase {
       nbSeances,
     ].some((valeur) => valeur !== undefined);
 
-    if (Object.keys(donneesCategorie).length === 0 && !modifierPlafond) {
+    if (Object.keys(donneesCategorie).length === 0 && !modifierPlafond && plafonds === undefined) {
       return this.categorieActeRepository.findById(id);
     }
-    if (!modifierPlafond) {
+    if (plafonds === undefined && !modifierPlafond) {
       return this.categorieActeRepository.update(id, donneesCategorie);
     }
 
@@ -62,6 +66,19 @@ export class UpdateCategorieActeUseCase {
         Object.keys(donneesCategorie).length === 0
           ? await this.categorieActeRepository.findById(id, tx)
           : await this.categorieActeRepository.update(id, donneesCategorie, tx);
+      if (plafonds !== undefined) {
+        await this.contraintes.applyConstraint(
+          { type: 'CATEGORIE', id },
+          plafonds,
+          tx,
+        );
+        if (plafonds !== null) {
+          // Rule 3: the acts of the category inherit the constraint, their own
+          // constraint is cleared in the same transaction.
+          await this.contraintes.purgeActsConstraints(id, tx);
+        }
+        return updatedCategorie;
+      }
       await this.updatePlafond.executePourCible(
         { type: 'CATEGORIE', id },
         plafondInput,

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { RecordNotFoundError } from '../../../common/errors/database.errors.js';
 import { ServiceRepository } from '../repositories/service.repository.js';
 import type { ReadService } from '../types/service.types.js';
 import type { ReadServicesByDirectionUseCaseInput } from '../types/use-case.structure-orga.types.js';
@@ -9,6 +10,12 @@ export class ReadServiceUseCase {
 
   async findAll(): Promise<ReadService[]> {
     return this.serviceRepository.findAll();
+  }
+
+  async findById(codeService: string): Promise<ReadService> {
+    const service = await this.serviceRepository.findById(codeService);
+    if (!service) throw new RecordNotFoundError('Service');
+    return service;
   }
 
   async findDeletionRequests(): Promise<ReadService[]> {
