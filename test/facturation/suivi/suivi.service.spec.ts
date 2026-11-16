@@ -38,6 +38,7 @@ interface ConfigurationTest {
     acteId?: number;
     acteCode?: string;
     acteNom?: string;
+    observation?: string | null;
   }>;
   beneficiaire?: Record<string, unknown>;
   versionsAnnuelles?: number;
@@ -135,6 +136,7 @@ function creerService(configuration: ConfigurationTest) {
     acteId: ligne.acteId ?? acte.id,
     dateActe: date(ligne.jour),
     libelle: `Acte ${index + 1}`,
+    observation: ligne.observation ?? null,
     montantActe: dec(ligne.montant),
     factureGlobale: {
       refSociale: `REF-${index + 1}`,
@@ -251,7 +253,11 @@ describe('SuiviService - représentation des feuilles T5_x', () => {
         valeur: '1000000',
       },
       lignes: [
-        { montant: '600000', jour: 1 },
+        {
+          montant: '600000',
+          jour: 1,
+          observation: 'Contrôle à refaire',
+        },
         {
           montant: '600000',
           jour: 2,
@@ -270,6 +276,10 @@ describe('SuiviService - représentation des feuilles T5_x', () => {
       nom: 'Catégorie de test',
     });
     expect(feuille.plafonds.parAn.valeur).toBe('1000000.00');
+    expect(feuille.lignes.map((ligne) => ligne.observation)).toEqual([
+      'Contrôle à refaire',
+      null,
+    ]);
     expect(feuille.lignes.map((ligne) => ligne.totalDepassement)).toEqual([
       '0.00',
       '200000.00',

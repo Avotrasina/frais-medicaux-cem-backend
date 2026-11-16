@@ -43,6 +43,7 @@ import {
   CategorieActeAvecPlafondsResponseDto,
   CategorieActeResponseDto,
 } from './dtos/categorie-acte-response.dto.js';
+import { ActeResponseDto } from '../acte/dtos/acte-response.dto.js';
 
 const CREATE_CATEGORIE_PIPE = new ValidationPipe({
   transform: true,
@@ -174,6 +175,15 @@ export class CategorieActeController {
     )[]
   > {
     return this.readCategorieActeUseCase.findAll(query);
+  }
+
+  @Get(':id/actes')
+  @ApiOkResponse({ type: [ActeResponseDto] })
+  @ApiResponse({ status: 404, description: 'Catégorie d’acte introuvable.' })
+  async findActes(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ActeResponseDto[]> {
+    return this.readCategorieActeUseCase.findActes(id);
   }
 
   @Get(':id')

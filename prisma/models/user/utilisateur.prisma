@@ -1,8 +1,11 @@
 model Utilisateur {
-  id   Int            @id @default(autoincrement())
-  nom  String
-  role RoleUtilisateur
-
+  id        Int            @id @default(autoincrement())
+  nom       String
+  role      RoleUtilisateur
+  username  String?
+  email     String?        @unique
+  mdp       String?        @map("mot_de_passe")
+  profil    String?
   facturesEnregistrees FactureGlobale[]   @relation("FactureEnregistreePar")
   facturesValidees     FactureGlobale[]   @relation("FactureValideePar")
   mouvementsEffectues  MouvementFacture[] @relation("MouvementEffectuePar")

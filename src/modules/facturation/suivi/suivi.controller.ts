@@ -63,7 +63,7 @@ export class SuiviController {
   @ApiOperation({
     summary: 'Ajouter une ligne de suivi',
     description:
-      'Enregistre un acte nécessitant un suivi de plafond pour une facture.',
+      'Enregistre un acte nécessitant un suivi de plafond pour une facture. L’observation est facultative.',
   })
   @UsePipes(PIPE)
   async creer(
@@ -190,7 +190,7 @@ export class SuiviController {
   @ApiOperation({
     summary: 'Modifier une ligne de suivi',
     description:
-      'Met à jour le montant ou la date d’un acte suivi et recalcule les cumuls.',
+      'Met à jour le montant, la date ou l’observation d’un acte suivi et recalcule les cumuls.',
   })
   @UsePipes(PIPE)
   async modifier(

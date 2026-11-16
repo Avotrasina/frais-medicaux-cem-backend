@@ -16,3 +16,12 @@ export const createImageFilePipe = () =>
       new FileTypeValidator({ fileType: IMAGE_MIME_REGEX }),
     ],
   });
+
+export const createOptionalImageFilePipe = () =>
+  new ParseFilePipe({
+    fileIsRequired: false,
+    validators: [
+      new MaxFileSizeValidator({ maxSize: STORAGE_SETTINGS.maxImageSize }),
+      new FileTypeValidator({ fileType: IMAGE_MIME_REGEX }),
+    ],
+  });

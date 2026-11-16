@@ -545,31 +545,56 @@ Les routes `/utilisateurs` appartiennent au module transversal
 ### `GET /utilisateurs?role=ADJOINT,CHEF`
 
 Filtre optionnel par un ou plusieurs rôles séparés par des virgules. Réponse
-`200`: tableau `[{ "id":9002, "nom":"DEMO FACTURATION - Adjoint", "role":"ADJOINT" }]`.
+`200`: tableau d’utilisateurs avec `id`, `nom`, `role`, `username`, `email` et
+`profil`. Pour les comptes existants non encore renseignés, `username`, `email`
+et `profil` peuvent être `null`. Le mot de passe n’est jamais retourné.
 
 ### `GET /utilisateurs/:id`
 
-Réponse `200`: `{"id":9001,"nom":"DEMO FACTURATION - Opérateur","role":"OPERATEUR"}`.
-`404` si absent.
+Même forme que la réponse de liste. `404` si absent.
+
+### `GET /utilisateurs/:id/profil`
+
+Retourne l’image de profil (`image/jpeg`, `image/png` ou `image/webp`).
+`404` si l’utilisateur n’a pas de profil ou si le fichier est absent.
 
 ### `POST /utilisateurs`
 
-```json
-{ "nom": "Marie Exemple", "role": "ADJOINT" }
+Requête `multipart/form-data`; `profil` est facultatif. Les champs obligatoires
+sont `nom`, `role`, `username`, `email` et `mdp`. L’image `profil` accepte JPEG,
+PNG ou WebP, dans la limite de taille configurée pour les images. `mdp` doit
+contenir au moins 8 caractères et est stocké sous forme de hash; il n’est jamais
+inclus dans les réponses. L’adresse e-mail est normalisée en minuscules et doit
+être unique.
+
+```text
+nom=Marie Exemple
+role=ADJOINT
+username=marie.exemple
+email=marie@example.com
+mdp=mot-de-passe-solide
+profil=<fichier image facultatif>
 ```
 
-Réponse `201`: `{"message":"L'utilisateur a été créé avec succès.","utilisateur":{"id":12,"nom":"Marie Exemple","role":"ADJOINT"}}`.
+Réponse `201`: enveloppe `message` et `utilisateur`. `409` si l’adresse e-mail
+est déjà utilisée.
 
 ### `PATCH /utilisateurs/:id`
 
-Au moins l'un des champs :
+Requête `multipart/form-data`; chaque champ est facultatif, mais au moins un
+champ ou une image `profil` doit être fourni. `mdp` remplace le hash existant.
+L’image, si fournie, suit les mêmes validations que pour la création.
 
-```json
-{ "nom": "Marie Exemple", "role": "CHEF" }
+```text
+username=marie.exemple
+email=marie@example.com
+mdp=nouveau-mot-de-passe
+profil=<fichier image facultatif>
 ```
 
 Réponse `200`: même enveloppe `message` et `utilisateur` que la création.
-`404` si absent; `400` si aucun champ n'est fourni.
+`404` si absent; `400` si aucun champ n'est fourni ou si un champ est invalide;
+`409` si l’adresse e-mail est déjà utilisée.
 
 ### `DELETE /utilisateurs/:id`
 

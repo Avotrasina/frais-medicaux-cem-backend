@@ -92,6 +92,9 @@ class LigneFeuilleSuiviResponseDto {
   id!: number;
 
   @ApiProperty()
+  acteId!: number;
+
+  @ApiProperty()
   refSociale!: string;
 
   @ApiProperty({ format: 'date' })
@@ -99,6 +102,9 @@ class LigneFeuilleSuiviResponseDto {
 
   @ApiProperty()
   libelle!: string;
+
+  @ApiProperty({ type: String, nullable: true })
+  observation!: string | null;
 
   @ApiProperty({ type: ActeLigneSuiviResponseDto })
   acte!: ActeLigneSuiviResponseDto;
