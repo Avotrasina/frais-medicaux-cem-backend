@@ -546,10 +546,13 @@ export class FactureIndividuelleService {
         montantDepassementActe: calcule.montantDepassementActe,
         montantDepassementPlafond: calcule.montantDepassementPlafond,
         observationDepassement: donnees.observationDepassement,
+        refPaie: donnees.refPaie?.trim() || null,
         tauxCem: calcule.tauxCem,
         montantCemIntegral: calcule.montantCemIntegral,
         createdAt,
-        moisAffectation: null,
+        moisAffectation: donnees.moisAffectation
+          ? convertirDate(donnees.moisAffectation)
+          : null,
         priseEnChargeId: donnees.numPec ?? null,
       },
     });

@@ -241,20 +241,25 @@ facture. À remplacer par l’acteur réel lorsque l’authentification sera int
   "montantDepassementActe": 0,
   "montantDepassementPlafond": 0,
   "montantCemIntegral": 0,
+  "refPaie": "PAIE-MARS-2026-01",
+  "moisAffectation": "2026-03-01",
   "observationDepassement": "Sans dépassement"
 }
 ```
 
 Requis : `libelle`, `dateActe`, `idp`, `acteId`, `montantActe`. Les montants
 de dépassement et `montantCemIntegral` sont facultatifs et valent zéro par
-défaut; `numPec` et `observationDepassement` sont facultatifs. Réponse `201`:
+défaut; `numPec`, `refPaie`, `moisAffectation` et `observationDepassement`
+sont facultatifs. `refPaie` est nettoyé des espaces périphériques.
+`moisAffectation` doit être une date valide au format `AAAA-MM-JJ`.
+Réponse `201`:
 `LigneFactureCalculee`: `{id, numLigne, libelle, dateActe, idp,
 acte:{id,code,nom}, montantActe, montantDepassementActe,
 montantDepassementPlafond, observationDepassement, tauxCem,
 montantCemIntegral, montantCem, montantAgent, montantDepassement,
 totalChargeAgent, numPec, refPaie, moisAffectation, avertissements}`.
 Les montants sont des chaînes à deux décimales; `moisAffectation` et
-`refPaie` sont initialement `null`.
+`refPaie` sont `null` s’ils ne sont pas fournis à la création.
 
 ### `PUT /factures/:id/lignes/:ligneId`
 

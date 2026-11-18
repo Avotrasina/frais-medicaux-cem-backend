@@ -30,4 +30,25 @@ describe('CreerFactureIndividuelleDto.numPec', () => {
       true,
     );
   });
+
+  it('accepte les champs facultatifs de paie dans le payload de création', () => {
+    const dto = plainToInstance(CreerFactureIndividuelleDto, {
+      ...payload,
+      refPaie: 'PAIE-MARS-2026-01',
+      moisAffectation: '2026-03-01',
+    });
+
+    expect(validateSync(dto)).toEqual([]);
+  });
+
+  it('refuse une date invalide pour moisAffectation', () => {
+    const dto = plainToInstance(CreerFactureIndividuelleDto, {
+      ...payload,
+      moisAffectation: '2026-13-01',
+    });
+
+    expect(
+      validateSync(dto).some((error) => error.property === 'moisAffectation'),
+    ).toBe(true);
+  });
 });
