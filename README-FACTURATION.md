@@ -215,6 +215,19 @@ qui n'est pas une action.
 **Entité principale : ligne de facture individuelle**, rattachée à une facture
 globale. Les routes ci-dessous sont sous `/factures/:id`.
 
+### Accès provisoire
+
+Les sept routes T6 de cette section n’utilisent pas `FactureRoleGuard` et ne
+requièrent pas d’authentification dans l’état actuel. Avec
+`PERMISSIONS_ROLES_ACTIVES=false` (valeur par défaut), les lectures et écritures
+T6 sont accessibles sans utilisateur authentifié. Si les permissions par rôle
+sont activées, les écritures sans utilisateur retournent `401`; les écritures
+avec utilisateur appliquent les rôles configurés.
+
+Lors d’une modification ou suppression en statut `A_CORRIGER`, si aucun
+utilisateur n’est fourni, le mouvement d’audit utilise `enregistreParId` de la
+facture. À remplacer par l’acteur réel lorsque l’authentification sera intégrée.
+
 ### `POST /factures/:id/lignes`
 
 ```json
@@ -228,20 +241,25 @@ globale. Les routes ci-dessous sont sous `/factures/:id`.
   "montantDepassementActe": 0,
   "montantDepassementPlafond": 0,
   "montantCemIntegral": 0,
+  "refPaie": "PAIE-MARS-2026-01",
+  "moisAffectation": "2026-03-01",
   "observationDepassement": "Sans dépassement"
 }
 ```
 
 Requis : `libelle`, `dateActe`, `idp`, `acteId`, `montantActe`. Les montants
 de dépassement et `montantCemIntegral` sont facultatifs et valent zéro par
-défaut; `numPec` et `observationDepassement` sont facultatifs. Réponse `201`:
+défaut; `numPec`, `refPaie`, `moisAffectation` et `observationDepassement`
+sont facultatifs. `refPaie` est nettoyé des espaces périphériques.
+`moisAffectation` doit être une date valide au format `AAAA-MM-JJ`.
+Réponse `201`:
 `LigneFactureCalculee`: `{id, numLigne, libelle, dateActe, idp,
 acte:{id,code,nom}, montantActe, montantDepassementActe,
 montantDepassementPlafond, observationDepassement, tauxCem,
 montantCemIntegral, montantCem, montantAgent, montantDepassement,
 totalChargeAgent, numPec, refPaie, moisAffectation, avertissements}`.
 Les montants sont des chaînes à deux décimales; `moisAffectation` et
-`refPaie` sont initialement `null`.
+`refPaie` sont `null` s’ils ne sont pas fournis à la création.
 
 ### `PUT /factures/:id/lignes/:ligneId`
 
@@ -633,6 +651,7 @@ curl -s "http://localhost:3000/factures?statut=VALIDEE" | jq .
 ```
 
 En développement, `FACTURATION_UTILISATEUR_TEST_ID` sélectionne le compte
-utilisé lorsque l'authentification ne fournit pas d'utilisateur; les IDs
-`9001`, `9002` et `9003` correspondent à l'opérateur, l'adjoint et le chef de
-démo.
+utilisé lorsque l'authentification ne fournit pas d'utilisateur pour les
+opérations qui exigent un acteur. Cette variable n'est pas nécessaire aux
+routes de lignes individuelles T6. Les IDs `9001`, `9002` et `9003`
+correspondent à l'opérateur, l'adjoint et le chef de démo.

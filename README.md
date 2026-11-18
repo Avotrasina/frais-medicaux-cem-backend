@@ -163,14 +163,21 @@ lit les dépassements T5_x sans les recopier automatiquement.
 `numPec` est l’identifiant entier d’une `Attestation`; une attestation
 introuvable ou déjà affectée à une autre ligne produit un avertissement.
 
-`PATCH /factures/:id/retenue` ne saisit que la référence libre `refPaie` sur
-les lignes sélectionnées. `moisAffectation` reste vide à la création et est
-renseigné uniquement lors de la clôture mensuelle. Une facture clôturée refuse
-les modifications; l'ajout d'une pièce jointe reste permis.
+`PATCH /factures/:id/retenue` peut saisir la référence libre `refPaie` sur les
+lignes sélectionnées. `refPaie` et `moisAffectation` peuvent aussi être fournis
+à la création d’une ligne T6; s’ils sont omis, ils restent `null`. La clôture
+mensuelle affecte ensuite le mois de paie aux lignes. Une facture clôturée
+refuse les modifications; l'ajout d'une pièce jointe reste permis.
 `GET /factures/:id/controle-totaux` compare les sommes des lignes aux montants
 de la facture. L’envoi en validation et la validation exigent des totaux
 concordants. Tout écart ou toute facture sans ligne bloque l’envoi en validation
 et la validation.
+
+Les routes T6 individuelles ne sont pas protégées par un guard et ne requièrent
+pas d’authentification pour le moment. Quand les permissions par rôle sont
+activées (`PERMISSIONS_ROLES_ACTIVES=true`), une écriture sans utilisateur est
+refusée. En statut `A_CORRIGER`, si aucun utilisateur n’est fourni, le mouvement
+d’audit utilise temporairement le créateur de la facture (`enregistreParId`).
 
 ### Clôture mensuelle et états de paie
 

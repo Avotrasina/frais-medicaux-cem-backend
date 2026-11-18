@@ -223,8 +223,8 @@ describe('FactureIndividuelleService - numérotation et mouvements', () => {
           id: prochainId,
           numLigne,
           dateActe: new Date(`${dateActe}T00:00:00.000Z`),
-          refPaie: null,
-          moisAffectation: null,
+          refPaie: args.data.refPaie ?? null,
+          moisAffectation: args.data.moisAffectation ?? null,
           priseEnChargeId: args.data.priseEnChargeId ?? null,
         } as Record<string, unknown> & { id: number; numLigne: number };
         prochainId += 1;
@@ -334,6 +334,29 @@ describe('FactureIndividuelleService - numérotation et mouvements', () => {
     expect(creerLigne.mock.calls.map(([appel]) => appel.data.numLigne)).toEqual(
       [1, 2],
     );
+  });
+
+  it('enregistre refPaie et moisAffectation fournis à la création', async () => {
+    const { service, creerLigne } = creerServiceCreation();
+
+    const resultat = await service.creer(
+      7,
+      { id: 5, role: RoleUtilisateur.OPERATEUR },
+      {
+        ...donnees,
+        refPaie: ' PAIE-MARS-2026-01 ',
+        moisAffectation: '2026-03-01',
+      },
+    );
+
+    expect(creerLigne).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        refPaie: 'PAIE-MARS-2026-01',
+        moisAffectation: new Date('2026-03-01T00:00:00.000Z'),
+      }),
+    });
+    expect(resultat.refPaie).toBe('PAIE-MARS-2026-01');
+    expect(resultat.moisAffectation).toBe('2026-03-01');
   });
 
   it('réessaie une création simultanée après le conflit P2002 de numLigne', async () => {

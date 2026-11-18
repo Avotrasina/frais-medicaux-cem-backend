@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,7 +12,6 @@ import {
   Put,
   Query,
   Req,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -28,7 +26,6 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import type { ActeurFacture } from '../globale/facture-globale.service.js';
-import { FactureRoleGuard } from '../../shared/facture-role.guard.js';
 import {
   AffecterRetenueDto,
   CreerFactureIndividuelleDto,
@@ -56,7 +53,6 @@ const VALIDATION_PAYLOAD = new ValidationPipe({
 
 @ApiTags('Factures individuelles')
 @Controller('factures')
-@UseGuards(FactureRoleGuard)
 @ApiExtraModels(PropositionDepassementResponseDto)
 export class FactureIndividuelleController {
   constructor(private readonly lignes: FactureIndividuelleService) {}
@@ -186,12 +182,9 @@ export class FactureIndividuelleController {
     return this.lignes.controleTotaux(id);
   }
 
-  private obtenirActeur(requete: RequeteAvecUtilisateur): ActeurFacture {
-    if (requete.user === undefined) {
-      throw new BadRequestException(
-        "Le guard n'a pas fourni l'utilisateur de l'action.",
-      );
-    }
+  private obtenirActeur(
+    requete: RequeteAvecUtilisateur,
+  ): ActeurFacture | undefined {
     return requete.user;
   }
 }
