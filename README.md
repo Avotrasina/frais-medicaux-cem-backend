@@ -172,6 +172,12 @@ de la facture. L’envoi en validation et la validation exigent des totaux
 concordants. Tout écart ou toute facture sans ligne bloque l’envoi en validation
 et la validation.
 
+Les routes T6 individuelles ne sont pas protégées par un guard et ne requièrent
+pas d’authentification pour le moment. Quand les permissions par rôle sont
+activées (`PERMISSIONS_ROLES_ACTIVES=true`), une écriture sans utilisateur est
+refusée. En statut `A_CORRIGER`, si aucun utilisateur n’est fourni, le mouvement
+d’audit utilise temporairement le créateur de la facture (`enregistreParId`).
+
 ### Clôture mensuelle et états de paie
 
 `POST /paies/:mois/cloture` clôture atomiquement une liste non vide de factures
