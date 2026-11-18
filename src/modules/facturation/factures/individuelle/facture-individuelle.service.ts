@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { Prisma } from '../../../../generated/prisma/client.js';
@@ -109,10 +110,10 @@ export class FactureIndividuelleService {
 
   async creer(
     idFacture: number,
-    acteur: ActeurFacture,
+    acteur: ActeurFacture | undefined,
     donnees: CreerFactureIndividuelleDto,
   ): Promise<LigneFactureCalculee> {
-    this.permissions.verifier(ActionFacture.SUIVI_CREER, acteur.role);
+    this.verifierPermission(ActionFacture.SUIVI_CREER, acteur);
     return this.avecRetryNumLigne(() =>
       this.prisma.$transaction((tx) =>
         this.creerDansTransaction(tx, idFacture, acteur, donnees),
@@ -123,10 +124,10 @@ export class FactureIndividuelleService {
   async modifier(
     idFacture: number,
     ligneId: number,
-    acteur: ActeurFacture,
+    acteur: ActeurFacture | undefined,
     donnees: ModifierFactureIndividuelleDto,
   ): Promise<LigneFactureCalculee> {
-    this.permissions.verifier(ActionFacture.SUIVI_MODIFIER, acteur.role);
+    this.verifierPermission(ActionFacture.SUIVI_MODIFIER, acteur);
     return this.prisma.$transaction(async (tx) => {
       const ligne = await tx.factureIndividuelle.findFirst({
         where: { id: ligneId, factureGlobaleId: idFacture },
@@ -185,7 +186,7 @@ export class FactureIndividuelleService {
       await this.enregistrerModificationFacture(
         tx,
         idFacture,
-        acteur,
+        acteur?.id ?? ligne.factureGlobale.enregistreParId,
         ligne.factureGlobale.statut,
         `Modification de la ligne ${ligne.numLigne}.`,
       );
@@ -212,9 +213,9 @@ export class FactureIndividuelleService {
   async supprimer(
     idFacture: number,
     ligneId: number,
-    acteur: ActeurFacture,
+    acteur: ActeurFacture | undefined,
   ): Promise<void> {
-    this.permissions.verifier(ActionFacture.SUIVI_SUPPRIMER, acteur.role);
+    this.verifierPermission(ActionFacture.SUIVI_SUPPRIMER, acteur);
     await this.prisma.$transaction(async (tx) => {
       const ligne = await tx.factureIndividuelle.findFirst({
         where: { id: ligneId, factureGlobaleId: idFacture },
@@ -229,7 +230,7 @@ export class FactureIndividuelleService {
       await this.enregistrerModificationFacture(
         tx,
         idFacture,
-        acteur,
+        acteur?.id ?? ligne.factureGlobale.enregistreParId,
         ligne.factureGlobale.statut,
         `Suppression de la ligne ${ligne.numLigne}.`,
       );
@@ -332,10 +333,10 @@ export class FactureIndividuelleService {
 
   async affecterRetenue(
     idFacture: number,
-    acteur: ActeurFacture,
+    acteur: ActeurFacture | undefined,
     donnees: AffecterRetenueDto,
   ): Promise<{ ligneIds: number[]; refPaie: string }> {
-    this.permissions.verifier(ActionFacture.SUIVI_MODIFIER, acteur.role);
+    this.verifierPermission(ActionFacture.SUIVI_MODIFIER, acteur);
     if (donnees.ligneIds.length === 0)
       throw new BadRequestException(
         'Au moins une ligne doit être sélectionnée.',
@@ -509,7 +510,7 @@ export class FactureIndividuelleService {
   private async creerDansTransaction(
     tx: Prisma.TransactionClient,
     idFacture: number,
-    acteur: ActeurFacture,
+    acteur: ActeurFacture | undefined,
     donnees: CreerFactureIndividuelleDto,
   ): Promise<LigneFactureCalculee> {
     const contexte = await this.resoudreContexte(
@@ -555,7 +556,7 @@ export class FactureIndividuelleService {
     await this.enregistrerModificationFacture(
       tx,
       idFacture,
-      acteur,
+      acteur?.id ?? contexte.enregistreParId,
       contexte.statut,
       `Création de la ligne ${numLigne}.`,
     );
@@ -584,6 +585,7 @@ export class FactureIndividuelleService {
   ): Promise<{
     factureId: number;
     statut: StatutFacture;
+    enregistreParId: number;
     beneficiaireId: number;
     acte: { id: number; code: string; nomActe: string; regime: RegimeActe };
     regle: { type: TypeRegle; tauxCem: Prisma.Decimal };
@@ -594,6 +596,7 @@ export class FactureIndividuelleService {
       select: {
         id: true,
         statut: true,
+        enregistreParId: true,
         dateCloture: true,
         moisPrestation: true,
         dateReception: true,
@@ -665,6 +668,7 @@ export class FactureIndividuelleService {
     return {
       factureId: facture.id,
       statut: facture.statut,
+      enregistreParId: facture.enregistreParId,
       beneficiaireId: beneficiaire.id,
       acte: {
         id: acte.id,
@@ -680,7 +684,7 @@ export class FactureIndividuelleService {
   private async enregistrerModificationFacture(
     tx: Prisma.TransactionClient,
     idFacture: number,
-    acteur: ActeurFacture,
+    effectueParId: number,
     statutActuel: StatutFacture,
     remarque: string,
   ): Promise<void> {
@@ -706,9 +710,24 @@ export class FactureIndividuelleService {
     await this.mouvements.ecrire(tx, {
       factureGlobaleId: idFacture,
       type: TypeMouvement.MODIFICATION,
-      effectueParId: acteur.id,
+      effectueParId,
       remarque,
     });
+  }
+
+  private verifierPermission(
+    action: ActionFacture,
+    acteur: ActeurFacture | undefined,
+  ): void {
+    if (acteur !== undefined) {
+      this.permissions.verifier(action, acteur.role);
+      return;
+    }
+    if (this.permissions.estActive()) {
+      throw new UnauthorizedException(
+        'Un utilisateur est requis lorsque les permissions par rôle sont activées.',
+      );
+    }
   }
 
   private async resoudreContexteLecture(

@@ -1,4 +1,5 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { GUARDS_METADATA } from '@nestjs/common/constants';
 import {
   RoleUtilisateur,
   StatutFacture,
@@ -13,6 +14,7 @@ import { MouvementFactureService } from '../../../src/modules/facturation/shared
 import { SuiviService } from '../../../src/modules/facturation/suivi/suivi.service.js';
 import { FactureWorkflowService } from '../../../src/modules/facturation/factures/workflow/facture-workflow.service.js';
 import { FactureIndividuelleService } from '../../../src/modules/facturation/factures/individuelle/facture-individuelle.service.js';
+import { FactureIndividuelleController } from '../../../src/modules/facturation/factures/individuelle/facture-individuelle.controller.js';
 
 vi.mock('../../../src/infrastructure/prisma/prisma.service.js', () => ({
   PrismaService: class PrismaService {},
@@ -204,5 +206,57 @@ describe('FactureIndividuelleService - suppression T6', () => {
     expect(tx.factureGlobale.updateMany).not.toHaveBeenCalled();
     expect(tx.factureIndividuelle.delete).not.toHaveBeenCalled();
     expect(mouvements.ecrire).not.toHaveBeenCalled();
+  });
+});
+
+describe('FactureIndividuelleService - permissions sans authentification', () => {
+  it('refuse une écriture anonyme quand les permissions par rôle sont actives', async () => {
+    const service = new FactureIndividuelleService(
+      {} as PrismaService,
+      {} as RegleService,
+      {} as FactureCalculService,
+      {
+        estActive: vi.fn().mockReturnValue(true),
+      } as unknown as FacturePermissionsService,
+      {} as MouvementFactureService,
+      {} as SuiviService,
+      new FactureWorkflowService(),
+    );
+
+    await expect(
+      service.creer(21, undefined, {
+        libelle: 'Consultation',
+        dateActe: '2026-03-10',
+        idp: 'IDP-AGENT-001',
+        acteId: 1,
+        montantActe: 25000,
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+  });
+});
+
+describe('FactureIndividuelleController sans authentification', () => {
+  it('crée une ligne T6 sans guard ni utilisateur authentifié', async () => {
+    const service = { creer: vi.fn().mockResolvedValue({ id: 12 }) };
+    const controller = new FactureIndividuelleController(service as never);
+    const donnees = {
+      libelle: 'Consultation',
+      dateActe: '2026-03-10',
+      idp: 'IDP-AGENT-001',
+      acteId: 1,
+      montantActe: 25000,
+    };
+
+    expect(
+      Reflect.getMetadata(GUARDS_METADATA, FactureIndividuelleController),
+    ).toBeUndefined();
+    await expect(controller.creer(21, donnees, {})).resolves.toEqual({
+      id: 12,
+    });
+    expect(service.creer).toHaveBeenCalledWith(
+      21,
+      undefined,
+      expect.objectContaining({ idp: 'IDP-AGENT-001' }),
+    );
   });
 });
